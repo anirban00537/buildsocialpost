@@ -4,8 +4,6 @@ import { Toaster } from "@/components/ui/toaster";
 import { SiteHeader } from "@/components/site-header";
 import Providers from "@/utils/providers";
 
-import "./globals.css";
-
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
