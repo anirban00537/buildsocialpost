@@ -30,7 +30,7 @@ const MainSidebar = () => {
               >
                 <SelectValue placeholder="Select a model" />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="bg-white">
                 <SelectItem value="genesis">
                   <div className="flex items-start gap-3 text-muted-foreground">
                     <Rabbit className="size-5" />
