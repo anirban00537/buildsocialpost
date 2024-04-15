@@ -1,31 +1,5 @@
 import React from "react";
-import {
-  Bird,
-  CornerDownLeft,
-  Mic,
-  Paperclip,
-  Rabbit,
-  Turtle,
-} from "lucide-react";
 
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
 import MainSidebar from "../sidebar/main.sidebar";
 const EditorBody = () => {
   return (
