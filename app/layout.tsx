@@ -4,6 +4,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 const defaultUrl = process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}`
   : "http://localhost:3000";
+import { MyFirebaseProvider } from "@/components/firebase-providers";
 
 export const metadata = {
   metadataBase: new URL(defaultUrl),
@@ -21,7 +22,9 @@ export default function RootLayout({
     <html lang="en" className={GeistSans.className}>
       <body className="bg-background text-foreground">
         <main className="min-h-screen flex flex-col items-center">
-          <TooltipProvider>{children}</TooltipProvider>
+          <MyFirebaseProvider>
+            <TooltipProvider>{children}</TooltipProvider>
+          </MyFirebaseProvider>
         </main>
       </body>
     </html>
