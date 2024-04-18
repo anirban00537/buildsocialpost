@@ -1,5 +1,5 @@
 import React from "react";
-import usePaddle from "../hooks/paddle";
+import usePaddle from "../../hooks/paddle";
 
 const CheckoutButton = () => {
   const paddle = usePaddle();
