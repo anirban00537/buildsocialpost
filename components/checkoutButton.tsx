@@ -1,19 +1,19 @@
 import React from "react";
 import usePaddle from "../hooks/paddle";
 
-const CheckoutButton=() =>{
+const CheckoutButton = () => {
   const paddle = usePaddle();
 
   const openCheckout = () => {
     paddle?.Checkout.open({
       items: [
         {
-          priceId: "pri_1234567890", // you can find it in the product catalog
+          priceId: "pro_01hvqyygf5w32q271qy4943sy9", // you can find it in the product catalog
           quantity: 1,
         },
       ],
       customer: {
-        email: "customer@email.com", // email of your current logged in user
+        email: "anirban00537@gmail.com", // email of your current logged in user
       },
       customData: {
         // other custom metadata you want to pass
@@ -25,5 +25,5 @@ const CheckoutButton=() =>{
   };
 
   return <button onClick={openCheckout}>Checkout</button>;
-}
-export default CheckoutButton
+};
+export default CheckoutButton;
