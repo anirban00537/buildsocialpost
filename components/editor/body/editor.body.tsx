@@ -32,14 +32,14 @@ const initialSlides: Slide[] = [
     subtitle: "Your amazing subtitle goes here",
     description: "Your amazing description goes here.",
     imageUrl:
-      "https://images.unsplash.com/photo-1716718406268-6ece312abee0?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", // Example Unsplash image
+      "https://images.unsplash.com/photo-1716718406268-6ece312abee0?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
   },
   {
     title: "Section Title",
     subtitle: "Your amazing subtitle goes here",
     description: "Put your content here.",
     imageUrl:
-      "https://images.unsplash.com/photo-1716718406268-6ece312abee0?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", // Example Unsplash image
+      "https://images.unsplash.com/photo-1716718406268-6ece312abee0?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
   },
   {
     title: "Section Title",
@@ -60,7 +60,7 @@ const CarouselEditor: React.FC = () => {
       subtitle: "Subtitle",
       description: "Description",
       imageUrl:
-        "https://images.unsplash.com/photo-1716718406268-6ece312abee0?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", // Example Unsplash image
+        "https://images.unsplash.com/photo-1716718406268-6ece312abee0?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     };
     setSlides((prevSlides) => [...prevSlides, newSlide]);
   }, []);
@@ -89,7 +89,9 @@ const CarouselEditor: React.FC = () => {
   };
 
   return (
-    <main className="flex h-full bg-slate-100 overflow-auto">
+    <main className="flex h-full bg-slate-100 overflow-hidden">
+      {" "}
+      {/* Changed to overflow-hidden */}
       <div className="w-full p-4 flex flex-col justify-center items-center">
         <Swiper
           ref={swiperRef}
@@ -100,6 +102,7 @@ const CarouselEditor: React.FC = () => {
           pagination={{ clickable: true }}
           scrollbar={{ draggable: true }}
           a11y={{ enabled: true }}
+          allowTouchMove={false}
           style={{ width: "100%", height: "40rem" }}
         >
           {slides.map((slide, index) => (
