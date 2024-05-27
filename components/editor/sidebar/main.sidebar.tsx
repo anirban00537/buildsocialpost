@@ -1,5 +1,5 @@
 import React from "react";
-import { Bird, Rabbit, Turtle } from "lucide-react";
+import { Image, Layers, Type } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
@@ -10,70 +10,75 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import { Button } from "@/components/ui/button";
 
 const MainSidebar = () => {
   return (
-    <div
-      className="sticky  h-full  top-0 flex flex-col p-4 bg-white col-span-2 items-start gap-8 "
+    <aside
+      className="sticky h-full top-0 flex flex-col p-4 bg-white col-span-2 items-start gap-8"
       x-chunk="dashboard-03-chunk-0"
     >
       <form className="grid w-full items-start gap-6">
         <fieldset className="grid gap-6 rounded-lg border p-4">
-          <legend className="-ml-1 px-1 text-sm font-medium">Settings</legend>
+          <legend className="-ml-1 px-1 text-sm font-medium">
+            Carousel Settings
+          </legend>
           <div className="grid gap-3">
-            <Label htmlFor="model">Model</Label>
+            <Label htmlFor="title">Carousel Title</Label>
+            <Input id="title" type="text" placeholder="Enter carousel title" />
+          </div>
+          <div className="grid gap-3">
+            <Label htmlFor="slides">Number of Slides</Label>
+            <Input id="slides" type="number" placeholder="5" />
+          </div>
+          <div className="grid gap-3">
+            <Label htmlFor="template">Template</Label>
             <Select>
               <SelectTrigger
-                id="model"
+                id="template"
                 className="items-start [&_[data-description]]:hidden"
               >
-                <SelectValue placeholder="Select a model" />
+                <SelectValue placeholder="Select a template" />
               </SelectTrigger>
               <SelectContent className="bg-white">
-                <SelectItem value="genesis">
+                <SelectItem value="professional">
                   <div className="flex items-start gap-3 text-muted-foreground">
-                    <Rabbit className="size-5" />
+                    <Layers className="size-5" />
                     <div className="grid gap-0.5">
                       <p>
-                        Neural{" "}
+                        Professional
                         <span className="font-medium text-foreground">
-                          Genesis
+                          {" "}
+                          Template
                         </span>
-                      </p>
-                      <p className="text-xs" data-description>
-                        Our fastest model for general use cases.
                       </p>
                     </div>
                   </div>
                 </SelectItem>
-                <SelectItem value="explorer">
+                <SelectItem value="creative">
                   <div className="flex items-start gap-3 text-muted-foreground">
-                    <Bird className="size-5" />
+                    <Image className="size-5" />
                     <div className="grid gap-0.5">
                       <p>
-                        Neural{" "}
+                        Creative
                         <span className="font-medium text-foreground">
-                          Explorer
+                          {" "}
+                          Template
                         </span>
-                      </p>
-                      <p className="text-xs" data-description>
-                        Performance and speed for efficiency.
                       </p>
                     </div>
                   </div>
                 </SelectItem>
-                <SelectItem value="quantum">
+                <SelectItem value="minimal">
                   <div className="flex items-start gap-3 text-muted-foreground">
-                    <Turtle className="size-5" />
+                    <Type className="size-5" />
                     <div className="grid gap-0.5">
                       <p>
-                        Neural{" "}
+                        Minimal
                         <span className="font-medium text-foreground">
-                          Quantum
+                          {" "}
+                          Template
                         </span>
-                      </p>
-                      <p className="text-xs" data-description>
-                        The most powerful model for complex computations.
                       </p>
                     </div>
                   </div>
@@ -82,46 +87,36 @@ const MainSidebar = () => {
             </Select>
           </div>
           <div className="grid gap-3">
-            <Label htmlFor="temperature">Temperature</Label>
-            <Input id="temperature" type="number" placeholder="0.4" />
-          </div>
-          <div className="grid grid-cols-2 gap-4">
-            <div className="grid gap-3">
-              <Label htmlFor="top-p">Top P</Label>
-              <Input id="top-p" type="number" placeholder="0.7" />
-            </div>
-            <div className="grid gap-3">
-              <Label htmlFor="top-k">Top K</Label>
-              <Input id="top-k" type="number" placeholder="0.0" />
-            </div>
+            <Label htmlFor="image-upload">Upload Images</Label>
+            <Input id="image-upload" type="file" multiple />
           </div>
         </fieldset>
         <fieldset className="grid gap-6 rounded-lg border p-4">
-          <legend className="-ml-1 px-1 text-sm font-medium">Messages</legend>
+          <legend className="-ml-1 px-1 text-sm font-medium">
+            Slide Content
+          </legend>
           <div className="grid gap-3">
-            <Label htmlFor="role">Role</Label>
-            <Select defaultValue="system">
-              <SelectTrigger>
-                <SelectValue placeholder="Select a role" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="system">System</SelectItem>
-                <SelectItem value="user">User</SelectItem>
-                <SelectItem value="assistant">Assistant</SelectItem>
-              </SelectContent>
-            </Select>
+            <Label htmlFor="slide-title">Slide Title</Label>
+            <Input
+              id="slide-title"
+              type="text"
+              placeholder="Enter slide title"
+            />
           </div>
           <div className="grid gap-3">
-            <Label htmlFor="content">Content</Label>
+            <Label htmlFor="slide-content">Slide Content</Label>
             <Textarea
-              id="content"
-              placeholder="You are a..."
+              id="slide-content"
+              placeholder="Enter slide content"
               className="min-h-[9.5rem]"
             />
           </div>
+          <Button className="mt-2" type="button">
+            Add Slide
+          </Button>
         </fieldset>
       </form>
-    </div>
+    </aside>
   );
 };
 

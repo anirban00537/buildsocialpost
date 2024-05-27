@@ -1,6 +1,4 @@
 import React from "react";
-import ReactQuill from "react-quill";
-import "react-quill/dist/quill.bubble.css";
 
 interface SlideProps {
   slide: {
@@ -28,32 +26,38 @@ const SlideComponent: React.FC<SlideProps> = ({
       <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-black via-transparent to-black opacity-80"></div>
       <div className="relative z-10 flex-grow flex flex-col justify-between">
         <div className="mb-4">
-          <ReactQuill
-            value={slide.subtitle}
-            onChange={(value) =>
-              updateSlide(index, { ...slide, subtitle: value })
+          <div
+            contentEditable
+            suppressContentEditableWarning
+            onBlur={(e) =>
+              updateSlide(index, { ...slide, subtitle: e.target.innerText })
             }
-            placeholder="Subtitle"
             className="w-full p-2 mb-2 text-lg bg-transparent border-0 placeholder-white focus:outline-none break-words whitespace-normal resize-none"
-            theme="bubble"
-          />
-          <ReactQuill
-            value={slide.title}
-            onChange={(value) => updateSlide(index, { ...slide, title: value })}
-            placeholder="Title"
-            className="w-full p-2 mb-2 text-4xl font-bold bg-transparent border-0 placeholder-white focus:outline-none break-words whitespace-normal resize-none"
-            theme="bubble"
-          />
-          <ReactQuill
-            value={slide.description}
-            onChange={(value) =>
-              updateSlide(index, { ...slide, description: value })
+          >
+            {slide.subtitle || "Subtitle"}
+          </div>
+          <div
+            contentEditable
+            suppressContentEditableWarning
+            onBlur={(e) =>
+              updateSlide(index, { ...slide, title: e.target.innerText })
             }
-            placeholder="Description"
+            className="w-full p-2 mb-2 text-4xl font-bold bg-transparent border-0 placeholder-white focus:outline-none break-words whitespace-normal resize-none"
+          >
+            {slide.title || "Title"}
+          </div>
+          <div
+            contentEditable
+            suppressContentEditableWarning
+            onBlur={(e) =>
+              updateSlide(index, { ...slide, description: e.target.innerText })
+            }
             className="w-full p-2 text-base bg-transparent border-0 placeholder-white focus:outline-none break-words whitespace-normal resize-none"
-            theme="bubble"
-          />
+          >
+            {slide.description || "Description"}
+          </div>
         </div>
+       
       </div>
     </div>
   );
