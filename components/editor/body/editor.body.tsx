@@ -19,8 +19,8 @@ const EditorBody = () => {
   };
 
   const slideStyle = {
-    width: "30rem", // Adjusted width
-    height: "35rem", // Adjusted height
+    width: "30rem", // Width set to 30rem
+    height: "35rem", // Height set to 35rem
     border: "1px solid black",
     borderRadius: "0.5rem",
     padding: "0.5rem",
@@ -36,27 +36,39 @@ const EditorBody = () => {
     transition: "all 0.3s ease",
   };
 
+  const sliderContainerStyle = {
+    width: "calc(30rem * 5 + 5 * 1rem)", // Calculate the width to accommodate 5 slides and their margins
+    overflow: "hidden", // Hide any overflow
+  };
+
+  const slideWrapperStyle = {
+    display: "flex",
+    justifyContent: "center",
+  };
+
   return (
     <main className="grid flex-1 bg-slate-100 overflow-auto md:grid-cols-2 lg:grid-cols-12">
       <MainSidebar />
       <div className="relative flex h-full min-h-[50vh] flex-col rounded-xl bg-muted/50 p-4 lg:col-span-10">
-        <Slider {...settings}>
-          <div className="px-2">
-            <div style={slideStyle}>Slide 1</div>
-          </div>
-          <div className="px-2">
-            <div style={slideStyle}>Slide 2</div>
-          </div>
-          <div className="px-2">
-            <div style={slideStyle}>Slide 3</div>
-          </div>
-          <div className="px-2">
-            <div style={slideStyle}>Slide 4</div>
-          </div>
-          <div className="px-2">
-            <div style={slideStyle}>Slide 5</div>
-          </div>
-        </Slider>
+        <div style={sliderContainerStyle}>
+          <Slider {...settings}>
+            <div style={slideWrapperStyle}>
+              <div style={slideStyle}>Slide 1</div>
+            </div>
+            <div style={slideWrapperStyle}>
+              <div style={slideStyle}>Slide 2</div>
+            </div>
+            <div style={slideWrapperStyle}>
+              <div style={slideStyle}>Slide 3</div>
+            </div>
+            <div style={slideWrapperStyle}>
+              <div style={slideStyle}>Slide 4</div>
+            </div>
+            <div style={slideWrapperStyle}>
+              <div style={slideStyle}>Slide 5</div>
+            </div>
+          </Slider>
+        </div>
       </div>
     </main>
   );
