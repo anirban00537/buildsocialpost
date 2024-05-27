@@ -66,16 +66,18 @@ const CarouselEditor: React.FC = () => {
       </div>
       <div className="col-span-10 p-4 flex justify-center">
         <Swiper
-          spaceBetween={50}
-          slidesPerView={1}
+          spaceBetween={20}
+          slidesPerView="auto"
           navigation
           pagination={{ clickable: true }}
           scrollbar={{ draggable: true }}
           a11y={{ enabled: true }}
-          style={{ width: "30rem", height: "35rem" }}
         >
           {slides.map((slide, index) => (
-            <SwiperSlide key={index}>
+            <SwiperSlide
+              key={index}
+              style={{ width: "30rem", height: "35rem" }}
+            >
               <div className="bg-white p-4 rounded-lg shadow-lg h-full w-full">
                 <div className="flex justify-between items-center mb-4">
                   <input
