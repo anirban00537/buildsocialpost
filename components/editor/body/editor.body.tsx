@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import SwiperCore from "swiper";
 import { Navigation, Pagination, Scrollbar, A11y } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -9,6 +9,7 @@ import "swiper/css/pagination";
 import "swiper/css/scrollbar";
 import "swiper/css/a11y";
 import MainSidebar from "../sidebar/main.sidebar";
+import debounce from "lodash/debounce";
 import SlideComponent from "../slide/slide.comp";
 
 SwiperCore.use([Navigation, Pagination, Scrollbar, A11y]);
@@ -47,7 +48,7 @@ const initialSlides: Slide[] = [
 const CarouselEditor: React.FC = () => {
   const [slides, setSlides] = useState<Slide[]>(initialSlides);
 
-  const addSlide = () => {
+  const addSlide = useCallback(() => {
     const newSlide: Slide = {
       title: "New Slide",
       subtitle: "Subtitle",
@@ -55,20 +56,25 @@ const CarouselEditor: React.FC = () => {
       imageUrl:
         "https://images.unsplash.com/photo-1716718406268-6ece312abee0?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", // Example Unsplash image
     };
-    setSlides([...slides, newSlide]);
-  };
+    setSlides((prevSlides) => [...prevSlides, newSlide]);
+  }, []);
+
+  const debouncedUpdateSlide = useCallback(
+    debounce((index: number, updatedSlide: Slide) => {
+      setSlides((prevSlides) =>
+        prevSlides.map((slide, i) => (i === index ? updatedSlide : slide))
+      );
+    }, 300), // 300ms debounce delay
+    []
+  );
 
   const updateSlide = (index: number, updatedSlide: Slide) => {
-    const newSlides = slides.map((slide, i) =>
-      i === index ? updatedSlide : slide
-    );
-    setSlides(newSlides);
+    debouncedUpdateSlide(index, updatedSlide);
   };
 
-  const deleteSlide = (index: number) => {
-    const newSlides = slides.filter((_, i) => i !== index);
-    setSlides(newSlides);
-  };
+  const deleteSlide = useCallback((index: number) => {
+    setSlides((prevSlides) => prevSlides.filter((_, i) => i !== index));
+  }, []);
 
   return (
     <main className="flex h-full bg-slate-100 overflow-auto">
