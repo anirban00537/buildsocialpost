@@ -78,15 +78,16 @@ const CarouselEditor: React.FC = () => {
   return (
     <main className="flex h-full bg-slate-100 overflow-auto">
       <div className="w-full p-4 flex flex-col justify-center items-center">
-        <div className="flex justify-center items-center w-full h-full">
+        <div className={`swiper-container`}>
           <Swiper
             spaceBetween={0}
             slidesPerView="auto"
+            centeredSlides={true} // Center the first slide
             navigation
             pagination={{ clickable: true }}
             scrollbar={{ draggable: true }}
             a11y={{ enabled: true }}
-            style={{ width: "auto", height: "40rem" }}
+            style={{ width: "100%", height: "40rem" }}
           >
             {slides.map((slide, index) => (
               <SwiperSlide
