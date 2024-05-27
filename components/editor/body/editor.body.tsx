@@ -60,11 +60,8 @@ const CarouselEditor: React.FC = () => {
   };
 
   return (
-    <main className="grid grid-cols-12 bg-slate-100 overflow-auto">
-      <div className="col-span-2">
-        <MainSidebar />
-      </div>
-      <div className="col-span-10 p-4 flex justify-center">
+    <main className="flex h-full bg-slate-100 overflow-auto">
+      <div className="w-full p-4 flex flex-col justify-center">
         <Swiper
           spaceBetween={20}
           slidesPerView="auto"
