@@ -1,77 +1,137 @@
 "use client";
-import React from "react";
-import dynamic from "next/dynamic";
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
+import React, { useState } from "react";
+import SwiperCore from "swiper";
+import { Navigation, Pagination, Scrollbar, A11y } from "swiper/modules";
+import { Swiper, SwiperSlide } from "swiper/react";
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
+import "swiper/css/scrollbar";
+import "swiper/css/a11y";
 import MainSidebar from "../sidebar/main.sidebar";
 
-// Dynamically import the Slider component from react-slick
-const Slider = dynamic(() => import("react-slick"), { ssr: false });
+SwiperCore.use([Navigation, Pagination, Scrollbar, A11y]);
 
-const EditorBody = () => {
-  const settings = {
-    dots: true,
-    infinite: false,
-    speed: 500,
-    slidesToShow: 5,
-    slidesToScroll: 1,
-    adaptiveHeight: true,
+interface Slide {
+  title: string;
+  subtitle: string;
+  description: string;
+  imageUrl: string;
+}
+
+const initialSlides: Slide[] = [
+  {
+    title: "Amazing Catchy Title Goes Right Here!",
+    subtitle: "Your amazing subtitle goes here",
+    description: "Your amazing description goes here.",
+    imageUrl: "/images/avatar.png",
+  },
+  {
+    title: "Section Title",
+    subtitle: "Your amazing subtitle goes here",
+    description: "Put your content here.",
+    imageUrl: "/images/avatar.png",
+  },
+];
+
+const CarouselEditor: React.FC = () => {
+  const [slides, setSlides] = useState<Slide[]>(initialSlides);
+
+  const addSlide = () => {
+    const newSlide: Slide = {
+      title: "New Slide",
+      subtitle: "Subtitle",
+      description: "Description",
+      imageUrl: "/images/avatar.png",
+    };
+    setSlides([...slides, newSlide]);
   };
 
-  const slideStyle = {
-    width: "30rem", // Width set to 30rem
-    height: "35rem", // Height set to 35rem
-    border: "1px solid black",
-    borderRadius: "0.5rem",
-    padding: "0.5rem",
-    margin: "0.5rem",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    fontSize: "1.5rem",
-    fontWeight: "bold",
-    backgroundColor: "white",
-    color: "black",
-    boxShadow: "0 0 10px rgba(0, 0, 0, 0.3)",
-    transition: "all 0.3s ease",
+  const updateSlide = (index: number, updatedSlide: Slide) => {
+    const newSlides = slides.map((slide, i) =>
+      i === index ? updatedSlide : slide
+    );
+    setSlides(newSlides);
   };
 
-  const sliderContainerStyle = {
-    width: "calc(30rem * 5 + 5 * 1rem)", // Calculate the width to accommodate 5 slides and their margins
-    overflow: "hidden", // Hide any overflow
-  };
-
-  const slideWrapperStyle = {
-    display: "flex",
-    justifyContent: "center",
+  const deleteSlide = (index: number) => {
+    const newSlides = slides.filter((_, i) => i !== index);
+    setSlides(newSlides);
   };
 
   return (
-    <main className="grid flex-1 bg-slate-100 overflow-auto md:grid-cols-2 lg:grid-cols-12">
-      <MainSidebar />
-      <div className="relative flex h-full min-h-[50vh] flex-col rounded-xl bg-muted/50 p-4 lg:col-span-10">
-        <div style={sliderContainerStyle}>
-          <Slider {...settings}>
-            <div style={slideWrapperStyle}>
-              <div style={slideStyle}>Slide 1</div>
-            </div>
-            <div style={slideWrapperStyle}>
-              <div style={slideStyle}>Slide 2</div>
-            </div>
-            <div style={slideWrapperStyle}>
-              <div style={slideStyle}>Slide 3</div>
-            </div>
-            <div style={slideWrapperStyle}>
-              <div style={slideStyle}>Slide 4</div>
-            </div>
-            <div style={slideWrapperStyle}>
-              <div style={slideStyle}>Slide 5</div>
-            </div>
-          </Slider>
-        </div>
+    <main className="grid grid-cols-12 bg-slate-100 overflow-auto">
+      <div className="col-span-2">
+        <MainSidebar />
+      </div>
+      <div className="col-span-10 p-4 flex justify-center">
+        <Swiper
+          spaceBetween={50}
+          slidesPerView={1}
+          navigation
+          pagination={{ clickable: true }}
+          scrollbar={{ draggable: true }}
+          a11y={{ enabled: true }}
+          style={{ width: "30rem", height: "35rem" }}
+        >
+          {slides.map((slide, index) => (
+            <SwiperSlide key={index}>
+              <div className="bg-white p-4 rounded-lg shadow-lg h-full w-full">
+                <div className="flex justify-between items-center mb-4">
+                  <input
+                    type="text"
+                    value={slide.title}
+                    onChange={(e) =>
+                      updateSlide(index, { ...slide, title: e.target.value })
+                    }
+                    placeholder="Title"
+                    className="w-full p-2 border border-gray-300 rounded"
+                  />
+                  <button
+                    onClick={() => deleteSlide(index)}
+                    className="ml-4 p-2 bg-red-500 text-white rounded hover:bg-red-700"
+                  >
+                    Delete
+                  </button>
+                </div>
+                <input
+                  type="text"
+                  value={slide.subtitle}
+                  onChange={(e) =>
+                    updateSlide(index, { ...slide, subtitle: e.target.value })
+                  }
+                  placeholder="Subtitle"
+                  className="w-full mb-4 p-2 border border-gray-300 rounded"
+                />
+                <textarea
+                  value={slide.description}
+                  onChange={(e) =>
+                    updateSlide(index, {
+                      ...slide,
+                      description: e.target.value,
+                    })
+                  }
+                  placeholder="Description"
+                  className="w-full mb-4 p-2 border border-gray-300 rounded"
+                ></textarea>
+                <img
+                  src={slide.imageUrl}
+                  alt="Slide"
+                  className="w-full h-32 object-cover rounded"
+                />
+              </div>
+            </SwiperSlide>
+          ))}
+        </Swiper>
+        <button
+          onClick={addSlide}
+          className="mt-4 p-2 bg-blue-500 text-white rounded hover:bg-blue-700"
+        >
+          Add Slide
+        </button>
       </div>
     </main>
   );
 };
 
-export default EditorBody;
+export default CarouselEditor;
