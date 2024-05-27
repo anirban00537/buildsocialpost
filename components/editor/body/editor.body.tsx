@@ -8,7 +8,6 @@ import "swiper/css/navigation";
 import "swiper/css/pagination";
 import "swiper/css/scrollbar";
 import "swiper/css/a11y";
-import MainSidebar from "../sidebar/main.sidebar";
 import debounce from "lodash/debounce";
 import SlideComponent from "../slide/slide.comp";
 
@@ -79,29 +78,31 @@ const CarouselEditor: React.FC = () => {
   return (
     <main className="flex h-full bg-slate-100 overflow-auto">
       <div className="w-full p-4 flex flex-col justify-center items-center">
-        <Swiper
-          spaceBetween={20}
-          slidesPerView="auto"
-          navigation
-          pagination={{ clickable: true }}
-          scrollbar={{ draggable: true }}
-          a11y={{ enabled: true }}
-          style={{ width: "100%", height: "40rem" }}
-        >
-          {slides.map((slide, index) => (
-            <SwiperSlide
-              key={index}
-              style={{ width: "30rem", height: "35rem" }}
-            >
-              <SlideComponent
-                slide={slide}
-                index={index}
-                updateSlide={updateSlide}
-                deleteSlide={deleteSlide}
-              />
-            </SwiperSlide>
-          ))}
-        </Swiper>
+        <div className="flex justify-center items-center w-full h-full">
+          <Swiper
+            spaceBetween={0}
+            slidesPerView="auto"
+            navigation
+            pagination={{ clickable: true }}
+            scrollbar={{ draggable: true }}
+            a11y={{ enabled: true }}
+            style={{ width: "auto", height: "40rem" }}
+          >
+            {slides.map((slide, index) => (
+              <SwiperSlide
+                key={index}
+                style={{ width: "30rem", height: "35rem" }}
+              >
+                <SlideComponent
+                  slide={slide}
+                  index={index}
+                  updateSlide={updateSlide}
+                  deleteSlide={deleteSlide}
+                />
+              </SwiperSlide>
+            ))}
+          </Swiper>
+        </div>
         <button
           onClick={addSlide}
           className="mt-8 p-4 bg-blue-500 text-white rounded-full hover:bg-blue-700"
