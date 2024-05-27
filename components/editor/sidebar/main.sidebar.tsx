@@ -1,6 +1,5 @@
 import React from "react";
 import { Bird, Rabbit, Turtle } from "lucide-react";
-
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
@@ -15,7 +14,7 @@ import { Textarea } from "@/components/ui/textarea";
 const MainSidebar = () => {
   return (
     <div
-      className="relative hidden flex-col p-4 bg-white col-span-2 items-start gap-8 md:flex"
+      className="sticky  h-full  top-0 flex flex-col p-4 bg-white col-span-2 items-start gap-8 "
       x-chunk="dashboard-03-chunk-0"
     >
       <form className="grid w-full items-start gap-6">
