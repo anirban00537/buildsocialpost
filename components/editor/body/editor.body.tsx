@@ -1,7 +1,13 @@
 "use client";
 import React, { useState, useCallback } from "react";
 import SwiperCore from "swiper";
-import { Navigation, Pagination, Scrollbar, A11y } from "swiper/modules";
+import {
+  Navigation,
+  Pagination,
+  Scrollbar,
+  A11y,
+  Autoplay,
+} from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/navigation";
@@ -11,7 +17,7 @@ import "swiper/css/a11y";
 import debounce from "lodash/debounce";
 import SlideComponent from "../slide/slide.comp";
 
-SwiperCore.use([Navigation, Pagination, Scrollbar, A11y]);
+SwiperCore.use([Navigation, Pagination, Scrollbar, A11y, Autoplay]);
 
 interface Slide {
   title: string;
@@ -78,32 +84,32 @@ const CarouselEditor: React.FC = () => {
   return (
     <main className="flex h-full bg-slate-100 overflow-auto">
       <div className="w-full p-4 flex flex-col justify-center items-center">
-        <div className={`swiper-container`}>
-          <Swiper
-            spaceBetween={0}
-            slidesPerView="auto"
-            centeredSlides={true} // Center the first slide
-            navigation
-            pagination={{ clickable: true }}
-            scrollbar={{ draggable: true }}
-            a11y={{ enabled: true }}
-            style={{ width: "100%", height: "40rem" }}
-          >
-            {slides.map((slide, index) => (
-              <SwiperSlide
-                key={index}
-                style={{ width: "30rem", height: "35rem" }}
-              >
-                <SlideComponent
-                  slide={slide}
-                  index={index}
-                  updateSlide={updateSlide}
-                  deleteSlide={deleteSlide}
-                />
-              </SwiperSlide>
-            ))}
-          </Swiper>
-        </div>
+        <Swiper
+          spaceBetween={0}
+          slidesPerView="auto"
+          centeredSlides={true} // Center the first slide
+          navigation={true}
+          pagination={{ clickable: true }}
+          scrollbar={{ draggable: true }}
+          a11y={{ enabled: true }}
+          autoplay={{ delay: 5000 }} // Optional: Add autoplay
+          allowTouchMove={false} // Disable swiping
+          style={{ width: "100%", height: "40rem" }}
+        >
+          {slides.map((slide, index) => (
+            <SwiperSlide
+              key={index}
+              style={{ width: "30rem", height: "35rem" }}
+            >
+              <SlideComponent
+                slide={slide}
+                index={index}
+                updateSlide={updateSlide}
+                deleteSlide={deleteSlide}
+              />
+            </SwiperSlide>
+          ))}
+        </Swiper>
         <button
           onClick={addSlide}
           className="mt-8 p-4 bg-blue-500 text-white rounded-full hover:bg-blue-700"
