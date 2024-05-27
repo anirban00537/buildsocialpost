@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useRef } from "react";
 import SwiperCore from "swiper";
 import {
   Navigation,
@@ -52,6 +52,7 @@ const initialSlides: Slide[] = [
 
 const CarouselEditor: React.FC = () => {
   const [slides, setSlides] = useState<Slide[]>(initialSlides);
+  const swiperRef = useRef<any>(null); // Reference to Swiper instance
 
   const addSlide = useCallback(() => {
     const newSlide: Slide = {
@@ -81,25 +82,31 @@ const CarouselEditor: React.FC = () => {
     setSlides((prevSlides) => prevSlides.filter((_, i) => i !== index));
   }, []);
 
+  const handleSlideClick = (index: number) => {
+    if (swiperRef.current && swiperRef.current.swiper) {
+      swiperRef.current.swiper.slideTo(index, 500); // Slide to the clicked slide with a transition of 500ms
+    }
+  };
+
   return (
     <main className="flex h-full bg-slate-100 overflow-auto">
       <div className="w-full p-4 flex flex-col justify-center items-center">
         <Swiper
+          ref={swiperRef}
           spaceBetween={0}
           slidesPerView="auto"
-          centeredSlides={true} // Center the first slide
+          centeredSlides={true}
           navigation={true}
           pagination={{ clickable: true }}
           scrollbar={{ draggable: true }}
           a11y={{ enabled: true }}
-          autoplay={{ delay: 5000 }} // Optional: Add autoplay
-          allowTouchMove={false} // Disable swiping
           style={{ width: "100%", height: "40rem" }}
         >
           {slides.map((slide, index) => (
             <SwiperSlide
               key={index}
               style={{ width: "30rem", height: "35rem" }}
+              onClick={() => handleSlideClick(index)} // Add click handler to each slide
             >
               <SlideComponent
                 slide={slide}
