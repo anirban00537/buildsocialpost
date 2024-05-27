@@ -1,4 +1,3 @@
-// SlideComponent.tsx
 import React from "react";
 
 interface SlideProps {
@@ -20,49 +19,39 @@ const SlideComponent: React.FC<SlideProps> = ({
   deleteSlide,
 }) => {
   return (
-    <div className="bg-white p-6 rounded-lg shadow-lg h-full w-full flex flex-col">
-      <div className="flex justify-between items-center mb-4">
-        <input
-          type="text"
-          value={slide.title}
-          onChange={(e) =>
-            updateSlide(index, { ...slide, title: e.target.value })
-          }
-          placeholder="Title"
-          className="w-full p-2 rounded border-0 focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
-        <button
-          onClick={() => deleteSlide(index)}
-          className="ml-4 p-2 bg-red-500 text-white rounded hover:bg-red-700"
-        >
-          Delete
-        </button>
+    <div
+      className="relative bg-cover bg-center p-8 h-full w-full flex flex-col justify-between text-white"
+      style={{ backgroundImage: `url(${slide.imageUrl})` }}
+    >
+      <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-black via-transparent to-black opacity-80"></div>
+      <div className="relative z-10 flex-grow flex flex-col justify-between">
+        <div className="mb-4">
+          <textarea
+            value={slide.subtitle}
+            onChange={(e) =>
+              updateSlide(index, { ...slide, subtitle: e.target.value })
+            }
+            placeholder="Subtitle"
+            className="w-full p-2 mb-2 text-lg bg-transparent border-0 placeholder-white focus:outline-none break-words whitespace-normal resize-none"
+          />
+          <textarea
+            value={slide.title}
+            onChange={(e) =>
+              updateSlide(index, { ...slide, title: e.target.value })
+            }
+            placeholder="Title"
+            className="w-full p-2 mb-2 text-4xl font-bold bg-transparent border-0 placeholder-white focus:outline-none break-words whitespace-normal resize-none"
+          />
+          <textarea
+            value={slide.description}
+            onChange={(e) =>
+              updateSlide(index, { ...slide, description: e.target.value })
+            }
+            placeholder="Description"
+            className="w-full p-2 text-base bg-transparent border-0 placeholder-white focus:outline-none break-words whitespace-normal resize-none"
+          ></textarea>
+        </div>
       </div>
-      <input
-        type="text"
-        value={slide.subtitle}
-        onChange={(e) =>
-          updateSlide(index, { ...slide, subtitle: e.target.value })
-        }
-        placeholder="Subtitle"
-        className="w-full mb-4 p-2 rounded border-0 focus:outline-none focus:ring-2 focus:ring-blue-500"
-      />
-      <textarea
-        value={slide.description}
-        onChange={(e) =>
-          updateSlide(index, {
-            ...slide,
-            description: e.target.value,
-          })
-        }
-        placeholder="Description"
-        className="w-full mb-4 p-2 rounded border-0 focus:outline-none focus:ring-2 focus:ring-blue-500"
-      ></textarea>
-      <img
-        src={slide.imageUrl}
-        alt="Slide"
-        className="w-full h-32 object-cover rounded"
-      />
     </div>
   );
 };
