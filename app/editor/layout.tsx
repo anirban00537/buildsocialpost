@@ -54,7 +54,7 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
         <EditorNavbar />
         <main className="grid flex-1 gap-4 overflow-auto p-4 md:grid-cols-2 lg:grid-cols-3">
           <MainSidebar />
-          <div className="relative flex h-full min-h-[50vh] flex-col rounded-xl bg-muted/50 p-4 lg:col-span-2">
+          <div className="relative flex  min-h-[100vh]  flex-col rounded-xl bg-muted/50 p-4 lg:col-span-2">
             {children}
           </div>
         </main>

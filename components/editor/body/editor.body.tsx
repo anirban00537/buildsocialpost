@@ -89,7 +89,7 @@ const CarouselEditor: React.FC = () => {
   };
 
   return (
-    <main className="flex h-full bg-slate-100 overflow-hidden">
+    <main className="flex h-full overflow-hidden">
       {" "}
       {/* Changed to overflow-hidden */}
       <div className="w-full p-4 flex flex-col justify-center items-center">
