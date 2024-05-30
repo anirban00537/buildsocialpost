@@ -15,6 +15,7 @@ import "swiper/css/pagination";
 import "swiper/css/scrollbar";
 import "swiper/css/a11y";
 import debounce from "lodash/debounce";
+import { ChevronLeft, ChevronRight, Plus, Trash2, Copy } from "lucide-react";
 import SlideComponent from "../slide/slide.comp";
 
 SwiperCore.use([Navigation, Pagination, Scrollbar, A11y, Autoplay]);
@@ -65,6 +66,14 @@ const CarouselEditor: React.FC = () => {
     setSlides((prevSlides) => [...prevSlides, newSlide]);
   }, []);
 
+  const copySlide = useCallback((index: number) => {
+    setSlides((prevSlides) => [...prevSlides, prevSlides[index]]);
+  }, []);
+
+  const deleteSlide = useCallback((index: number) => {
+    setSlides((prevSlides) => prevSlides.filter((_, i) => i !== index));
+  }, []);
+
   const debouncedUpdateSlide = useCallback(
     debounce((index: number, updatedSlide: Slide) => {
       setSlides((prevSlides) =>
@@ -78,10 +87,6 @@ const CarouselEditor: React.FC = () => {
     debouncedUpdateSlide(index, updatedSlide);
   };
 
-  const deleteSlide = useCallback((index: number) => {
-    setSlides((prevSlides) => prevSlides.filter((_, i) => i !== index));
-  }, []);
-
   const handleSlideClick = (index: number) => {
     if (swiperRef.current && swiperRef.current.swiper) {
       swiperRef.current.swiper.slideTo(index, 500); // Slide to the clicked slide with a transition of 500ms
@@ -90,39 +95,74 @@ const CarouselEditor: React.FC = () => {
 
   return (
     <main className="flex h-full overflow-hidden">
-      {" "}
-      {/* Changed to overflow-hidden */}
       <div className="w-full p-4 flex flex-col justify-center items-center">
-        <Swiper
-          ref={swiperRef}
-          spaceBetween={0}
-          slidesPerView="auto"
-          centeredSlides={true}
-          navigation={true}
-          pagination={{ clickable: true }}
-          scrollbar={{ draggable: true }}
-          a11y={{ enabled: true }}
-          allowTouchMove={false}
-          style={{ width: "100%", height: "40rem" }}
-        >
-          {slides.map((slide, index) => (
-            <SwiperSlide
-              key={index}
-              style={{ width: "30rem", height: "35rem" }}
-              onClick={() => handleSlideClick(index)} // Add click handler to each slide
-            >
-              <SlideComponent
-                slide={slide}
-                index={index}
-                updateSlide={updateSlide}
-                deleteSlide={deleteSlide}
-              />
-            </SwiperSlide>
-          ))}
-        </Swiper>
+        <div className="relative w-full">
+          <Swiper
+            ref={swiperRef}
+            spaceBetween={0}
+            slidesPerView="auto"
+            centeredSlides={true}
+            navigation={{
+              nextEl: ".custom-next",
+              prevEl: ".custom-prev",
+            }}
+            pagination={{ enabled: false }}
+            scrollbar={{ hide: true, enabled: false }}
+            a11y={{ enabled: true }}
+            allowTouchMove={false}
+            style={{ width: "100%", height: "40rem" }}
+          >
+            {slides.map((slide, index) => (
+              <SwiperSlide
+                key={index}
+                className=" flex flex-col justify-center items-center"
+                onClick={() => handleSlideClick(index)}
+                style={{
+                  width: "30rem",
+                  height: "40rem",
+                }}
+              >
+                <div style={{ width: "30rem", height: "35rem" }}>
+                  <SlideComponent
+                    slide={slide}
+                    index={index}
+                    updateSlide={updateSlide}
+                    deleteSlide={deleteSlide}
+                  />
+                </div>
+                <div className="flex mt-3 space-x-2">
+                  <button
+                    className="text-gray-500 border h-6 w-6 flex items-center justify-center border-gray-500 rounded-full hover:bg-blue-700 z-10"
+                    onClick={addSlide}
+                  >
+                    <Plus size={18} />
+                  </button>
+                  <button
+                    className="text-gray-500  p-1  rounded-full hover:bg-blue-700 z-10"
+                    onClick={() => copySlide(index)}
+                  >
+                    <Copy size={18} />
+                  </button>
+                  <button
+                    className="text-gray-500  p-1 rounded-full hover:bg-blue-700 z-10"
+                    onClick={() => deleteSlide(index)}
+                  >
+                    <Trash2 size={18} />
+                  </button>
+                </div>
+              </SwiperSlide>
+            ))}
+          </Swiper>
+          <button className="custom-prev absolute top-1/2 left-0 transform -translate-y-1/2 p-2 bg-blue-500 text-white rounded-full hover:bg-blue-700 z-20">
+            <ChevronLeft />
+          </button>
+          <button className="custom-next absolute top-1/2 right-0 transform -translate-y-1/2 p-2 bg-blue-500 text-white rounded-full hover:bg-blue-700 z-20">
+            <ChevronRight />
+          </button>
+        </div>
         <button
           onClick={addSlide}
-          className="mt-8 p-4 bg-blue-500 text-white rounded-full hover:bg-blue-700"
+          className="mt-8 p-2 bg-blue-500 text-white rounded-full hover:bg-blue-700"
         >
           Add Slide
         </button>
