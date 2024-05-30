@@ -22,11 +22,8 @@ import { Textarea } from "@/components/ui/textarea";
 
 const EditorNavbar = () => {
   return (
-    <header className="sticky top-0 z-10 flex h-[53px] items-center gap-1 border-b bg-background px-4">
-      <h1 className="flex items-center gap-1 text-muted-foreground text-xl font-bold">
-        <Triangle className="" />
-        Build Carousel
-      </h1>
+    <header className="sticky top-0 z-10 flex h-[57px] items-center gap-1 border-b bg-background px-4">
+      <h1 className="text-xl font-semibold">Playground</h1>
       <Drawer>
         <DrawerTrigger asChild>
           <Button variant="ghost" size="icon" className="md:hidden">
@@ -47,7 +44,7 @@ const EditorNavbar = () => {
                 Settings
               </legend>
               <div className="grid gap-3">
-                <Label htmlFor="model">Modelssssssss</Label>
+                <Label htmlFor="model">Model</Label>
                 <Select>
                   <SelectTrigger
                     id="model"
