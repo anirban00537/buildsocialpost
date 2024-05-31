@@ -6,7 +6,7 @@ const index = () => {
   const buyProduct = async () => {
     try {
       const response = await axios.post("/api/purchaseProduct", {
-        productId: "399038",
+        productId: "399160",
       });
       console.log(response, "response");
       window.open(response.data.checkoutUrl, "_blank");

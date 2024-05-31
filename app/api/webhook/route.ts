@@ -20,10 +20,11 @@ export async function POST(req: Request) {
       throw new Error("Invalid signature.");
     }
 
-    console.log(body);
+    console.log(body.meta, "metasssssssssssssssssssssssss");
 
     // Logic according to event
     if (eventType === "order_created") {
+      console.log("order createddddddddddddddd");
       const userId = body.meta.custom_data.user_id;
       const isSuccessful = body.data.attributes.status === "paid";
     }

@@ -36,7 +36,7 @@ export async function POST(req: Request) {
       },
     });
     const checkoutUrl = response.data.data.attributes.url;
-    console.log(response.data);
+    // console.log(response.data);
 
     return Response.json({ checkoutUrl });
   } catch (error) {
