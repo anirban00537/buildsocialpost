@@ -1,18 +1,49 @@
-import { AuthCard } from "@/components/auth-card";
-import { ProviderLoginButtons } from "@/components/auth/provider-login-buttons";
-import { OrSeparator } from "@/components/ui/or-separator";
+"use client";
 
-export default function LoginPage() {
+import React, { useState } from "react";
+import { useRouter } from "next/navigation"; // Updated import for Next.js 13
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "@/lib/firebase";
+
+const LoginPage = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState(null);
+  const router = useRouter();
+
+  const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+      router.push("/editor");
+    } catch (err: any) {
+      setError(err.message);
+    }
+  };
+
   return (
-    <div className="grow flex flex-col items-center justify-center">
-      <section className="w-[32rem] space-y-4">
-        <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl mb-6">
-          Login Example
-        </h1>
-        <AuthCard />
-        <OrSeparator />
-        <ProviderLoginButtons />
-      </section>
+    <div className="login-container">
+      <h1>Login</h1>
+      <form onSubmit={handleLogin}>
+        <input
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder="Email"
+          required
+        />
+        <input
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          placeholder="Password"
+          required
+        />
+        <button type="submit">Login</button>
+        {error && <p style={{ color: "red" }}>{error}</p>}
+      </form>
     </div>
   );
-}
+};
+
+export default LoginPage;

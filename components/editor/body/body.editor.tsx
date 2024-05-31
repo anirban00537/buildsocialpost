@@ -17,6 +17,7 @@ import "swiper/css/a11y";
 import debounce from "lodash/debounce";
 import { ChevronLeft, ChevronRight, Plus, Trash2, Copy } from "lucide-react";
 import SlideComponent from "../slide/slide.comp";
+import useUser from "@/hooks/useUser";
 
 SwiperCore.use([Navigation, Pagination, Scrollbar, A11y, Autoplay]);
 
@@ -54,7 +55,7 @@ const initialSlides: Slide[] = [
 const CarouselEditor: React.FC = () => {
   const [slides, setSlides] = useState<Slide[]>(initialSlides);
   const swiperRef = useRef<any>(null); // Reference to Swiper instance
-
+  const { claims, loading, token, user } = useUser();
   const addSlide = useCallback(() => {
     const newSlide: Slide = {
       title: "New Slide",
@@ -69,7 +70,7 @@ const CarouselEditor: React.FC = () => {
   const copySlide = useCallback((index: number) => {
     setSlides((prevSlides) => [...prevSlides, prevSlides[index]]);
   }, []);
-
+  console.log(user, "user");
   const deleteSlide = useCallback((index: number) => {
     setSlides((prevSlides) => prevSlides.filter((_, i) => i !== index));
   }, []);
