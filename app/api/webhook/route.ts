@@ -1,13 +1,14 @@
 import crypto from "crypto";
+import { db } from "@/lib/firebase";
+import { collection, addDoc } from "firebase/firestore";
 
 export async function POST(req: Request) {
   try {
-    // Catch the event type
     const clonedReq = req.clone();
     const eventType = req.headers.get("X-Event-Name");
     const body = await req.json();
 
-    // Check signature
+    // Verify signature
     const secret = process.env.NEXT_PUBLIC_LEMONSQUEEZY_WEBHOOK_SIGNATURE || "";
     const hmac = crypto.createHmac("sha256", secret);
     const digest = Buffer.from(
@@ -20,18 +21,28 @@ export async function POST(req: Request) {
       throw new Error("Invalid signature.");
     }
 
-    console.log(body.meta, "metasssssssssssssssssssssssss");
-
-    // Logic according to event
+    // Logic based on event type
     if (eventType === "order_created") {
-      console.log("order createddddddddddddddd");
       const userId = body.meta.custom_data.user_id;
       const isSuccessful = body.data.attributes.status === "paid";
+
+      // Store the subscription data in Firestore
+      const subscriptionData = {
+        userId,
+        orderId: body.data.id,
+        status: isSuccessful ? "paid" : "pending",
+        createdAt: new Date().toISOString(),
+      };
+      await addDoc(collection(db, "subscriptions"), subscriptionData);
     }
 
-    return Response.json({ message: "Webhook received" });
+    return new Response(JSON.stringify({ message: "Webhook received" }), {
+      status: 200,
+    });
   } catch (err) {
     console.error(err);
-    return Response.json({ message: "Server error" }, { status: 500 });
+    return new Response(JSON.stringify({ message: "Server error" }), {
+      status: 500,
+    });
   }
 }
