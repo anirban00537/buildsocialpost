@@ -21,6 +21,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import useUser from "@/hooks/useUser";
+import SubscriptionInfo from "@/components/subscription/status";
 
 const EditorNavbar = () => {
   const { user, loading } = useUser();
@@ -151,6 +152,7 @@ const EditorNavbar = () => {
           {user?.email}
         </Button>
       )}
+      <SubscriptionInfo />
     </header>
   );
 };

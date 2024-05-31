@@ -1,20 +1,33 @@
+// pages/index.js
 "use client";
+import { auth } from "@/lib/firebase";
 import axios from "axios";
 import React from "react";
 
-const index = () => {
+const Index = () => {
   const buyProduct = async () => {
-    try {
-      const response = await axios.post("/api/purchaseProduct", {
-        productId: "399160",
-      });
+    
+    const user = auth.currentUser;
+    if (user) {
+      const token = await user.getIdToken();
+      const response = await axios.post(
+        "/api/purchaseProduct",
+        {
+          productId: "399160",
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       console.log(response, "response");
       window.open(response.data.checkoutUrl, "_blank");
-    } catch (error) {
-      console.log(error);
-      alert("Something went wrong");
+    } else {
+      alert("User not authenticated");
     }
   };
+
   return (
     <div className="flex h-screen w-full items-center justify-center">
       <button onClick={buyProduct}>Buy Product</button>
@@ -22,4 +35,4 @@ const index = () => {
   );
 };
 
-export default index;
+export default Index;

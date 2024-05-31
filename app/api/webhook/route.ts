@@ -1,6 +1,6 @@
 import crypto from "crypto";
 import { db } from "@/lib/firebase";
-import { collection, addDoc } from "firebase/firestore";
+import { doc, setDoc } from "firebase/firestore";
 
 export async function POST(req: Request) {
   try {
@@ -25,15 +25,18 @@ export async function POST(req: Request) {
     if (eventType === "order_created") {
       const userId = body.meta.custom_data.user_id;
       const isSuccessful = body.data.attributes.status === "paid";
+      const endDate = new Date();
+      endDate.setMonth(endDate.getMonth() + 1);
 
-      // Store the subscription data in Firestore
       const subscriptionData = {
         userId,
         orderId: body.data.id,
         status: isSuccessful ? "paid" : "pending",
+        endDate: endDate.toISOString(),
         createdAt: new Date().toISOString(),
       };
-      await addDoc(collection(db, "subscriptions"), subscriptionData);
+      await setDoc(doc(db, "subscriptions", userId), subscriptionData);
+      console.log("Subscription created:", subscriptionData);
     }
 
     return new Response(JSON.stringify({ message: "Webhook received" }), {

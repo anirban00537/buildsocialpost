@@ -1,15 +1,16 @@
+// lib/firebase.ts
 import { initializeApp, getApps, getApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyBBgbMbPTEjA0c3JnbCfaWvntf4kjj6I0I",
-  authDomain: "buildcarousel-b7966.firebaseapp.com",
-  projectId: "buildcarousel-b7966",
-  storageBucket: "buildcarousel-b7966.appspot.com",
-  messagingSenderId: "463549739158",
-  appId: "1:463549739158:web:b337c7cf3a0249459cd2b7",
-  measurementId: "G-4R5GK3CLPT",
+  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
+  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
+  measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID,
 };
 
 const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
