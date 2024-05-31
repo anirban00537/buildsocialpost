@@ -42,8 +42,8 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import EditorNavbar from "@/components/editor/navbar/editor.navbar";
-import AsideSidebar from "@/components/editor/sidebar/aside.sidebar";
+import EditorNavbar from "@/components/editor/navbar/navbar.editor";
+import AsideSidebar from "@/components/editor/sidebar/asideSidebar.editor";
 import MainSidebar from "@/components/editor/sidebar/main.sidebar";
 
 const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
