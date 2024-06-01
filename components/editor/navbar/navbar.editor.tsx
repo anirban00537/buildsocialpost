@@ -36,7 +36,7 @@ const EditorNavbar = () => {
   const { user, loading } = useUser();
 
   return (
-    <header className="sticky top-0 z-10 flex h-[57px] items-center gap-1 border-b bg-background px-4">
+    <header className="fixed top-0 left-0 z-10 flex h-[57px] w-full items-center gap-1 border-b bg-background px-4">
       <h1 className="text-xl font-semibold">Buildcarousel</h1>
       <Drawer>
         <DrawerTrigger asChild>

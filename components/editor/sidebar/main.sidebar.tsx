@@ -1,5 +1,5 @@
 import React from "react";
-import { Bird, Image, Layers, Rabbit, Turtle, Type } from "lucide-react";
+import { Bird, Rabbit, Turtle } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
@@ -10,14 +10,10 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { Button } from "@/components/ui/button";
 
 const MainSidebar = () => {
   return (
-    <div
-      className="relative hidden flex-col items-start gap-8 md:flex"
-      x-chunk="dashboard-03-chunk-0"
-    >
+    <div className="fixed top-0 left-[56px] h-full w-[400px] overflow-y-auto bg-white p-4 shadow-lg">
       <form className="grid w-full items-start gap-6">
         <fieldset className="grid gap-6 rounded-lg border p-4">
           <legend className="-ml-1 px-1 text-sm font-medium">Settings</legend>
