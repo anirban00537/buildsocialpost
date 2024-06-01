@@ -46,7 +46,6 @@ const EditorNavbar = () => {
   const { handleLogout } = useLogout();
   return (
     <header className="flex items-center justify-between p-4 border-b">
-      <h1 className="text-xl font-semibold">Buildcarousel</h1>
       <Drawer>
         <DrawerTrigger asChild>
           <Button variant="ghost" size="icon" className="md:hidden">

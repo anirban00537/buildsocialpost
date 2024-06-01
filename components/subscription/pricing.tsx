@@ -53,8 +53,7 @@ const Pricing = () => {
         setLoading(false);
       }
     } else {
-      alert("User not authenticated");
-      router.push("/signin");
+      router.push("/login");
       setLoading(false);
     }
   };
