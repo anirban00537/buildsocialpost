@@ -12,3 +12,9 @@ export interface Subscription {
   status: string;
   createdAt: string;
 }
+export interface Slide {
+  title: string;
+  subtitle: string;
+  description: string;
+  imageUrl: string;
+}

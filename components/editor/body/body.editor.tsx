@@ -1,5 +1,6 @@
 "use client";
-import React, { useState, useCallback, useRef } from "react";
+import React, { useRef, useCallback } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import SwiperCore from "swiper";
 import {
   Navigation,
@@ -14,78 +15,46 @@ import "swiper/css/navigation";
 import "swiper/css/pagination";
 import "swiper/css/scrollbar";
 import "swiper/css/a11y";
-import debounce from "lodash/debounce";
 import { ChevronLeft, ChevronRight, Plus, Trash2, Copy } from "lucide-react";
 import SlideComponent from "../slide/slide.comp";
 import useUser from "@/hooks/useUser";
+import {
+  addSlide,
+  copySlide,
+  deleteSlide,
+  updateSlide,
+} from "@/state/slice/carousel.slice";
+import { RootState } from "@/state/store";
+import { Slide } from "@/types";
 
 SwiperCore.use([Navigation, Pagination, Scrollbar, A11y, Autoplay]);
 
-interface Slide {
-  title: string;
-  subtitle: string;
-  description: string;
-  imageUrl: string;
-}
-
-const initialSlides: Slide[] = [
-  {
-    title: "Amazing Catchy Title Goes Right Here!",
-    subtitle: "Your amazing subtitle goes here",
-    description: "Your amazing description goes here.",
-    imageUrl:
-      "https://images.unsplash.com/photo-1716718406268-6ece312abee0?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-  },
-  {
-    title: "Section Title",
-    subtitle: "Your amazing subtitle goes here",
-    description: "Put your content here.",
-    imageUrl:
-      "https://images.unsplash.com/photo-1716718406268-6ece312abee0?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-  },
-  {
-    title: "Section Title",
-    subtitle: "Your amazing subtitle goes here",
-    description: "Put your content here.",
-    imageUrl:
-      "https://images.unsplash.com/photo-1716718406268-6ece312abee0?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-  },
-];
-
 const CarouselEditor: React.FC = () => {
-  const [slides, setSlides] = useState<Slide[]>(initialSlides);
+  const dispatch = useDispatch();
+  const slides = useSelector((state: RootState) => state.slides);
   const swiperRef = useRef<any>(null); // Reference to Swiper instance
   const { claims, loading, token, user } = useUser();
-  const addSlide = useCallback(() => {
-    const newSlide: Slide = {
-      title: "New Slide",
-      subtitle: "Subtitle",
-      description: "Description",
-      imageUrl:
-        "https://images.unsplash.com/photo-1716718406268-6ece312abee0?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    };
-    setSlides((prevSlides) => [...prevSlides, newSlide]);
-  }, []);
 
-  const copySlide = useCallback((index: number) => {
-    setSlides((prevSlides) => [...prevSlides, prevSlides[index]]);
-  }, []);
-  console.log(user, "user");
-  const deleteSlide = useCallback((index: number) => {
-    setSlides((prevSlides) => prevSlides.filter((_, i) => i !== index));
-  }, []);
+  const handleAddSlide = useCallback(() => {
+    dispatch(addSlide());
+  }, [dispatch]);
 
-  const debouncedUpdateSlide = useCallback(
-    debounce((index: number, updatedSlide: Slide) => {
-      setSlides((prevSlides) =>
-        prevSlides.map((slide, i) => (i === index ? updatedSlide : slide))
-      );
-    }, 300), // 300ms debounce delay
-    []
+  const handleCopySlide = useCallback(
+    (index: number) => {
+      dispatch(copySlide(index));
+    },
+    [dispatch]
   );
 
-  const updateSlide = (index: number, updatedSlide: Slide) => {
-    debouncedUpdateSlide(index, updatedSlide);
+  const handleDeleteSlide = useCallback(
+    (index: number) => {
+      dispatch(deleteSlide(index));
+    },
+    [dispatch]
+  );
+
+  const handleUpdateSlide = (index: number, updatedSlide: Slide) => {
+    dispatch(updateSlide({ index, updatedSlide }));
   };
 
   const handleSlideClick = (index: number) => {
@@ -116,7 +85,7 @@ const CarouselEditor: React.FC = () => {
             {slides.map((slide, index) => (
               <SwiperSlide
                 key={index}
-                className=" flex flex-col justify-center items-center"
+                className="flex flex-col justify-center items-center"
                 onClick={() => handleSlideClick(index)}
                 style={{
                   width: "30rem",
@@ -127,26 +96,26 @@ const CarouselEditor: React.FC = () => {
                   <SlideComponent
                     slide={slide}
                     index={index}
-                    updateSlide={updateSlide}
-                    deleteSlide={deleteSlide}
+                    updateSlide={handleUpdateSlide}
+                    deleteSlide={handleDeleteSlide}
                   />
                 </div>
                 <div className="flex mt-3 space-x-2">
                   <button
                     className="text-gray-500 border h-6 w-6 flex items-center justify-center border-gray-500 rounded-full hover:bg-blue-700 z-10"
-                    onClick={addSlide}
+                    onClick={handleAddSlide}
                   >
                     <Plus size={18} />
                   </button>
                   <button
-                    className="text-gray-500  p-1  rounded-full hover:bg-blue-700 z-10"
-                    onClick={() => copySlide(index)}
+                    className="text-gray-500 p-1 rounded-full hover:bg-blue-700 z-10"
+                    onClick={() => handleCopySlide(index)}
                   >
                     <Copy size={18} />
                   </button>
                   <button
-                    className="text-gray-500  p-1 rounded-full hover:bg-blue-700 z-10"
-                    onClick={() => deleteSlide(index)}
+                    className="text-gray-500 p-1 rounded-full hover:bg-blue-700 z-10"
+                    onClick={() => handleDeleteSlide(index)}
                   >
                     <Trash2 size={18} />
                   </button>
@@ -162,7 +131,7 @@ const CarouselEditor: React.FC = () => {
           </button>
         </div>
         <button
-          onClick={addSlide}
+          onClick={handleAddSlide}
           className="mt-8 p-2 bg-blue-500 text-white rounded-full hover:bg-blue-700"
         >
           Add Slide

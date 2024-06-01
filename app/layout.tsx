@@ -1,6 +1,11 @@
-import { GeistSans } from "geist/font/sans";
+import { Poppins } from "next/font/google";
 import "./globals.css";
-import { TooltipProvider } from "@/components/ui/tooltip";
+import DefaultLayout from "@/components/layout/default.layout";
+const poppins = Poppins({
+  weight: ["400", "700"],
+  subsets: ["latin"],
+});
+
 const defaultUrl = process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}`
   : "http://localhost:3000";
@@ -18,9 +23,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={GeistSans.className}>
+    <html lang="en" className={`${poppins.className} `}>
       <body className="">
-        <TooltipProvider>{children}</TooltipProvider>
+        <DefaultLayout>{children}</DefaultLayout>
       </body>
     </html>
   );
