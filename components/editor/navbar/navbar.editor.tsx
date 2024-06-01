@@ -1,5 +1,15 @@
 "use client";
-import { Bird, Rabbit, Settings, Share, Turtle } from "lucide-react";
+import { Bird, Rabbit, Settings, Turtle } from "lucide-react";
+import { DropdownMenuCheckboxItemProps } from "@radix-ui/react-dropdown-menu";
+
+import {
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import React from "react";
 import {
   Drawer,
@@ -22,6 +32,8 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import useUser from "@/hooks/useUser";
 import SubscriptionInfo from "@/components/subscription/status";
+import PricingModal from "@/components/subscription/pricingModal.subscription";
+import Link from "next/link";
 
 const EditorNavbar = () => {
   const { user, loading } = useUser();
@@ -147,12 +159,29 @@ const EditorNavbar = () => {
           </form>
         </DrawerContent>
       </Drawer>
-      {!loading && user && (
-        <Button variant="outline" size="sm" className="ml-auto gap-1.5 text-sm">
-          {user?.email}
-        </Button>
-      )}
-      <SubscriptionInfo />
+      <div className="ml-auto flex items-center gap-4">
+        {!loading && user ? (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline">{user?.email}</Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="w-56">
+              <DropdownMenuLabel>Appearance</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuCheckboxItem>Status Bar</DropdownMenuCheckboxItem>
+              <DropdownMenuCheckboxItem disabled>
+                Activity Bar
+              </DropdownMenuCheckboxItem>
+              <DropdownMenuCheckboxItem>Panel</DropdownMenuCheckboxItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        ) : (
+          <Link href="/login" className="gap-1.5 text-sm">
+            <Button variant="outline">Sign in</Button>
+          </Link>
+        )}
+        <SubscriptionInfo />
+      </div>
     </header>
   );
 };

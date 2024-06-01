@@ -1,5 +1,7 @@
 import React from "react";
 import useSubscriptionStatus from "@/hooks/useSubscriptionStatus";
+import PricingModal from "./pricingModal.subscription";
+import { Button } from "../ui/button";
 
 const SubscriptionInfo = () => {
   const { status, endDate, loading } = useSubscriptionStatus();
@@ -9,14 +11,30 @@ const SubscriptionInfo = () => {
   }
 
   if (!status || !endDate) {
-    return <div>No active subscription</div>;
+    return (
+      <PricingModal
+        buttonElement={
+          <Button
+            variant="outline"
+            size="sm"
+            className="ml-auto gap-1.5 text-sm"
+          >
+            Remove watermark
+          </Button>
+        }
+      />
+    );
   }
 
   return (
-    <div>
-      <p>Subscription Status: {status}</p>
-      <p>Subscription End Date: {endDate.toDateString()}</p>
-    </div>
+    <Button
+      variant="outline"
+      size="sm"
+      className="ml-auto gap-1.5 text-sm"
+      disabled
+    >
+      Subscribed until {endDate.toDateString()}
+    </Button>
   );
 };
 
