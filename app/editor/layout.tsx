@@ -18,6 +18,7 @@ import {
   Github,
 } from "lucide-react";
 import MainSidebar from "@/components/editor/sidebar/main.sidebar";
+import EditorNavbar from "@/components/editor/navbar/navbar.editor";
 
 const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [isSettingsPanelOpen, setIsSettingsPanelOpen] = useState(false);
@@ -32,31 +33,7 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
       <MainSidebar />
 
       <div className="flex flex-col flex-1 h-full overflow-hidden">
-        <header className="flex-shrink-0 border-b">
-          <div className="flex items-center justify-between p-2">
-            <div className="flex items-center space-x-3">
-              <span className="p-2 text-xl font-semibold tracking-wider uppercase lg:hidden">
-                BuildCarousel
-              </span>
-            </div>
-
-            <div className="relative flex items-center space-x-3">
-              <div className="hidden space-x-3 md:flex">
-                <div className="relative">
-                  <button className="p-1 bg-gray-200 rounded-full focus:outline-none focus:ring">
-                    <img
-                      className="object-cover w-8 h-8 rounded-full"
-                      src="https://avatars0.githubusercontent.com/u/57622665?s=460&u=8f581f4c4acd4c18c33a87b3e6476112325e8b38&v=4"
-                      alt="User"
-                    />
-                  </button>
-                  <div className="absolute right-0 p-1 bg-green-400 rounded-full bottom-3 animate-ping"></div>
-                  <div className="absolute right-0 p-1 bg-green-400 border border-white rounded-full bottom-3"></div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </header>
+        <EditorNavbar />
 
         <main className="flex-1 max-h-full p-5 overflow-hidden overflow-y-scroll">
           <div>{children}</div>

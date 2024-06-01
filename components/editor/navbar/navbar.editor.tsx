@@ -1,14 +1,24 @@
 "use client";
-import { Bird, Rabbit, Settings, Turtle } from "lucide-react";
+import React from "react";
 import {
   DropdownMenu,
-  DropdownMenuCheckboxItem,
+  DropdownMenuItem,
   DropdownMenuContent,
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import React from "react";
+import {
+  X,
+  Settings,
+  Github,
+  Rabbit,
+  Bird,
+  Turtle,
+  User,
+  LogOut,
+  CreditCard,
+} from "lucide-react";
 import {
   Drawer,
   DrawerContent,
@@ -28,15 +38,15 @@ import {
 } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import useUser from "@/hooks/useUser";
-import SubscriptionInfo from "@/components/subscription/status";
 import Link from "next/link";
+import SubscriptionInfo from "@/components/subscription/status";
+import useUser from "@/hooks/useUser";
 
 const EditorNavbar = () => {
   const { user, loading } = useUser();
 
   return (
-    <header className="fixed top-0 left-0 z-10 flex h-[57px] w-full items-center gap-1 border-b bg-background px-4">
+    <header className="flex items-center justify-between p-4 border-b">
       <h1 className="text-xl font-semibold">Buildcarousel</h1>
       <Drawer>
         <DrawerTrigger asChild>
@@ -157,19 +167,33 @@ const EditorNavbar = () => {
         </DrawerContent>
       </Drawer>
       <div className="ml-auto flex items-center gap-4">
+        <SubscriptionInfo />
         {!loading && user ? (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="outline">{user?.email}</Button>
+              <span>
+                <img
+                  className="w-8 h-8 rounded-full"
+                  src={user.photoURL || "https://thispersondoesnotexist.com/"}
+                  alt="User Avatar"
+                />
+              </span>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-56">
-              <DropdownMenuLabel>Appearance</DropdownMenuLabel>
+              <DropdownMenuLabel>{user.displayName}</DropdownMenuLabel>
               <DropdownMenuSeparator />
-              <DropdownMenuCheckboxItem>Status Bar</DropdownMenuCheckboxItem>
-              <DropdownMenuCheckboxItem disabled>
-                Activity Bar
-              </DropdownMenuCheckboxItem>
-              <DropdownMenuCheckboxItem>Panel</DropdownMenuCheckboxItem>
+              <DropdownMenuItem>
+                <User className="w-4 h-4 mr-2" />
+                Profile
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                <CreditCard className="w-4 h-4 mr-2" />
+                Billing
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                <LogOut className="w-4 h-4 mr-2" />
+                Logout
+              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         ) : (
@@ -177,7 +201,6 @@ const EditorNavbar = () => {
             <Button variant="outline">Sign in</Button>
           </Link>
         )}
-        <SubscriptionInfo />
       </div>
     </header>
   );
