@@ -1,22 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import {
-  Home,
-  FileText,
-  Folder,
-  Image,
-  BarChart2,
-  Settings,
-  User,
-  ChevronDown,
-  Search,
-  Bell,
-  Grid,
-  MoreVertical,
-  LogOut,
-  X,
-  Github,
-} from "lucide-react";
+import { X } from "lucide-react";
 import MainSidebar from "@/components/editor/sidebar/main.sidebar";
 import EditorNavbar from "@/components/editor/navbar/navbar.editor";
 

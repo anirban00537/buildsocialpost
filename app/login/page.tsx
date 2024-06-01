@@ -1,40 +1,29 @@
 "use client";
 
-import React, { useState } from "react";
-import { useRouter } from "next/navigation";
-import { signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
-import { auth, googleProvider } from "@/lib/firebase";
+import { useLogin } from "@/hooks/useAuth";
+import React from "react";
 
 const LoginPage = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState<string | null>(null);
-  const router = useRouter();
+  const {
+    email,
+    setEmail,
+    password,
+    setPassword,
+    handleLogin,
+    handleGoogleLogin,
+    error,
+  } = useLogin();
 
-  const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
+  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    try {
-      await signInWithEmailAndPassword(auth, email, password);
-      router.push("/editor");
-    } catch (err: any) {
-      setError(err.message);
-    }
-  };
-
-  const handleGoogleLogin = async () => {
-    try {
-      await signInWithPopup(auth, googleProvider);
-      router.push("/editor");
-    } catch (err: any) {
-      setError(err.message);
-    }
+    await handleLogin(email, password);
   };
 
   return (
     <div className="flex min-h-screen items-center justify-center ">
       <div className="w-full max-w-md p-8 space-y-8 bg-white rounded-lg border">
         <h1 className="text-3xl font-bold text-center text-gray-800">Login</h1>
-        <form onSubmit={handleLogin} className="space-y-6">
+        <form onSubmit={onSubmit} className="space-y-6">
           <div>
             <label
               htmlFor="email"

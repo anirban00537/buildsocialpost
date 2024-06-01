@@ -9,9 +9,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {
-  X,
   Settings,
-  Github,
   Rabbit,
   Bird,
   Turtle,
@@ -41,10 +39,11 @@ import { Textarea } from "@/components/ui/textarea";
 import Link from "next/link";
 import SubscriptionInfo from "@/components/subscription/status";
 import useUser from "@/hooks/useUser";
+import { useLogout } from "@/hooks/useAuth";
 
 const EditorNavbar = () => {
   const { user, loading } = useUser();
-
+  const { handleLogout } = useLogout();
   return (
     <header className="flex items-center justify-between p-4 border-b">
       <h1 className="text-xl font-semibold">Buildcarousel</h1>
@@ -190,7 +189,11 @@ const EditorNavbar = () => {
                 <CreditCard className="w-4 h-4 mr-2" />
                 Billing
               </DropdownMenuItem>
-              <DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => {
+                  handleLogout();
+                }}
+              >
                 <LogOut className="w-4 h-4 mr-2" />
                 Logout
               </DropdownMenuItem>

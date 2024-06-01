@@ -1,32 +1,22 @@
-// app/signup/page.js
 "use client";
 
-import React, { useState } from "react";
-import { useRouter } from "next/navigation";
-import { createUserWithEmailAndPassword } from "firebase/auth";
-import { auth } from "@/lib/firebase";
+import { useSignup } from "@/hooks/useAuth";
+import React from "react";
 
 const SignupPage = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState(null);
-  const router = useRouter();
+  const { email, setEmail, password, setPassword, handleSignup, error } =
+    useSignup();
 
-  const handleSignup = async (e: React.FormEvent<HTMLFormElement>) => {
+  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    try {
-      await createUserWithEmailAndPassword(auth, email, password);
-      router.push("/editor");
-    } catch (err: any) {
-      setError(err.message);
-    }
+    await handleSignup(email, password);
   };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
       <div className="bg-white p-8 rounded shadow-md w-full max-w-md">
         <h1 className="text-2xl font-bold mb-6 text-center">Sign Up</h1>
-        <form onSubmit={handleSignup} className="space-y-6">
+        <form onSubmit={onSubmit} className="space-y-6">
           <div>
             <label
               htmlFor="email"
