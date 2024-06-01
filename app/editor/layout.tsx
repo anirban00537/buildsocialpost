@@ -17,6 +17,7 @@ import {
   X,
   Github,
 } from "lucide-react";
+import MainSidebar from "@/components/editor/sidebar/main.sidebar";
 
 const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [isSettingsPanelOpen, setIsSettingsPanelOpen] = useState(false);
@@ -28,19 +29,7 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 
   return (
     <div className="flex h-screen overflow-hidden bg-white">
-      <aside
-        className={`fixed inset-y-0 z-10 flex flex-col flex-shrink-0 w-64 max-h-screen overflow-hidden transition-all transform bg-white border-r shadow-lg lg:z-auto lg:static lg:shadow-none`}
-      >
-        <div className="flex items-center justify-between flex-shrink-0 p-2 lg:justify-center">
-          <span className="p-2 text-xl font-semibold leading-8 tracking-wider  whitespace-nowrap">
-            <span className={""}>-BuildCarousel</span>
-          </span>
-        </div>
-
-        <nav className="flex-1 overflow-hidden hover:overflow-y-auto">
-          sidebar content
-        </nav>
-      </aside>
+      <MainSidebar />
 
       <div className="flex flex-col flex-1 h-full overflow-hidden">
         <header className="flex-shrink-0 border-b">

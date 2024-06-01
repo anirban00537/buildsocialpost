@@ -13,8 +13,10 @@ import { Textarea } from "@/components/ui/textarea";
 
 const MainSidebar = () => {
   return (
-    <div className="fixed top-0 left-[56px] h-full w-[400px] overflow-y-auto bg-white p-4 shadow-lg">
-      <form className="grid w-full items-start gap-6">
+    <aside
+      className={`fixed inset-y-0 z-10 flex flex-col flex-shrink-0 w-96 max-h-screen overflow-hidden transition-all transform bg-white border-r shadow-lg px-4 lg:z-auto lg:static lg:shadow-none`}
+    >
+      <form className="grid w-full items-start gap-6 mt-10">
         <fieldset className="grid gap-6 rounded-lg border p-4">
           <legend className="-ml-1 px-1 text-sm font-medium">Settings</legend>
           <div className="grid gap-3">
@@ -118,7 +120,7 @@ const MainSidebar = () => {
           </div>
         </fieldset>
       </form>
-    </div>
+    </aside>
   );
 };
 
