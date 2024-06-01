@@ -1,7 +1,5 @@
 "use client";
 import { Bird, Rabbit, Settings, Turtle } from "lucide-react";
-import { DropdownMenuCheckboxItemProps } from "@radix-ui/react-dropdown-menu";
-
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -32,7 +30,6 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import useUser from "@/hooks/useUser";
 import SubscriptionInfo from "@/components/subscription/status";
-import PricingModal from "@/components/subscription/pricingModal.subscription";
 import Link from "next/link";
 
 const EditorNavbar = () => {
@@ -40,7 +37,7 @@ const EditorNavbar = () => {
 
   return (
     <header className="sticky top-0 z-10 flex h-[57px] items-center gap-1 border-b bg-background px-4">
-      <h1 className="text-xl font-semibold">Playground</h1>
+      <h1 className="text-xl font-semibold">Buildcarousel</h1>
       <Drawer>
         <DrawerTrigger asChild>
           <Button variant="ghost" size="icon" className="md:hidden">
