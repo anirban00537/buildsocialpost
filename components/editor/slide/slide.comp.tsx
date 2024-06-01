@@ -1,12 +1,8 @@
 import React from "react";
+import { Slide } from "@/types";
 
 interface SlideProps {
-  slide: {
-    title: string;
-    subtitle: string;
-    description: string;
-    imageUrl: string;
-  };
+  slide: Slide;
   index: number;
   updateSlide: (index: number, updatedSlide: any) => void;
   deleteSlide: (index: number) => void;
@@ -57,7 +53,23 @@ const SlideComponent: React.FC<SlideProps> = ({
             {slide.description || "Description"}
           </div>
         </div>
-       
+        <div className="flex items-center mt-4">
+          {slide.headshotUrl && (
+            <img
+              src={slide.headshotUrl}
+              alt="Headshot"
+              className="w-12 h-12 rounded-full mr-4"
+            />
+          )}
+          <div className="flex flex-col">
+            <div className="p-1 text-lg bg-transparent border-0 placeholder-white focus:outline-none break-words whitespace-normal resize-none">
+              {slide.name || "Anirban Roy"}
+            </div>
+            <div className="p-1 text-sm text-gray-400 bg-transparent border-0 placeholder-white focus:outline-none break-words whitespace-normal resize-none">
+              {slide.handle || "@anirban00537"}
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );

@@ -17,4 +17,7 @@ export interface Slide {
   subtitle: string;
   description: string;
   imageUrl: string;
+  headshotUrl: string;
+  name: string;
+  handle: string;
 }

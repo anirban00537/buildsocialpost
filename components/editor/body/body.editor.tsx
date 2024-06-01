@@ -1,6 +1,5 @@
 "use client";
-import React, { useRef, useCallback } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import React, { useRef } from "react";
 import SwiperCore from "swiper";
 import {
   Navigation,
@@ -18,44 +17,20 @@ import "swiper/css/a11y";
 import { ChevronLeft, ChevronRight, Plus, Trash2, Copy } from "lucide-react";
 import SlideComponent from "../slide/slide.comp";
 import useUser from "@/hooks/useUser";
-import {
-  addSlide,
-  copySlide,
-  deleteSlide,
-  updateSlide,
-} from "@/state/slice/carousel.slice";
-import { RootState } from "@/state/store";
-import { Slide } from "@/types";
+import useCarousel from "@/hooks/useCarousel";
 
 SwiperCore.use([Navigation, Pagination, Scrollbar, A11y, Autoplay]);
 
 const CarouselEditor: React.FC = () => {
-  const dispatch = useDispatch();
-  const slides = useSelector((state: RootState) => state.slides);
   const swiperRef = useRef<any>(null); // Reference to Swiper instance
   const { claims, loading, token, user } = useUser();
-
-  const handleAddSlide = useCallback(() => {
-    dispatch(addSlide());
-  }, [dispatch]);
-
-  const handleCopySlide = useCallback(
-    (index: number) => {
-      dispatch(copySlide(index));
-    },
-    [dispatch]
-  );
-
-  const handleDeleteSlide = useCallback(
-    (index: number) => {
-      dispatch(deleteSlide(index));
-    },
-    [dispatch]
-  );
-
-  const handleUpdateSlide = (index: number, updatedSlide: Slide) => {
-    dispatch(updateSlide({ index, updatedSlide }));
-  };
+  const {
+    slides,
+    handleInsertSlide,
+    handleCopySlide,
+    handleDeleteSlide,
+    handleUpdateSlide,
+  } = useCarousel();
 
   const handleSlideClick = (index: number) => {
     if (swiperRef.current && swiperRef.current.swiper) {
@@ -100,42 +75,36 @@ const CarouselEditor: React.FC = () => {
                     deleteSlide={handleDeleteSlide}
                   />
                 </div>
-                <div className="flex mt-3 space-x-2">
+                <div className="flex items-center justify-start mt-3 space-x-2">
                   <button
-                    className="text-gray-500 border h-6 w-6 flex items-center justify-center border-gray-500 rounded-full hover:bg-blue-700 z-10"
-                    onClick={handleAddSlide}
+                    className="flex items-center justify-center text-gray-500 border border-gray-500 rounded-md hover:bg-blue-700 p-1 h-7 w-7 z-10"
+                    onClick={() => handleInsertSlide(index)}
                   >
-                    <Plus size={18} />
+                    <Plus size={22} />
                   </button>
                   <button
-                    className="text-gray-500 p-1 rounded-full hover:bg-blue-700 z-10"
+                    className="flex items-center justify-center text-gray-500 rounded-full hover:bg-blue-700 p-2 z-10"
                     onClick={() => handleCopySlide(index)}
                   >
-                    <Copy size={18} />
+                    <Copy size={22} />
                   </button>
                   <button
-                    className="text-gray-500 p-1 rounded-full hover:bg-blue-700 z-10"
+                    className="flex items-center justify-center text-gray-500 rounded-full hover:bg-blue-700 p-2 z-10"
                     onClick={() => handleDeleteSlide(index)}
                   >
-                    <Trash2 size={18} />
+                    <Trash2 size={22} />
                   </button>
                 </div>
               </SwiperSlide>
             ))}
           </Swiper>
           <button className="custom-prev absolute top-1/2 left-0 transform -translate-y-1/2 p-2 bg-blue-500 text-white rounded-full hover:bg-blue-700 z-20">
-            <ChevronLeft />
+            <ChevronLeft size={24} />
           </button>
           <button className="custom-next absolute top-1/2 right-0 transform -translate-y-1/2 p-2 bg-blue-500 text-white rounded-full hover:bg-blue-700 z-20">
-            <ChevronRight />
+            <ChevronRight size={24} />
           </button>
         </div>
-        <button
-          onClick={handleAddSlide}
-          className="mt-8 p-2 bg-blue-500 text-white rounded-full hover:bg-blue-700"
-        >
-          Add Slide
-        </button>
       </div>
     </main>
   );
