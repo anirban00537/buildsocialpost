@@ -14,10 +14,14 @@ const SlideComponent: React.FC<SlideProps> = ({
   updateSlide,
   deleteSlide,
 }) => {
+  const backgroundImageStyle = slide.imageUrl
+    ? { backgroundImage: `url(${slide.imageUrl})` }
+    : { background: "linear-gradient(to right, #ff7e5f, #feb47b)" };
+
   return (
     <div
       className="relative bg-cover bg-center p-8 h-full w-full flex flex-col justify-between text-white"
-      style={{ backgroundImage: `url(${slide.imageUrl})` }}
+      style={backgroundImageStyle}
     >
       <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-black via-transparent to-black opacity-80"></div>
       <div className="relative z-10 flex-grow flex flex-col justify-between">
@@ -70,6 +74,12 @@ const SlideComponent: React.FC<SlideProps> = ({
             </div>
           </div>
         </div>
+      </div>
+      <div className="absolute bottom-0 left-0 w-full bg-black bg-opacity-60 text-center text-xs py-1">
+        Created by{" "}
+        <a href="https://buildcarousel.com" className="text-white underline">
+          buildcarousel.com
+        </a>
       </div>
     </div>
   );
