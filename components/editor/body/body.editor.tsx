@@ -14,13 +14,21 @@ import "swiper/css/navigation";
 import "swiper/css/pagination";
 import "swiper/css/scrollbar";
 import "swiper/css/a11y";
-import { ChevronLeft, ChevronRight, Plus, Trash2, Copy } from "lucide-react";
+import {
+  ChevronLeft,
+  ChevronRight,
+  Plus,
+  Trash2,
+  Copy,
+  Download,
+} from "lucide-react";
 import SlideComponent from "../slide/slide.comp";
 import useUser from "@/hooks/useUser";
 import useCarousel from "@/hooks/useCarousel";
 import IntroSlideComponent from "../slide/intro-slide.comp";
-import { IntroSlide } from "@/types";
 import OutroSliderComponent from "../slide/outro-slide.comp";
+import html2canvas from "html2canvas";
+import jsPDF from "jspdf";
 
 SwiperCore.use([Navigation, Pagination, Scrollbar, A11y, Autoplay]);
 
@@ -40,6 +48,22 @@ const CarouselEditor: React.FC = () => {
     if (swiperRef.current && swiperRef.current.swiper) {
       swiperRef.current.swiper.slideTo(index, 500); // Slide to the clicked slide with a transition of 500ms
     }
+  };
+
+  const exportSlidesToPDF = async () => {
+    const pdf = new jsPDF();
+    for (let i = 0; i < slides.length; i++) {
+      if (i !== 0) {
+        pdf.addPage();
+      }
+      const slideElement = document.getElementById(`slide-${i}`);
+      if (slideElement) {
+        const canvas = await html2canvas(slideElement);
+        const imgData = canvas.toDataURL("image/png");
+        pdf.addImage(imgData, "PNG", 0, 0, 210, 297); // A4 size
+      }
+    }
+    pdf.save("carousel_slides.pdf");
   };
 
   return (
@@ -71,7 +95,10 @@ const CarouselEditor: React.FC = () => {
                   height: "40rem",
                 }}
               >
-                <div style={{ width: "30rem", height: "35rem" }}>
+                <div
+                  id={`slide-${index}`}
+                  style={{ width: "30rem", height: "35rem" }}
+                >
                   {slide.type === "intro" ? (
                     <IntroSlideComponent
                       slide={slide}
@@ -127,6 +154,13 @@ const CarouselEditor: React.FC = () => {
             <ChevronRight size={24} />
           </button>
         </div>
+        <button
+          className="mt-4 flex items-center justify-center text-gray-500 border border-gray-500 rounded-md hover:bg-blue-700 p-2"
+          onClick={exportSlidesToPDF}
+        >
+          <Download size={22} className="mr-2" />
+          Export as PDF
+        </button>
       </div>
     </main>
   );
