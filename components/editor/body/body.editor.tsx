@@ -27,7 +27,7 @@ import useUser from "@/hooks/useUser";
 import useCarousel from "@/hooks/useCarousel";
 import IntroSlideComponent from "../slide/intro-slide.comp";
 import OutroSliderComponent from "../slide/outro-slide.comp";
-import html2canvas from "html2canvas";
+import { toPng } from "html-to-image";
 import jsPDF from "jspdf";
 
 SwiperCore.use([Navigation, Pagination, Scrollbar, A11y, Autoplay]);
@@ -51,16 +51,54 @@ const CarouselEditor: React.FC = () => {
   };
 
   const exportSlidesToPDF = async () => {
-    const pdf = new jsPDF();
+    const pdf = new jsPDF("p", "mm", "a4");
+    const pdfWidth = pdf.internal.pageSize.getWidth();
+    const pdfHeight = pdf.internal.pageSize.getHeight();
+    const pdfAspectRatio = pdfWidth / pdfHeight;
+
     for (let i = 0; i < slides.length; i++) {
-      if (i !== 0) {
-        pdf.addPage();
-      }
       const slideElement = document.getElementById(`slide-${i}`);
       if (slideElement) {
-        const canvas = await html2canvas(slideElement);
-        const imgData = canvas.toDataURL("image/png");
-        pdf.addImage(imgData, "PNG", 0, 0, 210, 297); // A4 size
+        try {
+          const imgData = await toPng(slideElement, { cacheBust: true });
+          const img = new Image();
+          img.src = imgData;
+          await new Promise((resolve) => {
+            img.onload = () => {
+              const imgWidth = img.width;
+              const imgHeight = img.height;
+              const imgAspectRatio = imgWidth / imgHeight;
+
+              let renderWidth = pdfWidth;
+              let renderHeight = pdfHeight;
+
+              if (imgAspectRatio > pdfAspectRatio) {
+                renderHeight = pdfWidth / imgAspectRatio;
+              } else {
+                renderWidth = pdfHeight * imgAspectRatio;
+              }
+
+              const marginX = (pdfWidth - renderWidth) / 2;
+              const marginY = (pdfHeight - renderHeight) / 2;
+
+              if (i !== 0) {
+                pdf.addPage();
+              }
+
+              pdf.addImage(
+                imgData,
+                "PNG",
+                marginX,
+                marginY,
+                renderWidth,
+                renderHeight
+              );
+              resolve(imgData);
+            };
+          });
+        } catch (error) {
+          console.error("Failed to export slide as image", error);
+        }
       }
     }
     pdf.save("carousel_slides.pdf");
