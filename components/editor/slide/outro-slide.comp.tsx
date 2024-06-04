@@ -18,14 +18,13 @@ const OutroSliderComponent: React.FC<SlideProps> = ({
 }) => {
   const backgroundImageStyle = slide.imageUrl
     ? { backgroundImage: `url(${slide.imageUrl})` }
-    : { background: "linear-gradient(to right, #ff7e5f, #feb47b)" };
+    : { background: "#feb47b" };
 
   return (
     <div
       className="relative bg-cover bg-center h-full w-full flex items-center justify-center text-white"
       style={backgroundImageStyle}
     >
-      <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-black via-transparent to-black opacity-80"></div>
       <div className="relative z-10 flex flex-col items-center justify-center text-center p-8">
         <div className="mb-4 w-full max-w-3xl">
           <div
@@ -75,7 +74,7 @@ const OutroSliderComponent: React.FC<SlideProps> = ({
           />
         )}
         <div className="flex flex-col ">
-          <div className="p-1 text-sm bg-transparent border-0 placeholder-white focus:outline-none break-words whitespace-normal resize-none">
+          <div className="text-sm bg-transparent border-0 placeholder-white focus:outline-none break-words whitespace-normal resize-none">
             {generalSettings.name || "Anirban Roy"}
           </div>
           <div className="p-1 text-sm text-gray-400 bg-transparent border-0 placeholder-white focus:outline-none break-words whitespace-normal resize-none">
