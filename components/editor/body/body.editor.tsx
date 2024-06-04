@@ -18,6 +18,9 @@ import { ChevronLeft, ChevronRight, Plus, Trash2, Copy } from "lucide-react";
 import SlideComponent from "../slide/slide.comp";
 import useUser from "@/hooks/useUser";
 import useCarousel from "@/hooks/useCarousel";
+import IntroSlideComponent from "../slide/intro-slide.comp";
+import { IntroSlide } from "@/types";
+import OutroSliderComponent from "../slide/outro-slide.comp";
 
 SwiperCore.use([Navigation, Pagination, Scrollbar, A11y, Autoplay]);
 
@@ -26,6 +29,7 @@ const CarouselEditor: React.FC = () => {
   const { claims, loading, token, user } = useUser();
   const {
     slides,
+    generalSettings,
     handleInsertSlide,
     handleCopySlide,
     handleDeleteSlide,
@@ -68,12 +72,30 @@ const CarouselEditor: React.FC = () => {
                 }}
               >
                 <div style={{ width: "30rem", height: "35rem" }}>
-                  <SlideComponent
-                    slide={slide}
-                    index={index}
-                    updateSlide={handleUpdateSlide}
-                    deleteSlide={handleDeleteSlide}
-                  />
+                  {slide.type === "intro" ? (
+                    <IntroSlideComponent
+                      slide={slide}
+                      index={index}
+                      updateSlide={handleUpdateSlide}
+                      deleteSlide={handleDeleteSlide}
+                    />
+                  ) : slide.type === "slide" ? (
+                    <SlideComponent
+                      slide={slide}
+                      index={index}
+                      generalSettings={generalSettings}
+                      updateSlide={handleUpdateSlide}
+                      deleteSlide={handleDeleteSlide}
+                    />
+                  ) : (
+                    <OutroSliderComponent
+                      slide={slide}
+                      index={index}
+                      generalSettings={generalSettings}
+                      updateSlide={handleUpdateSlide}
+                      deleteSlide={handleDeleteSlide}
+                    />
+                  )}
                 </div>
                 <div className="flex items-center justify-start mt-3 space-x-2">
                   <button

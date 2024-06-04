@@ -6,12 +6,15 @@ import {
   deleteSlide,
   updateSlide,
   insertSlide,
+  updateGeneralSettings,
 } from "@/state/slice/carousel.slice";
 import { Slide } from "@/types";
 
 const useCarousel = () => {
   const dispatch = useDispatch();
-  const slides = useSelector((state: RootState) => state.slides);
+  const { slides, generalSettings } = useSelector(
+    (state: RootState) => state.slides
+  );
 
   const handleInsertSlide = useCallback(
     (index: number) => {
@@ -42,9 +45,15 @@ const useCarousel = () => {
   );
 
   const handleUpdateHeadshot = useCallback(
-    (index: number, headshotUrl: string) => {
+    (headshotUrl: string) => {
+      const updatedSettings = {
+        ...generalSettings,
+        headshotUrl,
+      };
       dispatch(
-        updateSlide({ index, updatedSlide: { ...slides[index], headshotUrl } })
+        updateGeneralSettings({
+          updatedGeneralSettings: updatedSettings,
+        })
       );
     },
     [dispatch, slides]
@@ -52,6 +61,7 @@ const useCarousel = () => {
 
   return {
     slides,
+    generalSettings,
     handleInsertSlide,
     handleCopySlide,
     handleDeleteSlide,

@@ -1,18 +1,16 @@
 import React from "react";
-import { generalSettings, Slide } from "@/types";
+import { generalSettings, IntroSlide } from "@/types";
 
 interface SlideProps {
-  slide: Slide;
-  generalSettings: generalSettings;
+  slide: any;
   index: number;
   updateSlide: (index: number, updatedSlide: any) => void;
   deleteSlide: (index: number) => void;
 }
 
-const SlideComponent: React.FC<SlideProps> = ({
+const IntroSlideComponent: React.FC<SlideProps> = ({
   slide,
   index,
-  generalSettings,
   updateSlide,
   deleteSlide,
 }) => {
@@ -32,11 +30,11 @@ const SlideComponent: React.FC<SlideProps> = ({
             contentEditable
             suppressContentEditableWarning
             onBlur={(e) =>
-              updateSlide(index, { ...slide, subtitle: e.target.innerText })
+              updateSlide(index, { ...slide, tagline: e.target.innerText })
             }
-            className="w-full p-2 mb-2 text-lg bg-transparent border-0 placeholder-white focus:outline-none break-words whitespace-normal resize-none"
+            className="w-full p-2 mb-2 text-2xl italic bg-transparent border-0 placeholder-white focus:outline-none break-words whitespace-normal resize-none"
           >
-            {slide.subtitle || "Subtitle"}
+            {slide.tagline || "Your Tagline Here"}
           </div>
           <div
             contentEditable
@@ -46,34 +44,18 @@ const SlideComponent: React.FC<SlideProps> = ({
             }
             className="w-full p-2 mb-2 text-4xl font-bold bg-transparent border-0 placeholder-white focus:outline-none break-words whitespace-normal resize-none"
           >
-            {slide.title || "Title"}
+            {slide.title || "Your Title Here"}
           </div>
           <div
             contentEditable
             suppressContentEditableWarning
             onBlur={(e) =>
-              updateSlide(index, { ...slide, description: e.target.innerText })
+              updateSlide(index, { ...slide, paragraph: e.target.innerText })
             }
             className="w-full p-2 text-base bg-transparent border-0 placeholder-white focus:outline-none break-words whitespace-normal resize-none"
           >
-            {slide.description || "Description"}
-          </div>
-        </div>
-      </div>
-      <div className="absolute bottom-0 left-0 flex items-center p-4 mb-2">
-        {generalSettings.headshotUrl && (
-          <img
-            src={generalSettings.headshotUrl}
-            alt="Headshot"
-            className="w-8 h-8 rounded-full mr-4"
-          />
-        )}
-        <div className="flex flex-col ">
-          <div className="p-1 text-sm bg-transparent border-0 placeholder-white focus:outline-none break-words whitespace-normal resize-none">
-            {generalSettings.name || "Anirban Roy"}
-          </div>
-          <div className="p-1 text-sm text-gray-400 bg-transparent border-0 placeholder-white focus:outline-none break-words whitespace-normal resize-none">
-            {generalSettings.handle || "@anirban00537"}
+            {slide.paragraph ||
+              "Your introductory paragraph here. Describe your content briefly."}
           </div>
         </div>
       </div>
@@ -87,4 +69,4 @@ const SlideComponent: React.FC<SlideProps> = ({
   );
 };
 
-export default SlideComponent;
+export default IntroSlideComponent;

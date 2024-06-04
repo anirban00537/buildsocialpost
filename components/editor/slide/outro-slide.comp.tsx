@@ -9,10 +9,10 @@ interface SlideProps {
   deleteSlide: (index: number) => void;
 }
 
-const SlideComponent: React.FC<SlideProps> = ({
+const OutroSliderComponent: React.FC<SlideProps> = ({
   slide,
-  index,
   generalSettings,
+  index,
   updateSlide,
   deleteSlide,
 }) => {
@@ -27,7 +27,7 @@ const SlideComponent: React.FC<SlideProps> = ({
     >
       <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-black via-transparent to-black opacity-80"></div>
       <div className="relative z-10 flex flex-col items-center justify-center text-center p-8">
-        <div className="mb-4 w-full">
+        <div className="mb-4 w-full max-w-3xl">
           <div
             contentEditable
             suppressContentEditableWarning
@@ -36,7 +36,7 @@ const SlideComponent: React.FC<SlideProps> = ({
             }
             className="w-full p-2 mb-2 text-lg bg-transparent border-0 placeholder-white focus:outline-none break-words whitespace-normal resize-none"
           >
-            {slide.subtitle || "Subtitle"}
+            {slide.subtitle || "Your guide to finding balance in life"}
           </div>
           <div
             contentEditable
@@ -46,7 +46,7 @@ const SlideComponent: React.FC<SlideProps> = ({
             }
             className="w-full p-2 mb-2 text-4xl font-bold bg-transparent border-0 placeholder-white focus:outline-none break-words whitespace-normal resize-none"
           >
-            {slide.title || "Title"}
+            {slide.title || "Focus on Balance"}
           </div>
           <div
             contentEditable
@@ -56,7 +56,13 @@ const SlideComponent: React.FC<SlideProps> = ({
             }
             className="w-full p-2 text-base bg-transparent border-0 placeholder-white focus:outline-none break-words whitespace-normal resize-none"
           >
-            {slide.description || "Description"}
+            {slide.description ||
+              "It's important to prioritize balance in your life. With some intentional planning, you can find balance and enjoy more peace of mind."}
+          </div>
+          <div className="mt-4">
+            <button className="px-4 py-2 bg-yellow-500 text-black font-bold rounded">
+              Start creating balance today!
+            </button>
           </div>
         </div>
       </div>
@@ -87,4 +93,4 @@ const SlideComponent: React.FC<SlideProps> = ({
   );
 };
 
-export default SlideComponent;
+export default OutroSliderComponent;

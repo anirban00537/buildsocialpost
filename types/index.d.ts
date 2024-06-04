@@ -12,12 +12,25 @@ export interface Subscription {
   status: string;
   createdAt: string;
 }
+
 export interface Slide {
   title: string;
   subtitle: string;
   description: string;
   imageUrl: string | null;
+
+  type: "intro" | "slide" | "outro";
+}
+
+export interface generalSettings {
   headshotUrl: string;
   name: string;
   handle: string;
+}
+
+export interface IntroSlide {
+  tagline: string;
+  title: string;
+  paragraph: string;
+  imageUrl: string | null;
 }
