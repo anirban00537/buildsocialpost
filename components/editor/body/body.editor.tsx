@@ -79,51 +79,24 @@ const CarouselEditor: React.FC = () => {
   };
 
   const exportSlidesToPDF = async () => {
-    const pdf = new jsPDF("p", "mm", "a4");
-    const pdfWidth = pdf.internal.pageSize.getWidth();
-    const pdfHeight = pdf.internal.pageSize.getHeight();
-    const pdfAspectRatio = pdfWidth / pdfHeight;
+    const slideWidthInMM = 127;
+    const slideHeightInMM = 148;
+
+    const pdf = new jsPDF("p", "mm", [slideWidthInMM, slideHeightInMM]);
 
     for (let i = 0; i < slides.length; i++) {
       const slideElement = document.getElementById(`slide-${i}`);
       if (slideElement) {
         try {
+          // Set the slide element to match the export dimensions
+          slideElement.style.width = `${slideWidthInMM}mm`;
+          slideElement.style.height = `${slideHeightInMM}mm`;
+
           const imgData = await toPng(slideElement, { cacheBust: true });
-          const img = new Image();
-          img.src = imgData;
-          await new Promise((resolve) => {
-            img.onload = () => {
-              const imgWidth = img.width;
-              const imgHeight = img.height;
-              const imgAspectRatio = imgWidth / imgHeight;
-
-              let renderWidth = pdfWidth;
-              let renderHeight = pdfHeight;
-
-              if (imgAspectRatio > pdfAspectRatio) {
-                renderHeight = pdfWidth / imgAspectRatio;
-              } else {
-                renderWidth = pdfHeight * imgAspectRatio;
-              }
-
-              const marginX = (pdfWidth - renderWidth) / 2;
-              const marginY = (pdfHeight - renderHeight) / 2;
-
-              if (i !== 0) {
-                pdf.addPage();
-              }
-
-              pdf.addImage(
-                imgData,
-                "PNG",
-                marginX,
-                marginY,
-                renderWidth,
-                renderHeight
-              );
-              resolve(imgData);
-            };
-          });
+          if (i !== 0) {
+            pdf.addPage();
+          }
+          pdf.addImage(imgData, "PNG", 0, 0, slideWidthInMM, slideHeightInMM);
         } catch (error) {
           console.error("Failed to export slide as image", error);
         }
