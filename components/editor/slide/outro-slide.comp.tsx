@@ -7,6 +7,16 @@ interface SlideProps {
   index: number;
   updateSlide: (index: number, updatedSlide: any) => void;
   deleteSlide: (index: number) => void;
+  customStyles?: {
+    container?: React.CSSProperties;
+    subtitle?: React.CSSProperties;
+    title?: React.CSSProperties;
+    description?: React.CSSProperties;
+    button?: React.CSSProperties;
+    headshot?: React.CSSProperties;
+    authorName?: React.CSSProperties;
+    authorHandle?: React.CSSProperties;
+  };
 }
 
 const OutroSliderComponent: React.FC<SlideProps> = ({
@@ -15,6 +25,7 @@ const OutroSliderComponent: React.FC<SlideProps> = ({
   index,
   updateSlide,
   deleteSlide,
+  customStyles = {},
 }) => {
   const backgroundImageStyle = slide.imageUrl
     ? { backgroundImage: `url(${slide.imageUrl})` }
@@ -33,6 +44,7 @@ const OutroSliderComponent: React.FC<SlideProps> = ({
         justifyContent: "center",
         color: "white",
         ...backgroundImageStyle,
+        ...customStyles.container,
       }}
     >
       <div
@@ -66,6 +78,7 @@ const OutroSliderComponent: React.FC<SlideProps> = ({
               wordBreak: "break-word",
               whiteSpace: "normal",
               resize: "none",
+              ...customStyles.subtitle,
             }}
           >
             {slide.subtitle || "Your guide to finding balance in life"}
@@ -89,6 +102,7 @@ const OutroSliderComponent: React.FC<SlideProps> = ({
               wordBreak: "break-word",
               whiteSpace: "normal",
               resize: "none",
+              ...customStyles.title,
             }}
           >
             {slide.title || "Focus on Balance"}
@@ -110,6 +124,7 @@ const OutroSliderComponent: React.FC<SlideProps> = ({
               wordBreak: "break-word",
               whiteSpace: "normal",
               resize: "none",
+              ...customStyles.description,
             }}
           >
             {slide.description ||
@@ -125,6 +140,7 @@ const OutroSliderComponent: React.FC<SlideProps> = ({
                 borderRadius: "0.5rem",
                 border: "none",
                 cursor: "pointer",
+                ...customStyles.button,
               }}
             >
               Start creating balance today!
@@ -152,6 +168,7 @@ const OutroSliderComponent: React.FC<SlideProps> = ({
               height: "2rem",
               borderRadius: "50%",
               marginRight: "1rem",
+              ...customStyles.headshot,
             }}
           />
         )}
@@ -166,6 +183,7 @@ const OutroSliderComponent: React.FC<SlideProps> = ({
               wordBreak: "break-word",
               whiteSpace: "normal",
               resize: "none",
+              ...customStyles.authorName,
             }}
           >
             {generalSettings.name || "Anirban Roy"}
@@ -181,6 +199,7 @@ const OutroSliderComponent: React.FC<SlideProps> = ({
               wordBreak: "break-word",
               whiteSpace: "normal",
               resize: "none",
+              ...customStyles.authorHandle,
             }}
           >
             {generalSettings.handle || "@anirban00537"}

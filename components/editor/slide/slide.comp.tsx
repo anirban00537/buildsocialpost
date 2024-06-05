@@ -7,6 +7,15 @@ interface SlideProps {
   index: number;
   updateSlide: (index: number, updatedSlide: any) => void;
   deleteSlide: (index: number) => void;
+  customStyles?: {
+    container?: React.CSSProperties;
+    subtitle?: React.CSSProperties;
+    title?: React.CSSProperties;
+    description?: React.CSSProperties;
+    headshot?: React.CSSProperties;
+    authorName?: React.CSSProperties;
+    authorHandle?: React.CSSProperties;
+  };
 }
 
 const SlideComponent: React.FC<SlideProps> = ({
@@ -15,6 +24,7 @@ const SlideComponent: React.FC<SlideProps> = ({
   generalSettings,
   updateSlide,
   deleteSlide,
+  customStyles = {},
 }) => {
   const backgroundImageStyle = slide.imageUrl
     ? { backgroundImage: `url(${slide.imageUrl})` }
@@ -33,6 +43,7 @@ const SlideComponent: React.FC<SlideProps> = ({
         justifyContent: "center",
         color: "white",
         ...backgroundImageStyle,
+        ...customStyles.container,
       }}
     >
       <div
@@ -63,9 +74,10 @@ const SlideComponent: React.FC<SlideProps> = ({
               border: "none",
               color: "white",
               outline: "none",
-              wordBreak: "break-word", // Corrected here
+              wordBreak: "break-word",
               whiteSpace: "normal",
               resize: "none",
+              ...customStyles.subtitle,
             }}
           >
             {slide.subtitle || "Subtitle"}
@@ -86,9 +98,10 @@ const SlideComponent: React.FC<SlideProps> = ({
               border: "none",
               color: "white",
               outline: "none",
-              wordBreak: "break-word", // Corrected here
+              wordBreak: "break-word",
               whiteSpace: "normal",
               resize: "none",
+              ...customStyles.title,
             }}
           >
             {slide.title || "Title"}
@@ -107,9 +120,10 @@ const SlideComponent: React.FC<SlideProps> = ({
               border: "none",
               color: "white",
               outline: "none",
-              wordBreak: "break-word", // Corrected here
+              wordBreak: "break-word",
               whiteSpace: "normal",
               resize: "none",
+              ...customStyles.description,
             }}
           >
             {slide.description || "Description"}
@@ -132,14 +146,31 @@ const SlideComponent: React.FC<SlideProps> = ({
           <img
             src={generalSettings.headshotUrl}
             alt="Headshot"
-            style={{ width: "2.5rem", height: "2.5rem", borderRadius: "50%" }}
+            style={{
+              width: "2.5rem",
+              height: "2.5rem",
+              borderRadius: "50%",
+              ...customStyles.headshot,
+            }}
           />
         )}
         <div style={{ display: "flex", flexDirection: "column" }}>
-          <div style={{ fontSize: "0.875rem", fontWeight: "600" }}>
+          <div
+            style={{
+              fontSize: "0.875rem",
+              fontWeight: "600",
+              ...customStyles.authorName,
+            }}
+          >
             {generalSettings.name || "Anirban Roy"}
           </div>
-          <div style={{ fontSize: "0.75rem", color: "#d1d5db" }}>
+          <div
+            style={{
+              fontSize: "0.75rem",
+              color: "#d1d5db",
+              ...customStyles.authorHandle,
+            }}
+          >
             {generalSettings.handle || "@anirban00537"}
           </div>
         </div>

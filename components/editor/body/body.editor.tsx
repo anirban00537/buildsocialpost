@@ -44,6 +44,34 @@ const CarouselEditor: React.FC = () => {
     handleUpdateSlide,
   } = useCarousel();
 
+  const customStylesIntro = {
+    container: { backgroundColor: "#333" },
+    tagline: { fontSize: "2rem", color: "#fff" },
+    title: { fontSize: "3rem", color: "#ff0" },
+    paragraph: { fontSize: "1.5rem", color: "#ccc" },
+  };
+
+  const customStylesOutro = {
+    container: { backgroundColor: "#222" },
+    subtitle: { fontSize: "1.8rem", color: "#ddd" },
+    title: { fontSize: "2.8rem", color: "#eee" },
+    description: { fontSize: "1.3rem", color: "#bbb" },
+    button: { backgroundColor: "#fbbf24", color: "#000" },
+    headshot: { border: "2px solid #fff" },
+    authorName: { color: "#ff0" },
+    authorHandle: { color: "#ccc" },
+  };
+
+  const customStylesSlide = {
+    container: { backgroundColor: "#444" },
+    subtitle: { fontSize: "2rem", color: "#fff" },
+    title: { fontSize: "3rem", color: "#ff0" },
+    description: { fontSize: "1.5rem", color: "#ccc" },
+    headshot: { border: "2px solid #fff" },
+    authorName: { color: "#ff0" },
+    authorHandle: { color: "#ccc" },
+  };
+
   const handleSlideClick = (index: number) => {
     if (swiperRef.current && swiperRef.current.swiper) {
       swiperRef.current.swiper.slideTo(index, 500); // Slide to the clicked slide with a transition of 500ms
@@ -143,6 +171,7 @@ const CarouselEditor: React.FC = () => {
                       index={index}
                       updateSlide={handleUpdateSlide}
                       deleteSlide={handleDeleteSlide}
+                      customStyles={customStylesIntro}
                     />
                   ) : slide.type === "slide" ? (
                     <SlideComponent
@@ -151,6 +180,7 @@ const CarouselEditor: React.FC = () => {
                       generalSettings={generalSettings}
                       updateSlide={handleUpdateSlide}
                       deleteSlide={handleDeleteSlide}
+                      customStyles={customStylesSlide}
                     />
                   ) : (
                     <OutroSliderComponent
@@ -159,6 +189,7 @@ const CarouselEditor: React.FC = () => {
                       generalSettings={generalSettings}
                       updateSlide={handleUpdateSlide}
                       deleteSlide={handleDeleteSlide}
+                      customStyles={customStylesOutro}
                     />
                   )}
                 </div>

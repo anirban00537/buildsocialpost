@@ -5,7 +5,13 @@ interface SlideProps {
   slide: any;
   index: number;
   updateSlide: (index: number, updatedSlide: any) => void;
-  deleteSlide: (index: number) => void;
+  deleteSlide: (index: number, updatedSlide: any) => void;
+  customStyles?: {
+    container?: React.CSSProperties;
+    tagline?: React.CSSProperties;
+    title?: React.CSSProperties;
+    paragraph?: React.CSSProperties;
+  };
 }
 
 const IntroSlideComponent: React.FC<SlideProps> = ({
@@ -13,6 +19,7 @@ const IntroSlideComponent: React.FC<SlideProps> = ({
   index,
   updateSlide,
   deleteSlide,
+  customStyles = {},
 }) => {
   const backgroundImageStyle = slide.imageUrl
     ? { backgroundImage: `url(${slide.imageUrl})` }
@@ -31,6 +38,7 @@ const IntroSlideComponent: React.FC<SlideProps> = ({
         justifyContent: "center",
         color: "white",
         ...backgroundImageStyle,
+        ...customStyles.container,
       }}
     >
       <div
@@ -65,6 +73,7 @@ const IntroSlideComponent: React.FC<SlideProps> = ({
               wordBreak: "break-word",
               whiteSpace: "normal",
               resize: "none",
+              ...customStyles.tagline,
             }}
           >
             {slide.tagline || "Your Tagline Here"}
@@ -88,6 +97,7 @@ const IntroSlideComponent: React.FC<SlideProps> = ({
               wordBreak: "break-word",
               whiteSpace: "normal",
               resize: "none",
+              ...customStyles.title,
             }}
           >
             {slide.title || "Your Title Here"}
@@ -109,6 +119,7 @@ const IntroSlideComponent: React.FC<SlideProps> = ({
               wordBreak: "break-word",
               whiteSpace: "normal",
               resize: "none",
+              ...customStyles.paragraph,
             }}
           >
             {slide.paragraph ||
