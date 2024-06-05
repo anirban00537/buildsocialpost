@@ -59,19 +59,19 @@ const SlideComponent: React.FC<SlideProps> = ({
           </div>
         </div>
       </div>
-      <div className="absolute bottom-0 left-0 flex items-center p-4 mb-2">
+      <div className="absolute bottom-8 left-4 flex items-center space-x-4 p-2 rounded-lg">
         {generalSettings.headshotUrl && (
           <img
             src={generalSettings.headshotUrl}
             alt="Headshot"
-            className="w-8 h-8 rounded-full mr-4"
+            className="w-10 h-10 rounded-full"
           />
         )}
-        <div className="flex flex-col ">
-          <div className="text-sm bg-transparent border-0 placeholder-white focus:outline-none break-words whitespace-normal resize-none">
+        <div className="flex flex-col">
+          <div className="text-sm font-semibold">
             {generalSettings.name || "Anirban Roy"}
           </div>
-          <div className="p-1 text-sm text-gray-400 bg-transparent border-0 placeholder-white focus:outline-none break-words whitespace-normal resize-none">
+          <div className="text-xs text-gray-300">
             {generalSettings.handle || "@anirban00537"}
           </div>
         </div>
