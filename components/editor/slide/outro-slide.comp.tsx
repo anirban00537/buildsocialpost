@@ -22,18 +22,51 @@ const OutroSliderComponent: React.FC<SlideProps> = ({
 
   return (
     <div
-      className="relative bg-cover bg-center h-full w-full flex items-center justify-center text-white"
-      style={backgroundImageStyle}
+      style={{
+        position: "relative",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        height: "100%",
+        width: "100%",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        color: "white",
+        ...backgroundImageStyle,
+      }}
     >
-      <div className="relative z-10 flex flex-col items-center justify-center text-center p-8">
-        <div className="mb-4 w-full max-w-3xl">
+      <div
+        style={{
+          position: "relative",
+          zIndex: 10,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          textAlign: "center",
+          padding: "2rem",
+        }}
+      >
+        <div style={{ marginBottom: "1rem", width: "100%", maxWidth: "768px" }}>
           <div
             contentEditable
             suppressContentEditableWarning
             onBlur={(e) =>
               updateSlide(index, { ...slide, subtitle: e.target.innerText })
             }
-            className="w-full p-2 mb-2 text-lg bg-transparent border-0 placeholder-white focus:outline-none break-words whitespace-normal resize-none"
+            style={{
+              width: "100%",
+              padding: "0.5rem",
+              marginBottom: "0.5rem",
+              fontSize: "1.125rem",
+              backgroundColor: "transparent",
+              border: "none",
+              color: "white",
+              outline: "none",
+              wordBreak: "break-word",
+              whiteSpace: "normal",
+              resize: "none",
+            }}
           >
             {slide.subtitle || "Your guide to finding balance in life"}
           </div>
@@ -43,7 +76,20 @@ const OutroSliderComponent: React.FC<SlideProps> = ({
             onBlur={(e) =>
               updateSlide(index, { ...slide, title: e.target.innerText })
             }
-            className="w-full p-2 mb-2 text-4xl font-bold bg-transparent border-0 placeholder-white focus:outline-none break-words whitespace-normal resize-none"
+            style={{
+              width: "100%",
+              padding: "0.5rem",
+              marginBottom: "0.5rem",
+              fontSize: "2.25rem",
+              fontWeight: "bold",
+              backgroundColor: "transparent",
+              border: "none",
+              color: "white",
+              outline: "none",
+              wordBreak: "break-word",
+              whiteSpace: "normal",
+              resize: "none",
+            }}
           >
             {slide.title || "Focus on Balance"}
           </div>
@@ -53,38 +99,111 @@ const OutroSliderComponent: React.FC<SlideProps> = ({
             onBlur={(e) =>
               updateSlide(index, { ...slide, description: e.target.innerText })
             }
-            className="w-full p-2 text-base bg-transparent border-0 placeholder-white focus:outline-none break-words whitespace-normal resize-none"
+            style={{
+              width: "100%",
+              padding: "0.5rem",
+              fontSize: "1rem",
+              backgroundColor: "transparent",
+              border: "none",
+              color: "white",
+              outline: "none",
+              wordBreak: "break-word",
+              whiteSpace: "normal",
+              resize: "none",
+            }}
           >
             {slide.description ||
               "It's important to prioritize balance in your life. With some intentional planning, you can find balance and enjoy more peace of mind."}
           </div>
-          <div className="mt-4">
-            <button className="px-4 py-2 bg-yellow-500 text-black font-bold rounded">
+          <div style={{ marginTop: "1rem" }}>
+            <button
+              style={{
+                padding: "0.5rem 1rem",
+                backgroundColor: "#fbbf24",
+                color: "black",
+                fontWeight: "bold",
+                borderRadius: "0.5rem",
+                border: "none",
+                cursor: "pointer",
+              }}
+            >
               Start creating balance today!
             </button>
           </div>
         </div>
       </div>
-      <div className="absolute bottom-0 left-0 flex items-center p-4 mb-2">
+      <div
+        style={{
+          position: "absolute",
+          bottom: "0",
+          left: "0",
+          display: "flex",
+          alignItems: "center",
+          padding: "1rem",
+          marginBottom: "0.5rem",
+        }}
+      >
         {generalSettings.headshotUrl && (
           <img
             src={generalSettings.headshotUrl}
             alt="Headshot"
-            className="w-8 h-8 rounded-full mr-4"
+            style={{
+              width: "2rem",
+              height: "2rem",
+              borderRadius: "50%",
+              marginRight: "1rem",
+            }}
           />
         )}
-        <div className="flex flex-col ">
-          <div className="text-sm bg-transparent border-0 placeholder-white focus:outline-none break-words whitespace-normal resize-none">
+        <div style={{ display: "flex", flexDirection: "column" }}>
+          <div
+            style={{
+              fontSize: "0.875rem",
+              backgroundColor: "transparent",
+              border: "none",
+              color: "white",
+              outline: "none",
+              wordBreak: "break-word",
+              whiteSpace: "normal",
+              resize: "none",
+            }}
+          >
             {generalSettings.name || "Anirban Roy"}
           </div>
-          <div className="p-1 text-sm text-gray-400 bg-transparent border-0 placeholder-white focus:outline-none break-words whitespace-normal resize-none">
+          <div
+            style={{
+              padding: "0.25rem",
+              fontSize: "0.875rem",
+              color: "#9ca3af",
+              backgroundColor: "transparent",
+              border: "none",
+              outline: "none",
+              wordBreak: "break-word",
+              whiteSpace: "normal",
+              resize: "none",
+            }}
+          >
             {generalSettings.handle || "@anirban00537"}
           </div>
         </div>
       </div>
-      <div className="absolute bottom-0 left-0 w-full bg-black bg-opacity-60 text-center text-xs py-1">
+      <div
+        style={{
+          position: "absolute",
+          bottom: 0,
+          left: 0,
+          width: "100%",
+          backgroundColor: "rgba(0, 0, 0, 0.6)",
+          textAlign: "center",
+          fontSize: "0.75rem",
+          padding: "0.25rem",
+        }}
+      >
         Created by{" "}
-        <a href="https://buildcarousel.com" className="text-white underline">
+        <a
+          href="https://buildcarousel.com"
+          style={{ color: "white", textDecoration: "underline" }}
+        >
           buildcarousel.com
         </a>
       </div>

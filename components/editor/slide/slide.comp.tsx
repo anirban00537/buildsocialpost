@@ -22,18 +22,51 @@ const SlideComponent: React.FC<SlideProps> = ({
 
   return (
     <div
-      className="relative bg-cover bg-center h-full w-full flex items-center justify-center text-white"
-      style={backgroundImageStyle}
+      style={{
+        position: "relative",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        height: "100%",
+        width: "100%",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        color: "white",
+        ...backgroundImageStyle,
+      }}
     >
-      <div className="relative z-10 flex flex-col items-center justify-center text-center p-8">
-        <div className="mb-4 w-full">
+      <div
+        style={{
+          position: "relative",
+          zIndex: 10,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          textAlign: "center",
+          padding: "2rem",
+        }}
+      >
+        <div style={{ marginBottom: "1rem", width: "100%" }}>
           <div
             contentEditable
             suppressContentEditableWarning
             onBlur={(e) =>
               updateSlide(index, { ...slide, subtitle: e.target.innerText })
             }
-            className="w-full p-2 mb-2 text-lg bg-transparent border-0 placeholder-white focus:outline-none break-words whitespace-normal resize-none"
+            style={{
+              width: "100%",
+              padding: "0.5rem",
+              marginBottom: "0.5rem",
+              fontSize: "1.125rem",
+              backgroundColor: "transparent",
+              border: "none",
+              color: "white",
+              outline: "none",
+              wordBreak: "break-word", // Corrected here
+              whiteSpace: "normal",
+              resize: "none",
+            }}
           >
             {slide.subtitle || "Subtitle"}
           </div>
@@ -43,7 +76,20 @@ const SlideComponent: React.FC<SlideProps> = ({
             onBlur={(e) =>
               updateSlide(index, { ...slide, title: e.target.innerText })
             }
-            className="w-full p-2 mb-2 text-4xl font-bold bg-transparent border-0 placeholder-white focus:outline-none break-words whitespace-normal resize-none"
+            style={{
+              width: "100%",
+              padding: "0.5rem",
+              marginBottom: "0.5rem",
+              fontSize: "2.25rem",
+              fontWeight: "bold",
+              backgroundColor: "transparent",
+              border: "none",
+              color: "white",
+              outline: "none",
+              wordBreak: "break-word", // Corrected here
+              whiteSpace: "normal",
+              resize: "none",
+            }}
           >
             {slide.title || "Title"}
           </div>
@@ -53,32 +99,68 @@ const SlideComponent: React.FC<SlideProps> = ({
             onBlur={(e) =>
               updateSlide(index, { ...slide, description: e.target.innerText })
             }
-            className="w-full p-2 text-base bg-transparent border-0 placeholder-white focus:outline-none break-words whitespace-normal resize-none"
+            style={{
+              width: "100%",
+              padding: "0.5rem",
+              fontSize: "1rem",
+              backgroundColor: "transparent",
+              border: "none",
+              color: "white",
+              outline: "none",
+              wordBreak: "break-word", // Corrected here
+              whiteSpace: "normal",
+              resize: "none",
+            }}
           >
             {slide.description || "Description"}
           </div>
         </div>
       </div>
-      <div className="absolute bottom-8 left-4 flex items-center space-x-4 p-2 rounded-lg">
+      <div
+        style={{
+          position: "absolute",
+          bottom: "2rem",
+          left: "1rem",
+          display: "flex",
+          alignItems: "center",
+          gap: "1rem", // Use gap for spacing
+          padding: "0.5rem",
+          borderRadius: "0.5rem",
+        }}
+      >
         {generalSettings.headshotUrl && (
           <img
             src={generalSettings.headshotUrl}
             alt="Headshot"
-            className="w-10 h-10 rounded-full"
+            style={{ width: "2.5rem", height: "2.5rem", borderRadius: "50%" }}
           />
         )}
-        <div className="flex flex-col">
-          <div className="text-sm font-semibold">
+        <div style={{ display: "flex", flexDirection: "column" }}>
+          <div style={{ fontSize: "0.875rem", fontWeight: "600" }}>
             {generalSettings.name || "Anirban Roy"}
           </div>
-          <div className="text-xs text-gray-300">
+          <div style={{ fontSize: "0.75rem", color: "#d1d5db" }}>
             {generalSettings.handle || "@anirban00537"}
           </div>
         </div>
       </div>
-      <div className="absolute bottom-0 left-0 w-full bg-black bg-opacity-60 text-center text-xs py-1">
+      <div
+        style={{
+          position: "absolute",
+          bottom: 0,
+          left: 0,
+          width: "100%",
+          backgroundColor: "rgba(0, 0, 0, 0.6)",
+          textAlign: "center",
+          fontSize: "0.75rem",
+          padding: "0.25rem",
+        }}
+      >
         Created by{" "}
-        <a href="https://buildcarousel.com" className="text-white underline">
+        <a
+          href="https://buildcarousel.com"
+          style={{ color: "white", textDecoration: "underline" }}
+        >
           buildcarousel.com
         </a>
       </div>
