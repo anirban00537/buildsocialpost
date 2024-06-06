@@ -1,6 +1,5 @@
 "use client";
-import React, { useRef } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import React from "react";
 import SwiperCore from "swiper";
 import {
   Navigation,
@@ -24,69 +23,27 @@ import {
   Download,
 } from "lucide-react";
 import SlideComponent from "../slide/slide.comp";
-import useUser from "@/hooks/useUser";
-import useCarousel from "@/hooks/useCarousel";
 import IntroSlideComponent from "../slide/intro-slide.comp";
 import OutroSliderComponent from "../slide/outro-slide.comp";
-import { toPng } from "html-to-image";
-import jsPDF from "jspdf";
-import { RootState } from "@/state/store";
-import { setSelectedTheme } from "@/state/slice/carousel.slice";
+import useCarousel from "@/hooks/useCarousel";
 
 SwiperCore.use([Navigation, Pagination, Scrollbar, A11y, Autoplay]);
 
 const CarouselEditor: React.FC = () => {
-  const swiperRef = useRef<any>(null);
   const {
+    swiperRef,
     slides,
     generalSettings,
+    themes,
+    selectedTheme,
+    handleThemeChange,
+    handleSlideClick,
     handleInsertSlide,
     handleCopySlide,
     handleDeleteSlide,
     handleUpdateSlide,
+    exportSlidesToPDF,
   } = useCarousel();
-
-  const dispatch = useDispatch();
-  const themes = useSelector((state: RootState) => state.slides.themes);
-  const selectedTheme = useSelector(
-    (state: RootState) => state.slides.selectedTheme
-  );
-
-  const handleThemeChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    dispatch(setSelectedTheme(event.target.value as keyof typeof themes));
-  };
-
-  const handleSlideClick = (index: number) => {
-    if (swiperRef.current && swiperRef.current.swiper) {
-      swiperRef.current.swiper.slideTo(index, 500);
-    }
-  };
-
-  const exportSlidesToPDF = async () => {
-    const slideWidthInMM = 127;
-    const slideHeightInMM = 148;
-
-    const pdf = new jsPDF("p", "mm", [slideWidthInMM, slideHeightInMM]);
-
-    for (let i = 0; i < slides.length; i++) {
-      const slideElement = document.getElementById(`slide-${i}`);
-      if (slideElement) {
-        try {
-          slideElement.style.width = `${30}rem`;
-          slideElement.style.height = `${35}rem`;
-
-          const imgData = await toPng(slideElement, { cacheBust: true });
-          if (i !== 0) {
-            pdf.addPage();
-          }
-          pdf.addImage(imgData, "PNG", 0, 0, slideWidthInMM, slideHeightInMM);
-        } catch (error) {
-          console.error("Failed to export slide as image", error);
-        }
-      }
-    }
-    pdf.save("carousel_slides.pdf");
-  };
 
   return (
     <main className="flex h-full overflow-hidden">
@@ -104,6 +61,8 @@ const CarouselEditor: React.FC = () => {
             <option value="theme1">Theme 1</option>
             <option value="theme2">Theme 2</option>
             <option value="theme3">Theme 3</option>
+            <option value="theme4">Theme 4</option>
+            <option value="theme5">Theme 5</option>
           </select>
         </div>
         <div className="relative w-full">

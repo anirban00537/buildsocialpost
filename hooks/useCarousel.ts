@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
-import { useCallback } from "react";
+import { useCallback, useRef } from "react";
 import { RootState } from "@/state/store";
 import {
   copySlide,
@@ -7,12 +7,16 @@ import {
   updateSlide,
   insertSlide,
   updateGeneralSettings,
+  setSelectedTheme,
 } from "@/state/slice/carousel.slice";
 import { Slide } from "@/types";
+import { toPng } from "html-to-image";
+import jsPDF from "jspdf";
 
 const useCarousel = () => {
   const dispatch = useDispatch();
-  const { slides, generalSettings } = useSelector(
+  const swiperRef = useRef<any>(null);
+  const { slides, generalSettings, themes, selectedTheme } = useSelector(
     (state: RootState) => state.slides
   );
 
@@ -56,17 +60,65 @@ const useCarousel = () => {
         })
       );
     },
-    [dispatch, slides]
+    [dispatch, generalSettings]
   );
 
+  const handleThemeChange = useCallback(
+    (event: React.ChangeEvent<HTMLSelectElement>) => {
+      dispatch(setSelectedTheme(event.target.value as keyof typeof themes));
+    },
+    [dispatch, themes]
+  );
+
+  const handleSlideClick = useCallback(
+    (index: number) => {
+      if (swiperRef.current && swiperRef.current.swiper) {
+        swiperRef.current.swiper.slideTo(index, 500);
+      }
+    },
+    [swiperRef]
+  );
+
+  const exportSlidesToPDF = useCallback(async () => {
+    const slideWidthInMM = 127;
+    const slideHeightInMM = 148;
+
+    const pdf = new jsPDF("p", "mm", [slideWidthInMM, slideHeightInMM]);
+
+    for (let i = 0; i < slides.length; i++) {
+      const slideElement = document.getElementById(`slide-${i}`);
+      if (slideElement) {
+        try {
+          slideElement.style.width = `${30}rem`;
+          slideElement.style.height = `${35}rem`;
+
+          const imgData = await toPng(slideElement, { cacheBust: true });
+          if (i !== 0) {
+            pdf.addPage();
+          }
+          pdf.addImage(imgData, "PNG", 0, 0, slideWidthInMM, slideHeightInMM);
+        } catch (error) {
+          console.error("Failed to export slide as image", error);
+        }
+      }
+    }
+    pdf.save("carousel_slides.pdf");
+  }, [slides]);
+
   return {
+    swiperRef,
     slides,
     generalSettings,
+    themes,
+    selectedTheme,
     handleInsertSlide,
     handleCopySlide,
     handleDeleteSlide,
     handleUpdateSlide,
     handleUpdateHeadshot,
+    handleThemeChange,
+    handleSlideClick,
+    exportSlidesToPDF,
   };
 };
 
