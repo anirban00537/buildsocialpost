@@ -1,11 +1,14 @@
+// carouselSlice.ts
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { generalSettings, Slide } from "@/types";
 import { initialSlides } from "@/lib/data";
+import { Theme, themes } from "@/lib/theme";
 
-// Define the types for the initial state
 interface CarouselState {
   slides: Slide[];
   generalSettings: generalSettings;
+  themes: { [key: string]: Theme };
+  selectedTheme: keyof typeof themes;
 }
 
 const initialState: CarouselState = {
@@ -15,6 +18,8 @@ const initialState: CarouselState = {
     name: "Anirban Roy",
     handle: "@anirban00537",
   },
+  themes,
+  selectedTheme: "theme1",
 };
 
 const carouselSlice = createSlice({
@@ -24,7 +29,7 @@ const carouselSlice = createSlice({
     insertSlide: (state, action: PayloadAction<number>) => {
       state.slides.splice(action.payload + 1, 0, {
         type: "slide",
-        title: "New Slideeeee" + (state.slides.length + 1),
+        title: "New Slide " + (state.slides.length + 1),
         subtitle: "Subtitle",
         description: "Description",
         imageUrl:
@@ -51,6 +56,9 @@ const carouselSlice = createSlice({
       const { updatedGeneralSettings } = action.payload;
       state.generalSettings = updatedGeneralSettings;
     },
+    setSelectedTheme: (state, action: PayloadAction<keyof typeof themes>) => {
+      state.selectedTheme = action.payload;
+    },
   },
 });
 
@@ -60,5 +68,6 @@ export const {
   deleteSlide,
   updateSlide,
   updateGeneralSettings,
+  setSelectedTheme,
 } = carouselSlice.actions;
 export default carouselSlice.reducer;

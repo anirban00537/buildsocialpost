@@ -1,5 +1,6 @@
 "use client";
 import React, { useRef } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import SwiperCore from "swiper";
 import {
   Navigation,
@@ -29,11 +30,13 @@ import IntroSlideComponent from "../slide/intro-slide.comp";
 import OutroSliderComponent from "../slide/outro-slide.comp";
 import { toPng } from "html-to-image";
 import jsPDF from "jspdf";
+import { RootState } from "@/state/store";
+import { setSelectedTheme } from "@/state/slice/carousel.slice";
 
 SwiperCore.use([Navigation, Pagination, Scrollbar, A11y, Autoplay]);
 
 const CarouselEditor: React.FC = () => {
-  const swiperRef = useRef<any>(null); // Reference to Swiper instance
+  const swiperRef = useRef<any>(null);
   const { claims, loading, token, user } = useUser();
   const {
     slides,
@@ -44,37 +47,19 @@ const CarouselEditor: React.FC = () => {
     handleUpdateSlide,
   } = useCarousel();
 
-  const customStylesIntro = {
-    container: { backgroundColor: "#333" },
-    tagline: { fontSize: "2rem", color: "#fff" },
-    title: { fontSize: "3rem", color: "#ff0" },
-    paragraph: { fontSize: "1.5rem", color: "#ccc" },
-  };
+  const dispatch = useDispatch();
+  const themes = useSelector((state: RootState) => state.slides.themes);
+  const selectedTheme = useSelector(
+    (state: RootState) => state.slides.selectedTheme
+  );
 
-  const customStylesOutro = {
-    container: { backgroundColor: "#222" },
-    subtitle: { fontSize: "1.8rem", color: "#ddd" },
-    title: { fontSize: "2.8rem", color: "#eee" },
-    description: { fontSize: "1.3rem", color: "#bbb" },
-    button: { backgroundColor: "#fbbf24", color: "#000" },
-    headshot: { border: "2px solid #fff" },
-    authorName: { color: "#ff0" },
-    authorHandle: { color: "#ccc" },
-  };
-
-  const customStylesSlide = {
-    container: { backgroundColor: "#444" },
-    subtitle: { fontSize: "2rem", color: "#fff" },
-    title: { fontSize: "3rem", color: "#ff0" },
-    description: { fontSize: "1.5rem", color: "#ccc" },
-    headshot: { border: "2px solid #fff" },
-    authorName: { color: "#ff0" },
-    authorHandle: { color: "#ccc" },
+  const handleThemeChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    dispatch(setSelectedTheme(event.target.value as keyof typeof themes));
   };
 
   const handleSlideClick = (index: number) => {
     if (swiperRef.current && swiperRef.current.swiper) {
-      swiperRef.current.swiper.slideTo(index, 500); // Slide to the clicked slide with a transition of 500ms
+      swiperRef.current.swiper.slideTo(index, 500);
     }
   };
 
@@ -88,9 +73,8 @@ const CarouselEditor: React.FC = () => {
       const slideElement = document.getElementById(`slide-${i}`);
       if (slideElement) {
         try {
-          // Set the slide element to match the export dimensions
-          slideElement.style.width = `${slideWidthInMM}mm`;
-          slideElement.style.height = `${slideHeightInMM}mm`;
+          slideElement.style.width = `${30}rem`;
+          slideElement.style.height = `${35}rem`;
 
           const imgData = await toPng(slideElement, { cacheBust: true });
           if (i !== 0) {
@@ -108,6 +92,21 @@ const CarouselEditor: React.FC = () => {
   return (
     <main className="flex h-full overflow-hidden">
       <div className="w-full p-4 flex flex-col justify-center items-center">
+        <div className="relative w-full mb-4">
+          <label htmlFor="theme-select" className="mr-2">
+            Choose Theme:
+          </label>
+          <select
+            id="theme-select"
+            value={selectedTheme}
+            onChange={handleThemeChange}
+            className="p-2 border rounded"
+          >
+            <option value="theme1">Theme 1</option>
+            <option value="theme2">Theme 2</option>
+            <option value="theme3">Theme 3</option>
+          </select>
+        </div>
         <div className="relative w-full">
           <Swiper
             ref={swiperRef}
@@ -131,12 +130,16 @@ const CarouselEditor: React.FC = () => {
                 onClick={() => handleSlideClick(index)}
                 style={{
                   width: "30rem",
-                  height: "40rem",
+                  height: "35rem",
                 }}
               >
                 <div
                   id={`slide-${index}`}
-                  style={{ width: "30rem", height: "35rem" }}
+                  style={{
+                    width: "30rem",
+                    height: "35rem",
+                    overflow: "hidden",
+                  }}
                 >
                   {slide.type === "intro" ? (
                     <IntroSlideComponent
@@ -144,7 +147,7 @@ const CarouselEditor: React.FC = () => {
                       index={index}
                       updateSlide={handleUpdateSlide}
                       deleteSlide={handleDeleteSlide}
-                      customStyles={customStylesIntro}
+                      customStyles={themes[selectedTheme]}
                     />
                   ) : slide.type === "slide" ? (
                     <SlideComponent
@@ -153,7 +156,7 @@ const CarouselEditor: React.FC = () => {
                       generalSettings={generalSettings}
                       updateSlide={handleUpdateSlide}
                       deleteSlide={handleDeleteSlide}
-                      customStyles={customStylesSlide}
+                      customStyles={themes[selectedTheme]}
                     />
                   ) : (
                     <OutroSliderComponent
@@ -162,7 +165,7 @@ const CarouselEditor: React.FC = () => {
                       generalSettings={generalSettings}
                       updateSlide={handleUpdateSlide}
                       deleteSlide={handleDeleteSlide}
-                      customStyles={customStylesOutro}
+                      customStyles={themes[selectedTheme]}
                     />
                   )}
                 </div>
