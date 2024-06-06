@@ -37,7 +37,6 @@ SwiperCore.use([Navigation, Pagination, Scrollbar, A11y, Autoplay]);
 
 const CarouselEditor: React.FC = () => {
   const swiperRef = useRef<any>(null);
-  const { claims, loading, token, user } = useUser();
   const {
     slides,
     generalSettings,
