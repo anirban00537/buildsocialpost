@@ -64,8 +64,8 @@ const useCarousel = () => {
   );
 
   const handleThemeChange = useCallback(
-    (event: React.ChangeEvent<HTMLSelectElement>) => {
-      dispatch(setSelectedTheme(event.target.value as keyof typeof themes));
+    (theme: string) => {
+      dispatch(setSelectedTheme(theme));
     },
     [dispatch, themes]
   );

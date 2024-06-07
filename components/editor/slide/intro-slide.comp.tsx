@@ -1,17 +1,12 @@
+import { Theme } from "@/lib/theme";
 import React from "react";
-import { generalSettings, IntroSlide } from "@/types";
 
 interface SlideProps {
   slide: any;
   index: number;
   updateSlide: (index: number, updatedSlide: any) => void;
   deleteSlide: (index: number, updatedSlide: any) => void;
-  customStyles?: {
-    container?: React.CSSProperties;
-    tagline?: React.CSSProperties;
-    title?: React.CSSProperties;
-    paragraph?: React.CSSProperties;
-  };
+  customStyles?: Theme;
 }
 
 const IntroSlideComponent: React.FC<SlideProps> = ({

@@ -36,7 +36,6 @@ const CarouselEditor: React.FC = () => {
     generalSettings,
     themes,
     selectedTheme,
-    handleThemeChange,
     handleSlideClick,
     handleInsertSlide,
     handleCopySlide,
@@ -48,23 +47,6 @@ const CarouselEditor: React.FC = () => {
   return (
     <main className="flex h-full overflow-hidden">
       <div className="w-full p-4 flex flex-col justify-center items-center">
-        <div className="relative w-full mb-4">
-          <label htmlFor="theme-select" className="mr-2">
-            Choose Theme:
-          </label>
-          <select
-            id="theme-select"
-            value={selectedTheme}
-            onChange={handleThemeChange}
-            className="p-2 border rounded"
-          >
-            <option value="theme1">Theme 1</option>
-            <option value="theme2">Theme 2</option>
-            <option value="theme3">Theme 3</option>
-            <option value="theme4">Theme 4</option>
-            <option value="theme5">Theme 5</option>
-          </select>
-        </div>
         <div className="relative w-full">
           <Swiper
             ref={swiperRef}
