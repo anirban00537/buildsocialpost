@@ -20,24 +20,23 @@ export const generateCaruselContentFromTopic = async (
           
           [Intro]
           type:"intro"
-          Tagline: 
-          Title: 
-          Paragraph: 
+          tagline: 
+          title: 
+          pagrgraph: 
           
           [Slide 1]
-          Title: 
-          Paragraph:
+          title: 
+          pagrgraph:
           
           [rest of the slides]
           ...
           
           [Outro]
-          Tagline: 
-          Title: 
-          Paragraph:
-          Call to action:
+          tagline: 
+          title: 
+          pagrgraph:
           
-          All titles and taglines should be a maximum of 100 characters. Paragraphs should be under 200 characters. Please generate content for ${numSlides} slides.`,
+          All titles and tagline should be a maximum of 100 characters. pagrgraphs should be under 200 characters. Please generate content for ${numSlides} slides.`,
         },
         {
           role: "user",
@@ -59,14 +58,14 @@ export const generateCaruselContentFromTopic = async (
   }
 };
 type Slide = {
-  Tagline?: string;
-  Title?: string;
-  Paragraph?: string;
+  tagline?: string;
+  title?: string;
+  pagrgraph?: string;
   "Call to action"?: string;
 };
 
 const isValidSlideKey = (key: string): key is keyof Slide => {
-  return ["Tagline", "Title", "Paragraph", "Call to action"].includes(key);
+  return ["tagline", "title", "pagrgraph", "Call to action"].includes(key);
 };
 
 export const parseCarouselContentToJSON = (content: string): Slide[] => {

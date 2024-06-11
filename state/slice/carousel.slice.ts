@@ -30,7 +30,7 @@ const carouselSlice = createSlice({
       state.slides.splice(action.payload + 1, 0, {
         type: "slide",
         title: "New Slide " + (state.slides.length + 1),
-        subtitle: "Subtitle",
+        tagline: "tagline",
         description: "Description",
         imageUrl:
           "https://images.unsplash.com/photo-1716718406268-6ece312abee0?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
@@ -59,6 +59,9 @@ const carouselSlice = createSlice({
     setSelectedTheme: (state, action: PayloadAction<keyof typeof themes>) => {
       state.selectedTheme = action.payload;
     },
+    addAllSlides: (state, action: PayloadAction<Slide[]>) => {
+      state.slides = action.payload;
+    },
   },
 });
 
@@ -69,5 +72,6 @@ export const {
   updateSlide,
   updateGeneralSettings,
   setSelectedTheme,
+  addAllSlides,
 } = carouselSlice.actions;
 export default carouselSlice.reducer;

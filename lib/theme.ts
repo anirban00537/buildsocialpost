@@ -3,7 +3,7 @@ export type Theme = {
   tagline: React.CSSProperties;
   title: React.CSSProperties;
   paragraph: React.CSSProperties;
-  subtitle: React.CSSProperties;
+  tagline: React.CSSProperties;
   description: React.CSSProperties;
   button: React.CSSProperties;
   headshot: React.CSSProperties;
@@ -35,7 +35,7 @@ export const themes: { [key: string]: Theme } = {
       lineHeight: "1.8",
       margin: "10px 0",
     },
-    subtitle: {
+    tagline: {
       fontSize: "1.5rem",
       color: "#ffdd57",
       textTransform: "uppercase",
@@ -94,7 +94,7 @@ export const themes: { [key: string]: Theme } = {
       lineHeight: "1.8",
       margin: "10px 0",
     },
-    subtitle: {
+    tagline: {
       fontSize: "1.3rem",
       color: "#00bfff",
       textTransform: "uppercase",
@@ -154,7 +154,7 @@ export const themes: { [key: string]: Theme } = {
       lineHeight: "1.8",
       margin: "10px 0",
     },
-    subtitle: {
+    tagline: {
       fontSize: "1.5rem",
       color: "#ffc107",
       textTransform: "uppercase",
@@ -214,7 +214,7 @@ export const themes: { [key: string]: Theme } = {
       lineHeight: "1.8",
       margin: "10px 0",
     },
-    subtitle: {
+    tagline: {
       fontSize: "1.3rem",
       color: "#ff5733",
       textTransform: "uppercase",
@@ -273,7 +273,7 @@ export const themes: { [key: string]: Theme } = {
       lineHeight: "1.8",
       margin: "10px 0",
     },
-    subtitle: {
+    tagline: {
       fontSize: "1.5rem",
       color: "#28a745",
       textTransform: "uppercase",
@@ -326,7 +326,7 @@ export const themes: { [key: string]: Theme } = {
       lineHeight: "1.8",
       margin: "10px 0",
     },
-    subtitle: {
+    tagline: {
       fontSize: "1.5rem",
       color: "#007bff",
       textTransform: "uppercase",
@@ -385,7 +385,7 @@ export const themes: { [key: string]: Theme } = {
       lineHeight: "1.8",
       margin: "10px 0",
     },
-    subtitle: {
+    tagline: {
       fontSize: "1.5rem",
       color: "#ffffff",
       textTransform: "uppercase",
@@ -444,7 +444,7 @@ export const themes: { [key: string]: Theme } = {
       lineHeight: "1.8",
       margin: "10px 0",
     },
-    subtitle: {
+    tagline: {
       fontSize: "1.5rem",
       color: "#ff3366",
       textTransform: "uppercase",

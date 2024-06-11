@@ -15,7 +15,7 @@ export interface Subscription {
 
 export interface Slide {
   title: string;
-  subtitle: string;
+  tagline: string;
   description: string;
   imageUrl: string | null;
 

@@ -9,7 +9,7 @@ interface SlideProps {
   deleteSlide: (index: number) => void;
   customStyles?: {
     container?: React.CSSProperties;
-    subtitle?: React.CSSProperties;
+    tagline?: React.CSSProperties;
     title?: React.CSSProperties;
     description?: React.CSSProperties;
     headshot?: React.CSSProperties;
@@ -63,7 +63,7 @@ const SlideComponent: React.FC<SlideProps> = ({
             contentEditable
             suppressContentEditableWarning
             onBlur={(e) =>
-              updateSlide(index, { ...slide, subtitle: e.target.innerText })
+              updateSlide(index, { ...slide, tagline: e.target.innerText })
             }
             style={{
               width: "100%",
@@ -77,10 +77,10 @@ const SlideComponent: React.FC<SlideProps> = ({
               wordBreak: "break-word",
               whiteSpace: "normal",
               resize: "none",
-              ...customStyles.subtitle,
+              ...customStyles.tagline,
             }}
           >
-            {slide.subtitle || "Subtitle"}
+            {slide.tagline || "tagline"}
           </div>
           <div
             contentEditable

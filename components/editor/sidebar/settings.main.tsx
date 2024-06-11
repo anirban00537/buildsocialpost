@@ -10,11 +10,16 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { Slider } from "@/components/ui/slider";
+import { useGenerateContent } from "@/hooks/useGenerateContent";
 
 const SettingsComponent = () => {
+  const { generateContent, topic, setTopic } = useGenerateContent();
   const [slides, setSlides] = useState(0.5);
   return (
-    <form className="grid w-full items-start gap-6 p-4">
+    <form
+      className="grid w-full items-start gap-6 p-4"
+      onSubmit={generateContent}
+    >
       <fieldset className="grid gap-6 rounded-lg">
         <legend className="-ml-1 px-1 text-sm font-semibold mb-4">
           Settings
@@ -25,7 +30,9 @@ const SettingsComponent = () => {
             id="content"
             placeholder="You are a..."
             className="min-h-[3.5rem]"
+            value={topic}
             maxLength={300}
+            onChange={(e) => setTopic(e.target.value)}
           />
         </div>
         <div className="space-y-2">
@@ -161,6 +168,7 @@ const SettingsComponent = () => {
           </Select>
         </div>
       </fieldset>
+      <button type="submit">Generate</button>
     </form>
   );
 };
