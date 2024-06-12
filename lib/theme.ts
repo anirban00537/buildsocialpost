@@ -3,7 +3,6 @@ export type Theme = {
   tagline: React.CSSProperties;
   title: React.CSSProperties;
   paragraph: React.CSSProperties;
-  tagline: React.CSSProperties;
   description: React.CSSProperties;
   button: React.CSSProperties;
   headshot: React.CSSProperties;
@@ -35,12 +34,7 @@ export const themes: { [key: string]: Theme } = {
       lineHeight: "1.8",
       margin: "10px 0",
     },
-    tagline: {
-      fontSize: "1.5rem",
-      color: "#ffdd57",
-      textTransform: "uppercase",
-      margin: "10px 0",
-    },
+
     description: {
       fontSize: "1.2rem",
       color: "#ddd",
@@ -94,12 +88,7 @@ export const themes: { [key: string]: Theme } = {
       lineHeight: "1.8",
       margin: "10px 0",
     },
-    tagline: {
-      fontSize: "1.3rem",
-      color: "#00bfff",
-      textTransform: "uppercase",
-      margin: "10px 0",
-    },
+
     description: {
       fontSize: "1.1rem",
       color: "#ccc",
@@ -154,12 +143,7 @@ export const themes: { [key: string]: Theme } = {
       lineHeight: "1.8",
       margin: "10px 0",
     },
-    tagline: {
-      fontSize: "1.5rem",
-      color: "#ffc107",
-      textTransform: "uppercase",
-      margin: "10px 0",
-    },
+
     description: {
       fontSize: "1.2rem",
       color: "#adb5bd",
@@ -214,12 +198,7 @@ export const themes: { [key: string]: Theme } = {
       lineHeight: "1.8",
       margin: "10px 0",
     },
-    tagline: {
-      fontSize: "1.3rem",
-      color: "#ff5733",
-      textTransform: "uppercase",
-      margin: "10px 0",
-    },
+
     description: {
       fontSize: "1.1rem",
       color: "#555",
@@ -273,12 +252,7 @@ export const themes: { [key: string]: Theme } = {
       lineHeight: "1.8",
       margin: "10px 0",
     },
-    tagline: {
-      fontSize: "1.5rem",
-      color: "#28a745",
-      textTransform: "uppercase",
-      margin: "10px 0",
-    },
+
     description: {
       fontSize: "1.2rem",
       color: "#6c757d",
@@ -326,12 +300,7 @@ export const themes: { [key: string]: Theme } = {
       lineHeight: "1.8",
       margin: "10px 0",
     },
-    tagline: {
-      fontSize: "1.5rem",
-      color: "#007bff",
-      textTransform: "uppercase",
-      margin: "10px 0",
-    },
+
     description: {
       fontSize: "1.2rem",
       color: "#555",
@@ -385,12 +354,7 @@ export const themes: { [key: string]: Theme } = {
       lineHeight: "1.8",
       margin: "10px 0",
     },
-    tagline: {
-      fontSize: "1.5rem",
-      color: "#ffffff",
-      textTransform: "uppercase",
-      margin: "10px 0",
-    },
+
     description: {
       fontSize: "1.2rem",
       color: "#e0e0e0",
@@ -442,12 +406,6 @@ export const themes: { [key: string]: Theme } = {
       fontSize: "1.2rem",
       color: "#cccccc",
       lineHeight: "1.8",
-      margin: "10px 0",
-    },
-    tagline: {
-      fontSize: "1.5rem",
-      color: "#ff3366",
-      textTransform: "uppercase",
       margin: "10px 0",
     },
     description: {
