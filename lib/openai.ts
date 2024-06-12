@@ -8,25 +8,28 @@ export const generateCaruselContentFromTopic = async (
   topic: string,
   numSlides: number,
   maxTokens = 1000,
-  temperature = 0.4
+  temperature = 0.4,
+  language = "en",
+  model = "gpt-3.5-turbo",
+  mood = "neutral"
 ) => {
   try {
     const response = await openai.chat.completions.create({
-      model: "gpt-3.5-turbo",
+      model: model,
       messages: [
         {
           role: "system",
-          content: `You are an expert content creator for LinkedIn carousels. Generate engaging and informative carousel slides based on the given topic and number of slides. Answer them in this format example:
+          content: `You are an expert content creator for LinkedIn carousels. Generate engaging and informative carousel slides based on the given topic, number of slides, language, mood, and model specifications. Answer them in this format example:
           
           [Intro]
           type:"intro"
           tagline: 
           title: 
-          pagrgraph: 
+          paragraph: 
           
           [Slide 1]
           title: 
-          pagrgraph:
+          paragraph:
           
           [rest of the slides]
           ...
@@ -34,13 +37,13 @@ export const generateCaruselContentFromTopic = async (
           [Outro]
           tagline: 
           title: 
-          pagrgraph:
+          paragraph:
           
-          All titles and tagline should be a maximum of 100 characters. pagrgraphs should be under 200 characters. Please generate content for ${numSlides} slides.`,
+          All titles and taglines should be a maximum of 100 characters. Paragraphs should be under 200 characters. The content should be in ${language} and convey a ${mood} mood. Please generate content for ${numSlides} slides on the topic: ${topic}.`,
         },
         {
           role: "user",
-          content: `${topic}`,
+          content: topic,
         },
       ],
       max_tokens: Number(maxTokens),

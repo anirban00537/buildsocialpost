@@ -1,3 +1,4 @@
+// /pages/api/create-content.js
 import {
   generateCaruselContentFromTopic,
   parseCarouselContentToJSON,
@@ -5,7 +6,8 @@ import {
 
 export async function POST(req: Request) {
   try {
-    const { topic, numSlides, maxTokens, temperature } = await req.json();
+    const { topic, numSlides, maxTokens, temperature, language, model, mood } =
+      await req.json();
 
     if (!topic || !numSlides) {
       return new Response(
@@ -21,7 +23,10 @@ export async function POST(req: Request) {
       topic,
       numSlides,
       maxTokens,
-      temperature
+      temperature,
+      language,
+      model,
+      mood
     );
 
     const response = parseCarouselContentToJSON(content);

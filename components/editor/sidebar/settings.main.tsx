@@ -13,8 +13,25 @@ import { Slider } from "@/components/ui/slider";
 import { useGenerateContent } from "@/hooks/useGenerateContent";
 
 const SettingsComponent = () => {
-  const { generateContent, topic, setTopic } = useGenerateContent();
-  const [slides, setSlides] = useState(0.5);
+  const {
+    generateContent,
+    topic,
+    setTopic,
+    setNumSlides,
+    numSlides,
+    setMaxTokens,
+    maxTokens,
+    setTemperature,
+    temperature,
+    setLanguage,
+    language,
+    setModel,
+    model,
+    setMood,
+    mood,
+  } = useGenerateContent();
+  const [slides, setSlides] = useState(5);
+
   return (
     <form
       className="grid w-full items-start gap-6 p-4"
@@ -24,6 +41,7 @@ const SettingsComponent = () => {
         <legend className="-ml-1 px-1 text-sm font-semibold mb-4">
           Settings
         </legend>
+
         <div className="grid gap-3">
           <Label htmlFor="content">Topic</Label>
           <Textarea
@@ -35,42 +53,32 @@ const SettingsComponent = () => {
             onChange={(e) => setTopic(e.target.value)}
           />
         </div>
+
         <div className="space-y-2">
-          <Label htmlFor="model" className="text-sm ">
+          <Label htmlFor="model" className="text-sm">
             Model
           </Label>
-          <Select>
+          <Select value={model} onValueChange={setModel}>
             <SelectTrigger id="model" className="w-full p-2 border rounded-lg">
               <SelectValue placeholder="Select a model" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="genesis">
+              <SelectItem value="gpt-4">
                 <div className="flex items-start gap-3 text-muted-foreground">
                   <Zap className="size-5" />
                   <div className="grid gap-0.5">
-                    <p>GPT 4o</p>
+                    <p>GPT-4</p>
                     <p className="text-xs" data-description>
                       Intelligent and faster.
                     </p>
                   </div>
                 </div>
               </SelectItem>
-              <SelectItem value="explorer">
+              <SelectItem value="gpt-3.5-turbo">
                 <div className="flex items-start gap-3 text-muted-foreground">
                   <Brain className="size-5" />
                   <div className="grid gap-0.5">
-                    <p>GPT 4</p>
-                    <p className="text-xs" data-description>
-                      Intelligent and efficient.
-                    </p>
-                  </div>
-                </div>
-              </SelectItem>
-              <SelectItem value="quantum">
-                <div className="flex items-start gap-3 text-muted-foreground">
-                  <Shield className="size-5" />
-                  <div className="grid gap-0.5">
-                    <p>GPT 3.5</p>
+                    <p>GPT-3.5 Turbo</p>
                     <p className="text-xs" data-description>
                       Fast and accurate.
                     </p>
@@ -80,8 +88,9 @@ const SettingsComponent = () => {
             </SelectContent>
           </Select>
         </div>
+
         <div className="space-y-2">
-          <Label htmlFor="template" className="text-sm ">
+          <Label htmlFor="template" className="text-sm">
             Template Settings
           </Label>
           <Select>
@@ -96,7 +105,7 @@ const SettingsComponent = () => {
                 <div className="flex items-start gap-3 text-muted-foreground">
                   <Zap className="size-5" />
                   <div className="grid gap-0.5">
-                    <p>Linkedin Carousel</p>
+                    <p>LinkedIn Carousel</p>
                   </div>
                 </div>
               </SelectItem>
@@ -112,13 +121,14 @@ const SettingsComponent = () => {
                 <div className="flex items-start gap-3 text-muted-foreground">
                   <Shield className="size-5" />
                   <div className="grid gap-0.5">
-                    <p>Tiktok</p>
+                    <p>TikTok</p>
                   </div>
                 </div>
               </SelectItem>
             </SelectContent>
           </Select>
         </div>
+
         <div className="grid gap-3">
           <Label htmlFor="slides">Slides</Label>
           <div className="flex items-center gap-2">
@@ -126,16 +136,20 @@ const SettingsComponent = () => {
               max={10}
               step={1}
               value={[slides]}
-              onValueChange={(value) => setSlides(value[0])}
+              onValueChange={(value) => {
+                setSlides(value[0]);
+                setNumSlides(value[0]);
+              }}
               className="flex-grow"
             />
             <span className="text-sm font-medium">{slides}</span>
           </div>
         </div>
+
         <div className="grid gap-4">
           <div className="grid gap-3">
             <Label htmlFor="mood">Mood</Label>
-            <Select>
+            <Select value={mood} onValueChange={setMood}>
               <SelectTrigger id="mood">
                 <SelectValue placeholder="Select a mood" />
               </SelectTrigger>
@@ -149,9 +163,10 @@ const SettingsComponent = () => {
             </Select>
           </div>
         </div>
+
         <div className="grid gap-3">
           <Label htmlFor="language">Language</Label>
-          <Select>
+          <Select value={language} onValueChange={setLanguage}>
             <SelectTrigger
               id="language"
               className="items-start [&_[data-description]]:hidden"
@@ -159,16 +174,18 @@ const SettingsComponent = () => {
               <SelectValue placeholder="Select a language" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="english">English</SelectItem>
-              <SelectItem value="spanish">Spanish</SelectItem>
-              <SelectItem value="french">French</SelectItem>
-              <SelectItem value="german">German</SelectItem>
-              <SelectItem value="chinese">Chinese</SelectItem>
+              <SelectItem value="en">English</SelectItem>
+              <SelectItem value="es">Spanish</SelectItem>
+              <SelectItem value="fr">French</SelectItem>
+              <SelectItem value="de">German</SelectItem>
+              <SelectItem value="zh">Chinese</SelectItem>
             </SelectContent>
           </Select>
         </div>
       </fieldset>
-      <button type="submit">Generate</button>
+      <button type="submit" className="btn btn-primary">
+        Generate
+      </button>
     </form>
   );
 };

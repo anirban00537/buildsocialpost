@@ -7,7 +7,11 @@ export const useGenerateContent = () => {
   const [numSlides, setNumSlides] = useState(5);
   const [maxTokens, setMaxTokens] = useState(600);
   const [temperature, setTemperature] = useState(0.2);
+  const [language, setLanguage] = useState("en");
+  const [model, setModel] = useState("gpt-3.5-turbo");
+  const [mood, setMood] = useState("neutral");
   const dispatch = useDispatch();
+
   const generateContent = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
@@ -16,7 +20,15 @@ export const useGenerateContent = () => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ topic, numSlides, maxTokens, temperature }),
+        body: JSON.stringify({
+          topic,
+          numSlides,
+          maxTokens,
+          temperature,
+          language,
+          model,
+          mood,
+        }),
       });
 
       if (!response.ok) {
@@ -24,12 +36,12 @@ export const useGenerateContent = () => {
       }
 
       const data = await response.json();
-      console.log(data.response, "dataaaaaaaaa");
       dispatch(addAllSlides(data.response));
     } catch (error) {
       console.error("Error generating content:", error);
     }
   };
+
   return {
     generateContent,
     setTopic,
@@ -40,5 +52,11 @@ export const useGenerateContent = () => {
     maxTokens,
     setTemperature,
     temperature,
+    setLanguage,
+    language,
+    setModel,
+    model,
+    setMood,
+    mood,
   };
 };
