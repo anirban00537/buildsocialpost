@@ -19,8 +19,6 @@ const SettingsComponent = () => {
     setTopic,
     setNumSlides,
     numSlides,
-    setMaxTokens,
-    maxTokens,
     setTemperature,
     temperature,
     setLanguage,
@@ -30,7 +28,6 @@ const SettingsComponent = () => {
     setMood,
     mood,
   } = useGenerateContent();
-  const [slides, setSlides] = useState(5);
 
   return (
     <form
@@ -63,14 +60,11 @@ const SettingsComponent = () => {
               <SelectValue placeholder="Select a model" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="gpt-4">
+              <SelectItem value="gpt-4o">
                 <div className="flex items-start gap-3 text-muted-foreground">
                   <Zap className="size-5" />
                   <div className="grid gap-0.5">
-                    <p>GPT-4</p>
-                    <p className="text-xs" data-description>
-                      Intelligent and faster.
-                    </p>
+                    <p>GPT-4o</p>
                   </div>
                 </div>
               </SelectItem>
@@ -79,9 +73,6 @@ const SettingsComponent = () => {
                   <Brain className="size-5" />
                   <div className="grid gap-0.5">
                     <p>GPT-3.5 Turbo</p>
-                    <p className="text-xs" data-description>
-                      Fast and accurate.
-                    </p>
                   </div>
                 </div>
               </SelectItem>
@@ -135,14 +126,13 @@ const SettingsComponent = () => {
             <Slider
               max={10}
               step={1}
-              value={[slides]}
+              value={[numSlides]}
               onValueChange={(value) => {
-                setSlides(value[0]);
                 setNumSlides(value[0]);
               }}
               className="flex-grow"
             />
-            <span className="text-sm font-medium">{slides}</span>
+            <span className="text-sm font-medium">{numSlides}</span>
           </div>
         </div>
 

@@ -22,24 +22,26 @@ export const generateCaruselContentFromTopic = async (
           content: `You are an expert content creator for LinkedIn carousels. Generate engaging and informative carousel slides based on the given topic, number of slides, language, mood, and model specifications. Answer them in this format example:
           
           [Intro]
-          type:"intro"
+          type:intro
           tagline: 
           title: 
-          paragraph: 
+          description: 
           
           [Slide 1]
+          type:slide
           title: 
-          paragraph:
+          description:
           
           [rest of the slides]
           ...
           
           [Outro]
+          type:outro
           tagline: 
           title: 
-          paragraph:
+          description:
           
-          All titles and taglines should be a maximum of 100 characters. Paragraphs should be under 200 characters. The content should be in ${language} and convey a ${mood} mood. Please generate content for ${numSlides} slides on the topic: ${topic}.`,
+          All titles and taglines should be a maximum of 60 characters. descriptions should be under 200 characters. The content should be in ${language} and convey a ${mood} mood. Please generate content for ${numSlides} slides on the topic: ${topic}.`,
         },
         {
           role: "user",
@@ -68,7 +70,7 @@ type Slide = {
 };
 
 const isValidSlideKey = (key: string): key is keyof Slide => {
-  return ["tagline", "title", "pagrgraph", "Call to action"].includes(key);
+  return ["type", "tagline", "title", "description"].includes(key);
 };
 
 export const parseCarouselContentToJSON = (content: string): Slide[] => {

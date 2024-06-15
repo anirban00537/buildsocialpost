@@ -1,4 +1,3 @@
-// /pages/api/create-content.js
 import {
   generateCaruselContentFromTopic,
   parseCarouselContentToJSON,
@@ -18,7 +17,6 @@ export async function POST(req: Request) {
       );
     }
 
-    // Generate carousel content
     const content: any = await generateCaruselContentFromTopic(
       topic,
       numSlides,
@@ -28,6 +26,8 @@ export async function POST(req: Request) {
       model,
       mood
     );
+    // Generate carousel content
+    console.log(content, "content");
 
     const response = parseCarouselContentToJSON(content);
 
