@@ -53,6 +53,7 @@ const SlideComponent: React.FC<SlideProps> = ({
           alignItems: "center",
           justifyContent: "center",
           textAlign: "center",
+          width: "100%",
         }}
       >
         <div style={{ marginBottom: "16px", width: "100%" }}>
