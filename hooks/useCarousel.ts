@@ -89,8 +89,8 @@ const useCarousel = () => {
       const slideElement = document.getElementById(`slide-${i}`);
       if (slideElement) {
         try {
-          slideElement.style.width = `${30}rem`;
-          slideElement.style.height = `${35}rem`;
+          slideElement.style.width = `480px`;
+          slideElement.style.height = `560px`;
 
           const imgData = await toPng(slideElement, { cacheBust: true });
           if (i !== 0) {

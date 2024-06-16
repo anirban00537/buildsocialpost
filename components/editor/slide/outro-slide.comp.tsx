@@ -6,7 +6,6 @@ interface SlideProps {
   generalSettings: generalSettings;
   index: number;
   updateSlide: (index: number, updatedSlide: any) => void;
-  deleteSlide: (index: number) => void;
   customStyles?: {
     container?: React.CSSProperties;
     tagline?: React.CSSProperties;
@@ -24,7 +23,6 @@ const OutroSliderComponent: React.FC<SlideProps> = ({
   generalSettings,
   index,
   updateSlide,
-  deleteSlide,
   customStyles = {},
 }) => {
   const backgroundImageStyle = slide.imageUrl
@@ -56,10 +54,10 @@ const OutroSliderComponent: React.FC<SlideProps> = ({
           alignItems: "center",
           justifyContent: "center",
           textAlign: "center",
-          padding: "2rem",
+          padding: "32px",
         }}
       >
-        <div style={{ marginBottom: "1rem", width: "100%", maxWidth: "768px" }}>
+        <div style={{ marginBottom: "16px", width: "100%", maxWidth: "768px" }}>
           <div
             contentEditable
             suppressContentEditableWarning
@@ -68,9 +66,9 @@ const OutroSliderComponent: React.FC<SlideProps> = ({
             }
             style={{
               width: "100%",
-              padding: "0.5rem",
-              marginBottom: "0.5rem",
-              fontSize: "1.125rem",
+              padding: "8px",
+              marginBottom: "8px",
+              fontSize: "18px",
               backgroundColor: "transparent",
               border: "none",
               color: "white",
@@ -91,9 +89,9 @@ const OutroSliderComponent: React.FC<SlideProps> = ({
             }
             style={{
               width: "100%",
-              padding: "0.5rem",
-              marginBottom: "0.5rem",
-              fontSize: "2.25rem",
+              padding: "8px",
+              marginBottom: "8px",
+              fontSize: "36px",
               fontWeight: "bold",
               backgroundColor: "transparent",
               border: "none",
@@ -115,8 +113,8 @@ const OutroSliderComponent: React.FC<SlideProps> = ({
             }
             style={{
               width: "100%",
-              padding: "0.5rem",
-              fontSize: "1rem",
+              padding: "8px",
+              fontSize: "16px",
               backgroundColor: "transparent",
               border: "none",
               color: "white",
@@ -130,22 +128,6 @@ const OutroSliderComponent: React.FC<SlideProps> = ({
             {slide.description ||
               "It's important to prioritize balance in your life. With some intentional planning, you can find balance and enjoy more peace of mind."}
           </div>
-          <div style={{ marginTop: "1rem" }}>
-            <button
-              style={{
-                padding: "0.5rem 1rem",
-                backgroundColor: "#fbbf24",
-                color: "black",
-                fontWeight: "bold",
-                borderRadius: "0.5rem",
-                border: "none",
-                cursor: "pointer",
-                ...customStyles.button,
-              }}
-            >
-              Start creating balance today!
-            </button>
-          </div>
         </div>
       </div>
       <div
@@ -155,56 +137,57 @@ const OutroSliderComponent: React.FC<SlideProps> = ({
           left: "0",
           display: "flex",
           alignItems: "center",
-          padding: "1rem",
-          marginBottom: "0.5rem",
+          padding: "16px",
+          marginBottom: "8px",
         }}
       >
         {generalSettings.headshotUrl && (
-          <img
-            src={generalSettings.headshotUrl}
-            alt="Headshot"
+          <div
             style={{
-              width: "2rem",
-              height: "2rem",
-              borderRadius: "50%",
-              marginRight: "1rem",
-              ...customStyles.headshot,
+              position: "absolute",
+              bottom: "32px",
+              left: "16px",
+              display: "flex",
+              alignItems: "center",
+              gap: "16px", // Use gap for spacing
+              padding: "8px",
+              borderRadius: "8px",
             }}
-          />
+          >
+            {generalSettings.headshotUrl && (
+              <img
+                src={generalSettings.headshotUrl}
+                alt="Headshot"
+                style={{
+                  width: "40px",
+                  height: "40px",
+                  borderRadius: "50%",
+                  ...customStyles.headshot,
+                }}
+              />
+            )}
+            <div style={{ display: "flex", flexDirection: "column" }}>
+              <div
+                style={{
+                  fontSize: "14px",
+                  fontWeight: "600",
+                  ...customStyles.authorName,
+                }}
+              >
+                {generalSettings.name || "Anirban Roy"}
+              </div>
+              <div
+                style={{
+                  fontSize: "12px",
+                  color: "#d1d5db",
+                  ...customStyles.authorHandle,
+                }}
+              >
+                {generalSettings.handle || "@anirban00537"}
+              </div>
+            </div>
+          </div>
         )}
-        <div style={{ display: "flex", flexDirection: "column" }}>
-          <div
-            style={{
-              fontSize: "0.875rem",
-              backgroundColor: "transparent",
-              border: "none",
-              color: "white",
-              outline: "none",
-              wordBreak: "break-word",
-              whiteSpace: "normal",
-              resize: "none",
-              ...customStyles.authorName,
-            }}
-          >
-            {generalSettings.name || "Anirban Roy"}
-          </div>
-          <div
-            style={{
-              padding: "0.25rem",
-              fontSize: "0.875rem",
-              color: "#9ca3af",
-              backgroundColor: "transparent",
-              border: "none",
-              outline: "none",
-              wordBreak: "break-word",
-              whiteSpace: "normal",
-              resize: "none",
-              ...customStyles.authorHandle,
-            }}
-          >
-            {generalSettings.handle || "@anirban00537"}
-          </div>
-        </div>
       </div>
       <div
         style={{
@@ -214,8 +197,8 @@ const OutroSliderComponent: React.FC<SlideProps> = ({
           width: "100%",
           backgroundColor: "rgba(0, 0, 0, 0.6)",
           textAlign: "center",
-          fontSize: "0.75rem",
-          padding: "0.25rem",
+          fontSize: "12px",
+          padding: "4px",
         }}
       >
         Created by{" "}

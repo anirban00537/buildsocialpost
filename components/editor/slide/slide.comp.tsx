@@ -6,7 +6,6 @@ interface SlideProps {
   generalSettings: generalSettings;
   index: number;
   updateSlide: (index: number, updatedSlide: any) => void;
-  deleteSlide: (index: number) => void;
   customStyles?: {
     container?: React.CSSProperties;
     tagline?: React.CSSProperties;
@@ -23,7 +22,6 @@ const SlideComponent: React.FC<SlideProps> = ({
   index,
   generalSettings,
   updateSlide,
-  deleteSlide,
   customStyles = {},
 }) => {
   const backgroundImageStyle = slide.imageUrl
@@ -55,33 +53,10 @@ const SlideComponent: React.FC<SlideProps> = ({
           alignItems: "center",
           justifyContent: "center",
           textAlign: "center",
-          padding: "2rem",
+          padding: "32px",
         }}
       >
-        <div style={{ marginBottom: "1rem", width: "100%" }}>
-          <div
-            contentEditable
-            suppressContentEditableWarning
-            onBlur={(e) =>
-              updateSlide(index, { ...slide, tagline: e.target.innerText })
-            }
-            style={{
-              width: "100%",
-              padding: "0.5rem",
-              marginBottom: "0.5rem",
-              fontSize: "1.125rem",
-              backgroundColor: "transparent",
-              border: "none",
-              color: "white",
-              outline: "none",
-              wordBreak: "break-word",
-              whiteSpace: "normal",
-              resize: "none",
-              ...customStyles.tagline,
-            }}
-          >
-            {slide.tagline || "tagline"}
-          </div>
+        <div style={{ marginBottom: "16px", width: "100%" }}>
           <div
             contentEditable
             suppressContentEditableWarning
@@ -90,9 +65,9 @@ const SlideComponent: React.FC<SlideProps> = ({
             }
             style={{
               width: "100%",
-              padding: "0.5rem",
-              marginBottom: "0.5rem",
-              fontSize: "2.25rem",
+              padding: "8px",
+              marginBottom: "8px",
+              fontSize: "36px",
               fontWeight: "bold",
               backgroundColor: "transparent",
               border: "none",
@@ -114,8 +89,8 @@ const SlideComponent: React.FC<SlideProps> = ({
             }
             style={{
               width: "100%",
-              padding: "0.5rem",
-              fontSize: "1rem",
+              padding: "8px",
+              fontSize: "16px",
               backgroundColor: "transparent",
               border: "none",
               color: "white",
@@ -133,13 +108,13 @@ const SlideComponent: React.FC<SlideProps> = ({
       <div
         style={{
           position: "absolute",
-          bottom: "2rem",
-          left: "1rem",
+          bottom: "32px",
+          left: "16px",
           display: "flex",
           alignItems: "center",
-          gap: "1rem", // Use gap for spacing
-          padding: "0.5rem",
-          borderRadius: "0.5rem",
+          gap: "16px", // Use gap for spacing
+          padding: "8px",
+          borderRadius: "8px",
         }}
       >
         {generalSettings.headshotUrl && (
@@ -147,8 +122,8 @@ const SlideComponent: React.FC<SlideProps> = ({
             src={generalSettings.headshotUrl}
             alt="Headshot"
             style={{
-              width: "2.5rem",
-              height: "2.5rem",
+              width: "40px",
+              height: "40px",
               borderRadius: "50%",
               ...customStyles.headshot,
             }}
@@ -157,7 +132,7 @@ const SlideComponent: React.FC<SlideProps> = ({
         <div style={{ display: "flex", flexDirection: "column" }}>
           <div
             style={{
-              fontSize: "0.875rem",
+              fontSize: "14px",
               fontWeight: "600",
               ...customStyles.authorName,
             }}
@@ -166,7 +141,7 @@ const SlideComponent: React.FC<SlideProps> = ({
           </div>
           <div
             style={{
-              fontSize: "0.75rem",
+              fontSize: "12px",
               color: "#d1d5db",
               ...customStyles.authorHandle,
             }}
@@ -183,8 +158,8 @@ const SlideComponent: React.FC<SlideProps> = ({
           width: "100%",
           backgroundColor: "rgba(0, 0, 0, 0.6)",
           textAlign: "center",
-          fontSize: "0.75rem",
-          padding: "0.25rem",
+          fontSize: "12px",
+          padding: "4px",
         }}
       >
         Created by{" "}

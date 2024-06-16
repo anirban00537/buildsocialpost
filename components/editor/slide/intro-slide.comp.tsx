@@ -5,7 +5,6 @@ interface SlideProps {
   slide: any;
   index: number;
   updateSlide: (index: number, updatedSlide: any) => void;
-  deleteSlide: (index: number, updatedSlide: any) => void;
   customStyles?: Theme;
 }
 
@@ -13,7 +12,6 @@ const IntroSlideComponent: React.FC<SlideProps> = ({
   slide,
   index,
   updateSlide,
-  deleteSlide,
   customStyles = {},
 }) => {
   const backgroundImageStyle = slide.imageUrl
@@ -45,10 +43,10 @@ const IntroSlideComponent: React.FC<SlideProps> = ({
           alignItems: "center",
           justifyContent: "center",
           textAlign: "center",
-          padding: "2rem",
+          padding: "32px",
         }}
       >
-        <div style={{ marginBottom: "1rem", width: "100%" }}>
+        <div style={{ marginBottom: "16px", width: "100%" }}>
           <div
             contentEditable
             suppressContentEditableWarning
@@ -57,9 +55,9 @@ const IntroSlideComponent: React.FC<SlideProps> = ({
             }
             style={{
               width: "100%",
-              padding: "0.5rem",
-              marginBottom: "0.5rem",
-              fontSize: "1.5rem",
+              padding: "8px",
+              marginBottom: "8px",
+              fontSize: "24px",
               fontStyle: "italic",
               backgroundColor: "transparent",
               border: "none",
@@ -81,9 +79,9 @@ const IntroSlideComponent: React.FC<SlideProps> = ({
             }
             style={{
               width: "100%",
-              padding: "0.5rem",
-              marginBottom: "0.5rem",
-              fontSize: "2.25rem",
+              padding: "8px",
+              marginBottom: "8px",
+              fontSize: "36px",
               fontWeight: "bold",
               backgroundColor: "transparent",
               border: "none",
@@ -105,8 +103,8 @@ const IntroSlideComponent: React.FC<SlideProps> = ({
             }
             style={{
               width: "100%",
-              padding: "0.5rem",
-              fontSize: "1rem",
+              padding: "8px",
+              fontSize: "16px",
               backgroundColor: "transparent",
               border: "none",
               color: "white",
@@ -130,8 +128,8 @@ const IntroSlideComponent: React.FC<SlideProps> = ({
           width: "100%",
           backgroundColor: "rgba(0, 0, 0, 0.6)",
           textAlign: "center",
-          fontSize: "0.75rem",
-          padding: "0.25rem",
+          fontSize: "12px",
+          padding: "4px",
         }}
       >
         Created by{" "}

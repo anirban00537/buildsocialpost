@@ -61,7 +61,7 @@ const CarouselEditor: React.FC = () => {
             scrollbar={{ hide: true, enabled: false }}
             a11y={{ enabled: true }}
             allowTouchMove={false}
-            style={{ width: "100%", height: "40rem" }}
+            style={{ width: "100%", height: "640px" }}
           >
             {slides.map((slide, index) => (
               <SwiperSlide
@@ -69,15 +69,15 @@ const CarouselEditor: React.FC = () => {
                 className="flex flex-col justify-center items-center"
                 onClick={() => handleSlideClick(index)}
                 style={{
-                  width: "30rem",
-                  height: "35rem",
+                  width: "480px",
+                  height: "560px",
                 }}
               >
                 <div
                   id={`slide-${index}`}
                   style={{
-                    width: "30rem",
-                    height: "35rem",
+                    width: "480px",
+                    height: "560px",
                     overflow: "hidden",
                   }}
                 >
@@ -86,7 +86,6 @@ const CarouselEditor: React.FC = () => {
                       slide={slide}
                       index={index}
                       updateSlide={handleUpdateSlide}
-                      deleteSlide={handleDeleteSlide}
                       customStyles={themes[selectedTheme]}
                     />
                   ) : slide.type === "slide" ? (
@@ -95,7 +94,6 @@ const CarouselEditor: React.FC = () => {
                       index={index}
                       generalSettings={generalSettings}
                       updateSlide={handleUpdateSlide}
-                      deleteSlide={handleDeleteSlide}
                       customStyles={themes[selectedTheme]}
                     />
                   ) : (
@@ -104,7 +102,6 @@ const CarouselEditor: React.FC = () => {
                       index={index}
                       generalSettings={generalSettings}
                       updateSlide={handleUpdateSlide}
-                      deleteSlide={handleDeleteSlide}
                       customStyles={themes[selectedTheme]}
                     />
                   )}
