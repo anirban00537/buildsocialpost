@@ -54,7 +54,6 @@ const OutroSliderComponent: React.FC<SlideProps> = ({
           alignItems: "center",
           justifyContent: "center",
           textAlign: "center",
-          padding: "32px",
         }}
       >
         <div style={{ marginBottom: "16px", width: "100%", maxWidth: "768px" }}>
@@ -151,7 +150,6 @@ const OutroSliderComponent: React.FC<SlideProps> = ({
               alignItems: "center",
               gap: "16px", // Use gap for spacing
               padding: "8px",
-              borderRadius: "8px",
             }}
           >
             {generalSettings.headshotUrl && (

@@ -53,7 +53,6 @@ const SlideComponent: React.FC<SlideProps> = ({
           alignItems: "center",
           justifyContent: "center",
           textAlign: "center",
-          padding: "32px",
         }}
       >
         <div style={{ marginBottom: "16px", width: "100%" }}>
@@ -62,6 +61,30 @@ const SlideComponent: React.FC<SlideProps> = ({
             suppressContentEditableWarning
             onBlur={(e) =>
               updateSlide(index, { ...slide, title: e.target.innerText })
+            }
+            style={{
+              width: "100%",
+              padding: "8px",
+              marginBottom: "8px",
+              fontSize: "24px",
+              fontStyle: "italic",
+              backgroundColor: "transparent",
+              border: "none",
+              color: "white",
+              outline: "none",
+              wordBreak: "break-word",
+              whiteSpace: "normal",
+              resize: "none",
+              ...customStyles.tagline,
+            }}
+          >
+            {slide.title || "Title"}
+          </div>
+          <div
+            contentEditable
+            suppressContentEditableWarning
+            onBlur={(e) =>
+              updateSlide(index, { ...slide, description: e.target.innerText })
             }
             style={{
               width: "100%",
@@ -79,28 +102,6 @@ const SlideComponent: React.FC<SlideProps> = ({
               ...customStyles.title,
             }}
           >
-            {slide.title || "Title"}
-          </div>
-          <div
-            contentEditable
-            suppressContentEditableWarning
-            onBlur={(e) =>
-              updateSlide(index, { ...slide, description: e.target.innerText })
-            }
-            style={{
-              width: "100%",
-              padding: "8px",
-              fontSize: "16px",
-              backgroundColor: "transparent",
-              border: "none",
-              color: "white",
-              outline: "none",
-              wordBreak: "break-word",
-              whiteSpace: "normal",
-              resize: "none",
-              ...customStyles.description,
-            }}
-          >
             {slide.description || "Description"}
           </div>
         </div>
@@ -114,7 +115,6 @@ const SlideComponent: React.FC<SlideProps> = ({
           alignItems: "center",
           gap: "16px", // Use gap for spacing
           padding: "8px",
-          borderRadius: "8px",
         }}
       >
         {generalSettings.headshotUrl && (

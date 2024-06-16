@@ -19,7 +19,7 @@ export const generateCaruselContentFromTopic = async (
       messages: [
         {
           role: "system",
-          content: `You are an expert content creator for LinkedIn carousels. Generate engaging and informative carousel slides based on the given topic, number of slides, language, mood, and model specifications. Answer them in this format example:
+          content: `You are an expert content creator for LinkedIn carousels. Generate engaging and informative carousel slides based on the given topic Answer them in this format example:
           
           [Intro]
           type:intro
@@ -41,7 +41,7 @@ export const generateCaruselContentFromTopic = async (
           title: 
           description:
           
-          All titles and taglines should be a maximum of 60 characters. descriptions should be under 200 characters. The content should be in ${language} and convey a ${mood} mood. Please generate content for ${numSlides} slides on the topic: ${topic}.`,
+          All titles and taglines should be a maximum of 60 characters. descriptions should be under 200 characters. The content should be in ${language} and convey a ${mood} mood. Please generate content for ${numSlides} slides on the topic: ${topic}. Please only include the content in the format above. Do not include any additional text. Do not include any additional text.`,
         },
         {
           role: "user",

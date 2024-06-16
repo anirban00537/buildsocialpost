@@ -10,10 +10,12 @@ export const useGenerateContent = () => {
   const [language, setLanguage] = useState("en");
   const [model, setModel] = useState("gpt-3.5-turbo");
   const [mood, setMood] = useState("neutral");
+  const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
 
   const generateContent = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setLoading(true);
     try {
       const response = await fetch("/api/create-content", {
         method: "POST",
@@ -39,6 +41,8 @@ export const useGenerateContent = () => {
       dispatch(addAllSlides(data.response));
     } catch (error) {
       console.error("Error generating content:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -58,5 +62,6 @@ export const useGenerateContent = () => {
     model,
     setMood,
     mood,
+    loading,
   };
 };

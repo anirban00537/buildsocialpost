@@ -1,13 +1,13 @@
-import type { Config } from "tailwindcss"
+import type { Config } from "tailwindcss";
 
-const config = {
+const config: Config = {
   darkMode: ["class"],
   content: [
-    './pages/**/*.{ts,tsx}',
-    './components/**/*.{ts,tsx}',
-    './app/**/*.{ts,tsx}',
-    './src/**/*.{ts,tsx}',
-	],
+    "./pages/**/*.{ts,tsx}",
+    "./components/**/*.{ts,tsx}",
+    "./app/**/*.{ts,tsx}",
+    "./src/**/*.{ts,tsx}",
+  ],
   prefix: "",
   theme: {
     container: {
@@ -19,44 +19,44 @@ const config = {
     },
     extend: {
       colors: {
-        border: "hsl(var(--border))",
-        input: "hsl(var(--input))",
-        ring: "hsl(var(--ring))",
-        background: "hsl(var(--background))",
-        foreground: "hsl(var(--foreground))",
+        border: "#dcdcdc", // Example hex value, replace with actual values
+        input: "#f5f5f5", // Example hex value, replace with actual values
+        ring: "#c0c0c0", // Example hex value, replace with actual values
+        background: "#ffffff", // Example hex value, replace with actual values
+        foreground: "#000000", // Example hex value, replace with actual values
         primary: {
-          DEFAULT: "hsl(var(--primary))",
-          foreground: "hsl(var(--primary-foreground))",
+          DEFAULT: "#3490dc", // Example hex value, replace with actual values
+          foreground: "#ffffff", // Example hex value, replace with actual values
         },
         secondary: {
-          DEFAULT: "hsl(var(--secondary))",
-          foreground: "hsl(var(--secondary-foreground))",
+          DEFAULT: "#ffed4a", // Example hex value, replace with actual values
+          foreground: "#000000", // Example hex value, replace with actual values
         },
         destructive: {
-          DEFAULT: "hsl(var(--destructive))",
-          foreground: "hsl(var(--destructive-foreground))",
+          DEFAULT: "#e3342f", // Example hex value, replace with actual values
+          foreground: "#ffffff", // Example hex value, replace with actual values
         },
         muted: {
-          DEFAULT: "hsl(var(--muted))",
-          foreground: "hsl(var(--muted-foreground))",
+          DEFAULT: "#f5f5f5", // Example hex value, replace with actual values
+          foreground: "#737373", // Example hex value, replace with actual values
         },
         accent: {
-          DEFAULT: "hsl(var(--accent))",
-          foreground: "hsl(var(--accent-foreground))",
+          DEFAULT: "#38b2ac", // Example hex value, replace with actual values
+          foreground: "#ffffff", // Example hex value, replace with actual values
         },
         popover: {
-          DEFAULT: "hsl(var(--popover))",
-          foreground: "hsl(var(--popover-foreground))",
+          DEFAULT: "#ffffff", // Example hex value, replace with actual values
+          foreground: "#000000", // Example hex value, replace with actual values
         },
         card: {
-          DEFAULT: "hsl(var(--card))",
-          foreground: "hsl(var(--card-foreground))",
+          DEFAULT: "#f8f9fa", // Example hex value, replace with actual values
+          foreground: "#212529", // Example hex value, replace with actual values
         },
       },
       borderRadius: {
-        lg: "var(--radius)",
-        md: "calc(var(--radius) - 2px)",
-        sm: "calc(var(--radius) - 4px)",
+        lg: "0.75rem", // Example value, replace with actual values
+        md: "0.5rem", // Example value, replace with actual values
+        sm: "0.25rem", // Example value, replace with actual values
       },
       keyframes: {
         "accordion-down": {
@@ -75,6 +75,6 @@ const config = {
     },
   },
   plugins: [require("tailwindcss-animate")],
-} satisfies Config
+};
 
-export default config
+export default config;

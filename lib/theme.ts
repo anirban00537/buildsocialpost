@@ -15,11 +15,10 @@ export const themes: { [key: string]: Theme } = {
     container: {
       backgroundColor: "#1a1a1a",
       padding: "30px",
-      borderRadius: "15px",
       boxShadow: "0 4px 20px rgba(0, 0, 0, 0.5)",
       display: "flex",
       flexDirection: "column",
-      alignItems: "flex-start",
+      alignItems: "center",
     },
     tagline: { fontSize: "16px", color: "#fff", fontStyle: "italic" },
     title: {
@@ -175,7 +174,7 @@ export const themes: { [key: string]: Theme } = {
       textAlign: "left",
       display: "flex",
       flexDirection: "column",
-      alignItems: "flex-start",
+      alignItems: "center",
     },
     tagline: {
       fontSize: "13px",
@@ -223,7 +222,6 @@ export const themes: { [key: string]: Theme } = {
     container: {
       backgroundColor: "#e9ecef",
       padding: "40px",
-      borderRadius: "15px",
       boxShadow: "0 4px 20px rgba(0, 0, 0, 0.5)",
       textAlign: "center",
       display: "flex",
@@ -280,7 +278,7 @@ export const themes: { [key: string]: Theme } = {
       boxShadow: "0 4px 20px rgba(0, 0, 0, 0.1)",
       display: "flex",
       flexDirection: "column",
-      alignItems: "flex-start",
+      alignItems: "center",
     },
     tagline: { fontSize: "11px", color: "#333", fontStyle: "italic" },
     title: {
@@ -376,12 +374,11 @@ export const themes: { [key: string]: Theme } = {
     container: {
       backgroundColor: "#333333",
       padding: "40px",
-      borderRadius: "15px",
       boxShadow: "0 4px 20px rgba(0, 0, 0, 0.5)",
       textAlign: "left",
       display: "flex",
       flexDirection: "column",
-      alignItems: "flex-start",
+      alignItems: "center",
     },
     tagline: {
       fontSize: "9px",

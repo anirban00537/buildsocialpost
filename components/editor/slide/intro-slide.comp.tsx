@@ -43,7 +43,6 @@ const IntroSlideComponent: React.FC<SlideProps> = ({
           alignItems: "center",
           justifyContent: "center",
           textAlign: "center",
-          padding: "32px",
         }}
       >
         <div style={{ marginBottom: "16px", width: "100%" }}>
@@ -99,7 +98,7 @@ const IntroSlideComponent: React.FC<SlideProps> = ({
             contentEditable
             suppressContentEditableWarning
             onBlur={(e) =>
-              updateSlide(index, { ...slide, paragraph: e.target.innerText })
+              updateSlide(index, { ...slide, description: e.target.innerText })
             }
             style={{
               width: "100%",
@@ -112,10 +111,10 @@ const IntroSlideComponent: React.FC<SlideProps> = ({
               wordBreak: "break-word",
               whiteSpace: "normal",
               resize: "none",
-              ...customStyles.paragraph,
+              ...customStyles.description,
             }}
           >
-            {slide.paragraph ||
+            {slide.description ||
               "Your introductory paragraph here. Describe your content briefly."}
           </div>
         </div>
