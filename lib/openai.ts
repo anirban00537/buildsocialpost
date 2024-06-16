@@ -14,6 +14,14 @@ export const generateCaruselContentFromTopic = async (
   mood = "neutral"
 ) => {
   try {
+    console.log("topic", topic);
+    console.log("numSlides", numSlides);
+    console.log("maxTokens", maxTokens);
+    console.log("temperature", temperature);
+    console.log("model", model);
+    console.log("language", language);
+    console.log("mood", mood);
+
     const response = await openai.chat.completions.create({
       model: model,
       messages: [

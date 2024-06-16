@@ -29,7 +29,7 @@ const config: Config = {
           foreground: "#ffffff", // Example hex value, replace with actual values
         },
         secondary: {
-          DEFAULT: "#ffed4a", // Example hex value, replace with actual values
+          DEFAULT: "#F1F3F5", // Example hex value, replace with actual values
           foreground: "#000000", // Example hex value, replace with actual values
         },
         destructive: {

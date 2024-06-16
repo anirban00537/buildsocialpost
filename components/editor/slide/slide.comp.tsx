@@ -76,7 +76,7 @@ const SlideComponent: React.FC<SlideProps> = ({
               wordBreak: "break-word",
               whiteSpace: "normal",
               resize: "none",
-              ...customStyles.tagline,
+              ...customStyles.title,
             }}
           >
             {slide.title || "Title"}
@@ -100,7 +100,7 @@ const SlideComponent: React.FC<SlideProps> = ({
               wordBreak: "break-word",
               whiteSpace: "normal",
               resize: "none",
-              ...customStyles.title,
+              ...customStyles.description,
             }}
           >
             {slide.description || "Description"}
