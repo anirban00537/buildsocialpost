@@ -19,34 +19,29 @@ export const themes: { [key: string]: Theme } = {
       display: "flex",
       flexDirection: "column",
       alignItems: "center",
-      textAlign: "left",
     },
     tagline: {
       fontSize: "16px",
       color: "#fff",
       fontStyle: "italic",
-      textAlign: "left",
     },
     title: {
       fontSize: "43px",
       color: "#ffdd57",
       textShadow: "3px 3px 6px rgba(0, 0, 0, 0.8)",
       margin: "10px 0",
-      textAlign: "left",
     },
     paragraph: {
       fontSize: "16px",
       color: "#ddd",
       lineHeight: "1.8",
       margin: "10px 0",
-      textAlign: "left",
     },
     description: {
       fontSize: "16px",
       color: "#ddd",
       lineHeight: "1.8",
       margin: "10px 0",
-      textAlign: "left",
     },
     button: {
       backgroundColor: "#ffdd57",
@@ -57,21 +52,18 @@ export const themes: { [key: string]: Theme } = {
       cursor: "pointer",
       transition: "background-color 0.3s",
       margin: "20px 0",
-      textAlign: "left",
     },
     headshot: {
       border: "2px solid #ffdd57",
       borderRadius: "50%",
       margin: "10px 0",
-      textAlign: "left",
     },
     authorName: {
       color: "#ffdd57",
       fontWeight: "bold",
       margin: "5px 0",
-      textAlign: "left",
     },
-    authorHandle: { color: "#ddd", margin: "5px 0", textAlign: "left" },
+    authorHandle: { color: "#ddd", margin: "5px 0" },
   },
   theme2: {
     container: {
@@ -79,7 +71,6 @@ export const themes: { [key: string]: Theme } = {
       padding: "40px",
       borderRadius: "10px",
       boxShadow: "0 4px 20px rgba(0, 0, 0, 0.5)",
-      textAlign: "center",
       display: "flex",
       flexDirection: "column",
       alignItems: "center",
@@ -133,7 +124,7 @@ export const themes: { [key: string]: Theme } = {
       padding: "50px",
       borderRadius: "10px",
       boxShadow: "0 4px 20px rgba(0, 0, 0, 0.5)",
-      textAlign: "center",
+
       display: "flex",
       flexDirection: "column",
       alignItems: "center",
@@ -187,7 +178,7 @@ export const themes: { [key: string]: Theme } = {
       padding: "50px",
       borderRadius: "10px",
       boxShadow: "0 4px 20px rgba(0, 0, 0, 0.5)",
-      textAlign: "left",
+
       display: "flex",
       flexDirection: "column",
       alignItems: "center",
@@ -239,7 +230,7 @@ export const themes: { [key: string]: Theme } = {
       backgroundColor: "#e9ecef",
       padding: "40px",
       boxShadow: "0 4px 20px rgba(0, 0, 0, 0.5)",
-      textAlign: "center",
+
       display: "flex",
       flexDirection: "column",
       alignItems: "center",
@@ -339,7 +330,7 @@ export const themes: { [key: string]: Theme } = {
       padding: "50px",
       borderRadius: "10px",
       boxShadow: "0 4px 20px rgba(0, 0, 0, 0.5)",
-      textAlign: "center",
+
       display: "flex",
       flexDirection: "column",
       alignItems: "center",
@@ -391,7 +382,7 @@ export const themes: { [key: string]: Theme } = {
       backgroundColor: "#333333",
       padding: "40px",
       boxShadow: "0 4px 20px rgba(0, 0, 0, 0.5)",
-      textAlign: "left",
+
       display: "flex",
       flexDirection: "column",
       alignItems: "center",

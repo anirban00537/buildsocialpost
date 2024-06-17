@@ -6,6 +6,7 @@ interface SlideProps {
   generalSettings: generalSettings;
   index: number;
   updateSlide: (index: number, updatedSlide: any) => void;
+  textAlign?: "left" | "center" | "right"; // Adding textAlign prop
   customStyles?: {
     container?: React.CSSProperties;
     tagline?: React.CSSProperties;
@@ -23,6 +24,7 @@ const SlideComponent: React.FC<SlideProps> = ({
   generalSettings,
   index,
   updateSlide,
+  textAlign = "center", // Default to center if not provided
   customStyles = {},
 }) => {
   const backgroundImageStyle = slide.imageUrl
@@ -51,10 +53,16 @@ const SlideComponent: React.FC<SlideProps> = ({
           zIndex: 10,
           display: "flex",
           flexDirection: "column",
-          alignItems: "center",
+          alignItems:
+            textAlign === "center"
+              ? "center"
+              : textAlign === "left"
+              ? "flex-start"
+              : "flex-end",
           justifyContent: "center",
-          textAlign: "center",
+          textAlign: textAlign,
           width: "100%",
+          padding: "0 16px",
         }}
       >
         <div style={{ marginBottom: "16px", width: "100%", maxWidth: "768px" }}>
@@ -78,6 +86,7 @@ const SlideComponent: React.FC<SlideProps> = ({
                 wordBreak: "break-word",
                 whiteSpace: "normal",
                 resize: "none",
+                textAlign: textAlign,
                 ...customStyles.tagline,
               }}
             >
@@ -104,6 +113,7 @@ const SlideComponent: React.FC<SlideProps> = ({
                 wordBreak: "break-word",
                 whiteSpace: "normal",
                 resize: "none",
+                textAlign: textAlign,
                 ...customStyles.title,
               }}
             >
@@ -131,6 +141,7 @@ const SlideComponent: React.FC<SlideProps> = ({
                 wordBreak: "break-word",
                 whiteSpace: "normal",
                 resize: "none",
+                textAlign: textAlign,
                 ...customStyles.description,
               }}
             >

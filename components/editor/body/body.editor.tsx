@@ -85,6 +85,7 @@ const CarouselEditor: React.FC = () => {
                     generalSettings={generalSettings}
                     updateSlide={handleUpdateSlide}
                     customStyles={themes[selectedTheme]}
+                    textAlign="right"
                   />
                 </div>
                 <div className="flex items-center justify-start mt-3 space-x-2">
