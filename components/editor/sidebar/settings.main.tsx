@@ -12,6 +12,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Slider } from "@/components/ui/slider";
 import { useGenerateContent } from "@/hooks/useGenerateContent";
 import { Button } from "@/components/ui/button";
+import { carouselsSize } from "@/lib/coreConstants";
 
 const SettingsComponent = () => {
   const {
@@ -94,30 +95,16 @@ const SettingsComponent = () => {
               <SelectValue placeholder="Select a template" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="linkedin">
-                <div className="flex items-start gap-3 text-muted-foreground">
-                  <Zap className="size-5" />
-                  <div className="grid gap-0.5">
-                    <p>LinkedIn Carousel</p>
+              {carouselsSize.map((size, index) => (
+                <SelectItem key={index} value={size.id.toString()}>
+                  <div className="flex items-start gap-3 text-muted-foreground">
+                    <Shield className="size-5" />
+                    <div className="grid gap-0.5">
+                      <p>{size.ratio}</p>
+                    </div>
                   </div>
-                </div>
-              </SelectItem>
-              <SelectItem value="instagram">
-                <div className="flex items-start gap-3 text-muted-foreground">
-                  <Brain className="size-5" />
-                  <div className="grid gap-0.5">
-                    <p>Instagram Carousel</p>
-                  </div>
-                </div>
-              </SelectItem>
-              <SelectItem value="tiktok">
-                <div className="flex items-start gap-3 text-muted-foreground">
-                  <Shield className="size-5" />
-                  <div className="grid gap-0.5">
-                    <p>TikTok</p>
-                  </div>
-                </div>
-              </SelectItem>
+                </SelectItem>
+              ))}
             </SelectContent>
           </Select>
         </div>
