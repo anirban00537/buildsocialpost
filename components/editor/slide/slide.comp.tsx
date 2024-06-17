@@ -11,6 +11,7 @@ interface SlideProps {
     tagline?: React.CSSProperties;
     title?: React.CSSProperties;
     description?: React.CSSProperties;
+    button?: React.CSSProperties;
     headshot?: React.CSSProperties;
     authorName?: React.CSSProperties;
     authorHandle?: React.CSSProperties;
@@ -19,8 +20,8 @@ interface SlideProps {
 
 const SlideComponent: React.FC<SlideProps> = ({
   slide,
-  index,
   generalSettings,
+  index,
   updateSlide,
   customStyles = {},
 }) => {
@@ -56,69 +57,101 @@ const SlideComponent: React.FC<SlideProps> = ({
           width: "100%",
         }}
       >
-        <div style={{ marginBottom: "16px", width: "100%" }}>
-          <div
-            contentEditable
-            suppressContentEditableWarning
-            onBlur={(e) =>
-              updateSlide(index, { ...slide, title: e.target.innerText })
-            }
-            style={{
-              width: "100%",
-              padding: "8px",
-              marginBottom: "8px",
-              fontSize: "24px",
-              fontStyle: "italic",
-              backgroundColor: "transparent",
-              border: "none",
-              color: "white",
-              outline: "none",
-              wordBreak: "break-word",
-              whiteSpace: "normal",
-              resize: "none",
-              ...customStyles.title,
-            }}
-          >
-            {slide.title || "Title"}
-          </div>
-          <div
-            contentEditable
-            suppressContentEditableWarning
-            onBlur={(e) =>
-              updateSlide(index, { ...slide, description: e.target.innerText })
-            }
-            style={{
-              width: "100%",
-              padding: "8px",
-              marginBottom: "8px",
-              fontSize: "36px",
-              fontWeight: "bold",
-              backgroundColor: "transparent",
-              border: "none",
-              color: "white",
-              outline: "none",
-              wordBreak: "break-word",
-              whiteSpace: "normal",
-              resize: "none",
-              ...customStyles.description,
-            }}
-          >
-            {slide.description || "Description"}
-          </div>
+        <div style={{ marginBottom: "16px", width: "100%", maxWidth: "768px" }}>
+          {slide.tagline && (
+            <div
+              contentEditable
+              suppressContentEditableWarning
+              onBlur={(e) =>
+                updateSlide(index, { ...slide, tagline: e.target.innerText })
+              }
+              style={{
+                width: "100%",
+                padding: "8px",
+                marginBottom: "8px",
+                fontSize: "24px",
+                fontStyle: "italic",
+                backgroundColor: "transparent",
+                border: "none",
+                color: "white",
+                outline: "none",
+                wordBreak: "break-word",
+                whiteSpace: "normal",
+                resize: "none",
+                ...customStyles.tagline,
+              }}
+            >
+              {slide.tagline || "Your Tagline Here"}
+            </div>
+          )}
+          {slide.title && (
+            <div
+              contentEditable
+              suppressContentEditableWarning
+              onBlur={(e) =>
+                updateSlide(index, { ...slide, title: e.target.innerText })
+              }
+              style={{
+                width: "100%",
+                padding: "8px",
+                marginBottom: "8px",
+                fontSize: "36px",
+                fontWeight: "bold",
+                backgroundColor: "transparent",
+                border: "none",
+                color: "white",
+                outline: "none",
+                wordBreak: "break-word",
+                whiteSpace: "normal",
+                resize: "none",
+                ...customStyles.title,
+              }}
+            >
+              {slide.title || "Title"}
+            </div>
+          )}
+          {slide.description && (
+            <div
+              contentEditable
+              suppressContentEditableWarning
+              onBlur={(e) =>
+                updateSlide(index, {
+                  ...slide,
+                  description: e.target.innerText,
+                })
+              }
+              style={{
+                width: "100%",
+                padding: "8px",
+                fontSize: "16px",
+                backgroundColor: "transparent",
+                border: "none",
+                color: "white",
+                outline: "none",
+                wordBreak: "break-word",
+                whiteSpace: "normal",
+                resize: "none",
+                ...customStyles.description,
+              }}
+            >
+              {slide.description ||
+                "Your introductory paragraph here. Describe your content briefly."}
+            </div>
+          )}
         </div>
       </div>
-      <div
-        style={{
-          position: "absolute",
-          bottom: "32px",
-          left: "16px",
-          display: "flex",
-          alignItems: "center",
-          gap: "16px", // Use gap for spacing
-          padding: "8px",
-        }}
-      >
-        {generalSettings.headshotUrl && (
+      {generalSettings.headshotUrl && (
+        <div
+          style={{
+            position: "absolute",
+            bottom: "32px",
+            left: "16px",
+            display: "flex",
+            alignItems: "center",
+            gap: "16px",
+            padding: "8px",
+          }}
+        >
           <img
             src={generalSettings.headshotUrl}
             alt="Headshot"
@@ -129,28 +162,28 @@ const SlideComponent: React.FC<SlideProps> = ({
               ...customStyles.headshot,
             }}
           />
-        )}
-        <div style={{ display: "flex", flexDirection: "column" }}>
-          <div
-            style={{
-              fontSize: "14px",
-              fontWeight: "600",
-              ...customStyles.authorName,
-            }}
-          >
-            {generalSettings.name || "Anirban Roy"}
-          </div>
-          <div
-            style={{
-              fontSize: "12px",
-              color: "#d1d5db",
-              ...customStyles.authorHandle,
-            }}
-          >
-            {generalSettings.handle || "@anirban00537"}
+          <div style={{ display: "flex", flexDirection: "column" }}>
+            <div
+              style={{
+                fontSize: "14px",
+                fontWeight: "600",
+                ...customStyles.authorName,
+              }}
+            >
+              {generalSettings.name || "Anirban Roy"}
+            </div>
+            <div
+              style={{
+                fontSize: "12px",
+                color: "#d1d5db",
+                ...customStyles.authorHandle,
+              }}
+            >
+              {generalSettings.handle || "@anirban00537"}
+            </div>
           </div>
         </div>
-      </div>
+      )}
       <div
         style={{
           position: "absolute",

@@ -22,10 +22,8 @@ import {
   Copy,
   Download,
 } from "lucide-react";
-import SlideComponent from "../slide/slide.comp";
-import IntroSlideComponent from "../slide/intro-slide.comp";
-import OutroSliderComponent from "../slide/outro-slide.comp";
 import useCarousel from "@/hooks/useCarousel";
+import SlideComponent from "../slide/slide.comp";
 
 SwiperCore.use([Navigation, Pagination, Scrollbar, A11y, Autoplay]);
 
@@ -81,30 +79,13 @@ const CarouselEditor: React.FC = () => {
                     overflow: "hidden",
                   }}
                 >
-                  {slide.type === "intro" ? (
-                    <IntroSlideComponent
-                      slide={slide}
-                      index={index}
-                      updateSlide={handleUpdateSlide}
-                      customStyles={themes[selectedTheme]}
-                    />
-                  ) : slide.type === "slide" ? (
-                    <SlideComponent
-                      slide={slide}
-                      index={index}
-                      generalSettings={generalSettings}
-                      updateSlide={handleUpdateSlide}
-                      customStyles={themes[selectedTheme]}
-                    />
-                  ) : (
-                    <OutroSliderComponent
-                      slide={slide}
-                      index={index}
-                      generalSettings={generalSettings}
-                      updateSlide={handleUpdateSlide}
-                      customStyles={themes[selectedTheme]}
-                    />
-                  )}
+                  <SlideComponent
+                    slide={slide}
+                    index={index}
+                    generalSettings={generalSettings}
+                    updateSlide={handleUpdateSlide}
+                    customStyles={themes[selectedTheme]}
+                  />
                 </div>
                 <div className="flex items-center justify-start mt-3 space-x-2">
                   <button

@@ -11,7 +11,6 @@ export const initialSlides: Slide[] = [
   {
     type: "slide",
     title: "Section Title",
-    tagline: "Your amazing tagline goes here",
     description: "Put your content here.",
     imageUrl: null,
   },
