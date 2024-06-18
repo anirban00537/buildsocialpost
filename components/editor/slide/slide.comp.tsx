@@ -6,17 +6,8 @@ interface SlideProps {
   generalSettings: generalSettings;
   index: number;
   updateSlide: (index: number, updatedSlide: any) => void;
-  textAlign?: "left" | "center" | "right"; // Adding textAlign prop
-  customStyles?: {
-    container?: React.CSSProperties;
-    tagline?: React.CSSProperties;
-    title?: React.CSSProperties;
-    description?: React.CSSProperties;
-    button?: React.CSSProperties;
-    headshot?: React.CSSProperties;
-    authorName?: React.CSSProperties;
-    authorHandle?: React.CSSProperties;
-  };
+  textAlign?: "left" | "center" | "right";
+  slideNumber?: number;
 }
 
 const SlideComponent: React.FC<SlideProps> = ({
@@ -24,12 +15,12 @@ const SlideComponent: React.FC<SlideProps> = ({
   generalSettings,
   index,
   updateSlide,
-  textAlign = "center", // Default to center if not provided
-  customStyles = {},
+  textAlign = "center",
+  slideNumber,
 }) => {
   const backgroundImageStyle = slide.imageUrl
     ? { backgroundImage: `url(${slide.imageUrl})` }
-    : { background: "#feb47b" };
+    : { background: "#000000" };
 
   return (
     <div
@@ -44,7 +35,6 @@ const SlideComponent: React.FC<SlideProps> = ({
         justifyContent: "center",
         color: "white",
         ...backgroundImageStyle,
-        ...customStyles.container,
       }}
     >
       <div
@@ -65,6 +55,25 @@ const SlideComponent: React.FC<SlideProps> = ({
           padding: "0 16px",
         }}
       >
+        {slideNumber !== undefined && (
+          <div
+            style={{
+              height: "32px",
+              width: "32px",
+              borderRadius: "50%",
+              backgroundColor: "white",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              fontSize: "24px",
+              fontWeight: "bold",
+              color: "black",
+              margin: "16px",
+            }}
+          >
+            {slideNumber}
+          </div>
+        )}
         <div style={{ marginBottom: "16px", width: "100%", maxWidth: "768px" }}>
           {slide.tagline && (
             <div
@@ -77,7 +86,7 @@ const SlideComponent: React.FC<SlideProps> = ({
                 width: "100%",
                 padding: "8px",
                 marginBottom: "8px",
-                fontSize: "24px",
+                fontSize: "13px",
                 fontStyle: "italic",
                 backgroundColor: "transparent",
                 border: "none",
@@ -87,7 +96,6 @@ const SlideComponent: React.FC<SlideProps> = ({
                 whiteSpace: "normal",
                 resize: "none",
                 textAlign: textAlign,
-                ...customStyles.tagline,
               }}
             >
               {slide.tagline || "Your Tagline Here"}
@@ -114,7 +122,6 @@ const SlideComponent: React.FC<SlideProps> = ({
                 whiteSpace: "normal",
                 resize: "none",
                 textAlign: textAlign,
-                ...customStyles.title,
               }}
             >
               {slide.title || "Title"}
@@ -133,7 +140,7 @@ const SlideComponent: React.FC<SlideProps> = ({
               style={{
                 width: "100%",
                 padding: "8px",
-                fontSize: "16px",
+                fontSize: "13px",
                 backgroundColor: "transparent",
                 border: "none",
                 color: "white",
@@ -142,7 +149,6 @@ const SlideComponent: React.FC<SlideProps> = ({
                 whiteSpace: "normal",
                 resize: "none",
                 textAlign: textAlign,
-                ...customStyles.description,
               }}
             >
               {slide.description ||
@@ -170,7 +176,6 @@ const SlideComponent: React.FC<SlideProps> = ({
               width: "40px",
               height: "40px",
               borderRadius: "50%",
-              ...customStyles.headshot,
             }}
           />
           <div style={{ display: "flex", flexDirection: "column" }}>
@@ -178,7 +183,6 @@ const SlideComponent: React.FC<SlideProps> = ({
               style={{
                 fontSize: "14px",
                 fontWeight: "600",
-                ...customStyles.authorName,
               }}
             >
               {generalSettings.name || "Anirban Roy"}
@@ -187,7 +191,6 @@ const SlideComponent: React.FC<SlideProps> = ({
               style={{
                 fontSize: "12px",
                 color: "#d1d5db",
-                ...customStyles.authorHandle,
               }}
             >
               {generalSettings.handle || "@anirban00537"}
