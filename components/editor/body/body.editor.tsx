@@ -34,6 +34,7 @@ const CarouselEditor: React.FC = () => {
     generalSettings,
     themes,
     selectedTheme,
+    layout,
     textSettings,
     handleSlideClick,
     handleInsertSlide,
@@ -68,15 +69,15 @@ const CarouselEditor: React.FC = () => {
                 className="flex flex-col justify-center items-center"
                 onClick={() => handleSlideClick(index)}
                 style={{
-                  width: "480px",
-                  height: "560px",
+                  width: layout.width + "px",
+                  height: layout.height + "px",
                 }}
               >
                 <div
                   id={`slide-${index}`}
                   style={{
-                    width: "480px",
-                    height: "560px",
+                    width: layout.width + "px",
+                    height: layout.height + "px",
                     overflow: "hidden",
                   }}
                 >
@@ -88,6 +89,7 @@ const CarouselEditor: React.FC = () => {
                     textAlign={textSettings.alignment}
                     slideNumber={index + 1}
                     fontSize={textSettings.fontSize}
+                    backgroundColor="#d1d5db"
                   />
                 </div>
                 <div className="flex items-center justify-start mt-3 space-x-2">

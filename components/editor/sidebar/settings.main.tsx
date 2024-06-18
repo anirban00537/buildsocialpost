@@ -83,32 +83,6 @@ const SettingsComponent = () => {
           </Select>
         </div>
 
-        <div className="space-y-2">
-          <Label htmlFor="template" className="text-sm">
-            Template Settings
-          </Label>
-          <Select>
-            <SelectTrigger
-              id="template"
-              className="w-full p-2 border rounded-lg"
-            >
-              <SelectValue placeholder="Select a template" />
-            </SelectTrigger>
-            <SelectContent>
-              {carouselsSize.map((size, index) => (
-                <SelectItem key={index} value={size.id.toString()}>
-                  <div className="flex items-start gap-3 text-muted-foreground">
-                    <Shield className="size-5" />
-                    <div className="grid gap-0.5">
-                      <p>{size.ratio}</p>
-                    </div>
-                  </div>
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-
         <div className="grid gap-3">
           <Label htmlFor="slides">Slides</Label>
           <div className="flex items-center gap-2">

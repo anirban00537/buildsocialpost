@@ -49,7 +49,7 @@ export const generateCaruselContentFromTopic = async (
           title: 
           description:
           
-          All titles and taglines should be a maximum of 60 characters. descriptions should be under 200 characters. The content should be in ${language} and convey a ${mood} mood. Please generate content for ${numSlides} slides on the topic: ${topic}. Please only include the content in the format above. Do not include any additional text. Do not include any additional text.`,
+          All titles and taglines should be a maximum of 60 characters.Each descriptions should be under 300 characters min 150 charecters. The content should be in ${language} and convey a ${mood} mood. Please generate content for ${numSlides} slides on the topic: ${topic}. Please only include the content in the format above. Do not include any additional text. Do not include any additional text.`,
         },
         {
           role: "user",

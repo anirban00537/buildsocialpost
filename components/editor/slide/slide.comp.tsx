@@ -9,6 +9,7 @@ interface SlideProps {
   textAlign?: "left" | "center" | "right";
   slideNumber?: number;
   fontSize?: number;
+  backgroundColor?: string;
 }
 
 const SlideComponent: React.FC<SlideProps> = ({
@@ -19,10 +20,11 @@ const SlideComponent: React.FC<SlideProps> = ({
   textAlign = "center",
   slideNumber,
   fontSize = 12,
+  backgroundColor = "black",
 }) => {
   const backgroundImageStyle = slide.imageUrl
     ? { backgroundImage: `url(${slide.imageUrl})` }
-    : { background: "#000000" };
+    : { background: backgroundColor };
 
   return (
     <div

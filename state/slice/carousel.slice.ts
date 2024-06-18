@@ -12,6 +12,10 @@ interface CarouselState {
     alignment: "left" | "center" | "right";
     fontSize: number;
   };
+  layout: {
+    height: number;
+    width: number;
+  };
 }
 
 const initialState: CarouselState = {
@@ -26,6 +30,10 @@ const initialState: CarouselState = {
   textSettings: {
     alignment: "center",
     fontSize: 14,
+  },
+  layout: {
+    height: 560,
+    width: 480,
   },
 };
 
@@ -78,6 +86,14 @@ const carouselSlice = createSlice({
     ) => {
       state.textSettings = action.payload;
     },
+
+    setLayoutHeightAndWidth: (
+      state,
+      action: PayloadAction<{ height: number; width: number }>
+    ) => {
+      state.layout.height = action.payload.height;
+      state.layout.width = action.payload.width;
+    },
   },
 });
 
@@ -90,5 +106,6 @@ export const {
   setSelectedTheme,
   addAllSlides,
   setTextSettings,
+  setLayoutHeightAndWidth,
 } = carouselSlice.actions;
 export default carouselSlice.reducer;
