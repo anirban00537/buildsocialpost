@@ -15,6 +15,9 @@ import jsPDF from "jspdf";
 
 const useCarousel = () => {
   const dispatch = useDispatch();
+  const textSettings = useSelector(
+    (state: RootState) => state.slides.textSettings
+  );
   const swiperRef = useRef<any>(null);
   const { slides, generalSettings, themes, selectedTheme } = useSelector(
     (state: RootState) => state.slides
@@ -119,6 +122,7 @@ const useCarousel = () => {
     handleThemeChange,
     handleSlideClick,
     exportSlidesToPDF,
+    textSettings,
   };
 };
 

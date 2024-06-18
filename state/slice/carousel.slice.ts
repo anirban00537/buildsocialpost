@@ -1,4 +1,3 @@
-// carouselSlice.ts
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { generalSettings, Slide } from "@/types";
 import { initialSlides } from "@/lib/data";
@@ -9,6 +8,10 @@ interface CarouselState {
   generalSettings: generalSettings;
   themes: { [key: string]: Theme };
   selectedTheme: keyof typeof themes;
+  textSettings: {
+    alignment: "left" | "center" | "right";
+    fontSize: number;
+  };
 }
 
 const initialState: CarouselState = {
@@ -20,6 +23,10 @@ const initialState: CarouselState = {
   },
   themes,
   selectedTheme: "theme1",
+  textSettings: {
+    alignment: "center",
+    fontSize: 14,
+  },
 };
 
 const carouselSlice = createSlice({
@@ -62,6 +69,15 @@ const carouselSlice = createSlice({
     addAllSlides: (state, action: PayloadAction<Slide[]>) => {
       state.slides = action.payload;
     },
+    setTextSettings: (
+      state,
+      action: PayloadAction<{
+        alignment: "left" | "center" | "right";
+        fontSize: number;
+      }>
+    ) => {
+      state.textSettings = action.payload;
+    },
   },
 });
 
@@ -73,5 +89,6 @@ export const {
   updateGeneralSettings,
   setSelectedTheme,
   addAllSlides,
+  setTextSettings,
 } = carouselSlice.actions;
 export default carouselSlice.reducer;

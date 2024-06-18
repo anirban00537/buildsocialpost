@@ -8,6 +8,7 @@ interface SlideProps {
   updateSlide: (index: number, updatedSlide: any) => void;
   textAlign?: "left" | "center" | "right";
   slideNumber?: number;
+  fontSize?: number;
 }
 
 const SlideComponent: React.FC<SlideProps> = ({
@@ -17,6 +18,7 @@ const SlideComponent: React.FC<SlideProps> = ({
   updateSlide,
   textAlign = "center",
   slideNumber,
+  fontSize = 12,
 }) => {
   const backgroundImageStyle = slide.imageUrl
     ? { backgroundImage: `url(${slide.imageUrl})` }
@@ -65,7 +67,7 @@ const SlideComponent: React.FC<SlideProps> = ({
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              fontSize: "24px",
+              fontSize: `${fontSize + 12}px`,
               fontWeight: "bold",
               color: "black",
               margin: "16px",
@@ -86,7 +88,7 @@ const SlideComponent: React.FC<SlideProps> = ({
                 width: "100%",
                 padding: "8px",
                 marginBottom: "8px",
-                fontSize: "13px",
+                fontSize: `${fontSize}px`,
                 fontStyle: "italic",
                 backgroundColor: "transparent",
                 border: "none",
@@ -112,7 +114,7 @@ const SlideComponent: React.FC<SlideProps> = ({
                 width: "100%",
                 padding: "8px",
                 marginBottom: "8px",
-                fontSize: "36px",
+                fontSize: `${fontSize + 24}px`,
                 fontWeight: "bold",
                 backgroundColor: "transparent",
                 border: "none",
@@ -140,7 +142,7 @@ const SlideComponent: React.FC<SlideProps> = ({
               style={{
                 width: "100%",
                 padding: "8px",
-                fontSize: "13px",
+                fontSize: `${fontSize}px`,
                 backgroundColor: "transparent",
                 border: "none",
                 color: "white",
@@ -181,7 +183,7 @@ const SlideComponent: React.FC<SlideProps> = ({
           <div style={{ display: "flex", flexDirection: "column" }}>
             <div
               style={{
-                fontSize: "14px",
+                fontSize: `${fontSize}px`,
                 fontWeight: "600",
               }}
             >
@@ -189,7 +191,7 @@ const SlideComponent: React.FC<SlideProps> = ({
             </div>
             <div
               style={{
-                fontSize: "12px",
+                fontSize: `${fontSize}px`,
                 color: "#d1d5db",
               }}
             >

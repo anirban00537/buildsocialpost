@@ -1,7 +1,16 @@
 import React, { useState } from "react";
-import { Settings, FileText, Zap, Brain, Shield, User } from "lucide-react";
+import {
+  Settings,
+  FileText,
+  Zap,
+  Brain,
+  Shield,
+  User,
+  Text,
+} from "lucide-react";
 import SettingsComponent from "./settings.main";
 import TemplateSection from "./template.main";
+import TextSettingsSection from "./text.main";
 
 const MainSidebar: React.FC = () => {
   const [activeTab, setActiveTab] = useState("settings");
@@ -26,11 +35,20 @@ const MainSidebar: React.FC = () => {
         >
           <FileText size={24} />
         </button>
+        <button
+          className={`mb-4 p-2 ${
+            activeTab === "text" ? "text-blue-500" : "text-gray-500"
+          }`}
+          onClick={() => setActiveTab("text")}
+        >
+          <Text size={24} />
+        </button>
       </aside>
 
       <aside className="flex-1 bg-white overflow-hidden transition-all transform">
         {activeTab === "settings" && <SettingsComponent />}
         {activeTab === "templates" && <TemplateSection />}
+        {activeTab === "text" && <TextSettingsSection />}
       </aside>
     </div>
   );
