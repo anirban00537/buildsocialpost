@@ -65,7 +65,6 @@ const useCarousel = () => {
     },
     [dispatch, generalSettings]
   );
-
   const handleSlideClick = useCallback(
     (index: number) => {
       if (swiperRef.current && swiperRef.current.swiper) {
@@ -77,17 +76,17 @@ const useCarousel = () => {
 
   const exportSlidesToPDF = useCallback(async () => {
     setExportLoading(true);
-    const slideWidthInMM = 127;
-    const slideHeightInMM = 148;
+    const slideWidthInMM = layout.width;
+    const slideHeightInMM = layout.height;
 
-    const pdf = new jsPDF("p", "mm", [slideWidthInMM, slideHeightInMM]);
+    const pdf = new jsPDF("p", "px", [slideWidthInMM, slideHeightInMM]);
 
     for (let i = 0; i < slides.length; i++) {
       const slideElement = document.getElementById(`slide-${i}`);
       if (slideElement) {
         try {
-          slideElement.style.width = `480px`;
-          slideElement.style.height = `560px`;
+          slideElement.style.width = `${layout.width}px`;
+          slideElement.style.height = `${layout.height}px`;
 
           const imgData = await toPng(slideElement, { cacheBust: true });
           if (i !== 0) {
