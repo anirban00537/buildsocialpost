@@ -45,7 +45,7 @@ const EditorNavbar = () => {
   const { user, loading } = useUser();
   const { handleLogout } = useLogout();
   return (
-    <header className="flex items-center justify-between p-4 border-b">
+    <header className="bg-white sticky h-[65px] flex items-center justify-center border-b border-gray-200 top-0 z-50">
       <Drawer>
         <DrawerTrigger asChild>
           <Button variant="ghost" size="icon" className="md:hidden">

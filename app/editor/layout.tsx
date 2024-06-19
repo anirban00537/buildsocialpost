@@ -6,22 +6,20 @@ import EditorNavbar from "@/components/editor/navbar/navbar.editor";
 
 const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [isSettingsPanelOpen, setIsSettingsPanelOpen] = useState(false);
-  const [isSearchBoxOpen, setIsSearchBoxOpen] = useState(false);
-
   const toggleSettingsPanel = () =>
     setIsSettingsPanelOpen(!isSettingsPanelOpen);
-  const toggleSearchBox = () => setIsSearchBoxOpen(!isSearchBoxOpen);
 
   return (
     <div className="flex h-screen overflow-hidden bg-white">
-      <MainSidebar />
       <div className="flex flex-col flex-1 h-full overflow-hidden">
         <EditorNavbar />
-        <main className="flex-1 max-h-full p-5 overflow-hidden overflow-y-scroll">
+        <div className="md:flex flex-col items-center justify-center md:items-start md:justify-start md:flex-grow-0 md:flex-basis-1/3 md:mt-[63px] md:fixed md:top-0 md:left-0 md:h-screen z-30">
+          <MainSidebar />
+        </div>
+        <main className="flex-1 max-h-full p-5 ml-[390px]  overflow-hidden overflow-y-scroll">
           <div>{children}</div>
         </main>
       </div>
-
       <div>
         <button
           onClick={toggleSettingsPanel}
@@ -30,26 +28,6 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
           Settings
         </button>
       </div>
-
-      {isSettingsPanelOpen && (
-        <div
-          className="fixed inset-y-0 right-0 flex flex-col bg-white shadow-lg bg-opacity-20 w-80"
-          style={{ backdropFilter: "blur(14px)" }}
-        >
-          <div className="flex items-center justify-between flex-shrink-0 p-2">
-            <h6 className="p-2 text-lg">Settings</h6>
-            <button
-              onClick={toggleSettingsPanel}
-              className="p-2 rounded-md focus:outline-none focus:ring"
-            >
-              <X className="w-6 h-6 text-gray-600" />
-            </button>
-          </div>
-          <div className="flex-1 max-h-full p-4 overflow-hidden hover:overflow-y-scroll">
-            <span>Settings Content</span>
-          </div>
-        </div>
-      )}
     </div>
   );
 };
