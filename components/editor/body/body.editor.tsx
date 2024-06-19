@@ -61,7 +61,7 @@ const CarouselEditor: React.FC = () => {
             scrollbar={{ hide: true, enabled: false }}
             a11y={{ enabled: true }}
             allowTouchMove={false}
-            style={{ width: "100%", height: "640px" }}
+            style={{ width: "100%", height: `${layout.height + 80}px` }}
           >
             {slides.map((slide, index) => (
               <SwiperSlide

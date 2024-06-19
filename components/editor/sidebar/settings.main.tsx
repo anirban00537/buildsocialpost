@@ -12,7 +12,6 @@ import { Textarea } from "@/components/ui/textarea";
 import { Slider } from "@/components/ui/slider";
 import { useGenerateContent } from "@/hooks/useGenerateContent";
 import { Button } from "@/components/ui/button";
-import { carouselsSize } from "@/lib/coreConstants";
 
 const SettingsComponent = () => {
   const {
@@ -34,19 +33,16 @@ const SettingsComponent = () => {
 
   return (
     <form
-      className="grid w-full items-start gap-6 p-4"
+      className="grid w-full items-start gap-6 p-4 rounded-lg bg-white"
       onSubmit={generateContent}
     >
+      <legend className=" text-lg font-semibold">Ai Settings</legend>
       <fieldset className="grid gap-6 rounded-lg">
-        <legend className="-ml-1 px-1 text-sm font-semibold mb-4">
-          Settings
-        </legend>
-
         <div className="grid gap-3">
           <Label htmlFor="content">Topic</Label>
           <Textarea
             id="content"
-            placeholder="You are a..."
+            placeholder="Enter your topic..."
             className="min-h-[3.5rem]"
             value={topic}
             maxLength={300}
