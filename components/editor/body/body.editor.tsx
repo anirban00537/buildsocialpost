@@ -41,7 +41,6 @@ const CarouselEditor: React.FC = () => {
     handleCopySlide,
     handleDeleteSlide,
     handleUpdateSlide,
-    exportSlidesToPDF,
   } = useCarousel();
 
   return (
@@ -122,13 +121,6 @@ const CarouselEditor: React.FC = () => {
             <ChevronRight size={24} />
           </button>
         </div>
-        <button
-          className="mt-4 flex items-center justify-center text-gray-500 border border-gray-500 rounded-md hover:bg-blue-700 p-2"
-          onClick={exportSlidesToPDF}
-        >
-          <Download size={22} className="mr-2" />
-          Export as PDF
-        </button>
       </div>
     </main>
   );

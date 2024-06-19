@@ -1,17 +1,18 @@
+import { useState, useCallback, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useCallback, useRef } from "react";
 import { RootState } from "@/state/store";
+import { jsPDF } from "jspdf";
+import { toPng } from "html-to-image";
+import { Slide } from "@/types";
+
 import {
+  insertSlide,
   copySlide,
   deleteSlide,
   updateSlide,
-  insertSlide,
   updateGeneralSettings,
   setSelectedTheme,
 } from "@/state/slice/carousel.slice";
-import { Slide } from "@/types";
-import { toPng } from "html-to-image";
-import jsPDF from "jspdf";
 
 const useCarousel = () => {
   const dispatch = useDispatch();
@@ -22,6 +23,7 @@ const useCarousel = () => {
   const { slides, generalSettings, themes, selectedTheme } = useSelector(
     (state: RootState) => state.slides
   );
+  const [exportLoading, setExportLoading] = useState(false);
 
   const handleInsertSlide = useCallback(
     (index: number) => {
@@ -50,7 +52,6 @@ const useCarousel = () => {
     },
     [dispatch]
   );
-
   const handleUpdateHeadshot = useCallback(
     (headshotUrl: string) => {
       const updatedSettings = {
@@ -83,6 +84,7 @@ const useCarousel = () => {
   );
 
   const exportSlidesToPDF = useCallback(async () => {
+    setExportLoading(true);
     const slideWidthInMM = 127;
     const slideHeightInMM = 148;
 
@@ -106,6 +108,7 @@ const useCarousel = () => {
       }
     }
     pdf.save("carousel_slides.pdf");
+    setExportLoading(false);
   }, [slides]);
 
   return {
@@ -122,6 +125,7 @@ const useCarousel = () => {
     handleThemeChange,
     handleSlideClick,
     exportSlidesToPDF,
+    exportLoading,
     textSettings,
     layout,
   };
