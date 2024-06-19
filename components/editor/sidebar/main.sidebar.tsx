@@ -1,8 +1,9 @@
 import React, { useState } from "react";
-import { Settings, FileText, Text } from "lucide-react";
+import { Settings, FileText, Text, Columns2Icon } from "lucide-react";
 import AiSettingsComponent from "./ai.main";
 import TemplateSection from "./template.main";
 import SettingsSection from "./settings.main";
+import BackgroundColorssSection from "./background.main";
 
 const MainSidebar: React.FC = () => {
   const [activeTab, setActiveTab] = useState("ai-settings");
@@ -15,6 +16,7 @@ const MainSidebar: React.FC = () => {
             { name: "ai-settings", icon: <Settings size={24} /> },
             { name: "templates", icon: <FileText size={24} /> },
             { name: "settings", icon: <Text size={24} /> },
+            { name: "background", icon: <Columns2Icon size={24} /> },
           ].map((tab) => (
             <button
               key={tab.name}
@@ -31,11 +33,11 @@ const MainSidebar: React.FC = () => {
           ))}
         </div>
       </div>
-
       <aside className="flex-1 border bg-white overflow-hidden transition-all transform">
         {activeTab === "ai-settings" && <AiSettingsComponent />}
         {activeTab === "templates" && <TemplateSection />}
         {activeTab === "settings" && <SettingsSection />}
+        {activeTab === "background" && <BackgroundColorssSection />}
       </aside>
     </aside>
   );

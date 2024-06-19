@@ -78,7 +78,6 @@ const carouselSlice = createSlice({
       const { updatedGeneralSettings } = action.payload;
       state.generalSettings = updatedGeneralSettings;
     },
-
     addAllSlides: (state, action: PayloadAction<Slide[]>) => {
       state.slides = action.payload;
     },
@@ -91,13 +90,27 @@ const carouselSlice = createSlice({
     ) => {
       state.textSettings = action.payload;
     },
-
     setLayoutHeightAndWidth: (
       state,
       action: PayloadAction<{ height: number; width: number }>
     ) => {
       state.layout.height = action.payload.height;
       state.layout.width = action.payload.width;
+    },
+    setBackgroundSettings: (
+      state,
+      action: PayloadAction<{
+        type: "color" | "image" | "gradient";
+        color?: string;
+        imageUrl?: string;
+        gradient?: string[];
+      }>
+    ) => {
+      const { type, color, imageUrl, gradient } = action.payload;
+      state.background.type = type;
+      if (color) state.background.color = color;
+      if (imageUrl) state.background.imageUrl = imageUrl;
+      if (gradient) state.background.gradient = gradient;
     },
   },
 });
@@ -111,5 +124,6 @@ export const {
   addAllSlides,
   setTextSettings,
   setLayoutHeightAndWidth,
+  setBackgroundSettings,
 } = carouselSlice.actions;
 export default carouselSlice.reducer;
