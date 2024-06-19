@@ -1,20 +1,20 @@
 import React, { useState } from "react";
 import { Settings, FileText, Text } from "lucide-react";
-import SettingsComponent from "./settings.main";
+import AiSettingsComponent from "./ai.main";
 import TemplateSection from "./template.main";
-import TextSettingsSection from "./text.main";
+import SettingsSection from "./settings.main";
 
 const MainSidebar: React.FC = () => {
-  const [activeTab, setActiveTab] = useState("settings");
+  const [activeTab, setActiveTab] = useState("ai-settings");
 
   return (
     <aside className="flex flex-col md:flex-row h-screen w-full md:w-[420px] bg-gray-50">
       <div className="md:sticky md:top-0 w-full md:w-[100px] order-first md:order-first bg-white shadow-md">
         <div className="flex md:flex-col w-full h-full justify-start items-center md:border-r border-b md:border-b-0 border-gray-200">
           {[
-            { name: "settings", icon: <Settings size={24} /> },
+            { name: "ai-settings", icon: <Settings size={24} /> },
             { name: "templates", icon: <FileText size={24} /> },
-            { name: "text", icon: <Text size={24} /> },
+            { name: "settings", icon: <Text size={24} /> },
           ].map((tab) => (
             <button
               key={tab.name}
@@ -33,9 +33,9 @@ const MainSidebar: React.FC = () => {
       </div>
 
       <aside className="flex-1 border bg-white overflow-hidden transition-all transform">
-        {activeTab === "settings" && <SettingsComponent />}
+        {activeTab === "ai-settings" && <AiSettingsComponent />}
         {activeTab === "templates" && <TemplateSection />}
-        {activeTab === "text" && <TextSettingsSection />}
+        {activeTab === "settings" && <SettingsSection />}
       </aside>
     </aside>
   );

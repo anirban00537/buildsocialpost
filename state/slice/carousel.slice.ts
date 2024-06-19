@@ -1,13 +1,16 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { generalSettings, Slide } from "@/types";
 import { initialSlides } from "@/lib/data";
-import { Theme, themes } from "@/lib/theme";
 
 interface CarouselState {
   slides: Slide[];
   generalSettings: generalSettings;
-  themes: { [key: string]: Theme };
-  selectedTheme: keyof typeof themes;
+  background: {
+    type: "color" | "image" | "gradient";
+    color: string;
+    imageUrl: string;
+    gradient: string[];
+  };
   textSettings: {
     alignment: "left" | "center" | "right";
     fontSize: number;
@@ -25,8 +28,12 @@ const initialState: CarouselState = {
     name: "Anirban Roy",
     handle: "@anirban00537",
   },
-  themes,
-  selectedTheme: "theme1",
+  background: {
+    type: "color",
+    color: "#000000",
+    imageUrl: "",
+    gradient: ["#fafafa", "#dddddd", "#bbbbbb"],
+  },
   textSettings: {
     alignment: "center",
     fontSize: 14,
@@ -71,9 +78,7 @@ const carouselSlice = createSlice({
       const { updatedGeneralSettings } = action.payload;
       state.generalSettings = updatedGeneralSettings;
     },
-    setSelectedTheme: (state, action: PayloadAction<keyof typeof themes>) => {
-      state.selectedTheme = action.payload;
-    },
+
     addAllSlides: (state, action: PayloadAction<Slide[]>) => {
       state.slides = action.payload;
     },
@@ -103,7 +108,6 @@ export const {
   deleteSlide,
   updateSlide,
   updateGeneralSettings,
-  setSelectedTheme,
   addAllSlides,
   setTextSettings,
   setLayoutHeightAndWidth,

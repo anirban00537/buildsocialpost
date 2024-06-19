@@ -185,7 +185,7 @@ const SlideComponent: React.FC<SlideProps> = ({
           <div style={{ display: "flex", flexDirection: "column" }}>
             <div
               style={{
-                fontSize: `${fontSize}px`,
+                fontSize: `14px`,
                 fontWeight: "600",
               }}
             >
@@ -193,8 +193,9 @@ const SlideComponent: React.FC<SlideProps> = ({
             </div>
             <div
               style={{
-                fontSize: `${fontSize}px`,
-                color: "#d1d5db",
+                fontSize: `12px`,
+                fontStyle: "italic",
+                color: "rgba(255, 255, 255, 0.8)",
               }}
             >
               {generalSettings.handle || "@anirban00537"}

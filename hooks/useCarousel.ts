@@ -11,16 +11,15 @@ import {
   deleteSlide,
   updateSlide,
   updateGeneralSettings,
-  setSelectedTheme,
 } from "@/state/slice/carousel.slice";
 
 const useCarousel = () => {
   const dispatch = useDispatch();
-  const { textSettings, layout } = useSelector(
+  const { textSettings, layout, background } = useSelector(
     (state: RootState) => state.slides
   );
   const swiperRef = useRef<any>(null);
-  const { slides, generalSettings, themes, selectedTheme } = useSelector(
+  const { slides, generalSettings } = useSelector(
     (state: RootState) => state.slides
   );
   const [exportLoading, setExportLoading] = useState(false);
@@ -67,13 +66,6 @@ const useCarousel = () => {
     [dispatch, generalSettings]
   );
 
-  const handleThemeChange = useCallback(
-    (theme: string) => {
-      dispatch(setSelectedTheme(theme));
-    },
-    [dispatch, themes]
-  );
-
   const handleSlideClick = useCallback(
     (index: number) => {
       if (swiperRef.current && swiperRef.current.swiper) {
@@ -115,14 +107,13 @@ const useCarousel = () => {
     swiperRef,
     slides,
     generalSettings,
-    themes,
-    selectedTheme,
+    background,
     handleInsertSlide,
     handleCopySlide,
     handleDeleteSlide,
     handleUpdateSlide,
     handleUpdateHeadshot,
-    handleThemeChange,
+
     handleSlideClick,
     exportSlidesToPDF,
     exportLoading,
