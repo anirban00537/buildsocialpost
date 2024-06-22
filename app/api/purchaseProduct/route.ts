@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import { lemonSqueezyApiInstance } from "@/utils/axios";
 import { NextRequest, NextResponse } from "next/server";
 

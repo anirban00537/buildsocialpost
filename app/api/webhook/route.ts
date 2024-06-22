@@ -1,5 +1,7 @@
+export const dynamic = "force-dynamic";
+
 import crypto from "crypto";
-import { databases, ID } from "@/lib/appwrite";
+import { databases, ID } from "@/lib/node-appwrite";
 
 export async function POST(req: Request) {
   try {
@@ -40,12 +42,14 @@ export async function POST(req: Request) {
         createdAt: new Date().toISOString(),
       };
 
-      // await databases.createDocument(
-      //   "6676798b000501b76612",
-      //   "6676799900328c7c1974",
-      //   ID.unique(),
-      //   subscriptionData
-      // );
+      const data = await databases.createDocument(
+        "6676798b000501b76612",
+        "6676a90d00019bc19abd",
+        ID.unique(),
+        subscriptionData
+      );
+
+      console.log("Subscription created:", data);
 
       console.log("Subscription created:", subscriptionData);
     }
