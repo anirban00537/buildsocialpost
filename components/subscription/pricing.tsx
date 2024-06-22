@@ -1,8 +1,9 @@
 "use client";
-import { auth } from "@/lib/firebase";
 import axios from "axios";
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useSelector } from "react-redux";
+import { RootState } from "@/state/store";
 
 const plan = {
   name: "Pro plan",
@@ -24,24 +25,17 @@ const plan = {
 const Pricing = () => {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+  const user: any = useSelector((state: RootState) => state.user.userinfo);
+  const loggedIn = useSelector((state: RootState) => state.user.loggedin);
 
   const buyProduct = async () => {
     setLoading(true);
-    const user = auth.currentUser;
-    if (user) {
+    if (loggedIn) {
       try {
-        const token = await user.getIdToken();
-        const response = await axios.post(
-          "/api/purchaseProduct",
-          {
-            productId: "399160",
-          },
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+        const response = await axios.post("/api/purchaseProduct", {
+          productId: "399160",
+          userId: user.$id,
+        });
         console.log(response, "response");
         window.open(response.data.checkoutUrl, "_blank");
       } catch (error) {
@@ -59,7 +53,7 @@ const Pricing = () => {
   };
 
   return (
-    <section className="relative flex items-center justify-center  text-white">
+    <section className="relative flex items-center justify-center text-white">
       <div className="max-w-screen-xl mx-auto text-gray-600 md:px-8">
         <div className="relative max-w-xl space-y-3 px-4 md:px-0 text-center">
           <h3 className="text-white font-semibold">Pricing</h3>
@@ -75,7 +69,7 @@ const Pricing = () => {
           </div>
         </div>
         <div className="mt-4 flex items-center justify-center">
-          <div className="flex flex-col border-y max-w-lg rounded-xl border  bg-white text-gray-800">
+          <div className="flex flex-col border-y max-w-lg rounded-xl border bg-white text-gray-800">
             <div className="p-6 md:p-8 border-b">
               <div className="justify-between flex">
                 <div className="max-w-xs">

@@ -1,8 +1,7 @@
 // hooks/useSubscriptionStatus.ts
 import { useEffect, useState } from "react";
-import { auth, db } from "@/lib/firebase";
-import { onAuthStateChanged } from "firebase/auth";
-import { doc, getDoc } from "firebase/firestore";
+import { account, databases } from "@/lib/appwrite";
+import { Models } from "appwrite";
 
 interface SubscriptionStatus {
   status: string | null;
@@ -16,27 +15,39 @@ const useSubscriptionStatus = (): SubscriptionStatus => {
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (user) => {
-      if (user) {
-        const docRef = doc(db, "subscriptions", user.uid);
-        const docSnap = await getDoc(docRef);
+    const fetchSubscriptionStatus = async (userId: string) => {
+      try {
+        const response = await databases.getDocument(
+          "6676798b000501b76612", // Replace with your actual database ID
+          "6676799900328c7c1974", // Replace with your actual collection ID
+          userId
+        );
 
-        if (docSnap.exists()) {
-          const data = docSnap.data();
-          setStatus(data.status);
-          setEndDate(new Date(data.endDate));
-        } else {
-          setStatus(null);
-          setEndDate(null);
-        }
-      } else {
+        const data = response;
+        setStatus(data.status);
+        setEndDate(new Date(data.endDate));
+      } catch (error) {
+        console.error("Error fetching subscription data:", error);
         setStatus(null);
         setEndDate(null);
+      } finally {
+        setLoading(false);
       }
-      setLoading(false);
-    });
+    };
 
-    return () => unsubscribe();
+    const getUser = async () => {
+      try {
+        const user: Models.User<Models.Preferences> = await account.get();
+        fetchSubscriptionStatus(user.$id);
+      } catch (error) {
+        console.error("Error fetching user:", error);
+        setStatus(null);
+        setEndDate(null);
+        setLoading(false);
+      }
+    };
+
+    getUser();
   }, []);
 
   return { status, endDate, loading };

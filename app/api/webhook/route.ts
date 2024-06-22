@@ -1,14 +1,11 @@
 import crypto from "crypto";
-import { db } from "@/lib/firebase";
-import { doc, setDoc } from "firebase/firestore";
+import { databases, ID } from "@/lib/appwrite";
 
 export async function POST(req: Request) {
   try {
     const clonedReq = req.clone();
     const eventType = req.headers.get("X-Event-Name");
     const body = await req.json();
-
-    // Verify signature
     const secret = process.env.NEXT_PUBLIC_LEMONSQUEEZY_WEBHOOK_SIGNATURE || "";
     const hmac = crypto.createHmac("sha256", secret);
     const digest = Buffer.from(
@@ -21,7 +18,6 @@ export async function POST(req: Request) {
       throw new Error("Invalid signature.");
     }
 
-    // Logic based on event type
     if (eventType === "order_created") {
       const userId = body.meta.custom_data.user_id;
       const isSuccessful = body.data.attributes.status === "paid";
@@ -35,7 +31,14 @@ export async function POST(req: Request) {
         endDate: endDate.toISOString(),
         createdAt: new Date().toISOString(),
       };
-      await setDoc(doc(db, "subscriptions", userId), subscriptionData);
+
+      await databases.createDocument(
+        "6676798b000501b76612",
+        "6676799900328c7c1974",
+        ID.unique(),
+        subscriptionData
+      );
+
       console.log("Subscription created:", subscriptionData);
     }
 
