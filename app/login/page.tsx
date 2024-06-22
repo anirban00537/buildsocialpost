@@ -1,81 +1,164 @@
 "use client";
-
-import { useLogin } from "@/hooks/useAuth";
-import React from "react";
+import { Button } from "@/components/ui/button";
+import { useLogin, useLogout, useSignup, useAuthUser } from "@/hooks/useAuth";
+import { useState } from "react";
 
 const LoginPage = () => {
-  const {
-    email,
-    setEmail,
-    password,
-    setPassword,
-    handleLogin,
-    handleGoogleLogin,
-    error,
-  } = useLogin();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [name, setName] = useState("");
+  const [success, setSuccess] = useState<string>("");
+  const [activeTab, setActiveTab] = useState<"login" | "register">("login");
 
-  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    await handleLogin(email, password);
+  const { login, loading: loginLoading, error: loginError } = useLogin();
+  const { signup, loading: signupLoading, error: signupError } = useSignup();
+  const { logout, loading: logoutLoading, error: logoutError } = useLogout();
+  const {
+    user: loggedInUser,
+    loading: userLoading,
+    error: userError,
+  } = useAuthUser();
+
+  const handleLogin = async () => {
+    try {
+      const user = await login(email, password);
+      setSuccess("Login successful!");
+    } catch (error) {
+      setSuccess("");
+    }
   };
 
+  const handleSignup = async () => {
+    try {
+      const user = await signup(email, password, name);
+      setSuccess("Registration successful! Logging you in...");
+    } catch (error) {
+      setSuccess("");
+    }
+  };
+
+  const handleLogout = async () => {
+    try {
+      await logout();
+      setSuccess("");
+    } catch (error) {
+      setSuccess("");
+    }
+  };
+
+  if (userLoading) {
+    return <div>Loading...</div>;
+  }
+
   return (
-    <div className="flex min-h-screen items-center justify-center ">
-      <div className="w-full max-w-md p-8 space-y-8 bg-white rounded-lg border">
-        <h1 className="text-3xl font-bold text-center text-gray-800">Login</h1>
-        <form onSubmit={onSubmit} className="space-y-6">
-          <div>
-            <label
-              htmlFor="email"
-              className="block text-sm font-medium text-gray-700"
+    <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-purple-500 via-pink-500 to-red-500 p-4">
+      <div className="w-full max-w-md p-8 space-y-6 bg-white rounded-2xl shadow-2xl">
+        {loggedInUser ? (
+          <div className="text-center">
+            <p className="text-lg font-semibold text-gray-800">
+              Logged in as {loggedInUser.name}
+            </p>
+            <Button
+              className="w-full mt-4"
+              onClick={handleLogout}
+              disabled={logoutLoading}
             >
-              Email
-            </label>
-            <input
-              id="email"
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="Email"
-              required
-              className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring focus:border-indigo-500"
-            />
+              {logoutLoading ? "Logging out..." : "Logout"}
+            </Button>
+            {success && <p className="mt-4 text-green-500">{success}</p>}
+            {logoutError && <p className="mt-4 text-red-500">{logoutError}</p>}
           </div>
+        ) : (
           <div>
-            <label
-              htmlFor="password"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Password
-            </label>
-            <input
-              id="password"
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="Password"
-              required
-              className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring focus:border-indigo-500"
-            />
+            <div className="flex justify-center mb-6">
+              <button
+                className={`px-4 py-2 font-semibold transition-colors duration-300 ${
+                  activeTab === "login"
+                    ? "text-blue-600 border-b-4 border-blue-600"
+                    : "text-gray-600 hover:text-blue-600"
+                }`}
+                onClick={() => setActiveTab("login")}
+              >
+                Login
+              </button>
+              <button
+                className={`px-4 py-2 font-semibold transition-colors duration-300 ${
+                  activeTab === "register"
+                    ? "text-blue-600 border-b-4 border-blue-600"
+                    : "text-gray-600 hover:text-blue-600"
+                }`}
+                onClick={() => setActiveTab("register")}
+              >
+                Register
+              </button>
+            </div>
+            {loginError && (
+              <p className="text-center text-red-500">{loginError}</p>
+            )}
+            {signupError && (
+              <p className="text-center text-red-500">{signupError}</p>
+            )}
+            {success && <p className="text-center text-green-500">{success}</p>}
+            {activeTab === "login" ? (
+              <form className="space-y-4">
+                <input
+                  type="email"
+                  placeholder="Email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition duration-300"
+                />
+                <input
+                  type="password"
+                  placeholder="Password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition duration-300"
+                />
+                <Button
+                  type="button"
+                  onClick={handleLogin}
+                  className="w-full"
+                  disabled={loginLoading}
+                >
+                  {loginLoading ? "Logging in..." : "Login"}
+                </Button>
+              </form>
+            ) : (
+              <form className="space-y-4">
+                <input
+                  type="email"
+                  placeholder="Email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition duration-300"
+                />
+                <input
+                  type="password"
+                  placeholder="Password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition duration-300"
+                />
+                <input
+                  type="text"
+                  placeholder="Name"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition duration-300"
+                />
+                <Button
+                  type="button"
+                  onClick={handleSignup}
+                  className="w-full"
+                  disabled={signupLoading}
+                >
+                  {signupLoading ? "Registering..." : "Register"}
+                </Button>
+              </form>
+            )}
           </div>
-          <button
-            type="submit"
-            className="w-full py-2 text-white bg-gradient-to-r from-indigo-500 to-purple-500 rounded hover:from-purple-500 hover:to-indigo-500 focus:outline-none focus:ring focus:ring-indigo-300"
-          >
-            Login
-          </button>
-          {error && <p className="text-sm text-red-500">{error}</p>}
-        </form>
-        <div className="relative flex items-center justify-center w-full mt-6">
-          <span className="absolute px-2 text-gray-500 bg-white">or</span>
-          <div className="w-full border-t border-gray-300"></div>
-        </div>
-        <button
-          onClick={handleGoogleLogin}
-          className="w-full py-2 text-white bg-gradient-to-r from-red-500 to-red-600 rounded hover:from-red-600 hover:to-red-500 focus:outline-none focus:ring focus:ring-red-300"
-        >
-          Login with Google
-        </button>
+        )}
       </div>
     </div>
   );

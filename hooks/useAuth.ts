@@ -1,72 +1,94 @@
-import { createUserWithEmailAndPassword, signOut } from "firebase/auth";
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
-import { auth, googleProvider } from "@/lib/firebase";
+import { useState, useEffect } from "react";
+import { account, ID } from "@/lib/appwrite";
+
+// Custom hooks
 
 const useLogin = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState<string | null>(null);
-  const router = useRouter();
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string>("");
 
-  const handleLogin = async (email: string, password: string) => {
+  const login = async (email: string, password: string) => {
     try {
-      await signInWithEmailAndPassword(auth, email, password);
-      router.push("/editor");
-    } catch (err: any) {
-      setError(err.message);
+      setLoading(true);
+      await account.createEmailPasswordSession(email, password);
+      const user = await account.get();
+      return user;
+    } catch (error: any) {
+      setError(
+        error.message ||
+          "Login failed. Please check your credentials and try again."
+      );
+      throw error;
+    } finally {
+      setLoading(false);
     }
   };
 
-  const handleGoogleLogin = async () => {
-    try {
-      await signInWithPopup(auth, googleProvider);
-      router.push("/editor");
-    } catch (err: any) {
-      setError(err.message);
-    }
-  };
-
-  return {
-    handleLogin,
-    handleGoogleLogin,
-    error,
-    setEmail,
-    setPassword,
-    email,
-    password,
-  };
+  return { login, loading, error };
 };
 
 const useSignup = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState<string | null>(null);
-  const router = useRouter();
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string>("");
 
-  const handleSignup = async (email: string, password: string) => {
+  const signup = async (email: string, password: string, name: string) => {
     try {
-      await createUserWithEmailAndPassword(auth, email, password);
-      router.push("/editor");
-    } catch (err: any) {
-      setError(err.message);
+      setLoading(true);
+      await account.create(ID.unique(), email, password, name);
+      const user = await account.get();
+      return user;
+    } catch (error: any) {
+      setError(error.message || "Registration failed. Please try again.");
+      throw error;
+    } finally {
+      setLoading(false);
     }
   };
 
-  return { handleSignup, error, setEmail, setPassword, email, password };
+  return { signup, loading, error };
 };
+
 const useLogout = () => {
-  const router = useRouter();
-  const handleLogout = async () => {
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string>("");
+
+  const logout = async () => {
     try {
-      await signOut(auth);
-    } catch (err: any) {
-      console.error("Error logging out: ", err.message);
+      setLoading(true);
+      await account.deleteSession("current");
+    } catch (error: any) {
+      setError(error.message || "Logout failed. Please try again.");
+      throw error;
+    } finally {
+      setLoading(false);
     }
   };
 
-  return { handleLogout };
+  return { logout, loading, error };
 };
 
-export { useLogin, useSignup, useLogout };
+const useAuthUser = () => {
+  const [user, setUser] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string>("");
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        setLoading(true);
+        const user = await account.get();
+        setUser(user);
+      } catch (error: any) {
+        setError(error.message || "Failed to fetch the current user.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUser();
+  }, []);
+
+  return { user, loading, error };
+};
+
+export { useLogin, useSignup, useLogout, useAuthUser };
