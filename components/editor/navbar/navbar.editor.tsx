@@ -14,6 +14,8 @@ import Link from "next/link";
 import SubscriptionInfo from "@/components/subscription/status";
 import { useAuthUser, useLogout } from "@/hooks/useAuth";
 import useCarousel from "@/hooks/useCarousel";
+import { useSelector } from "react-redux";
+import { RootState } from "@/state/store";
 
 const getRandomColor = () => {
   const colors = [
@@ -53,9 +55,9 @@ const getInitials = (email: string) => {
 const EditorNavbar = () => {
   const { exportSlidesToPDF, exportLoading } = useCarousel();
   const { logout } = useLogout();
-  const { error, loading, user } = useAuthUser();
   const bgColor = getRandomColor();
-  const initials = user?.email ? getInitials(user.email) : "U";
+  const user: any = useSelector((state: RootState) => state.user.userinfo);
+  const initials = user?.email ? getInitials(user.email) : null;
 
   return (
     <header className="bg-white sticky top-0 h-[65px] flex items-center justify-between border-b border-gray-200 z-50 px-4">
@@ -94,7 +96,7 @@ const EditorNavbar = () => {
           )}
         </Button>
         <SubscriptionInfo />
-        {!loading && user ? (
+        {user && user.email ? (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <span>

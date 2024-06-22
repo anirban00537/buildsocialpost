@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { account, ID } from "@/lib/appwrite";
-import { logout, setUser } from "@/state/slice/user.slice";
+import { logout, setLoading, setUser } from "@/state/slice/user.slice";
 import { useRouter } from "next/navigation";
 import { RootState } from "@/state/store";
 
@@ -27,29 +27,29 @@ const useLogout = () => {
 };
 
 const useAuthUser = () => {
-  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string>("");
   const dispatch = useDispatch();
   const user: any = useSelector((state: RootState) => state.user.userinfo);
 
+  const fetchUser = async () => {
+    try {
+      dispatch(setLoading(true));
+      const user = await account.get();
+      dispatch(setUser(user));
+    } catch (error: any) {
+      setError(error.message || "Failed to fetch the current user.");
+    } finally {
+      dispatch(setLoading(false));
+    }
+  };
+
   useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        setLoading(true);
-        const user = await account.get();
-        dispatch(setUser(user));
-      } catch (error: any) {
-        setError(error.message || "Failed to fetch the current user.");
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchUser();
-  }, [dispatch]);
+  }, []);
 
-  return { loading, error, user };
+  return { error, user };
 };
+
 
 const useMagicLinkLogin = () => {
   const [loading, setLoading] = useState(false);
@@ -88,7 +88,7 @@ const useMagicURLCallback = () => {
           const user = await account.createSession(userId, secret);
           dispatch(setUser(user));
           setSuccess("Logged in successfully!");
-          router.push("/");
+          router.push("/editor");
         } catch (error: any) {
           setError(error.message || "Failed to log in. Please try again.");
         } finally {

@@ -6,7 +6,9 @@ import { store } from "@/state/store";
 const DefaultLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <Provider store={store}>
-      <TooltipProvider>{children}</TooltipProvider>
+      <TooltipProvider>
+        {children}
+      </TooltipProvider>
     </Provider>
   );
 };

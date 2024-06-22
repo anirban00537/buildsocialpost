@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { account, databases, Query } from "@/lib/appwrite";
-import { Models } from "appwrite";
 import { useSelector } from "react-redux";
 import { RootState } from "@/state/store";
 
@@ -17,7 +16,6 @@ const useSubscriptionStatus = (): SubscriptionStatus => {
   const user: any = useSelector((state: RootState) => state.user.userinfo);
 
   const fetchSubscriptionStatus = async (userId: string) => {
-    console.log("Fetching subscription status for user ID:", userId);
     try {
       const response = await databases.listDocuments(
         "6676798b000501b76612", // Database ID
@@ -29,17 +27,13 @@ const useSubscriptionStatus = (): SubscriptionStatus => {
         ]
       );
 
-      console.log("Subscription data fetched:", response.documents);
-
       if (response.documents.length > 0) {
         const data = response.documents[0];
         const endDate = new Date(data.endDate);
         const isExpired = endDate < new Date();
-        console.log(isExpired, "isExpired");
         setStatus(!isExpired);
         setEndDate(endDate);
       } else {
-        console.warn("No subscription found for user ID:", userId);
         setStatus(null);
         setEndDate(null);
       }
@@ -53,9 +47,10 @@ const useSubscriptionStatus = (): SubscriptionStatus => {
   };
 
   useEffect(() => {
-    console.log(user.$id, "useruseruser");
-    if (user.$id) {
+    if (user?.$id) {
       fetchSubscriptionStatus(user.$id);
+    } else {
+      setLoading(false); // Handle case where user is not available
     }
   }, [user]);
 
