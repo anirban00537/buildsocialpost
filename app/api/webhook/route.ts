@@ -6,15 +6,23 @@ export async function POST(req: Request) {
     const clonedReq = req.clone();
     const eventType = req.headers.get("X-Event-Name");
     const body = await req.json();
+    console.log(
+      process.env.NEXT_PUBLIC_LEMONSQUEEZY_WEBHOOK_SIGNATURE,
+      "process.env.NEXT_PUBLIC_LEMONSQUEEZY_WEBHOOK_SIGNATURE"
+    );
     const secret = process.env.NEXT_PUBLIC_LEMONSQUEEZY_WEBHOOK_SIGNATURE || "";
     const hmac = crypto.createHmac("sha256", secret);
-    const digest = Buffer.from(
-      hmac.update(await clonedReq.text()).digest("hex"),
-      "utf8"
-    );
-    const signature = Buffer.from(req.headers.get("X-Signature") || "", "utf8");
+    const requestBodyText = await clonedReq.text();
+    const digest = hmac.update(requestBodyText).digest("hex");
+    const signature = req.headers.get("X-Signature");
 
-    if (!crypto.timingSafeEqual(digest, signature)) {
+    if (
+      !signature ||
+      !crypto.timingSafeEqual(
+        Buffer.from(digest, "hex"),
+        Buffer.from(signature, "hex")
+      )
+    ) {
       throw new Error("Invalid signature.");
     }
 
@@ -25,19 +33,19 @@ export async function POST(req: Request) {
       endDate.setMonth(endDate.getMonth() + 1);
 
       const subscriptionData = {
-        userId,
-        orderId: body.data.id,
+        userId: userId.toString(),
+        orderId: body.data.id.toString(),
         status: isSuccessful ? "paid" : "pending",
         endDate: endDate.toISOString(),
         createdAt: new Date().toISOString(),
       };
 
-      await databases.createDocument(
-        "6676798b000501b76612",
-        "6676799900328c7c1974",
-        ID.unique(),
-        subscriptionData
-      );
+      // await databases.createDocument(
+      //   "6676798b000501b76612",
+      //   "6676799900328c7c1974",
+      //   ID.unique(),
+      //   subscriptionData
+      // );
 
       console.log("Subscription created:", subscriptionData);
     }
