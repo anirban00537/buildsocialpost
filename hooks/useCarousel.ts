@@ -76,23 +76,21 @@ const useCarousel = () => {
 
   const exportSlidesToPDF = useCallback(async () => {
     setExportLoading(true);
-    const slideWidthInMM = layout.width;
-    const slideHeightInMM = layout.height;
 
-    const pdf = new jsPDF("p", "px", [slideWidthInMM, slideHeightInMM]);
+    const pdf = new jsPDF("p", "px", [layout.width, layout.height]);
 
     for (let i = 0; i < slides.length; i++) {
       const slideElement = document.getElementById(`slide-${i}`);
       if (slideElement) {
         try {
-          slideElement.style.width = `${layout.width}px`;
-          slideElement.style.height = `${layout.height}px`;
+          // slideElement.style.width = `${layout.width}px`;
+          // slideElement.style.height = `${layout.height}px`;
 
           const imgData = await toPng(slideElement, { cacheBust: true });
           if (i !== 0) {
             pdf.addPage();
           }
-          pdf.addImage(imgData, "PNG", 0, 0, slideWidthInMM, slideHeightInMM);
+          pdf.addImage(imgData, "PNG", 0, 0, layout.width, layout.height);
         } catch (error) {
           console.error("Failed to export slide as image", error);
         }

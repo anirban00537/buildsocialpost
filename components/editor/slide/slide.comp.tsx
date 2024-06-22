@@ -1,4 +1,5 @@
 import React from "react";
+import { ArrowRightCircle } from "lucide-react"; // Importing the right arrow icon
 import { generalSettings, Slide } from "@/types";
 
 interface SlideProps {
@@ -69,7 +70,7 @@ const SlideComponent: React.FC<SlideProps> = ({
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              fontSize: `${fontSize + 12}px`,
+              fontSize: `${14}px`,
               fontWeight: "bold",
               color: "black",
               margin: "16px",
@@ -222,6 +223,20 @@ const SlideComponent: React.FC<SlideProps> = ({
         >
           buildcarousel.com
         </a>
+      </div>
+      <div
+        style={{
+          position: "absolute",
+          bottom: "42px",
+          right: "26px",
+          cursor: "pointer",
+        }}
+      >
+        <ArrowRightCircle
+          size={32}
+          color="white"
+          className="hover:scale-110 transition-transform"
+        />
       </div>
     </div>
   );
