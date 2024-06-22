@@ -1,14 +1,20 @@
 import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { account, ID } from "@/lib/appwrite";
+import { logout, setUser } from "@/state/slice/user.slice";
+import { useRouter } from "next/navigation";
+import { RootState } from "@/state/store";
 
 const useLogout = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string>("");
+  const dispatch = useDispatch();
 
-  const logout = async () => {
+  const logoutUser = async () => {
     try {
       setLoading(true);
       await account.deleteSession("current");
+      dispatch(logout());
     } catch (error: any) {
       setError(error.message || "Logout failed. Please try again.");
       throw error;
@@ -17,19 +23,21 @@ const useLogout = () => {
     }
   };
 
-  return { logout, loading, error };
+  return { logout: logoutUser, loading, error };
 };
+
 const useAuthUser = () => {
-  const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string>("");
+  const dispatch = useDispatch();
+  const user: any = useSelector((state: RootState) => state.user.userinfo);
 
   useEffect(() => {
     const fetchUser = async () => {
       try {
         setLoading(true);
         const user = await account.get();
-        setUser(user);
+        dispatch(setUser(user));
       } catch (error: any) {
         setError(error.message || "Failed to fetch the current user.");
       } finally {
@@ -38,10 +46,11 @@ const useAuthUser = () => {
     };
 
     fetchUser();
-  }, []);
+  }, [dispatch]);
 
-  return { user, loading, error };
+  return { loading, error, user };
 };
+
 const useMagicLinkLogin = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string>("");
@@ -61,4 +70,39 @@ const useMagicLinkLogin = () => {
 
   return { sendMagicLink, loading, error };
 };
-export { useMagicLinkLogin, useLogout, useAuthUser };
+const useMagicURLCallback = () => {
+  const dispatch = useDispatch();
+  const router = useRouter();
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string>("");
+  const [success, setSuccess] = useState<string>("");
+
+  useEffect(() => {
+    const createSessionFromURL = async () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const secret = urlParams.get("secret");
+      const userId = urlParams.get("userId");
+
+      if (secret && userId) {
+        try {
+          const user = await account.createSession(userId, secret);
+          dispatch(setUser(user));
+          setSuccess("Logged in successfully!");
+          router.push("/");
+        } catch (error: any) {
+          setError(error.message || "Failed to log in. Please try again.");
+        } finally {
+          setLoading(false);
+        }
+      } else {
+        setError("Invalid login attempt.");
+        setLoading(false);
+      }
+    };
+
+    createSessionFromURL();
+  }, [dispatch, router]);
+
+  return { loading, success, error };
+};
+export { useMagicLinkLogin, useLogout, useAuthUser, useMagicURLCallback };

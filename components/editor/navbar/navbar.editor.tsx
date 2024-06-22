@@ -12,14 +12,50 @@ import { User, LogOut, CreditCard } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import SubscriptionInfo from "@/components/subscription/status";
-import useUser from "@/hooks/useUser";
-import { useLogout } from "@/hooks/useAuth";
+import { useAuthUser, useLogout } from "@/hooks/useAuth";
 import useCarousel from "@/hooks/useCarousel";
+
+const getRandomColor = () => {
+  const colors = [
+    "#FFB6C1",
+    "#FF69B4",
+    "#FF1493",
+    "#C71585",
+    "#DB7093",
+    "#FF6347",
+    "#FF4500",
+    "#FF8C00",
+    "#FFD700",
+    "#ADFF2F",
+    "#7FFF00",
+    "#7CFC00",
+    "#00FA9A",
+    "#00FF7F",
+    "#3CB371",
+    "#20B2AA",
+    "#00CED1",
+    "#1E90FF",
+    "#4682B4",
+    "#5F9EA0",
+    "#6A5ACD",
+    "#8A2BE2",
+    "#9400D3",
+    "#9932CC",
+    "#8B008B",
+  ];
+  return colors[Math.floor(Math.random() * colors.length)];
+};
+
+const getInitials = (email: string) => {
+  return email ? email.charAt(0).toUpperCase() : "U";
+};
 
 const EditorNavbar = () => {
   const { exportSlidesToPDF, exportLoading } = useCarousel();
-  const { user, loading } = useUser();
-  const { handleLogout } = useLogout();
+  const { logout } = useLogout();
+  const { error, loading, user } = useAuthUser();
+  const bgColor = getRandomColor();
+  const initials = user?.email ? getInitials(user.email) : "U";
 
   return (
     <header className="bg-white sticky top-0 h-[65px] flex items-center justify-between border-b border-gray-200 z-50 px-4">
@@ -62,11 +98,20 @@ const EditorNavbar = () => {
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <span>
-                <img
-                  className="w-8 h-8 rounded-full"
-                  src={user.photoURL || "https://thispersondoesnotexist.com/"}
-                  alt="User Avatar"
-                />
+                {user.photoURL ? (
+                  <img
+                    className="w-8 h-8 rounded-full"
+                    src={user.photoURL}
+                    alt="User Avatar"
+                  />
+                ) : (
+                  <div
+                    className="w-8 h-8 rounded-full flex items-center justify-center text-white"
+                    style={{ backgroundColor: bgColor }}
+                  >
+                    {initials}
+                  </div>
+                )}
               </span>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-56">
@@ -80,7 +125,7 @@ const EditorNavbar = () => {
                 <CreditCard className="w-4 h-4 mr-2" />
                 Billing
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={handleLogout}>
+              <DropdownMenuItem onClick={logout}>
                 <LogOut className="w-4 h-4 mr-2" />
                 Logout
               </DropdownMenuItem>

@@ -1,38 +1,9 @@
 "use client";
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import { account } from "@/lib/appwrite";
+
+import { useMagicURLCallback } from "@/hooks/useAuth";
 
 const MagicURLCallback = () => {
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string>("");
-  const [success, setSuccess] = useState<string>("");
-  const router = useRouter();
-
-  useEffect(() => {
-    const createSessionFromURL = async () => {
-      const urlParams = new URLSearchParams(window.location.search);
-      const secret = urlParams.get("secret");
-      const userId = urlParams.get("userId");
-
-      if (secret && userId) {
-        try {
-          await account.createSession(userId, secret);
-          setSuccess("Logged in successfully!");
-          router.push("/");
-        } catch (error: any) {
-          setError(error.message || "Failed to log in. Please try again.");
-        } finally {
-          setLoading(false);
-        }
-      } else {
-        setError("Invalid login attempt.");
-        setLoading(false);
-      }
-    };
-
-    createSessionFromURL();
-  }, [router]);
+  const { loading, success, error } = useMagicURLCallback();
 
   if (loading) {
     return <div>Loading...</div>;
