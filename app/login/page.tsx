@@ -1,17 +1,18 @@
 "use client";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { useLogin, useLogout, useSignup, useAuthUser } from "@/hooks/useAuth";
-import { useState } from "react";
+import { useMagicLinkLogin, useLogout, useAuthUser } from "@/hooks/useAuth";
+import { account } from "@/lib/appwrite";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [name, setName] = useState("");
   const [success, setSuccess] = useState<string>("");
-  const [activeTab, setActiveTab] = useState<"login" | "register">("login");
 
-  const { login, loading: loginLoading, error: loginError } = useLogin();
-  const { signup, loading: signupLoading, error: signupError } = useSignup();
+  const {
+    sendMagicLink,
+    loading: magicLinkLoading,
+    error: magicLinkError,
+  } = useMagicLinkLogin();
   const { logout, loading: logoutLoading, error: logoutError } = useLogout();
   const {
     user: loggedInUser,
@@ -19,23 +20,38 @@ const LoginPage = () => {
     error: userError,
   } = useAuthUser();
 
-  const handleLogin = async () => {
+  const handleSendMagicLink = async () => {
     try {
-      const user = await login(email, password);
-      setSuccess("Login successful!");
+      await sendMagicLink(email);
+      setSuccess("Magic link sent! Check your email.");
     } catch (error) {
       setSuccess("");
     }
   };
 
-  const handleSignup = async () => {
-    try {
-      const user = await signup(email, password, name);
-      setSuccess("Registration successful! Logging you in...");
-    } catch (error) {
-      setSuccess("");
-    }
-  };
+  useEffect(() => {
+    const createSessionFromURL = async () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const secret = urlParams.get("secret");
+      const userId = urlParams.get("userId");
+
+      if (secret && userId) {
+        try {
+          await account.createSession(userId, secret);
+          setSuccess("Logged in successfully!");
+          window.history.replaceState(
+            {},
+            document.title,
+            window.location.pathname
+          );
+        } catch (error: any) {
+          setSuccess("");
+        }
+      }
+    };
+
+    createSessionFromURL();
+  }, []);
 
   const handleLogout = async () => {
     try {
@@ -56,7 +72,7 @@ const LoginPage = () => {
         {loggedInUser ? (
           <div className="text-center">
             <p className="text-lg font-semibold text-gray-800">
-              Logged in as {loggedInUser.name}
+              Logged in as {loggedInUser.email}
             </p>
             <Button
               className="w-full mt-4"
@@ -70,93 +86,32 @@ const LoginPage = () => {
           </div>
         ) : (
           <div>
-            <div className="flex justify-center mb-6">
-              <button
-                className={`px-4 py-2 font-semibold transition-colors duration-300 ${
-                  activeTab === "login"
-                    ? "text-blue-600 border-b-4 border-blue-600"
-                    : "text-gray-600 hover:text-blue-600"
-                }`}
-                onClick={() => setActiveTab("login")}
-              >
-                Login
-              </button>
-              <button
-                className={`px-4 py-2 font-semibold transition-colors duration-300 ${
-                  activeTab === "register"
-                    ? "text-blue-600 border-b-4 border-blue-600"
-                    : "text-gray-600 hover:text-blue-600"
-                }`}
-                onClick={() => setActiveTab("register")}
-              >
-                Register
-              </button>
+            <div className="text-center mb-6">
+              <p className="text-lg font-semibold text-gray-800">
+                Magic Link Login
+              </p>
             </div>
-            {loginError && (
-              <p className="text-center text-red-500">{loginError}</p>
-            )}
-            {signupError && (
-              <p className="text-center text-red-500">{signupError}</p>
+            {magicLinkError && (
+              <p className="text-center text-red-500">{magicLinkError}</p>
             )}
             {success && <p className="text-center text-green-500">{success}</p>}
-            {activeTab === "login" ? (
-              <form className="space-y-4">
-                <input
-                  type="email"
-                  placeholder="Email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition duration-300"
-                />
-                <input
-                  type="password"
-                  placeholder="Password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition duration-300"
-                />
-                <Button
-                  type="button"
-                  onClick={handleLogin}
-                  className="w-full"
-                  disabled={loginLoading}
-                >
-                  {loginLoading ? "Logging in..." : "Login"}
-                </Button>
-              </form>
-            ) : (
-              <form className="space-y-4">
-                <input
-                  type="email"
-                  placeholder="Email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition duration-300"
-                />
-                <input
-                  type="password"
-                  placeholder="Password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition duration-300"
-                />
-                <input
-                  type="text"
-                  placeholder="Name"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition duration-300"
-                />
-                <Button
-                  type="button"
-                  onClick={handleSignup}
-                  className="w-full"
-                  disabled={signupLoading}
-                >
-                  {signupLoading ? "Registering..." : "Register"}
-                </Button>
-              </form>
-            )}
+            <form className="space-y-4">
+              <input
+                type="email"
+                placeholder="Email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition duration-300"
+              />
+              <Button
+                type="button"
+                onClick={handleSendMagicLink}
+                className="w-full"
+                disabled={magicLinkLoading}
+              >
+                {magicLinkLoading ? "Sending magic link..." : "Send Magic Link"}
+              </Button>
+            </form>
           </div>
         )}
       </div>

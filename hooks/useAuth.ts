@@ -1,52 +1,5 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { account, ID } from "@/lib/appwrite";
-
-// Custom hooks
-
-const useLogin = () => {
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string>("");
-
-  const login = async (email: string, password: string) => {
-    try {
-      setLoading(true);
-      await account.createEmailPasswordSession(email, password);
-      const user = await account.get();
-      return user;
-    } catch (error: any) {
-      setError(
-        error.message ||
-          "Login failed. Please check your credentials and try again."
-      );
-      throw error;
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  return { login, loading, error };
-};
-
-const useSignup = () => {
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string>("");
-
-  const signup = async (email: string, password: string, name: string) => {
-    try {
-      setLoading(true);
-      await account.create(ID.unique(), email, password, name);
-      const user = await account.get();
-      return user;
-    } catch (error: any) {
-      setError(error.message || "Registration failed. Please try again.");
-      throw error;
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  return { signup, loading, error };
-};
 
 const useLogout = () => {
   const [loading, setLoading] = useState(false);
@@ -66,7 +19,6 @@ const useLogout = () => {
 
   return { logout, loading, error };
 };
-
 const useAuthUser = () => {
   const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(true);
@@ -90,5 +42,23 @@ const useAuthUser = () => {
 
   return { user, loading, error };
 };
+const useMagicLinkLogin = () => {
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string>("");
 
-export { useLogin, useSignup, useLogout, useAuthUser };
+  const sendMagicLink = async (email: string) => {
+    try {
+      setLoading(true);
+      const redirectURL = `${window.location.origin}/magic-url-callback`;
+      await account.createMagicURLToken(ID.unique(), email, redirectURL);
+    } catch (error: any) {
+      setError(error.message || "Failed to send magic link. Please try again.");
+      throw error;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return { sendMagicLink, loading, error };
+};
+export { useMagicLinkLogin, useLogout, useAuthUser };
