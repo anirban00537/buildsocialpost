@@ -6,10 +6,10 @@ interface CarouselState {
   slides: Slide[];
   generalSettings: generalSettings;
   background: {
-    type: "color" | "image" | "gradient";
-    color: string;
-    imageUrl: string;
-    gradient: string[];
+    color1: string;
+    color2: string;
+    color3: string;
+    color4: string;
   };
   textSettings: {
     alignment: "left" | "center" | "right";
@@ -29,10 +29,10 @@ const initialState: CarouselState = {
     handle: "@anirban00537",
   },
   background: {
-    type: "color",
-    color: "#000000",
-    imageUrl: "",
-    gradient: ["#fafafa", "#dddddd", "#bbbbbb"],
+    color1: "#Fefefe",
+    color2: "#D8D8D8",
+    color3: "#A0A0A0",
+    color4: "#707070",
   },
   textSettings: {
     alignment: "center",
@@ -97,20 +97,16 @@ const carouselSlice = createSlice({
       state.layout.height = action.payload.height;
       state.layout.width = action.payload.width;
     },
-    setBackgroundSettings: (
+    setBackground: (
       state,
       action: PayloadAction<{
-        type: "color" | "image" | "gradient";
-        color?: string;
-        imageUrl?: string;
-        gradient?: string[];
+        color1: string;
+        color2: string;
+        color3: string;
+        color4: string;
       }>
     ) => {
-      const { type, color, imageUrl, gradient } = action.payload;
-      state.background.type = type;
-      if (color) state.background.color = color;
-      if (imageUrl) state.background.imageUrl = imageUrl;
-      if (gradient) state.background.gradient = gradient;
+      state.background = action.payload;
     },
   },
 });
@@ -124,6 +120,6 @@ export const {
   addAllSlides,
   setTextSettings,
   setLayoutHeightAndWidth,
-  setBackgroundSettings,
+  setBackground,
 } = carouselSlice.actions;
 export default carouselSlice.reducer;
