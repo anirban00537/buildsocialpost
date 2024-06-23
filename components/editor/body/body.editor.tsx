@@ -87,22 +87,22 @@ const CarouselEditor: React.FC = () => {
                 </div>
                 <div className="flex items-center justify-start mt-3 space-x-2">
                   <button
-                    className="flex items-center justify-center text-gray-500 border border-gray-500 rounded-md hover:bg-blue-700 p-1 h-7 w-7 z-10"
+                    className="flex items-center justify-center border-slate-400 text-slate-400 border  rounded-md hover:bg-blue-700  h-6 w-6 z-10"
                     onClick={() => handleInsertSlide(index)}
                   >
                     <Plus size={22} />
                   </button>
                   <button
-                    className="flex items-center justify-center text-gray-500 rounded-full hover:bg-blue-700 p-2 z-10"
+                    className="flex items-center justify-center border-slate-400 text-slate-400 border  rounded-md hover:bg-blue-700  h-6 w-6 z-10"
                     onClick={() => handleCopySlide(index)}
                   >
-                    <Copy size={22} />
+                    <Copy size={12} />
                   </button>
                   <button
-                    className="flex items-center justify-center text-gray-500 rounded-full hover:bg-blue-700 p-2 z-10"
+                    className="flex items-center justify-center border-red-300 text-red-300 border  rounded-md hover:bg-blue-700  h-6 w-6 z-10"
                     onClick={() => handleDeleteSlide(index)}
                   >
-                    <Trash2 size={22} />
+                    <Trash2 size={15} />
                   </button>
                 </div>
               </SwiperSlide>
