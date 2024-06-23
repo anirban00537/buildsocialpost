@@ -32,7 +32,6 @@ const CarouselEditor: React.FC = () => {
     swiperRef,
     slides,
     generalSettings,
-    background,
     layout,
     textSettings,
     handleSlideClick,
@@ -82,12 +81,8 @@ const CarouselEditor: React.FC = () => {
                   <SlideComponent
                     slide={slide}
                     index={index}
-                    generalSettings={generalSettings}
                     updateSlide={handleUpdateSlide}
-                    textAlign={textSettings.alignment}
                     slideNumber={index + 1}
-                    fontSize={textSettings.fontSize}
-                    backgroundColor={background.color}
                   />
                 </div>
                 <div className="flex items-center justify-start mt-3 space-x-2">

@@ -6,23 +6,22 @@ import { RootState } from "@/state/store";
 
 interface SlideProps {
   slide: Slide;
-  generalSettings: generalSettings;
   index: number;
   updateSlide: (index: number, updatedSlide: any) => void;
-  textAlign?: "left" | "center" | "right";
   slideNumber?: number;
-  fontSize?: number;
 }
 
 const SlideComponent: React.FC<SlideProps> = ({
   slide,
-  generalSettings,
   index,
   updateSlide,
-  textAlign = "center",
   slideNumber,
-  fontSize = 12,
 }) => {
+  const { textSettings, layout, background } = useSelector(
+    (state: RootState) => state.slides
+  );
+  const { generalSettings } = useSelector((state: RootState) => state.slides);
+  const { alignment, fontSize } = textSettings;
   const backgroundImageStyle = slide.imageUrl
     ? { backgroundImage: `url(${slide.imageUrl})` }
     : {
@@ -76,13 +75,13 @@ const SlideComponent: React.FC<SlideProps> = ({
           display: "flex",
           flexDirection: "column",
           alignItems:
-            textAlign === "center"
+            alignment === "center"
               ? "center"
-              : textAlign === "left"
+              : alignment === "left"
               ? "flex-start"
               : "flex-end",
           justifyContent: "center",
-          textAlign: textAlign,
+          textAlign: alignment,
           width: "100%",
           padding: "0 16px",
         }}
@@ -127,7 +126,7 @@ const SlideComponent: React.FC<SlideProps> = ({
                 wordBreak: "break-word",
                 whiteSpace: "normal",
                 resize: "none",
-                textAlign: textAlign,
+                textAlign: alignment,
               }}
             >
               {slide.tagline || "Your Tagline Here"}
@@ -153,7 +152,7 @@ const SlideComponent: React.FC<SlideProps> = ({
                 wordBreak: "break-word",
                 whiteSpace: "normal",
                 resize: "none",
-                textAlign: textAlign,
+                textAlign: alignment,
               }}
             >
               {slide.title || "Title"}
@@ -180,7 +179,7 @@ const SlideComponent: React.FC<SlideProps> = ({
                 wordBreak: "break-word",
                 whiteSpace: "normal",
                 resize: "none",
-                textAlign: textAlign,
+                textAlign: alignment,
               }}
             >
               {slide.description ||
@@ -269,7 +268,7 @@ const SlideComponent: React.FC<SlideProps> = ({
           color: color3,
         }}
       >
-        <ChevronRight 
+        <ChevronRight
           size={26}
           color={color3}
           className="hover:scale-110 transition-transform"

@@ -29,7 +29,9 @@ const useLogout = () => {
 const useAuthUser = () => {
   const [error, setError] = useState<string>("");
   const dispatch = useDispatch();
-  const user: any = useSelector((state: RootState) => state.user.userinfo);
+  const { loading, userinfo: user } = useSelector(
+    (state: RootState) => state.user
+  );
 
   const fetchUser = async () => {
     try {
@@ -47,9 +49,8 @@ const useAuthUser = () => {
     fetchUser();
   }, []);
 
-  return { error, user };
+  return { error, user, loading };
 };
-
 
 const useMagicLinkLogin = () => {
   const [loading, setLoading] = useState(false);
