@@ -29,10 +29,10 @@ const initialState: CarouselState = {
     handle: "@anirban00537",
   },
   background: {
-    color1: "#Fefefe",
-    color2: "#D8D8D8",
-    color3: "#A0A0A0",
-    color4: "#707070",
+    color1: "#fff3c1",
+    color2: "#330000",
+    color3: "#ffffff",
+    color4: "#07d7e5",
   },
   textSettings: {
     alignment: "center",

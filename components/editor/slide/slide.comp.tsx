@@ -1,6 +1,8 @@
 import React from "react";
 import { ArrowRightCircle } from "lucide-react"; // Importing the right arrow icon
 import { generalSettings, Slide } from "@/types";
+import { useSelector } from "react-redux";
+import { RootState } from "@/state/store";
 
 interface SlideProps {
   slide: Slide;
@@ -10,7 +12,6 @@ interface SlideProps {
   textAlign?: "left" | "center" | "right";
   slideNumber?: number;
   fontSize?: number;
-  backgroundColor?: string;
 }
 
 const SlideComponent: React.FC<SlideProps> = ({
@@ -21,11 +22,25 @@ const SlideComponent: React.FC<SlideProps> = ({
   textAlign = "center",
   slideNumber,
   fontSize = 12,
-  backgroundColor = "black",
 }) => {
   const backgroundImageStyle = slide.imageUrl
     ? { backgroundImage: `url(${slide.imageUrl})` }
-    : { background: backgroundColor };
+    : {
+        backgroundImage: `url('/backgrounds/background1.svg')`,
+        backgroundPosition: "center",
+        opacity: 0.1,
+        backgroundPositionX: "center",
+        backgroundPositionY: "center",
+        backgroundSize: "cover",
+        backgroundRepeat: "no-repeat",
+        backgroundAttachment: "initial",
+        backgroundOrigin: "initial",
+        backgroundClip: "initial",
+      };
+
+  const { color1, color2, color3, color4 } = useSelector(
+    (state: RootState) => state.slides.background
+  );
 
   return (
     <div
@@ -38,10 +53,22 @@ const SlideComponent: React.FC<SlideProps> = ({
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        color: "white",
-        ...backgroundImageStyle,
+        color: color2,
+        backgroundColor: color1,
+        zIndex: 1,
       }}
     >
+      <div
+        style={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          zIndex: 0,
+          ...backgroundImageStyle,
+        }}
+      />
       <div
         style={{
           position: "relative",
@@ -66,13 +93,13 @@ const SlideComponent: React.FC<SlideProps> = ({
               height: "32px",
               width: "32px",
               borderRadius: "50%",
-              backgroundColor: "white",
+              backgroundColor: color4,
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
               fontSize: `${14}px`,
               fontWeight: "bold",
-              color: "black",
+              color: color3,
               margin: "16px",
             }}
           >
@@ -95,7 +122,7 @@ const SlideComponent: React.FC<SlideProps> = ({
                 fontStyle: "italic",
                 backgroundColor: "transparent",
                 border: "none",
-                color: "white",
+                color: color2,
                 outline: "none",
                 wordBreak: "break-word",
                 whiteSpace: "normal",
@@ -121,7 +148,7 @@ const SlideComponent: React.FC<SlideProps> = ({
                 fontWeight: "bold",
                 backgroundColor: "transparent",
                 border: "none",
-                color: "white",
+                color: color2,
                 outline: "none",
                 wordBreak: "break-word",
                 whiteSpace: "normal",
@@ -148,7 +175,7 @@ const SlideComponent: React.FC<SlideProps> = ({
                 fontSize: `${fontSize}px`,
                 backgroundColor: "transparent",
                 border: "none",
-                color: "white",
+                color: color2,
                 outline: "none",
                 wordBreak: "break-word",
                 whiteSpace: "normal",
@@ -188,6 +215,7 @@ const SlideComponent: React.FC<SlideProps> = ({
               style={{
                 fontSize: `14px`,
                 fontWeight: "600",
+                color: color2,
               }}
             >
               {generalSettings.name || "Anirban Roy"}
@@ -196,7 +224,7 @@ const SlideComponent: React.FC<SlideProps> = ({
               style={{
                 fontSize: `12px`,
                 fontStyle: "italic",
-                color: "rgba(255, 255, 255, 0.8)",
+                color: color3,
               }}
             >
               {generalSettings.handle || "@anirban00537"}
@@ -210,16 +238,17 @@ const SlideComponent: React.FC<SlideProps> = ({
           bottom: 0,
           left: 0,
           width: "100%",
-          backgroundColor: "rgba(0, 0, 0, 0.6)",
+          backgroundColor: color4,
           textAlign: "center",
           fontSize: "12px",
           padding: "4px",
+          color: color3,
         }}
       >
         Created by{" "}
         <a
           href="https://buildcarousel.com"
-          style={{ color: "white", textDecoration: "underline" }}
+          style={{ color: color3, textDecoration: "underline" }}
         >
           buildcarousel.com
         </a>
@@ -234,7 +263,7 @@ const SlideComponent: React.FC<SlideProps> = ({
       >
         <ArrowRightCircle
           size={32}
-          color="white"
+          color={color3}
           className="hover:scale-110 transition-transform"
         />
       </div>

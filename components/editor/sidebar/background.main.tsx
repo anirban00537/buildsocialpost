@@ -55,41 +55,49 @@ const BackgroundColorssSection = () => {
   };
 
   return (
-    <form className="grid w-full items-start gap-6 p-4 rounded-lg bg-white">
-      <legend className="text-lg font-semibold mb-4">
-        Background Settings
-      </legend>
-      <div className="grid grid-cols-4 gap-2">
-        {(Object.keys(background) as Array<keyof BackgroundColors>).map(
-          (colorKey) => (
-            <div key={colorKey} className="flex flex-col items-center relative">
-              <Popover>
-                <PopoverTrigger asChild>
-                  <div
-                    className="w-12 h-12 cursor-pointer"
-                    style={{
-                      backgroundColor: background[colorKey],
-                      borderRadius: "50%",
-                      border: "3px solid #e5e7eb",
-                    }}
-                    onClick={() => handleColorPickerClick(colorKey)}
-                  />
-                </PopoverTrigger>
-                <PopoverContent
-                  className="z-50 w-auto h-auto flex items-start justify-start   bg-white rounded-lg border-none shadow-none"
-                  sideOffset={8}
-                  align="center"
-                  onMouseLeave={() => handleColorPickerClose(colorKey)}
-                >
-                  <HexColorPicker
-                    color={background[colorKey]}
-                    onChange={(color) => handleColorChange(colorKey, color)}
-                  />
-                </PopoverContent>
-              </Popover>
-            </div>
-          )
-        )}
+    <form className="grid w-full items-start gap-2 p-4 rounded-lg bg-white">
+      <legend className="text-sm font-medium ">Background</legend>
+      <div className="border p-3 rounded-lg ">
+        <label
+          htmlFor="color1"
+          className="block text-sm font-medium text-gray-700 mb-3"
+        >
+          Custom Background Color
+        </label>
+
+        <div className="grid grid-cols-4 gap-2">
+          {(Object.keys(background) as Array<keyof BackgroundColors>).map(
+            (colorKey) => (
+              <div
+                key={colorKey}
+                className="flex flex-col items-center relative"
+              >
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <div
+                      className="w-full h-7 border p-4 cursor-pointer rounded-md"
+                      style={{
+                        backgroundColor: background[colorKey],
+                      }}
+                      onClick={() => handleColorPickerClick(colorKey)}
+                    />
+                  </PopoverTrigger>
+                  <PopoverContent
+                    className="z-50 w-auto h-auto flex items-start justify-start   bg-white rounded-lg border-none shadow-none"
+                    sideOffset={8}
+                    align="center"
+                    onMouseLeave={() => handleColorPickerClose(colorKey)}
+                  >
+                    <HexColorPicker
+                      color={background[colorKey]}
+                      onChange={(color) => handleColorChange(colorKey, color)}
+                    />
+                  </PopoverContent>
+                </Popover>
+              </div>
+            )
+          )}
+        </div>
       </div>
     </form>
   );
