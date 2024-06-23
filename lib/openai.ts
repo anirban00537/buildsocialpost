@@ -19,29 +19,26 @@ export const generateCaruselContentFromTopic = async (
       messages: [
         {
           role: "user",
-          content: `You are an expert content creator for LinkedIn carousels. Generate engaging and informative carousel slides based on the given topic Answer them in this format example:
-          
+          content: `You are an expert LinkedIn carousel content creator. Generate ${numSlides} engaging and informative carousel slides on the topic "${topic}". Use the following format and guidelines:
+
           [Intro]
-          type:intro
-          tagline: 
-          title: 
-          description: 
-          
-          [Slide 1]
-          type:slide
-          title: 
-          description:
-          
-          [rest of the slides]
-          ...
-          
+          type: intro
+          tagline: [max 60 characters]
+          title: [max 60 characters]
+          description: [150-300 characters]
+
+          [Slide {n}]
+          type: slide
+          title: [max 60 characters]
+          description: [150-300 characters]
+
           [Outro]
-          type:outro
-          tagline: 
-          title: 
-          description:
-          
-          All titles and taglines should be a maximum of 60 characters. Each descriptions should be under 300 characters min 150 charecters. The content should be in ${language} and convey a ${mood} mood. Please generate content for ${numSlides} slides on the topic: ${topic}. Please only include the content in the format above. Do not include any additional text. Do not include any additional text.`,
+          type: outro
+          tagline: [max 60 characters]
+          title: [max 60 characters]
+          description: [150-300 characters]
+
+          The content should be in ${language} and convey a ${mood} mood. Do not include any additional text or explanations.`,
         },
       ],
       max_tokens: Number(maxTokens),
@@ -58,6 +55,7 @@ export const generateCaruselContentFromTopic = async (
     throw error;
   }
 };
+
 type Slide = {
   tagline?: string;
   title?: string;

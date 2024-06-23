@@ -35,7 +35,7 @@ const initialState: CarouselState = {
     color4: "#07d7e5",
   },
   textSettings: {
-    alignment: "center",
+    alignment: "left",
     fontSize: 14,
   },
   layout: {

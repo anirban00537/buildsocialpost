@@ -1,5 +1,5 @@
 import React from "react";
-import { ArrowRightCircle } from "lucide-react"; // Importing the right arrow icon
+import { ArrowBigRight, ArrowRightCircle, ChevronRight } from "lucide-react"; // Importing the right arrow icon
 import { generalSettings, Slide } from "@/types";
 import { useSelector } from "react-redux";
 import { RootState } from "@/state/store";
@@ -259,10 +259,18 @@ const SlideComponent: React.FC<SlideProps> = ({
           bottom: "42px",
           right: "26px",
           cursor: "pointer",
+          borderRadius: "50%",
+          backgroundColor: color4,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          fontWeight: "bold",
+          padding: "2px",
+          color: color3,
         }}
       >
-        <ArrowRightCircle
-          size={32}
+        <ChevronRight 
+          size={26}
           color={color3}
           className="hover:scale-110 transition-transform"
         />
