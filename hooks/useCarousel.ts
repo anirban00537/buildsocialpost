@@ -2,7 +2,7 @@ import { useState, useCallback, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/state/store";
 import { jsPDF } from "jspdf";
-import { toPng } from "html-to-image";
+import { toSvg } from "html-to-image";
 import { Slide } from "@/types";
 
 import {
@@ -51,6 +51,7 @@ const useCarousel = () => {
     },
     [dispatch]
   );
+
   const handleUpdateHeadshot = useCallback(
     (headshotUrl: string) => {
       const updatedSettings = {
@@ -65,6 +66,7 @@ const useCarousel = () => {
     },
     [dispatch, generalSettings]
   );
+
   const handleSlideClick = useCallback(
     (index: number) => {
       if (swiperRef.current && swiperRef.current.swiper) {
@@ -76,29 +78,57 @@ const useCarousel = () => {
 
   const exportSlidesToPDF = useCallback(async () => {
     setExportLoading(true);
-
     const pdf = new jsPDF("p", "px", [layout.width, layout.height]);
 
     for (let i = 0; i < slides.length; i++) {
       const slideElement = document.getElementById(`slide-${i}`);
       if (slideElement) {
         try {
-          // slideElement.style.width = `${layout.width}px`;
-          // slideElement.style.height = `${layout.height}px`;
+          const svgDataUrl = await toSvg(slideElement, { cacheBust: true });
+          console.log(`SVG Data URL for slide ${i}:`, svgDataUrl);
 
-          const imgData = await toPng(slideElement, { cacheBust: true });
-          if (i !== 0) {
-            pdf.addPage();
-          }
-          pdf.addImage(imgData, "PNG", 0, 0, layout.width, layout.height);
+          const image = new Image();
+          image.src = svgDataUrl;
+
+          image.onload = () => {
+            const canvas = document.createElement("canvas");
+            const width = layout.width;
+            const height = layout.height;
+            canvas.width = width;
+            canvas.height = height;
+
+            const context = canvas.getContext("2d");
+            if (context) {
+              context.drawImage(image, 0, 0, width, height);
+              const pngDataUrl = canvas.toDataURL("image/png");
+              console.log(`PNG Data URL for slide ${i}:`, pngDataUrl);
+
+              if (i !== 0) {
+                pdf.addPage();
+              }
+              pdf.addImage(pngDataUrl, "PNG", 0, 0, width, height);
+
+              // Save the PDF after the last slide is processed
+              if (i === slides.length - 1) {
+                pdf.save("carousel_slides.pdf");
+                setExportLoading(false);
+              }
+            } else {
+              console.error("Canvas context is null");
+            }
+          };
+
+          image.onerror = (error) => {
+            console.error(`Failed to load image for slide ${i}`, error);
+          };
         } catch (error) {
           console.error("Failed to export slide as image", error);
         }
+      } else {
+        console.warn(`Slide element with ID slide-${i} not found`);
       }
     }
-    pdf.save("carousel_slides.pdf");
-    setExportLoading(false);
-  }, [slides]);
+  }, [slides, layout.width, layout.height]);
 
   return {
     swiperRef,
@@ -110,7 +140,6 @@ const useCarousel = () => {
     handleDeleteSlide,
     handleUpdateSlide,
     handleUpdateHeadshot,
-
     handleSlideClick,
     exportSlidesToPDF,
     exportLoading,
