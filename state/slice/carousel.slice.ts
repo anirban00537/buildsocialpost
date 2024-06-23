@@ -30,7 +30,7 @@ const initialState: CarouselState = {
   },
   background: {
     color1: "#fff3c1",
-    color2: "#330000",
+    color2: "#494949",
     color3: "#ffffff",
     color4: "#07d7e5",
   },
@@ -39,8 +39,8 @@ const initialState: CarouselState = {
     fontSize: 14,
   },
   layout: {
-    height: 560,
-    width: 480,
+    height: 640,
+    width: 500,
   },
 };
 

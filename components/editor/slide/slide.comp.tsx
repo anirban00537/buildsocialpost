@@ -224,7 +224,7 @@ const SlideComponent: React.FC<SlideProps> = ({
               style={{
                 fontSize: `12px`,
                 fontStyle: "italic",
-                color: color3,
+                color: color2,
               }}
             >
               {generalSettings.handle || "@anirban00537"}

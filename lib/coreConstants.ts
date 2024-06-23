@@ -3,8 +3,8 @@ export const carouselsSize = [
     id: 1,
     platform: "Linkedin",
     ratio: "4:5",
-    width: 480,
-    height: 600,
+    width: 500,
+    height: 640,
   },
   {
     id: 2,
