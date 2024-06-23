@@ -79,6 +79,7 @@ const useCarousel = () => {
   const exportSlidesToPDF = useCallback(async () => {
     setExportLoading(true);
     const pdf = new jsPDF("p", "px", [layout.width, layout.height]);
+    const scaleFactor = 2; // Increase scale factor to improve quality
 
     for (let i = 0; i < slides.length; i++) {
       const slideElement = document.getElementById(`slide-${i}`);
@@ -92,8 +93,8 @@ const useCarousel = () => {
 
           image.onload = () => {
             const canvas = document.createElement("canvas");
-            const width = layout.width;
-            const height = layout.height;
+            const width = layout.width * scaleFactor;
+            const height = layout.height * scaleFactor;
             canvas.width = width;
             canvas.height = height;
 
@@ -106,7 +107,14 @@ const useCarousel = () => {
               if (i !== 0) {
                 pdf.addPage();
               }
-              pdf.addImage(pngDataUrl, "PNG", 0, 0, width, height);
+              pdf.addImage(
+                pngDataUrl,
+                "PNG",
+                0,
+                0,
+                layout.width,
+                layout.height
+              );
 
               // Save the PDF after the last slide is processed
               if (i === slides.length - 1) {
