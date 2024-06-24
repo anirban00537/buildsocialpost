@@ -6,20 +6,19 @@ import { useRouter } from "next/navigation";
 import { RootState } from "@/state/store";
 
 const useLogout = () => {
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoadingState] = useState(false);
   const [error, setError] = useState<string>("");
   const dispatch = useDispatch();
 
   const logoutUser = async () => {
     try {
-      setLoading(true);
+      setLoadingState(true);
       await account.deleteSession("current");
       dispatch(logout());
     } catch (error: any) {
       setError(error.message || "Logout failed. Please try again.");
-      throw error;
     } finally {
-      setLoading(false);
+      setLoadingState(false);
     }
   };
 
@@ -47,34 +46,35 @@ const useAuthUser = () => {
 
   useEffect(() => {
     fetchUser();
-  }, []);
+  }, [dispatch]);
 
-  return { error, user, loading };
+  return { error, user, loading, fetchUser };
 };
 
 const useMagicLinkLogin = () => {
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoadingState] = useState(false);
   const [error, setError] = useState<string>("");
-
   const sendMagicLink = async (email: string) => {
     try {
-      setLoading(true);
+      setLoadingState(true);
       const redirectURL = `${window.location.origin}/magic-url-callback`;
       await account.createMagicURLToken(ID.unique(), email, redirectURL);
     } catch (error: any) {
       setError(error.message || "Failed to send magic link. Please try again.");
-      throw error;
     } finally {
-      setLoading(false);
+      setLoadingState(false);
     }
   };
 
   return { sendMagicLink, loading, error };
 };
+
 const useMagicURLCallback = () => {
   const dispatch = useDispatch();
   const router = useRouter();
-  const [loading, setLoading] = useState(true);
+  const { fetchUser } = useAuthUser();
+
+  const [loading, setLoadingState] = useState(true);
   const [error, setError] = useState<string>("");
   const [success, setSuccess] = useState<string>("");
 
@@ -86,18 +86,18 @@ const useMagicURLCallback = () => {
 
       if (secret && userId) {
         try {
-          const user = await account.createSession(userId, secret);
-          dispatch(setUser(user));
+          await account.createSession(userId, secret);
+          fetchUser();
           setSuccess("Logged in successfully!");
           router.push("/editor");
         } catch (error: any) {
           setError(error.message || "Failed to log in. Please try again.");
         } finally {
-          setLoading(false);
+          setLoadingState(false);
         }
       } else {
         setError("Invalid login attempt.");
-        setLoading(false);
+        setLoadingState(false);
       }
     };
 
@@ -106,4 +106,5 @@ const useMagicURLCallback = () => {
 
   return { loading, success, error };
 };
+
 export { useMagicLinkLogin, useLogout, useAuthUser, useMagicURLCallback };
