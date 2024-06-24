@@ -82,7 +82,7 @@ const CarouselEditor: React.FC = () => {
                     slide={slide}
                     index={index}
                     updateSlide={handleUpdateSlide}
-                    slideNumber={index + 1}
+                    slideNumber={index}
                   />
                 </div>
                 <div className="flex items-center justify-start mt-3 space-x-2">

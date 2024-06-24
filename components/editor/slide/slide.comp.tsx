@@ -17,9 +17,7 @@ const SlideComponent: React.FC<SlideProps> = ({
   updateSlide,
   slideNumber,
 }) => {
-  const { textSettings, layout, background } = useSelector(
-    (state: RootState) => state.slides
-  );
+  const { textSettings } = useSelector((state: RootState) => state.slides);
   const { generalSettings } = useSelector((state: RootState) => state.slides);
   const { alignment, fontSize } = textSettings;
   const backgroundImageStyle = slide.imageUrl
@@ -86,7 +84,7 @@ const SlideComponent: React.FC<SlideProps> = ({
           padding: "0 16px",
         }}
       >
-        {slideNumber !== undefined && (
+        {slideNumber !== undefined && slide?.type === "slide" && (
           <div
             style={{
               height: "32px",
@@ -188,49 +186,52 @@ const SlideComponent: React.FC<SlideProps> = ({
           )}
         </div>
       </div>
-      {generalSettings.headshotUrl && (
-        <div
-          style={{
-            position: "absolute",
-            bottom: "32px",
-            left: "16px",
-            display: "flex",
-            alignItems: "center",
-            gap: "16px",
-            padding: "8px",
-          }}
-        >
-          <img
-            src={generalSettings.headshotUrl}
-            alt="Headshot"
+      {generalSettings.headshotUrl &&
+        generalSettings.name &&
+        generalSettings.handle &&
+        slide?.type !== "slide" && (
+          <div
             style={{
-              width: "40px",
-              height: "40px",
-              borderRadius: "50%",
+              position: "absolute",
+              bottom: "32px",
+              left: "16px",
+              display: "flex",
+              alignItems: "center",
+              gap: "16px",
+              padding: "8px",
             }}
-          />
-          <div style={{ display: "flex", flexDirection: "column" }}>
-            <div
+          >
+            <img
+              src={generalSettings.headshotUrl}
+              alt="Headshot"
               style={{
-                fontSize: `14px`,
-                fontWeight: "600",
-                color: color2,
+                width: "40px",
+                height: "40px",
+                borderRadius: "50%",
               }}
-            >
-              {generalSettings.name || "Anirban Roy"}
-            </div>
-            <div
-              style={{
-                fontSize: `12px`,
-                fontStyle: "italic",
-                color: color2,
-              }}
-            >
-              {generalSettings.handle || "@anirban00537"}
+            />
+            <div style={{ display: "flex", flexDirection: "column" }}>
+              <div
+                style={{
+                  fontSize: `14px`,
+                  fontWeight: "600",
+                  color: color2,
+                }}
+              >
+                {generalSettings.name || "Anirban Roy"}
+              </div>
+              <div
+                style={{
+                  fontSize: `12px`,
+                  fontStyle: "italic",
+                  color: color2,
+                }}
+              >
+                {generalSettings.handle || "@anirban00537"}
+              </div>
             </div>
           </div>
-        </div>
-      )}
+        )}
       <div
         style={{
           position: "absolute",
