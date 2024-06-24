@@ -1,5 +1,5 @@
 import React from "react";
-import { ArrowBigRight, ArrowRightCircle, ChevronRight } from "lucide-react"; // Importing the right arrow icon
+import { ChevronRight } from "lucide-react"; // Importing the right arrow icon
 import { generalSettings, Slide } from "@/types";
 import { useSelector } from "react-redux";
 import { RootState } from "@/state/store";
@@ -208,6 +208,7 @@ const SlideComponent: React.FC<SlideProps> = ({
                 width: "40px",
                 height: "40px",
                 borderRadius: "50%",
+                border: `2px solid ${color4}`,
               }}
             />
             <div style={{ display: "flex", flexDirection: "column" }}>
@@ -238,7 +239,7 @@ const SlideComponent: React.FC<SlideProps> = ({
           bottom: 0,
           left: 0,
           width: "100%",
-          backgroundColor: "#000",
+          backgroundColor: color1,
           textAlign: "center",
           fontSize: "12px",
           padding: "4px",
