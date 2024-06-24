@@ -238,7 +238,7 @@ const SlideComponent: React.FC<SlideProps> = ({
           bottom: 0,
           left: 0,
           width: "100%",
-          backgroundColor: color4,
+          backgroundColor: "#000",
           textAlign: "center",
           fontSize: "12px",
           padding: "4px",
@@ -248,7 +248,7 @@ const SlideComponent: React.FC<SlideProps> = ({
         Created by{" "}
         <a
           href="https://buildcarousel.com"
-          style={{ color: color3, textDecoration: "underline" }}
+          style={{ color: color3, textDecoration: "none", fontWeight: "bold" }}
         >
           buildcarousel.com
         </a>

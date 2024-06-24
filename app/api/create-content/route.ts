@@ -5,7 +5,7 @@ import {
 
 export async function POST(req: Request) {
   try {
-    const { topic, numSlides, maxTokens, temperature, language, model, mood } =
+    const { topic, numSlides,  temperature, language, model, mood } =
       await req.json();
 
     if (!topic || !numSlides) {
@@ -20,7 +20,6 @@ export async function POST(req: Request) {
     const content: any = await generateCaruselContentFromTopic(
       topic,
       numSlides,
-      maxTokens,
       temperature,
       language,
       model,

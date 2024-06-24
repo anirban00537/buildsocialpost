@@ -79,7 +79,7 @@ const useCarousel = () => {
   const exportSlidesToPDF = useCallback(async () => {
     setExportLoading(true);
     const pdf = new jsPDF("p", "px", [layout.width, layout.height]);
-    const scaleFactor = 2; // Increase scale factor to improve quality
+    const scaleFactor = 5; // Increase scale factor to improve quality
 
     for (let i = 0; i < slides.length; i++) {
       const slideElement = document.getElementById(`slide-${i}`);
@@ -113,7 +113,9 @@ const useCarousel = () => {
                 0,
                 0,
                 layout.width,
-                layout.height
+                layout.height,
+                undefined,
+                "FAST" // Use FAST compression to reduce file size
               );
 
               // Save the PDF after the last slide is processed

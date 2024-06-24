@@ -5,7 +5,6 @@ import { useDispatch } from "react-redux";
 export const useGenerateContent = () => {
   const [topic, setTopic] = useState("");
   const [numSlides, setNumSlides] = useState(5);
-  const [maxTokens, setMaxTokens] = useState(600);
   const [temperature, setTemperature] = useState(0.2);
   const [language, setLanguage] = useState("en");
   const [model, setModel] = useState("gpt-3.5-turbo");
@@ -25,7 +24,6 @@ export const useGenerateContent = () => {
         body: JSON.stringify({
           topic,
           numSlides,
-          maxTokens,
           temperature,
           language,
           model,
@@ -52,8 +50,6 @@ export const useGenerateContent = () => {
     topic,
     setNumSlides,
     numSlides,
-    setMaxTokens,
-    maxTokens,
     setTemperature,
     temperature,
     setLanguage,

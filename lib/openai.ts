@@ -7,41 +7,43 @@ const openai = new OpenAI({
 export const generateCaruselContentFromTopic = async (
   topic: string,
   numSlides: number,
-  maxTokens = 1000,
   temperature = 0.4,
   language = "en",
   model = "gpt-3.5-turbo",
   mood = "neutral"
 ) => {
   try {
+    const maxTokensPerSlide = 100;
+    const maxTokens = Math.min(numSlides * maxTokensPerSlide, 1000); // Ensure max tokens do not exceed 1000
+
     const response = await openai.chat.completions.create({
       model: model,
       messages: [
         {
           role: "user",
-          content: `You are an expert LinkedIn carousel content creator. Generate ${numSlides} engaging and informative carousel slides on the topic "${topic}". Use the following format and guidelines:
+          content: `You are an expert LinkedIn carousel content creator. Generate ${numSlides} engaging and informative carousel slides on the topic "${topic}". The ${numSlides} slides should exclude the intro and outro. Use the following format and guidelines:
 
           [Intro]
           type: intro
           tagline: [max 60 characters]
           title: [max 60 characters]
-          description: [150-300 characters]
+          description: [200-300 characters]
 
           [Slide {n}]
           type: slide
           title: [max 60 characters]
-          description: [150-300 characters]
+          description: [200-300 characters]
 
           [Outro]
           type: outro
           tagline: [max 60 characters]
           title: [max 60 characters]
-          description: [150-300 characters]
+          description: [200-300 characters]
 
           The content should be in ${language} and convey a ${mood} mood. Do not include any additional text or explanations.`,
         },
       ],
-      max_tokens: Number(maxTokens),
+      max_tokens: maxTokens,
       temperature: Number(temperature),
     });
 
