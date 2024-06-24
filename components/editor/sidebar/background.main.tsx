@@ -8,94 +8,7 @@ import {
   PopoverTrigger,
   PopoverContent,
 } from "@/components/ui/popover";
-
-type BackgroundColors = {
-  color1: string;
-  color2: string;
-  color3: string;
-  color4: string;
-};
-
-const colorPresets: BackgroundColors[] = [
-  {
-    color1: "#2c3e50", // Dark Blue - Background Color
-    color2: "#ecf0f1", // Light Grey - Text Color
-    color3: "#bdc3c7", // Silver - Text Color
-    color4: "#2980b9", // Bright Blue - Background Color
-  },
-  {
-    color1: "#27ae60", // Green - Background Color
-    color2: "#ecf0f1", // Light Grey - Text Color
-    color3: "#bdc3c7", // Silver - Text Color
-    color4: "#2ecc71", // Bright Green - Background Color
-  },
-  {
-    color1: "#8e44ad", // Purple - Background Color
-    color2: "#ecf0f1", // Light Grey - Text Color
-    color3: "#bdc3c7", // Silver - Text Color
-    color4: "#9b59b6", // Light Purple - Background Color
-  },
-  {
-    color1: "#e74c3c", // Red - Background Color
-    color2: "#ecf0f1", // Light Grey - Text Color
-    color3: "#bdc3c7", // Silver - Text Color
-    color4: "#c0392b", // Dark Red - Background Color
-  },
-  {
-    color1: "#1abc9c", // Turquoise - Background Color
-    color2: "#ecf0f1", // Light Grey - Text Color
-    color3: "#bdc3c7", // Silver - Text Color
-    color4: "#16a085", // Dark Turquoise - Background Color
-  },
-  {
-    color1: "#f39c12", // Orange - Background Color
-    color2: "#ecf0f1", // Light Grey - Text Color
-    color3: "#bdc3c7", // Silver - Text Color
-    color4: "#e67e22", // Dark Orange - Background Color
-  },
-  {
-    color1: "#3498db", // Light Blue - Background Color
-    color2: "#ecf0f1", // Light Grey - Text Color
-    color3: "#bdc3c7", // Silver - Text Color
-    color4: "#2980b9", // Dark Blue - Background Color
-  },
-  {
-    color1: "#34495e", // Dark Grey - Background Color
-    color2: "#ecf0f1", // Light Grey - Text Color
-    color3: "#bdc3c7", // Silver - Text Color
-    color4: "#2c3e50", // Very Dark Blue - Background Color
-  },
-  {
-    color1: "#d35400", // Pumpkin - Background Color
-    color2: "#ecf0f1", // Light Grey - Text Color
-    color3: "#bdc3c7", // Silver - Text Color
-    color4: "#e67e22", // Carrot - Background Color
-  },
-  {
-    color1: "#c0392b", // Red - Background Color
-    color2: "#ecf0f1", // Light Grey - Text Color
-    color3: "#bdc3c7", // Silver - Text Color
-    color4: "#e74c3c", // Light Red - Background Color
-  },
-  {
-    color1: "#16a085", // Green - Background Color
-    color2: "#ecf0f1", // Light Grey - Text Color
-    color3: "#bdc3c7", // Silver - Text Color
-    color4: "#1abc9c", // Light Green - Background Color
-  },
-  {
-    color1: "#2980b9", // Blue - Background Color
-    color2: "#ecf0f1", // Light Grey - Text Color
-    color3: "#bdc3c7", // Silver - Text Color
-    color4: "#3498db", // Light Blue - Background Color
-  },
-  {
-    color1: "#7f8c8d", // Asbestos - Background Color
-    color2: "#ecf0f1", // Light Grey - Text Color
-    color3: "#bdc3c7", // Silver - Text Color
-    color4: "#95a5a6", // Concrete - Background Color
-  },
-];
+import colorPresets, { BackgroundColors } from "@/lib/color-presets";
 
 const BackgroundColorsSection = () => {
   const dispatch = useDispatch();
@@ -160,7 +73,7 @@ const BackgroundColorsSection = () => {
                 <Popover>
                   <PopoverTrigger asChild>
                     <div
-                      className="w-full h-7 border p-4 cursor-pointer rounded-md"
+                      className="w-full h-7 border p-4 cursor-pointer rounded-md transition transform hover:scale-110"
                       style={{
                         backgroundColor: background[colorKey],
                       }}
@@ -190,14 +103,15 @@ const BackgroundColorsSection = () => {
         >
           Select Color Preset
         </label>
-        <div className="grid grid-cols-4 gap-2">
+        <div className="grid grid-cols-4 gap-4">
           {colorPresets.map((preset, index) => (
             <div
               key={index}
-              className="w-full grid grid-cols-4 h-5 border rounded-md cursor-pointer"
+              className="w-full grid grid-cols-4 h-7 border p-1 rounded-md cursor-pointer transition transform hover:scale-105 hover:shadow-lg"
               onClick={() => handlePresetSelect(preset)}
             >
               <div
+                className="transition-colors duration-200 ease-in-out"
                 style={{
                   backgroundColor: preset.color1,
                   width: "100%",
@@ -205,6 +119,7 @@ const BackgroundColorsSection = () => {
                 }}
               ></div>
               <div
+                className="transition-colors duration-200 ease-in-out"
                 style={{
                   backgroundColor: preset.color2,
                   width: "100%",
@@ -212,6 +127,7 @@ const BackgroundColorsSection = () => {
                 }}
               ></div>
               <div
+                className="transition-colors duration-200 ease-in-out"
                 style={{
                   backgroundColor: preset.color3,
                   width: "100%",
@@ -219,6 +135,7 @@ const BackgroundColorsSection = () => {
                 }}
               ></div>
               <div
+                className="transition-colors duration-200 ease-in-out"
                 style={{
                   backgroundColor: preset.color4,
                   width: "100%",
