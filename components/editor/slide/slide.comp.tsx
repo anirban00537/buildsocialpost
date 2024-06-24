@@ -253,28 +253,30 @@ const SlideComponent: React.FC<SlideProps> = ({
           buildcarousel.com
         </a>
       </div>
-      <div
-        style={{
-          position: "absolute",
-          bottom: "42px",
-          right: "26px",
-          cursor: "pointer",
-          borderRadius: "50%",
-          backgroundColor: color4,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          fontWeight: "bold",
-          padding: "2px",
-          color: color3,
-        }}
-      >
-        <ChevronRight
-          size={26}
-          color={color3}
-          className="hover:scale-110 transition-transform"
-        />
-      </div>
+      {slide?.type === "intro" && (
+        <div
+          style={{
+            position: "absolute",
+            bottom: "42px",
+            right: "26px",
+            cursor: "pointer",
+            borderRadius: "50%",
+            backgroundColor: color4,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            fontWeight: "bold",
+            padding: "2px",
+            color: color3,
+          }}
+        >
+          <ChevronRight
+            size={26}
+            color={color3}
+            className="hover:scale-110 transition-transform"
+          />
+        </div>
+      )}
     </div>
   );
 };
