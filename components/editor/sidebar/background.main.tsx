@@ -53,9 +53,9 @@ const BackgroundColorsSection = () => {
   };
 
   return (
-    <form className="grid w-full items-start gap-2 p-4 rounded-lg bg-white">
-      <legend className="text-sm font-medium">Background</legend>
-      <div className="border p-3 rounded-lg">
+    <form className="grid w-full items-start gap-4 p-3 pb-36 rounded-lg bg-white shadow-lg max-h-screen overflow-y-auto">
+      <legend className="text-lg font-semibold ">Background</legend>
+      <div className="border p-2 rounded-lg">
         <label
           htmlFor="color1"
           className="block text-sm font-medium text-gray-700 mb-3"
@@ -63,7 +63,7 @@ const BackgroundColorsSection = () => {
           Custom Background Color
         </label>
 
-        <div className="grid grid-cols-4 gap-2 mb-4">
+        <div className="grid grid-cols-4 gap-4 mb-4">
           {(Object.keys(background) as Array<keyof BackgroundColors>).map(
             (colorKey) => (
               <div
@@ -73,7 +73,7 @@ const BackgroundColorsSection = () => {
                 <Popover>
                   <PopoverTrigger asChild>
                     <div
-                      className="w-full h-7 border p-4 cursor-pointer rounded-md transition transform hover:scale-110"
+                      className="w-full h-10 border cursor-pointer rounded-md transition-transform transform hover:scale-110 shadow-sm"
                       style={{
                         backgroundColor: background[colorKey],
                       }}
@@ -81,7 +81,7 @@ const BackgroundColorsSection = () => {
                     />
                   </PopoverTrigger>
                   <PopoverContent
-                    className="z-50 w-auto h-auto flex items-start justify-start bg-white rounded-lg border-none shadow-none"
+                    className="z-50 w-auto h-auto flex items-start justify-start bg-white rounded-lg shadow-lg p-2"
                     sideOffset={8}
                     align="center"
                     onMouseLeave={() => handleColorPickerClose(colorKey)}
@@ -103,15 +103,15 @@ const BackgroundColorsSection = () => {
         >
           Select Color Preset
         </label>
-        <div className="grid grid-cols-4 gap-4">
+        <div className="grid grid-cols-4 gap-2">
           {colorPresets.map((preset, index) => (
             <div
               key={index}
-              className="w-full grid grid-cols-4 h-7 border p-1 rounded-md cursor-pointer transition transform hover:scale-105 hover:shadow-lg"
+              className="w-full h-8 border p-1 cursor-pointer rounded-md grid grid-cols-4 transition-transform transform hover:scale-105 hover:shadow-lg"
               onClick={() => handlePresetSelect(preset)}
             >
               <div
-                className="transition-colors duration-200 ease-in-out"
+                className="transition-colors duration-200 ease-in-out rounded-l-md"
                 style={{
                   backgroundColor: preset.color1,
                   width: "100%",
@@ -135,7 +135,7 @@ const BackgroundColorsSection = () => {
                 }}
               ></div>
               <div
-                className="transition-colors duration-200 ease-in-out"
+                className="transition-colors duration-200 ease-in-out rounded-r-md"
                 style={{
                   backgroundColor: preset.color4,
                   width: "100%",
