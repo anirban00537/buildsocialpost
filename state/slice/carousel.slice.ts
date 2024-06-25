@@ -18,6 +18,7 @@ interface CarouselState {
   layout: {
     height: number;
     width: number;
+    pattern: string;
   };
 }
 
@@ -41,6 +42,7 @@ const initialState: CarouselState = {
   layout: {
     height: 640,
     width: 500,
+    pattern: "/backgrounds/background1.svg",
   },
 };
 
@@ -108,6 +110,9 @@ const carouselSlice = createSlice({
     ) => {
       state.background = action.payload;
     },
+    setPattern: (state, action: PayloadAction<string>) => {
+      state.layout.pattern = action.payload;
+    },
   },
 });
 
@@ -121,5 +126,6 @@ export const {
   setTextSettings,
   setLayoutHeightAndWidth,
   setBackground,
+  setPattern,
 } = carouselSlice.actions;
 export default carouselSlice.reducer;

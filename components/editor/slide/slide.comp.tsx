@@ -17,22 +17,19 @@ const SlideComponent: React.FC<SlideProps> = ({
   updateSlide,
   slideNumber,
 }) => {
-  const { textSettings } = useSelector((state: RootState) => state.slides);
+  const { textSettings, layout } = useSelector(
+    (state: RootState) => state.slides
+  );
   const { generalSettings } = useSelector((state: RootState) => state.slides);
   const { alignment, fontSize } = textSettings;
+  const { pattern } = layout;
   const backgroundImageStyle = slide.imageUrl
     ? { backgroundImage: `url(${slide.imageUrl})` }
     : {
-        backgroundImage: `url('/backgrounds/background5.svg')`,
+        backgroundImage: `url(${pattern})`,
         backgroundPosition: "center",
         opacity: 0.1,
-        backgroundPositionX: "center",
-        backgroundPositionY: "center",
-        backgroundSize: "cover",
-        backgroundRepeat: "no-repeat",
-        backgroundAttachment: "initial",
-        backgroundOrigin: "initial",
-        backgroundClip: "initial",
+        backgroundRepeat: "repeat",
       };
 
   const { color1, color2, color3, color4 } = useSelector(
