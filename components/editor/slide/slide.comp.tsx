@@ -78,7 +78,9 @@ const SlideComponent: React.FC<SlideProps> = ({
           justifyContent: "center",
           textAlign: alignment,
           width: "100%",
-          padding: "0 16px",
+          height: "100%",
+          padding: "16px",
+          boxSizing: "border-box",
         }}
       >
         {slideNumber !== undefined && slide?.type === "slide" && (
@@ -108,6 +110,7 @@ const SlideComponent: React.FC<SlideProps> = ({
             display: "flex",
             flexDirection: "column",
             flexGrow: 1,
+            overflow: "hidden",
           }}
         >
           {slide.tagline && (
@@ -197,7 +200,8 @@ const SlideComponent: React.FC<SlideProps> = ({
                 display: "flex",
                 justifyContent: "center",
                 alignItems: "flex-end",
-                flexGrow: slide.description ? 0 : 1,
+                flexShrink: 1,
+                overflow: "hidden",
               }}
             >
               <img
@@ -205,7 +209,8 @@ const SlideComponent: React.FC<SlideProps> = ({
                 alt="Slide image"
                 style={{
                   maxWidth: "100%",
-                  maxHeight: "400px",
+                  maxHeight: "100%",
+                  objectFit: "contain",
                   background: "rgba(255, 255, 255, 0.3)",
                   backdropFilter: "blur(10px)",
                   padding: "8px",
