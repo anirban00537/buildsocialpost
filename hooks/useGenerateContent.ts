@@ -8,7 +8,7 @@ export const useGenerateContent = () => {
   const [temperature, setTemperature] = useState(0.2);
   const [language, setLanguage] = useState("en");
   const [model, setModel] = useState("gpt-3.5-turbo");
-  const [mood, setMood] = useState("neutral");
+  const [mood, setMood] = useState("Neutral");
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
 

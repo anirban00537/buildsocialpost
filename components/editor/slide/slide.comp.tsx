@@ -96,7 +96,7 @@ const SlideComponent: React.FC<SlideProps> = ({
               justifyContent: "center",
               fontSize: `${14}px`,
               fontWeight: "bold",
-              color: color3,
+              color: color2,
               margin: "16px",
             }}
           >
@@ -116,7 +116,6 @@ const SlideComponent: React.FC<SlideProps> = ({
                 padding: "8px",
                 marginBottom: "8px",
                 fontSize: `${fontSize}px`,
-                fontStyle: "italic",
                 backgroundColor: "transparent",
                 border: "none",
                 color: color2,
@@ -243,13 +242,13 @@ const SlideComponent: React.FC<SlideProps> = ({
           textAlign: "center",
           fontSize: "12px",
           padding: "4px",
-          color: color3,
+          color: color2,
         }}
       >
         Created by{" "}
         <a
           href="https://buildcarousel.com"
-          style={{ color: color3, textDecoration: "none", fontWeight: "bold" }}
+          style={{ color: color2, textDecoration: "none", fontWeight: "bold" }}
         >
           buildcarousel.com
         </a>
@@ -261,19 +260,23 @@ const SlideComponent: React.FC<SlideProps> = ({
             bottom: "42px",
             right: "26px",
             cursor: "pointer",
-            borderRadius: "50%",
+            borderRadius: "10px",
             backgroundColor: color4,
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
             fontWeight: "bold",
             padding: "2px",
-            color: color3,
+            paddingLeft: "12px",
+            paddingRight: "8px",
+            fontSize: "14px",
+            color: color2,
           }}
         >
+          Swipe
           <ChevronRight
-            size={26}
-            color={color3}
+            size={23}
+            color={color2}
             className="hover:scale-110 transition-transform"
           />
         </div>

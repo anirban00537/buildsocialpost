@@ -47,7 +47,7 @@ const CarouselEditor: React.FC = () => {
         <div className="relative w-full">
           <Swiper
             ref={swiperRef}
-            spaceBetween={0}
+            spaceBetween={1}
             slidesPerView="auto"
             centeredSlides={true}
             navigation={{

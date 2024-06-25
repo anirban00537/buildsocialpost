@@ -12,8 +12,9 @@ import { Textarea } from "@/components/ui/textarea";
 import { Slider } from "@/components/ui/slider";
 import { useGenerateContent } from "@/hooks/useGenerateContent";
 import { Button } from "@/components/ui/button";
-import useSubscriptionStatus from "@/hooks/useSubscriptionStatus";
 import Image from "next/image";
+import { useSelector } from "react-redux";
+import { RootState } from "@/state/store";
 
 const AiSettingsComponent = () => {
   const {
@@ -32,7 +33,7 @@ const AiSettingsComponent = () => {
     mood,
     loading,
   } = useGenerateContent();
-  const { status } = useSubscriptionStatus();
+  const { subscribed } = useSelector((state: RootState) => state.user);
 
   return (
     <form
@@ -111,6 +112,7 @@ const AiSettingsComponent = () => {
                 <SelectItem value="Happy">Happy</SelectItem>
                 <SelectItem value="Curious">Curious</SelectItem>
                 <SelectItem value="Fun">Fun</SelectItem>
+                <SelectItem value="Neutral">Neutral</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -140,7 +142,7 @@ const AiSettingsComponent = () => {
         type="submit"
         variant="default"
         size="lg"
-        disabled={loading || !status}
+        disabled={loading || !subscribed}
       >
         {loading ? (
           <>
@@ -166,7 +168,7 @@ const AiSettingsComponent = () => {
             </svg>
             Generating...
           </>
-        ) : !status ? (
+        ) : !subscribed ? (
           <span className="flex items-center gap-3">
             <Image src={"/premium.svg"} width={20} height={20} alt="Premium" />
             Upgrade to Premium

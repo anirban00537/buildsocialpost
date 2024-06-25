@@ -1,11 +1,14 @@
 import React from "react";
-import useSubscriptionStatus from "@/hooks/useSubscriptionStatus";
 import PricingModal from "./pricingModal.subscription";
 import { Button } from "../ui/button";
 import { DiamondPercent } from "lucide-react";
+import { RootState } from "@/state/store";
+import { useSelector } from "react-redux";
 
 const SubscriptionInfo = () => {
-  const { status, endDate, loading } = useSubscriptionStatus();
+  const { subscribed, endDate, loading } = useSelector(
+    (state: RootState) => state.user
+  );
 
   if (loading) {
     return (
@@ -15,7 +18,7 @@ const SubscriptionInfo = () => {
     );
   }
 
-  if (!status || !endDate) {
+  if (!subscribed || !endDate) {
     return (
       <PricingModal
         buttonElement={
