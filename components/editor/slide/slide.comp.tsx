@@ -111,6 +111,8 @@ const SlideComponent: React.FC<SlideProps> = ({
             flexDirection: "column",
             flexGrow: 1,
             overflow: "hidden",
+            justifyContent: "center",
+            alignItems: "center",
           }}
         >
           {slide.tagline && (
@@ -180,13 +182,13 @@ const SlideComponent: React.FC<SlideProps> = ({
                 fontSize: `${fontSize}px`,
                 backgroundColor: "transparent",
                 border: "none",
+                marginBottom: "8px",
                 color: color2,
                 outline: "none",
                 wordBreak: "break-word",
                 whiteSpace: "normal",
                 resize: "none",
                 textAlign: alignment,
-                flexGrow: 1,
               }}
             >
               {slide.description ||

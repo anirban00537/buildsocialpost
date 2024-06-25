@@ -1,11 +1,17 @@
 "use client";
 import { useAuthUser } from "@/hooks/useAuth";
 import React from "react";
+import FullScreenLoading from "../loading/fullscreen.loading";
 
 const AuthCheckLayout = ({ children }: { children: React.ReactNode }) => {
-  useAuthUser();
+  const { loading } = useAuthUser();
 
-  return <div>{children}</div>;
+  return (
+    <div>
+      {loading && <FullScreenLoading />}
+      {children}
+    </div>
+  );
 };
 
 export default AuthCheckLayout;
