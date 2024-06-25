@@ -17,7 +17,8 @@ export interface Slide {
   title: string;
   tagline?: string;
   description: string;
-  imageUrl: string | null;
+  imageUrl?: string | null;
+  backgroundImage?: string | null;
   type: "intro" | "slide" | "outro";
 }
 

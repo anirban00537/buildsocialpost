@@ -23,12 +23,12 @@ const SlideComponent: React.FC<SlideProps> = ({
   const { generalSettings } = useSelector((state: RootState) => state.slides);
   const { alignment, fontSize } = textSettings;
   const { pattern } = layout;
-  const backgroundImageStyle = slide.imageUrl
-    ? { backgroundImage: `url(${slide.imageUrl})` }
+  const backgroundImageStyle = slide.backgroundImage
+    ? { backgroundImage: `url(${slide.backgroundImage})` }
     : {
         backgroundImage: `url(${pattern})`,
         backgroundPosition: "center",
-        opacity: 0.1,
+        opacity: 0.07,
         backgroundRepeat: "repeat",
       };
 
@@ -100,7 +100,16 @@ const SlideComponent: React.FC<SlideProps> = ({
             {slideNumber}
           </div>
         )}
-        <div style={{ marginBottom: "16px", width: "100%", maxWidth: "768px" }}>
+        <div
+          style={{
+            marginBottom: "16px",
+            width: "100%",
+            maxWidth: "768px",
+            display: "flex",
+            flexDirection: "column",
+            flexGrow: 1,
+          }}
+        >
           {slide.tagline && (
             <div
               contentEditable
@@ -174,10 +183,35 @@ const SlideComponent: React.FC<SlideProps> = ({
                 whiteSpace: "normal",
                 resize: "none",
                 textAlign: alignment,
+                flexGrow: 1,
               }}
             >
               {slide.description ||
                 "Your introductory paragraph here. Describe your content briefly."}
+            </div>
+          )}
+          {slide.imageUrl && (
+            <div
+              style={{
+                width: "100%",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "flex-end",
+                flexGrow: slide.description ? 0 : 1,
+              }}
+            >
+              <img
+                src={slide.imageUrl}
+                alt="Slide image"
+                style={{
+                  maxWidth: "100%",
+                  maxHeight: "400px",
+                  background: "rgba(255, 255, 255, 0.3)",
+                  backdropFilter: "blur(10px)",
+                  padding: "8px",
+                  borderRadius: "8px",
+                }}
+              />
             </div>
           )}
         </div>
@@ -235,7 +269,7 @@ const SlideComponent: React.FC<SlideProps> = ({
           bottom: 0,
           left: 0,
           width: "100%",
-          backgroundColor: color1,
+          backgroundColor: color3,
           textAlign: "center",
           fontSize: "12px",
           padding: "4px",
