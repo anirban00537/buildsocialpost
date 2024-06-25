@@ -1,11 +1,24 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-const initialState = {
+// Define the shape of the user state
+interface UserState {
+  userinfo: any | null;
+  loggedin: boolean;
+  loading: boolean;
+  subscribed: boolean;
+  endDate: Date | null;
+}
+
+// Define the initial state using the UserState interface
+const initialState: UserState = {
   userinfo: null,
   loggedin: false,
   loading: false,
+  subscribed: false,
+  endDate: null,
 };
 
+// Create the slice
 const userSlice = createSlice({
   name: "user",
   initialState,
@@ -21,8 +34,16 @@ const userSlice = createSlice({
     setLoading: (state, action: PayloadAction<boolean>) => {
       state.loading = action.payload;
     },
+    setSubscribed: (state, action: PayloadAction<boolean>) => {
+      state.subscribed = action.payload;
+    },
+    setEndDate: (state, action: PayloadAction<Date | null>) => {
+      state.endDate = action.payload;
+    },
   },
 });
 
-export const { setUser, logout, setLoading } = userSlice.actions;
+// Export actions and reducer
+export const { setUser, logout, setLoading, setSubscribed, setEndDate } =
+  userSlice.actions;
 export default userSlice.reducer;

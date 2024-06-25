@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "@/state/store";
 import { setBackground } from "@/state/slice/carousel.slice";
@@ -21,6 +21,8 @@ const BackgroundColorsSection = () => {
     color3: false,
     color4: false,
   });
+
+
 
   const handleColorChange = (
     colorKey: keyof BackgroundColors,
