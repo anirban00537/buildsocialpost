@@ -23,7 +23,7 @@ const SlideComponent: React.FC<SlideProps> = ({
   const backgroundImageStyle = slide.imageUrl
     ? { backgroundImage: `url(${slide.imageUrl})` }
     : {
-        backgroundImage: `url('/backgrounds/background1.svg')`,
+        backgroundImage: `url('/backgrounds/background5.svg')`,
         backgroundPosition: "center",
         opacity: 0.1,
         backgroundPositionX: "center",
