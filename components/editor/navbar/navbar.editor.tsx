@@ -17,50 +17,51 @@ import useCarousel from "@/hooks/useCarousel";
 import { useSelector } from "react-redux";
 import { RootState } from "@/state/store";
 
-const getRandomColor = () => {
-  const colors = [
-    "#FFB6C1",
-    "#FF69B4",
-    "#FF1493",
-    "#C71585",
-    "#DB7093",
-    "#FF6347",
-    "#FF4500",
-    "#FF8C00",
-    "#FFD700",
-    "#ADFF2F",
-    "#7FFF00",
-    "#7CFC00",
-    "#00FA9A",
-    "#00FF7F",
-    "#3CB371",
-    "#20B2AA",
-    "#00CED1",
-    "#1E90FF",
-    "#4682B4",
-    "#5F9EA0",
-    "#6A5ACD",
-    "#8A2BE2",
-    "#9400D3",
-    "#9932CC",
-    "#8B008B",
-  ];
-  return colors[Math.floor(Math.random() * colors.length)];
+const getColorByAlphabet = (alphabet) => {
+  const colors = {
+    A: "#FFB6C1",
+    B: "#FF69B4",
+    C: "#FF1493",
+    D: "#C71585",
+    E: "#DB7093",
+    F: "#FF6347",
+    G: "#FF4500",
+    H: "#FF8C00",
+    I: "#FFD700",
+    J: "#ADFF2F",
+    K: "#7FFF00",
+    L: "#7CFC00",
+    M: "#00FA9A",
+    N: "#00FF7F",
+    O: "#3CB371",
+    P: "#20B2AA",
+    Q: "#00CED1",
+    R: "#1E90FF",
+    S: "#4682B4",
+    T: "#5F9EA0",
+    U: "#6A5ACD",
+    V: "#8A2BE2",
+    W: "#9400D3",
+    X: "#9932CC",
+    Y: "#8B008B",
+    Z: "#556B2F",
+  };
+  return colors[alphabet.toUpperCase()] || "#000000"; // Default to black if not found
 };
 
-const getInitials = (email: string) => {
+const getInitials = (email) => {
   return email ? email.charAt(0).toUpperCase() : "U";
 };
 
 const EditorNavbar = () => {
   const { exportSlidesToPDF, exportLoading } = useCarousel();
   const { logout } = useLogout();
-  const bgColor = getRandomColor();
-  const user: any = useSelector((state: RootState) => state.user.userinfo);
+  const user = useSelector((state: RootState) => state.user.userinfo);
   const initials = user?.email ? getInitials(user.email) : null;
+  const bgColor = initials ? getColorByAlphabet(initials) : "#000000"; // Default to black if no initials
 
   return (
-    <header className="bg-white sticky top-0 h-[65px] flex items-center justify-between border-b border-gray-200 z-50 px-4">
+    <header className="bg-white sticky top-0 h-[65px] flex items-center justify-between border-b border-gray-200 z-40 px-4">
       <div className="flex items-center gap-4">
         <img src="/logo.svg" alt="Logo" className="h-14 object-cover" />
       </div>
