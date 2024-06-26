@@ -1,4 +1,5 @@
 "use client";
+import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 
@@ -146,11 +147,11 @@ const Page = () => {
 
   return (
     <div>
-      <header className="bg-white  fixed w-full z-50">
-        <div className="max-w-screen-xl mx-auto px-4 py-4 flex items-center justify-between">
-          <a href="/" className="text-lg font-bold text-gray-800">
-            AI Carousel Maker
-          </a>
+      <header className="bg-white   w-full z-40 border">
+        <div className="max-w-screen-xl mx-auto px-4  py-4 flex items-center justify-between">
+          <Link href="/" className="text-lg font-bold text-gray-800">
+            <Image src="/logo.svg" alt="Logo" width={170} height={170} />
+          </Link>
           <nav className="space-x-6">
             <a href="#features" className="text-gray-600 hover:text-gray-800">
               Features
@@ -174,29 +175,46 @@ const Page = () => {
         </div>
       </header>
 
-      <section className="bg-gray-100 pt-20 pb-28">
-        <div className="max-w-screen-xl mx-auto px-4 text-center">
-          <h1 className="text-4xl text-gray-800 font-extrabold md:text-5xl">
-            Create Stunning Carousels with AI
-          </h1>
-          <p className="mt-4 text-gray-600">
-            Our AI-powered tool helps you design professional carousels for
-            LinkedIn, Instagram, and Twitter with ease. Generate content,
-            customize designs, and download your creations.
-          </p>
-          <div className="mt-8 flex justify-center gap-4">
-            <Link
-              href="/editor"
-              className="py-2 px-6 text-white font-medium bg-blue-600 hover:bg-blue-500 active:bg-blue-700 rounded-lg "
-            >
-              Start Creating
-            </Link>
-            <a
-              href="#"
-              className="py-2 px-6 text-gray-700 hover:text-gray-500 font-medium border rounded-lg"
-            >
-              Learn More
-            </a>
+      <section className="h-screen flex items-center justify-center pt-[400px] pb-28">
+        <div className="max-w-screen-xl mx-auto px-4 py-28 gap-12 text-gray-600 md:px-8">
+          <div className="space-y-5 max-w-4xl mx-auto text-center">
+            <h1 className="text-sm font-medium text-indigo-600 ">
+              Create Stunning Carousels with AI
+            </h1>
+
+            <h2 className="text-4xl font-extrabold text-slate-700 mx-auto md:text-5xl leading-relaxed">
+              Design professional carousels for LinkedIn, Instagram, and Twitter
+              with ease using{" "}
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-purple-500">
+                our AI-powered tool
+              </span>
+            </h2>
+
+            <p className="max-w-2xl mx-auto">
+              Our AI tool helps you generate content, customize designs, and
+              download your creations, simplifying your design process.
+            </p>
+            <div className="flex justify-center items-center gap-x-3 space-y-3 sm:flex sm:space-y-0">
+              <a
+                href="javascript:void(0)"
+                className="block py-2 px-4 text-white font-medium bg-blue-600 duration-150 hover:bg-blue-500 active:bg-blue-700 rounded-lg shadow-lg hover:shadow-none"
+              >
+                Start Creating
+              </a>
+              <a
+                href="javascript:void(0)"
+                className="block py-2 px-4 text-gray-700 hover:text-gray-500 font-medium duration-150 active:bg-gray-100 border rounded-lg"
+              >
+                Learn More
+              </a>
+            </div>
+          </div>
+          <div className="mt-14">
+            <img
+              src="https://raw.githubusercontent.com/sidiDev/remote-assets/main/Safari%20(Big%20Sur)%20-%20Light.png"
+              className="w-full shadow-lg rounded-lg border"
+              alt="Demo Image"
+            />
           </div>
         </div>
       </section>
