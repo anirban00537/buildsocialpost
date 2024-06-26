@@ -129,7 +129,7 @@ const EditorNavbar: React.FC = () => {
                 <CreditCard className="w-4 h-4 mr-2" />
                 Billing
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={logout}>
+              <DropdownMenuItem onClick={() => logout()}>
                 <LogOut className="w-4 h-4 mr-2" />
                 Logout
               </DropdownMenuItem>
