@@ -65,8 +65,6 @@ const useLogout = () => {
 const useAuthUser = () => {
   const [error, setError] = useState<string>("");
   const dispatch = useDispatch();
-  const { userinfo: user } = useSelector((state: RootState) => state.user);
-  const queryClient = useQueryClient();
 
   const {
     data: userData,
