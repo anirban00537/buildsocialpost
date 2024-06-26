@@ -184,10 +184,9 @@ const Page = () => {
                 Create Stunning Carousels with AI
               </h1>
               <h2 className="text-4xl text-gray-800 md:leading-[58px] font-extrabold md:text-5xl">
-                Design professional carousels for LinkedIn, Instagram, and
-                TikTok with ease using{" "}
+                Create Social media carousels in a few clicks.
                 <div className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-teal-400">
-                  our AI-powered tool
+                  with our AI tool .
                 </div>
               </h2>
               <p className="">
@@ -312,10 +311,7 @@ const Page = () => {
               Pay as you grow
             </p>
             <div className="max-w-xl">
-              <p>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam
-                efficitur consequat nunc.
-              </p>
+              <p>Choose a plan that’s right for you.</p>
             </div>
           </div>
           <div className="mt-16 justify-between gap-8 md:flex">
