@@ -10,80 +10,103 @@ import {
 } from "@/state/slice/user.slice";
 import { useRouter } from "next/navigation";
 import { RootState } from "@/state/store";
+import { useQuery, useMutation, useQueryClient } from "react-query";
 import colorPresets from "@/lib/color-presets";
 import { setBackground } from "@/state/slice/carousel.slice";
 
+// Function to fetch user data
+const getUser = async () => {
+  return await account.get();
+};
+
+// Function to fetch subscription status
+const fetchSubscriptionStatus = async (userId: string) => {
+  const response = await databases.listDocuments(
+    "6676798b000501b76612", // Database ID
+    "6676a90d00019bc19abd", // Collection ID
+    [
+      Query.equal("userId", userId),
+      Query.orderDesc("endDate"), // Order by endDate descending
+      Query.limit(1), // Limit to the latest document
+    ]
+  );
+
+  if (response.documents.length > 0) {
+    const data = response.documents[0];
+    const endDate = new Date(data.endDate);
+    const isExpired = endDate < new Date();
+    return { isSubscribed: !isExpired, endDate };
+  } else {
+    return { isSubscribed: false, endDate: null };
+  }
+};
+
+// Hook for logging out the user
 const useLogout = () => {
-  const [loading, setLoadingState] = useState(false);
   const [error, setError] = useState<string>("");
   const dispatch = useDispatch();
 
-  const logoutUser = async () => {
-    try {
-      setLoadingState(true);
-      await account.deleteSession("current");
-      dispatch(logout());
-    } catch (error: any) {
-      setError(error.message || "Logout failed. Please try again.");
-    } finally {
-      setLoadingState(false);
+  const { mutate: logoutUser, isLoading: loading } = useMutation(
+    async () => await account.deleteSession("current"),
+    {
+      onSuccess: () => {
+        dispatch(logout());
+      },
+      onError: (error: any) => {
+        setError(error.message || "Logout failed. Please try again.");
+      },
     }
-  };
+  );
 
   return { logout: logoutUser, loading, error };
 };
 
+// Hook for fetching authenticated user and their subscription status
 const useAuthUser = () => {
   const [error, setError] = useState<string>("");
   const dispatch = useDispatch();
-  const { loading, userinfo: user } = useSelector(
-    (state: RootState) => state.user
-  );
+  const { userinfo: user } = useSelector((state: RootState) => state.user);
+  const queryClient = useQueryClient();
 
-  const fetchSubscriptionStatus = async (userId: string) => {
-    try {
-      const response = await databases.listDocuments(
-        "6676798b000501b76612", // Database ID
-        "6676a90d00019bc19abd", // Collection ID
-        [
-          Query.equal("userId", userId),
-          Query.orderDesc("endDate"), // Order by endDate descending
-          Query.limit(1), // Limit to the latest document
-        ]
-      );
+  const {
+    data: userData,
+    isLoading: userLoading,
+    error: userError,
+    refetch: refetchUser,
+  } = useQuery("user", getUser, {
+    onSuccess: (data) => {
+      dispatch(setUser(data));
+    },
+    onError: (error: any) => {
+      setError(error.message || "Failed to fetch the current user.");
+    },
+  });
 
-      if (response.documents.length > 0) {
-        const data = response.documents[0];
-        const endDate = new Date(data.endDate);
-        const isExpired = endDate < new Date();
-        dispatch(setSubscribed(!isExpired));
-        dispatch(setEndDate(endDate));
-      } else {
+  const userId = userData?.$id;
+
+  const {
+    data: subscriptionData,
+    isLoading: subscriptionLoading,
+    error: subscriptionError,
+  } = useQuery(
+    ["subscriptionStatus", userId],
+    () =>
+      userId
+        ? fetchSubscriptionStatus(userId)
+        : Promise.reject(new Error("User ID is undefined")),
+    {
+      enabled: !!userId,
+      onSuccess: (data) => {
+        dispatch(setSubscribed(data.isSubscribed));
+        dispatch(setEndDate(data.endDate));
+      },
+      onError: (error: any) => {
+        setError(error.message || "Failed to fetch subscription status.");
         dispatch(setSubscribed(false));
         dispatch(setEndDate(null));
-      }
-    } catch (error) {
-      console.error("Error fetching subscription data:", error);
-      setError("Failed to fetch subscription status.");
-      dispatch(setSubscribed(false));
-      dispatch(setEndDate(null));
+      },
     }
-  };
-
-  const fetchUser = async () => {
-    dispatch(setLoading(true));
-    try {
-      const user = await account.get();
-      dispatch(setUser(user));
-      if (user.$id) {
-        await fetchSubscriptionStatus(user.$id);
-      }
-    } catch (error: any) {
-      setError(error.message || "Failed to fetch the current user.");
-    } finally {
-      dispatch(setLoading(false));
-    }
-  };
+  );
 
   useEffect(() => {
     const randomPreset =
@@ -92,29 +115,39 @@ const useAuthUser = () => {
   }, [dispatch]);
 
   useEffect(() => {
-    fetchUser();
-  }, [dispatch]);
+    dispatch(setLoading(userLoading || subscriptionLoading));
+  }, [userLoading, subscriptionLoading, dispatch]);
 
-  return { error, user, loading, fetchUser, fetchSubscriptionStatus };
+  return {
+    error: userError || subscriptionError,
+    user: userData,
+    loading: userLoading || subscriptionLoading,
+    fetchUser: refetchUser,
+  };
 };
+
+// Hook for sending a magic link to the user's email
 const useMagicLinkLogin = () => {
-  const [loading, setLoadingState] = useState(false);
   const [error, setError] = useState<string>("");
-  const sendMagicLink = async (email: string) => {
-    try {
-      setLoadingState(true);
+
+  const { mutate: sendMagicLink, isLoading: loading } = useMutation(
+    async (email: string) => {
       const redirectURL = `${window.location.origin}/magic-url-callback`;
       await account.createMagicURLToken(ID.unique(), email, redirectURL);
-    } catch (error: any) {
-      setError(error.message || "Failed to send magic link. Please try again.");
-    } finally {
-      setLoadingState(false);
+    },
+    {
+      onError: (error: any) => {
+        setError(
+          error.message || "Failed to send magic link. Please try again."
+        );
+      },
     }
-  };
+  );
 
   return { sendMagicLink, loading, error };
 };
 
+// Hook for handling the magic URL callback and creating a session
 const useMagicURLCallback = () => {
   const dispatch = useDispatch();
   const router = useRouter();
@@ -148,7 +181,7 @@ const useMagicURLCallback = () => {
     };
 
     createSessionFromURL();
-  }, [dispatch, router]);
+  }, [dispatch, router, fetchUser]);
 
   return { loading, success, error };
 };
