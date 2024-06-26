@@ -32,8 +32,6 @@ const Page = () => {
     ],
   };
 
-
-
   const footerNavs = [
     {
       href: "#",
@@ -185,14 +183,14 @@ const Page = () => {
               <h1 className="text-sm text-primary font-medium">
                 Create Stunning Carousels with AI
               </h1>
-              <h2 className="text-4xl text-gray-800 leading-10 font-extrabold md:text-5xl">
+              <h2 className="text-4xl text-gray-800 md:leading-[58px] font-extrabold md:text-5xl">
                 Design professional carousels for LinkedIn, Instagram, and
                 Tiktok with ease using{" "}
                 <div className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-teal-400">
                   our AI-powered tool
                 </div>
               </h2>
-              <p>
+              <p className="">
                 Our AI tool helps you generate content, customize designs, and
                 download your creations, simplifying your design process.
               </p>
@@ -329,7 +327,9 @@ const Page = () => {
                     <h4 className="text-lg text-gray-800 font-medium">
                       {item.name}
                     </h4>
-                    <p className="text-gray-600 mt-2 md:text-sm">{item.description}</p>
+                    <p className="text-gray-600 mt-2 md:text-sm">
+                      {item.description}
+                    </p>
                   </div>
                 </li>
               ))}
