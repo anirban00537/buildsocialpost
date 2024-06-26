@@ -107,7 +107,7 @@ const Page = () => {
     <div>
       <>
         <nav className="relative items-center pt-5 px-4 mx-auto max-w-screen-xl sm:px-8 md:flex md:space-x-6">
-          <div className="flex justify-between">
+          <div className="flex justify-between items-center">
             <a href="javascript:void(0)">
               <Image
                 src="/logo.svg"
@@ -170,7 +170,7 @@ const Page = () => {
             <li className="order-2 py-5 md:py-0">
               <a
                 href="javascript:void(0)"
-                className="py-2 px-5 rounded-lg font-medium text-white text-center bg-primary hover:bg-indigo-500 active:bg-indigo-700 duration-150 block md:py-3 md:inline"
+                className="py-2 px-5 rounded-lg font-medium text-white text-center bg-primary hover:bg-primary/90  duration-150 block md:py-3 md:inline"
               >
                 Get started
               </a>
@@ -185,7 +185,7 @@ const Page = () => {
               </h1>
               <h2 className="text-4xl text-gray-800 md:leading-[58px] font-extrabold md:text-5xl">
                 Design professional carousels for LinkedIn, Instagram, and
-                Tiktok with ease using{" "}
+                TikTok with ease using{" "}
                 <div className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-teal-400">
                   our AI-powered tool
                 </div>
@@ -197,7 +197,7 @@ const Page = () => {
               <div className="items-center gap-x-3 space-y-3 sm:flex sm:space-y-0">
                 <Link
                   href="/editor"
-                  className="block py-2 px-4 text-center text-white font-medium bg-primary duration-150 hover:bg-indigo-500 active:bg-indigo-700 rounded-lg "
+                  className="block py-2 px-4 text-center text-white font-medium bg-primary duration-150 hover:bg-primary/90 rounded-lg"
                 >
                   Let's get started
                 </Link>
@@ -211,10 +211,12 @@ const Page = () => {
               </div>
             </div>
             <div className="flex-none mt-14 md:mt-0 md:max-w-xl">
-              <img
+              <Image
                 src="/carousel.png"
-                className=" md:rounded-tl-[108px]"
-                alt=""
+                className="md:rounded-tl-[108px]"
+                alt="Carousel Preview"
+                width={500}
+                height={500}
               />
             </div>
           </div>
@@ -305,7 +307,7 @@ const Page = () => {
       <section className="relative py-14">
         <div className="max-w-screen-xl mx-auto text-gray-600 md:px-8">
           <div className="relative max-w-xl space-y-3 px-4 md:px-0">
-            <h3 className="text-indigo-600 font-semibold">Pricing</h3>
+            <h3 className="text-primary font-semibold">Pricing</h3>
             <p className="text-gray-800 text-3xl font-semibold sm:text-4xl">
               Pay as you grow
             </p>
@@ -350,7 +352,7 @@ const Page = () => {
                     </span>
                   </div>
                 </div>
-                <button className="mt-4 px-3 py-3 rounded-lg w-full font-semibold text-sm duration-150 text-white bg-indigo-600 hover:bg-indigo-500 active:bg-indigo-700">
+                <button className="mt-4 px-3 py-3 rounded-lg w-full font-semibold text-sm duration-150 text-white bg-primary  hover:bg-primary/90 ">
                   Get Started
                 </button>
               </div>
@@ -362,15 +364,15 @@ const Page = () => {
                   <li key={idx} className="flex items-center gap-5">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
-                      className="h-5 w-5 text-indigo-600"
+                      className="h-5 w-5 text-primary"
                       viewBox="0 0 20 20"
                       fill="currentColor"
                     >
                       <path
-                        fill-rule="evenodd"
+                        fillRule="evenodd"
                         d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                        clip-rule="evenodd"
-                      ></path>
+                        clipRule="evenodd"
+                      />
                     </svg>
                     {featureItem}
                   </li>
@@ -388,21 +390,21 @@ const Page = () => {
             See what our users have to say about AI Carousel Maker.
           </p>
           <div className="mt-12 flex flex-wrap justify-center gap-12">
-            <div className="max-w-sm p-6 bg-white border rounded-lg ">
+            <div className="max-w-sm p-6 bg-white border rounded-lg">
               <p className="text-gray-600">
                 "This tool has revolutionized the way I create content for my
                 social media. Highly recommended!"
               </p>
               <p className="mt-4 text-gray-800 font-bold">- Alex Johnson</p>
             </div>
-            <div className="max-w-sm p-6 bg-white border rounded-lg ">
+            <div className="max-w-sm p-6 bg-white border rounded-lg">
               <p className="text-gray-600">
                 "AI Carousel Maker saves me so much time and effort. The
                 AI-generated content is spot on."
               </p>
               <p className="mt-4 text-gray-800 font-bold">- Maria Davis</p>
             </div>
-            <div className="max-w-sm p-6 bg-white border rounded-lg ">
+            <div className="max-w-sm p-6 bg-white border rounded-lg">
               <p className="text-gray-600">
                 "I love the customization options and the modern backgrounds.
                 It's perfect for my business needs."
@@ -416,14 +418,20 @@ const Page = () => {
       <footer className="pt-10 bg-white">
         <div className="max-w-screen-xl mx-auto px-4 text-gray-600 md:px-8">
           <div className="space-y-6 sm:max-w-md sm:mx-auto sm:text-center">
-            <img src="/logo.svg" className="w-32 sm:mx-auto" alt="Logo" />
+            <Image
+              src="/logo.svg"
+              className="w-32 sm:mx-auto"
+              alt="Logo"
+              width={128}
+              height={128}
+            />
             <p>
               Create professional carousels easily with our AI-powered tool.
             </p>
             <div className="items-center gap-x-3 space-y-3 sm:flex sm:justify-center sm:space-y-0">
               <Link
                 href="/editor"
-                className="block py-2 px-4 text-center text-white font-medium bg-primary duration-150 hover:bg-indigo-500 active:bg-indigo-700 rounded-lg  hover:shadow-none"
+                className="block py-2 px-4 text-center text-white font-medium bg-primary duration-150 hover:bg-primary/90  rounded-lg hover:shadow-none"
               >
                 Let's get started
               </Link>
