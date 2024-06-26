@@ -164,24 +164,24 @@ const Page = () => {
               <h1 className="text-sm text-primary font-medium">
                 Create Stunning Carousels with AI
               </h1>
-              <h2 className="text-4xl text-gray-800 font-extrabold md:text-5xl">
+              <h2 className="text-4xl text-gray-800 leading-10	 font-extrabold md:text-5xl">
                 Design professional carousels for LinkedIn, Instagram, and
                 Tiktok with ease using{" "}
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-teal-400">
+                <div className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-teal-400">
                   our AI-powered tool
-                </span>
+                </div>
               </h2>
               <p>
                 Our AI tool helps you generate content, customize designs, and
                 download your creations, simplifying your design process.
               </p>
               <div className="items-center gap-x-3 space-y-3 sm:flex sm:space-y-0">
-                <a
-                  href="javascript:void(0)"
+                <Link
+                  href="/editor"
                   className="block py-2 px-4 text-center text-white font-medium bg-primary duration-150 hover:bg-indigo-500 active:bg-indigo-700 rounded-lg "
                 >
                   Let's get started
-                </a>
+                </Link>
                 <a
                   href="javascript:void(0)"
                   className="flex items-center justify-center gap-x-2 py-2 px-4 text-gray-700 hover:text-gray-500 font-medium duration-150 active:bg-gray-100 border rounded-lg md:inline-flex"
@@ -204,7 +204,7 @@ const Page = () => {
             </div>
             <div className="flex-none mt-14 md:mt-0 md:max-w-xl">
               <img
-                src="/carousel.jpg"
+                src="/carousel.png"
                 className=" md:rounded-tl-[108px]"
                 alt=""
               />
