@@ -14,6 +14,8 @@ interface CarouselState {
   textSettings: {
     alignment: "left" | "center" | "right";
     fontSize: number;
+    fontStyle: "normal" | "italic";
+    fontWeight: number;
   };
   layout: {
     height: number;
@@ -38,6 +40,8 @@ const initialState: CarouselState = {
   textSettings: {
     alignment: "left",
     fontSize: 14,
+    fontStyle: "normal",
+    fontWeight: 400,
   },
   layout: {
     height: 640,
@@ -88,6 +92,8 @@ const carouselSlice = createSlice({
       action: PayloadAction<{
         alignment: "left" | "center" | "right";
         fontSize: number;
+        fontStyle: "normal" | "italic";
+        fontWeight: number;
       }>
     ) => {
       state.textSettings = action.payload;

@@ -1,6 +1,6 @@
 import React from "react";
 import { ChevronRight } from "lucide-react"; // Importing the right arrow icon
-import { generalSettings, Slide } from "@/types";
+import { Slide } from "@/types";
 import { useSelector } from "react-redux";
 import { RootState } from "@/state/store";
 
@@ -21,7 +21,7 @@ const SlideComponent: React.FC<SlideProps> = ({
     (state: RootState) => state.slides
   );
   const { generalSettings } = useSelector((state: RootState) => state.slides);
-  const { alignment, fontSize } = textSettings;
+  const { alignment, fontSize, fontStyle, fontWeight } = textSettings;
   const { pattern } = layout;
   const backgroundImageStyle = slide.backgroundImage
     ? { backgroundImage: `url(${slide.backgroundImage})` }
@@ -83,25 +83,6 @@ const SlideComponent: React.FC<SlideProps> = ({
           boxSizing: "border-box",
         }}
       >
-        {slideNumber !== undefined && slide?.type === "slide" && (
-          <div
-            style={{
-              height: "32px",
-              width: "32px",
-              borderRadius: "50%",
-              backgroundColor: color4,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              fontSize: `${14}px`,
-              fontWeight: "bold",
-              color: color2,
-              margin: "16px",
-            }}
-          >
-            {slideNumber}
-          </div>
-        )}
         <div
           style={{
             marginBottom: "16px",
@@ -115,6 +96,27 @@ const SlideComponent: React.FC<SlideProps> = ({
             alignItems: "center",
           }}
         >
+          {slideNumber !== undefined && slide?.type === "slide" && (
+            <div
+              style={{
+                height: "32px",
+                width: "32px",
+                minWidth: "32px",
+                minHeight: "32px",
+                borderRadius: "50%",
+                backgroundColor: color4,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                fontSize: `${14}px`,
+                fontWeight: "bold",
+                color: color2,
+                margin: "16px",
+              }}
+            >
+              {slideNumber}
+            </div>
+          )}
           {slide.tagline && (
             <div
               contentEditable
@@ -127,6 +129,8 @@ const SlideComponent: React.FC<SlideProps> = ({
                 padding: "8px",
                 marginBottom: "8px",
                 fontSize: `${fontSize}px`,
+                fontStyle: fontStyle,
+                fontWeight: fontWeight,
                 backgroundColor: "transparent",
                 border: "none",
                 color: color2,
@@ -152,7 +156,8 @@ const SlideComponent: React.FC<SlideProps> = ({
                 padding: "8px",
                 marginBottom: "8px",
                 fontSize: `${fontSize + 24}px`,
-                fontWeight: "bold",
+                fontStyle: fontStyle,
+                fontWeight: fontWeight,
                 backgroundColor: "transparent",
                 border: "none",
                 color: color2,
@@ -180,6 +185,8 @@ const SlideComponent: React.FC<SlideProps> = ({
                 width: "100%",
                 padding: "8px",
                 fontSize: `${fontSize}px`,
+                fontStyle: fontStyle,
+                fontWeight: fontWeight,
                 backgroundColor: "transparent",
                 border: "none",
                 marginBottom: "8px",
