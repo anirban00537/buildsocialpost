@@ -17,52 +17,56 @@ import useCarousel from "@/hooks/useCarousel";
 import { useSelector } from "react-redux";
 import { RootState } from "@/state/store";
 
-const getRandomColor = () => {
-  const colors = [
-    "#FFB6C1",
-    "#FF69B4",
-    "#FF1493",
-    "#C71585",
-    "#DB7093",
-    "#FF6347",
-    "#FF4500",
-    "#FF8C00",
-    "#FFD700",
-    "#ADFF2F",
-    "#7FFF00",
-    "#7CFC00",
-    "#00FA9A",
-    "#00FF7F",
-    "#3CB371",
-    "#20B2AA",
-    "#00CED1",
-    "#1E90FF",
-    "#4682B4",
-    "#5F9EA0",
-    "#6A5ACD",
-    "#8A2BE2",
-    "#9400D3",
-    "#9932CC",
-    "#8B008B",
-  ];
-  return colors[Math.floor(Math.random() * colors.length)];
+const colors: { [key: string]: string } = {
+  A: "#FFB6C1",
+  B: "#FF69B4",
+  C: "#FF1493",
+  D: "#C71585",
+  E: "#DB7093",
+  F: "#FF6347",
+  G: "#FF4500",
+  H: "#FF8C00",
+  I: "#FFD700",
+  J: "#ADFF2F",
+  K: "#7FFF00",
+  L: "#7CFC00",
+  M: "#00FA9A",
+  N: "#00FF7F",
+  O: "#3CB371",
+  P: "#20B2AA",
+  Q: "#00CED1",
+  R: "#1E90FF",
+  S: "#4682B4",
+  T: "#5F9EA0",
+  U: "#6A5ACD",
+  V: "#8A2BE2",
+  W: "#9400D3",
+  X: "#9932CC",
+  Y: "#8B008B",
+  Z: "#556B2F",
 };
 
-const getInitials = (email: string) => {
+const getColorByAlphabet = (alphabet: string): string => {
+  return colors[alphabet.toUpperCase()] || "#000000"; // Default to black if not found
+};
+
+const getInitials = (email: string): string => {
   return email ? email.charAt(0).toUpperCase() : "U";
 };
 
-const EditorNavbar = () => {
+const EditorNavbar: React.FC = () => {
   const { exportSlidesToPDF, exportLoading } = useCarousel();
   const { logout } = useLogout();
-  const bgColor = getRandomColor();
-  const user: any = useSelector((state: RootState) => state.user.userinfo);
+  const user = useSelector((state: RootState) => state.user.userinfo);
   const initials = user?.email ? getInitials(user.email) : null;
+  const bgColor = initials ? getColorByAlphabet(initials) : "#000000"; // Default to black if no initials
 
   return (
-    <header className="bg-white sticky top-0 h-[65px] flex items-center justify-between border-b border-gray-200 z-50 px-4">
+    <header className="bg-white sticky top-0 h-[65px] flex items-center justify-between border-b border-gray-200 z-40 px-4">
       <div className="flex items-center gap-4">
-        <img src="/logo.svg" alt="Logo" className="h-14 object-cover" />
+        <Link href="/">
+          <img src="/logo.svg" alt="Logo" className="h-14 object-cover" />
+        </Link>
       </div>
 
       <div className="ml-auto flex items-center gap-4">
@@ -73,21 +77,18 @@ const EditorNavbar = () => {
                 className="animate-spin h-5 w-5 mr-3"
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
-                viewBox="0 0 24 24"
-              >
+                viewBox="0 0 24 24">
                 <circle
                   className="opacity-25"
                   cx="12"
                   cy="12"
                   r="10"
                   stroke="currentColor"
-                  strokeWidth="4"
-                ></circle>
+                  strokeWidth="4"></circle>
                 <path
                   className="opacity-75"
                   fill="currentColor"
-                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                ></path>
+                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
               </svg>
               Downloading...
             </div>
@@ -109,8 +110,7 @@ const EditorNavbar = () => {
                 ) : (
                   <div
                     className="w-8 h-8 rounded-full flex items-center justify-center text-white"
-                    style={{ backgroundColor: bgColor }}
-                  >
+                    style={{ backgroundColor: bgColor }}>
                     {initials}
                   </div>
                 )}
@@ -127,7 +127,7 @@ const EditorNavbar = () => {
                 <CreditCard className="w-4 h-4 mr-2" />
                 Billing
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={logout}>
+              <DropdownMenuItem onClick={() => logout()}>
                 <LogOut className="w-4 h-4 mr-2" />
                 Logout
               </DropdownMenuItem>

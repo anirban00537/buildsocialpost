@@ -14,10 +14,13 @@ interface CarouselState {
   textSettings: {
     alignment: "left" | "center" | "right";
     fontSize: number;
+    fontStyle: "normal" | "italic";
+    fontWeight: number;
   };
   layout: {
     height: number;
     width: number;
+    pattern: string;
   };
 }
 
@@ -37,10 +40,13 @@ const initialState: CarouselState = {
   textSettings: {
     alignment: "left",
     fontSize: 14,
+    fontStyle: "normal",
+    fontWeight: 400,
   },
   layout: {
     height: 640,
     width: 500,
+    pattern: "/backgrounds/background1.svg",
   },
 };
 
@@ -86,6 +92,8 @@ const carouselSlice = createSlice({
       action: PayloadAction<{
         alignment: "left" | "center" | "right";
         fontSize: number;
+        fontStyle: "normal" | "italic";
+        fontWeight: number;
       }>
     ) => {
       state.textSettings = action.payload;
@@ -108,6 +116,9 @@ const carouselSlice = createSlice({
     ) => {
       state.background = action.payload;
     },
+    setPattern: (state, action: PayloadAction<string>) => {
+      state.layout.pattern = action.payload;
+    },
   },
 });
 
@@ -121,5 +132,6 @@ export const {
   setTextSettings,
   setLayoutHeightAndWidth,
   setBackground,
+  setPattern,
 } = carouselSlice.actions;
 export default carouselSlice.reducer;

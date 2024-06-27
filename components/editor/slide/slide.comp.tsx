@@ -1,6 +1,6 @@
 import React from "react";
 import { ChevronRight } from "lucide-react"; // Importing the right arrow icon
-import { generalSettings, Slide } from "@/types";
+import { Slide } from "@/types";
 import { useSelector } from "react-redux";
 import { RootState } from "@/state/store";
 
@@ -17,22 +17,19 @@ const SlideComponent: React.FC<SlideProps> = ({
   updateSlide,
   slideNumber,
 }) => {
-  const { textSettings } = useSelector((state: RootState) => state.slides);
+  const { textSettings, layout } = useSelector(
+    (state: RootState) => state.slides
+  );
   const { generalSettings } = useSelector((state: RootState) => state.slides);
-  const { alignment, fontSize } = textSettings;
-  const backgroundImageStyle = slide.imageUrl
-    ? { backgroundImage: `url(${slide.imageUrl})` }
+  const { alignment, fontSize, fontStyle, fontWeight } = textSettings;
+  const { pattern } = layout;
+  const backgroundImageStyle = slide.backgroundImage
+    ? { backgroundImage: `url(${slide.backgroundImage})` }
     : {
-        backgroundImage: `url('/backgrounds/background1.svg')`,
+        backgroundImage: `url(${pattern})`,
         backgroundPosition: "center",
-        opacity: 0.1,
-        backgroundPositionX: "center",
-        backgroundPositionY: "center",
-        backgroundSize: "cover",
-        backgroundRepeat: "no-repeat",
-        backgroundAttachment: "initial",
-        backgroundOrigin: "initial",
-        backgroundClip: "initial",
+        opacity: 0.07,
+        backgroundRepeat: "repeat",
       };
 
   const { color1, color2, color3, color4 } = useSelector(
@@ -81,29 +78,45 @@ const SlideComponent: React.FC<SlideProps> = ({
           justifyContent: "center",
           textAlign: alignment,
           width: "100%",
-          padding: "0 16px",
+          height: "100%",
+          padding: "16px",
+          boxSizing: "border-box",
         }}
       >
-        {slideNumber !== undefined && slide?.type === "slide" && (
-          <div
-            style={{
-              height: "32px",
-              width: "32px",
-              borderRadius: "50%",
-              backgroundColor: color4,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              fontSize: `${14}px`,
-              fontWeight: "bold",
-              color: color2,
-              margin: "16px",
-            }}
-          >
-            {slideNumber}
-          </div>
-        )}
-        <div style={{ marginBottom: "16px", width: "100%", maxWidth: "768px" }}>
+        <div
+          style={{
+            marginBottom: "16px",
+            width: "100%",
+            maxWidth: "768px",
+            display: "flex",
+            flexDirection: "column",
+            flexGrow: 1,
+            overflow: "hidden",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          {slideNumber !== undefined && slide?.type === "slide" && (
+            <div
+              style={{
+                height: "32px",
+                width: "32px",
+                minWidth: "32px",
+                minHeight: "32px",
+                borderRadius: "50%",
+                backgroundColor: color4,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                fontSize: `${14}px`,
+                fontWeight: "bold",
+                color: color2,
+                margin: "16px",
+              }}
+            >
+              {slideNumber}
+            </div>
+          )}
           {slide.tagline && (
             <div
               contentEditable
@@ -116,6 +129,8 @@ const SlideComponent: React.FC<SlideProps> = ({
                 padding: "8px",
                 marginBottom: "8px",
                 fontSize: `${fontSize}px`,
+                fontStyle: fontStyle,
+                fontWeight: fontWeight,
                 backgroundColor: "transparent",
                 border: "none",
                 color: color2,
@@ -141,7 +156,8 @@ const SlideComponent: React.FC<SlideProps> = ({
                 padding: "8px",
                 marginBottom: "8px",
                 fontSize: `${fontSize + 24}px`,
-                fontWeight: "bold",
+                fontStyle: fontStyle,
+                fontWeight: fontWeight,
                 backgroundColor: "transparent",
                 border: "none",
                 color: color2,
@@ -169,8 +185,11 @@ const SlideComponent: React.FC<SlideProps> = ({
                 width: "100%",
                 padding: "8px",
                 fontSize: `${fontSize}px`,
+                fontStyle: fontStyle,
+                fontWeight: fontWeight,
                 backgroundColor: "transparent",
                 border: "none",
+                marginBottom: "8px",
                 color: color2,
                 outline: "none",
                 wordBreak: "break-word",
@@ -181,6 +200,32 @@ const SlideComponent: React.FC<SlideProps> = ({
             >
               {slide.description ||
                 "Your introductory paragraph here. Describe your content briefly."}
+            </div>
+          )}
+          {slide.imageUrl && (
+            <div
+              style={{
+                width: "100%",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "flex-end",
+                flexShrink: 1,
+                overflow: "hidden",
+              }}
+            >
+              <img
+                src={slide.imageUrl}
+                alt="Slide image"
+                style={{
+                  maxWidth: "100%",
+                  maxHeight: "100%",
+                  objectFit: "contain",
+                  background: "rgba(255, 255, 255, 0.3)",
+                  backdropFilter: "blur(10px)",
+                  padding: "8px",
+                  borderRadius: "8px",
+                }}
+              />
             </div>
           )}
         </div>
@@ -238,7 +283,7 @@ const SlideComponent: React.FC<SlideProps> = ({
           bottom: 0,
           left: 0,
           width: "100%",
-          backgroundColor: color1,
+          backgroundColor: color3,
           textAlign: "center",
           fontSize: "12px",
           padding: "4px",

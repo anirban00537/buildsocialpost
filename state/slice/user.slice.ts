@@ -13,7 +13,7 @@ interface UserState {
 const initialState: UserState = {
   userinfo: null,
   loggedin: false,
-  loading: false,
+  loading: true,
   subscribed: false,
   endDate: null,
 };
