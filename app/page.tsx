@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { motion } from "framer-motion";
 
 const Page = () => {
   const plan = {
@@ -177,7 +178,12 @@ const Page = () => {
             </li>
           </ul>
         </nav>
-        <section className="py-28">
+        <motion.section
+          className="py-28"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+        >
           <div className="max-w-screen-xl mx-auto text-gray-600 gap-x-12 items-center justify-between overflow-hidden md:flex md:px-8">
             <div className="flex-none space-y-5 px-4 sm:max-w-lg md:px-0 lg:max-w-xl">
               <h1 className="text-sm text-primary font-medium">
@@ -200,13 +206,6 @@ const Page = () => {
                 >
                   Let's get started
                 </Link>
-                <a
-                  href="javascript:void(0)"
-                  className="flex items-center justify-center gap-x-2 py-2 px-4 text-gray-700 hover:text-gray-500 font-medium duration-150 active:bg-gray-100 border rounded-lg md:inline-flex"
-                >
-                  Get access
-                  <ChevronDown className="w-5 h-5" />
-                </a>
               </div>
             </div>
             <div className="flex-none mt-14 md:mt-0 md:max-w-xl">
@@ -219,18 +218,16 @@ const Page = () => {
               />
             </div>
           </div>
-          <div className="mt-14 px-4 md:px-8">
-            <p className="text-center text-sm text-gray-700 font-semibold">
-              Trusted by the best companies
-            </p>
-            <div className="flex justify-center items-center flex-wrap gap-x-12 gap-y-6 mt-6">
-              {/* Replace with lucide-react icons if available */}
-            </div>
-          </div>
-        </section>
+        </motion.section>
       </>
 
-      <section id="features" className="py-14 bg-white">
+      <motion.section
+        id="features"
+        className="py-14 bg-white"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+      >
         <div className="max-w-screen-xl mx-auto px-4 text-center">
           <h2 className="text-3xl font-semibold text-gray-800">Features</h2>
           <p className="text-lg text-gray-600 mt-4 max-w-2xl mx-auto">
@@ -239,9 +236,13 @@ const Page = () => {
           </p>
           <div className="mt-12 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-12">
             {features.map((item, idx) => (
-              <div
+              <motion.div
                 key={idx}
                 className="flex flex-col items-center text-gray-600 hover:text-gray-800 transition-colors duration-200"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5 }}
               >
                 <div className="p-4 border rounded-full text-blue-600 bg-gray-100">
                   {item.icon}
@@ -250,60 +251,111 @@ const Page = () => {
                 <p className="mt-2 text-sm text-gray-500 max-w-xs text-center">
                   {item.description}
                 </p>
-              </div>
+              </motion.div>
             ))}
           </div>
         </div>
-      </section>
+      </motion.section>
 
-      <section id="how-it-works" className="py-28 bg-slate-50">
+      <motion.section
+        id="how-it-works"
+        className="py-28 bg-slate-50"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+      >
         <div className="max-w-screen-xl mx-auto px-4 text-center">
-          <h2 className="text-3xl font-semibold text-gray-800">How It Works</h2>
-          <p className="mt-4 text-gray-600">
-            Our AI carousel maker simplifies the creation process into a few
-            easy steps.
+          <h2 className="text-4xl font-bold text-gray-800">How It Works</h2>
+          <p className="mt-4 text-lg text-gray-600">
+            Our AI carousel maker simplifies the creation process into a few easy steps.
           </p>
           <div className="mt-12 flex flex-wrap justify-center gap-12">
-            <div className="max-w-sm p-6 bg-white border rounded-lg ">
-              <h3 className="text-xl font-semibold text-gray-800">
+            <motion.div
+              className="max-w-sm p-6 bg-white border rounded-lg shadow-lg"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5 }}
+            >
+              <div className="flex items-center justify-center mb-4">
+                <span className="text-5xl text-blue-500">
+                  <i className="fas fa-paint-brush"></i>
+                </span>
+              </div>
+              <h3 className="text-2xl font-semibold text-gray-800">
                 Step 1: Choose a Template
               </h3>
               <p className="mt-4 text-gray-600">
-                Select from a variety of professionally designed templates to
-                start your carousel.
+                Select from a variety of professionally designed templates to start your carousel.
               </p>
-            </div>
-            <div className="max-w-sm p-6 bg-white border rounded-lg ">
-              <h3 className="text-xl font-semibold text-gray-800">
+            </motion.div>
+            <motion.div
+              className="max-w-sm p-6 bg-white border rounded-lg shadow-lg"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5 }}
+            >
+              <div className="flex items-center justify-center mb-4">
+                <span className="text-5xl text-green-500">
+                  <i className="fas fa-edit"></i>
+                </span>
+              </div>
+              <h3 className="text-2xl font-semibold text-gray-800">
                 Step 2: Customize Your Design
               </h3>
               <p className="mt-4 text-gray-600">
-                Use our dynamic color palettes and text customization features
-                to make your carousel unique.
+                Use our dynamic color palettes and text customization features to make your carousel unique.
               </p>
-            </div>
-            <div className="max-w-sm p-6 bg-white border rounded-lg ">
-              <h3 className="text-xl font-semibold text-gray-800">
+            </motion.div>
+            <motion.div
+              className="max-w-sm p-6 bg-white border rounded-lg shadow-lg"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5 }}
+            >
+              <div className="flex items-center justify-center mb-4">
+                <span className="text-5xl text-red-500">
+                  <i className="fas fa-magic"></i>
+                </span>
+              </div>
+              <h3 className="text-2xl font-semibold text-gray-800">
                 Step 3: Generate Content
               </h3>
               <p className="mt-4 text-gray-600">
                 Let our AI generate engaging content for your carousel slides.
               </p>
-            </div>
-            <div className="max-w-sm p-6 bg-white border rounded-lg ">
-              <h3 className="text-xl font-semibold text-gray-800">
+            </motion.div>
+            <motion.div
+              className="max-w-sm p-6 bg-white border rounded-lg shadow-lg"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5 }}
+            >
+              <div className="flex items-center justify-center mb-4">
+                <span className="text-5xl text-purple-500">
+                  <i className="fas fa-download"></i>
+                </span>
+              </div>
+              <h3 className="text-2xl font-semibold text-gray-800">
                 Step 4: Download and Share
               </h3>
               <p className="mt-4 text-gray-600">
-                Download your carousel as an image or PDF and share it on your
-                social media platforms.
+                Download your carousel as an image or PDF and share it on your social media platforms.
               </p>
-            </div>
+            </motion.div>
           </div>
         </div>
-      </section>
+      </motion.section>
 
-      <section className="relative py-14">
+      <motion.section
+        className="relative py-14"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+      >
         <div className="max-w-screen-xl mx-auto text-gray-600 md:px-8">
           <div className="relative max-w-xl space-y-3 px-4 md:px-0">
             <h3 className="text-primary font-semibold">Pricing</h3>
@@ -317,7 +369,14 @@ const Page = () => {
           <div className="mt-16 justify-between gap-8 md:flex">
             <ul className="flex-1 max-w-md space-y-10 px-4 md:px-0">
               {features.map((item, idx) => (
-                <li key={idx} className="flex gap-x-3">
+                <motion.li
+                  key={idx}
+                  className="flex gap-x-3"
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5 }}
+                >
                   <div className="flex-none w-12 h-12 rounded-full bg-indigo-50 text-indigo-600 flex items-center justify-center">
                     {item.icon}
                   </div>
@@ -329,10 +388,16 @@ const Page = () => {
                       {item.description}
                     </p>
                   </div>
-                </li>
+                </motion.li>
               ))}
             </ul>
-            <div className="flex-1 flex flex-col border-y mt-6 md:max-w-xl md:rounded-xl md:border md:border-x-none md:shadow-lg md:mt-0">
+            <motion.div
+              className="flex-1 flex flex-col border-y mt-6 md:max-w-xl md:rounded-xl md:border md:border-x-none md:shadow-lg md:mt-0"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5 }}
+            >
               <div className="p-4 py-8 border-b md:p-8">
                 <div className="justify-between flex">
                   <div className="max-w-xs">
@@ -374,42 +439,66 @@ const Page = () => {
                   </li>
                 ))}
               </ul>
-            </div>
+            </motion.div>
           </div>
         </div>
-      </section>
+      </motion.section>
 
-      <section id="testimonials" className="py-28 bg-slate-50">
+      <motion.section
+        id="testimonials"
+        className="py-28 bg-slate-50"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+      >
         <div className="max-w-screen-xl mx-auto px-4 text-center">
           <h2 className="text-3xl font-semibold text-gray-800">Testimonials</h2>
           <p className="mt-4 text-gray-600">
             See what our users have to say about AI Carousel Maker.
           </p>
           <div className="mt-12 flex flex-wrap justify-center gap-12">
-            <div className="max-w-sm p-6 bg-white border rounded-lg">
+            <motion.div
+              className="max-w-sm p-6 bg-white border rounded-lg"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5 }}
+            >
               <p className="text-gray-600">
                 "This tool has revolutionized the way I create content for my
                 social media. Highly recommended!"
               </p>
               <p className="mt-4 text-gray-800 font-bold">- Alex Johnson</p>
-            </div>
-            <div className="max-w-sm p-6 bg-white border rounded-lg">
+            </motion.div>
+            <motion.div
+              className="max-w-sm p-6 bg-white border rounded-lg"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5 }}
+            >
               <p className="text-gray-600">
                 "AI Carousel Maker saves me so much time and effort. The
                 AI-generated content is spot on."
               </p>
               <p className="mt-4 text-gray-800 font-bold">- Maria Davis</p>
-            </div>
-            <div className="max-w-sm p-6 bg-white border rounded-lg">
+            </motion.div>
+            <motion.div
+              className="max-w-sm p-6 bg-white border rounded-lg"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5 }}
+            >
               <p className="text-gray-600">
                 "I love the customization options and the modern backgrounds.
                 It's perfect for my business needs."
               </p>
               <p className="mt-4 text-gray-800 font-bold">- James Smith</p>
-            </div>
+            </motion.div>
           </div>
         </div>
-      </section>
+      </motion.section>
 
       <footer className="pt-10 bg-white">
         <div className="max-w-screen-xl mx-auto px-4 text-gray-600 md:px-8">
