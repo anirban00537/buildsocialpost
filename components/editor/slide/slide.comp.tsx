@@ -50,8 +50,7 @@ const SlideComponent: React.FC<SlideProps> = ({
         color: color2,
         backgroundColor: color1,
         zIndex: 1,
-      }}
-    >
+      }}>
       <div
         style={{
           position: "absolute",
@@ -79,10 +78,12 @@ const SlideComponent: React.FC<SlideProps> = ({
           textAlign: alignment,
           width: "100%",
           height: "100%",
-          padding: "16px",
+          paddingLeft: "32px",
+          paddingRight: "32px",
+          paddingBottom: "16px",
+          paddingTop: "16px",
           boxSizing: "border-box",
-        }}
-      >
+        }}>
         <div
           style={{
             marginBottom: "16px",
@@ -94,10 +95,9 @@ const SlideComponent: React.FC<SlideProps> = ({
             overflow: "hidden",
             justifyContent: "center",
             alignItems: "center",
-          }}
-        >
+          }}>
           {slideNumber !== undefined && slide?.type === "slide" && (
-            <div
+            <p
               style={{
                 height: "32px",
                 width: "32px",
@@ -112,10 +112,15 @@ const SlideComponent: React.FC<SlideProps> = ({
                 fontWeight: "bold",
                 color: color2,
                 margin: "16px",
-              }}
-            >
+                alignSelf:
+                  alignment === "center"
+                    ? "center"
+                    : alignment === "left"
+                    ? "flex-start"
+                    : "flex-end",
+              }}>
               {slideNumber}
-            </div>
+            </p>
           )}
           {slide.tagline && (
             <div
@@ -139,8 +144,7 @@ const SlideComponent: React.FC<SlideProps> = ({
                 whiteSpace: "normal",
                 resize: "none",
                 textAlign: alignment,
-              }}
-            >
+              }}>
               {slide.tagline || "Your Tagline Here"}
             </div>
           )}
@@ -166,8 +170,7 @@ const SlideComponent: React.FC<SlideProps> = ({
                 whiteSpace: "normal",
                 resize: "none",
                 textAlign: alignment,
-              }}
-            >
+              }}>
               {slide.title || "Title"}
             </div>
           )}
@@ -196,8 +199,7 @@ const SlideComponent: React.FC<SlideProps> = ({
                 whiteSpace: "normal",
                 resize: "none",
                 textAlign: alignment,
-              }}
-            >
+              }}>
               {slide.description ||
                 "Your introductory paragraph here. Describe your content briefly."}
             </div>
@@ -211,8 +213,7 @@ const SlideComponent: React.FC<SlideProps> = ({
                 alignItems: "flex-end",
                 flexShrink: 1,
                 overflow: "hidden",
-              }}
-            >
+              }}>
               <img
                 src={slide.imageUrl}
                 alt="Slide image"
@@ -243,8 +244,7 @@ const SlideComponent: React.FC<SlideProps> = ({
               alignItems: "center",
               gap: "16px",
               padding: "8px",
-            }}
-          >
+            }}>
             <img
               src={generalSettings.headshotUrl}
               alt="Headshot"
@@ -261,8 +261,7 @@ const SlideComponent: React.FC<SlideProps> = ({
                   fontSize: `14px`,
                   fontWeight: "600",
                   color: color2,
-                }}
-              >
+                }}>
                 {generalSettings.name || "Anirban Roy"}
               </div>
               <div
@@ -270,8 +269,7 @@ const SlideComponent: React.FC<SlideProps> = ({
                   fontSize: `12px`,
                   fontStyle: "italic",
                   color: color2,
-                }}
-              >
+                }}>
                 {generalSettings.handle || "@anirban00537"}
               </div>
             </div>
@@ -288,13 +286,11 @@ const SlideComponent: React.FC<SlideProps> = ({
           fontSize: "12px",
           padding: "4px",
           color: color2,
-        }}
-      >
+        }}>
         Created by{" "}
         <a
           href="https://buildcarousel.com"
-          style={{ color: color2, textDecoration: "none", fontWeight: "bold" }}
-        >
+          style={{ color: color2, textDecoration: "none", fontWeight: "bold" }}>
           buildcarousel.com
         </a>
       </div>
@@ -316,8 +312,7 @@ const SlideComponent: React.FC<SlideProps> = ({
             paddingRight: "8px",
             fontSize: "14px",
             color: color2,
-          }}
-        >
+          }}>
           Swipe
           <ChevronRight
             size={23}

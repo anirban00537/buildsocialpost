@@ -177,17 +177,6 @@ const SettingsSection = () => {
             Bold
           </button>
         </div>
-        <div className="flex items-center gap-2 mt-2">
-          <Slider
-            max={900}
-            min={100}
-            step={100}
-            value={[fontWeight]}
-            onValueChange={(value) => handleFontWeightChange(value[0])}
-            className="flex-grow"
-          />
-          <span className="text-sm font-medium">{fontWeight}</span>
-        </div>
       </div>
       <div className="space-y-2">
         <Label htmlFor="template" className="text-sm">
