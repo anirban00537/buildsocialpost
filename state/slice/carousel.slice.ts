@@ -62,6 +62,8 @@ const carouselSlice = createSlice({
         description: "Description",
         imageUrl:
           "https://images.unsplash.com/photo-1716718406268-6ece312abee0?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+        backgroundImage:
+          "https://plus.unsplash.com/premium_photo-1681190675120-4d2e44599aab?q=80&w=1976&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
       });
     },
     copySlide: (state, action: PayloadAction<number>) => {

@@ -24,7 +24,10 @@ const SlideComponent: React.FC<SlideProps> = ({
   const { alignment, fontSize, fontStyle, fontWeight } = textSettings;
   const { pattern } = layout;
   const backgroundImageStyle = slide.backgroundImage
-    ? { backgroundImage: `url(${slide.backgroundImage})` }
+    ? {
+        backgroundImage: `url(${slide.backgroundImage})`,
+        zIndex: 0,
+      }
     : {
         backgroundImage: `url(${pattern})`,
         backgroundPosition: "center",
@@ -62,6 +65,20 @@ const SlideComponent: React.FC<SlideProps> = ({
           ...backgroundImageStyle,
         }}
       />
+      {slide.backgroundImage && (
+        <div
+          style={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            zIndex: 1,
+            backgroundColor: color1,
+            opacity: 0.5,
+          }}
+        />
+      )}
       <div
         style={{
           position: "relative",
@@ -78,8 +95,8 @@ const SlideComponent: React.FC<SlideProps> = ({
           textAlign: alignment,
           width: "100%",
           height: "100%",
-          paddingLeft: "32px",
-          paddingRight: "32px",
+          paddingLeft: "42px",
+          paddingRight: "42px",
           paddingBottom: "16px",
           paddingTop: "16px",
           boxSizing: "border-box",
@@ -111,7 +128,6 @@ const SlideComponent: React.FC<SlideProps> = ({
                 fontSize: `${14}px`,
                 fontWeight: "bold",
                 color: color2,
-                margin: "16px",
                 alignSelf:
                   alignment === "center"
                     ? "center"
@@ -131,7 +147,6 @@ const SlideComponent: React.FC<SlideProps> = ({
               }
               style={{
                 width: "100%",
-                padding: "8px",
                 marginBottom: "8px",
                 fontSize: `${fontSize}px`,
                 fontStyle: fontStyle,
@@ -157,7 +172,6 @@ const SlideComponent: React.FC<SlideProps> = ({
               }
               style={{
                 width: "100%",
-                padding: "8px",
                 marginBottom: "8px",
                 fontSize: `${fontSize + 24}px`,
                 fontStyle: fontStyle,
@@ -186,7 +200,6 @@ const SlideComponent: React.FC<SlideProps> = ({
               }
               style={{
                 width: "100%",
-                padding: "8px",
                 fontSize: `${fontSize}px`,
                 fontStyle: fontStyle,
                 fontWeight: fontWeight,
@@ -223,6 +236,7 @@ const SlideComponent: React.FC<SlideProps> = ({
                   objectFit: "contain",
                   background: "rgba(255, 255, 255, 0.3)",
                   backdropFilter: "blur(10px)",
+
                   padding: "8px",
                   borderRadius: "8px",
                 }}
@@ -243,7 +257,6 @@ const SlideComponent: React.FC<SlideProps> = ({
               display: "flex",
               alignItems: "center",
               gap: "16px",
-              padding: "8px",
             }}>
             <img
               src={generalSettings.headshotUrl}
@@ -286,6 +299,7 @@ const SlideComponent: React.FC<SlideProps> = ({
           fontSize: "12px",
           padding: "4px",
           color: color2,
+          zIndex: 1,
         }}>
         Created by{" "}
         <a
