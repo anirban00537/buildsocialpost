@@ -1,33 +1,27 @@
-export const dynamic = "force-dynamic";
-
+import { db } from "@/lib/firebase";
 import crypto from "crypto";
-import { databases, ID } from "@/lib/node-appwrite";
+import { doc, setDoc } from "firebase/firestore";
 
 export async function POST(req: Request) {
   try {
     const clonedReq = req.clone();
     const eventType = req.headers.get("X-Event-Name");
     const body = await req.json();
-    console.log(
-      process.env.NEXT_PUBLIC_LEMONSQUEEZY_WEBHOOK_SIGNATURE,
-      "process.env.NEXT_PUBLIC_LEMONSQUEEZY_WEBHOOK_SIGNATURE"
-    );
+
+    // Verify signature
     const secret = process.env.NEXT_PUBLIC_LEMONSQUEEZY_WEBHOOK_SIGNATURE || "";
     const hmac = crypto.createHmac("sha256", secret);
-    const requestBodyText = await clonedReq.text();
-    const digest = hmac.update(requestBodyText).digest("hex");
-    const signature = req.headers.get("X-Signature");
+    const digest = Buffer.from(
+      hmac.update(await clonedReq.text()).digest("hex"),
+      "utf8"
+    );
+    const signature = Buffer.from(req.headers.get("X-Signature") || "", "utf8");
 
-    if (
-      !signature ||
-      !crypto.timingSafeEqual(
-        Buffer.from(digest, "hex"),
-        Buffer.from(signature, "hex")
-      )
-    ) {
+    if (!crypto.timingSafeEqual(digest, signature)) {
       throw new Error("Invalid signature.");
     }
 
+    // Logic based on event type
     if (eventType === "order_created") {
       const userId = body.meta.custom_data.user_id;
       const isSuccessful = body.data.attributes.status === "paid";
@@ -35,22 +29,13 @@ export async function POST(req: Request) {
       endDate.setMonth(endDate.getMonth() + 1);
 
       const subscriptionData = {
-        userId: userId.toString(),
-        orderId: body.data.id.toString(),
+        userId,
+        orderId: body.data.id,
         status: isSuccessful ? "paid" : "pending",
         endDate: endDate.toISOString(),
         createdAt: new Date().toISOString(),
       };
-
-      const data = await databases.createDocument(
-        "6676798b000501b76612",
-        "6676a90d00019bc19abd",
-        ID.unique(),
-        subscriptionData
-      );
-
-      console.log("Subscription created:", data);
-
+      await setDoc(doc(db, "subscriptions", userId), subscriptionData);
       console.log("Subscription created:", subscriptionData);
     }
 

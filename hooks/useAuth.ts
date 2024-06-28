@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { account, databases, ID, Query } from "@/lib/appwrite";
+import { db, auth } from "@/lib/firebase";
 import {
   logout,
   setEndDate,
@@ -10,29 +10,54 @@ import {
 } from "@/state/slice/user.slice";
 import { useRouter } from "next/navigation";
 import { RootState } from "@/state/store";
-import { useQuery, useMutation, useQueryClient } from "react-query";
+import { useQuery, useMutation } from "react-query";
 import colorPresets from "@/lib/color-presets";
 import { setBackground } from "@/state/slice/carousel.slice";
+import {
+  doc,
+  getDoc,
+  collection,
+  query,
+  where,
+  orderBy,
+  limit,
+  getDocs,
+} from "firebase/firestore";
+import {
+  signOut,
+  GoogleAuthProvider,
+  signInWithPopup,
+  onAuthStateChanged,
+  User,
+} from "firebase/auth";
 
 // Function to fetch user data
-const getUser = async () => {
-  return await account.get();
+const getUser = async (): Promise<User | null> => {
+  return new Promise((resolve, reject) => {
+    const unsubscribe = onAuthStateChanged(
+      auth,
+      (user) => {
+        unsubscribe();
+        resolve(user);
+      },
+      reject
+    );
+  });
 };
 
 // Function to fetch subscription status
 const fetchSubscriptionStatus = async (userId: string) => {
-  const response = await databases.listDocuments(
-    "6676798b000501b76612", // Database ID
-    "6676a90d00019bc19abd", // Collection ID
-    [
-      Query.equal("userId", userId),
-      Query.orderDesc("endDate"), // Order by endDate descending
-      Query.limit(1), // Limit to the latest document
-    ]
+  const q = query(
+    collection(db, "subscriptions"),
+    where("userId", "==", userId),
+    orderBy("endDate", "desc"),
+    limit(1)
   );
 
-  if (response.documents.length > 0) {
-    const data = response.documents[0];
+  const querySnapshot = await getDocs(q);
+  if (!querySnapshot.empty) {
+    const doc = querySnapshot.docs[0];
+    const data = doc.data();
     const endDate = new Date(data.endDate);
     const isExpired = endDate < new Date();
     return { isSubscribed: !isExpired, endDate };
@@ -47,7 +72,7 @@ const useLogout = () => {
   const dispatch = useDispatch();
 
   const { mutate: logoutUser, isLoading: loading } = useMutation(
-    async () => await account.deleteSession("current"),
+    async () => await signOut(auth),
     {
       onSuccess: () => {
         dispatch(logout());
@@ -73,14 +98,16 @@ const useAuthUser = () => {
     refetch: refetchUser,
   } = useQuery("user", getUser, {
     onSuccess: (data) => {
-      dispatch(setUser(data));
+      if (data) {
+        dispatch(setUser(data));
+      }
     },
     onError: (error: any) => {
       setError(error.message || "Failed to fetch the current user.");
     },
   });
 
-  const userId = userData?.$id;
+  const userId = userData?.uid;
 
   const {
     data: subscriptionData,
@@ -124,64 +151,28 @@ const useAuthUser = () => {
   };
 };
 
-// Hook for sending a magic link to the user's email
-const useMagicLinkLogin = () => {
+// Hook for Google login
+const useGoogleLogin = () => {
   const [error, setError] = useState<string>("");
+  const dispatch = useDispatch();
 
-  const { mutate: sendMagicLink, isLoading: loading } = useMutation(
-    async (email: string) => {
-      const redirectURL = `${window.location.origin}/magic-url-callback`;
-      await account.createMagicURLToken(ID.unique(), email, redirectURL);
+  const { mutate: loginWithGoogle, isLoading: loading } = useMutation(
+    async () => {
+      const provider = new GoogleAuthProvider();
+      const result = await signInWithPopup(auth, provider);
+      const user = result.user;
+      dispatch(setUser(user));
     },
     {
       onError: (error: any) => {
         setError(
-          error.message || "Failed to send magic link. Please try again."
+          error.message || "Failed to log in with Google. Please try again."
         );
       },
     }
   );
 
-  return { sendMagicLink, loading, error };
+  return { loginWithGoogle, loading, error };
 };
 
-// Hook for handling the magic URL callback and creating a session
-const useMagicURLCallback = () => {
-  const dispatch = useDispatch();
-  const router = useRouter();
-  const { fetchUser } = useAuthUser();
-
-  const [loading, setLoadingState] = useState(true);
-  const [error, setError] = useState<string>("");
-  const [success, setSuccess] = useState<string>("");
-
-  useEffect(() => {
-    const createSessionFromURL = async () => {
-      const urlParams = new URLSearchParams(window.location.search);
-      const secret = urlParams.get("secret");
-      const userId = urlParams.get("userId");
-
-      if (secret && userId) {
-        try {
-          await account.createSession(userId, secret);
-          fetchUser();
-          setSuccess("Logged in successfully!");
-          router.push("/editor");
-        } catch (error: any) {
-          setError(error.message || "Failed to log in. Please try again.");
-        } finally {
-          setLoadingState(false);
-        }
-      } else {
-        setError("Invalid login attempt.");
-        setLoadingState(false);
-      }
-    };
-
-    createSessionFromURL();
-  }, [dispatch, router, fetchUser]);
-
-  return { loading, success, error };
-};
-
-export { useMagicLinkLogin, useLogout, useAuthUser, useMagicURLCallback };
+export { useLogout, useAuthUser, useGoogleLogin };

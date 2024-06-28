@@ -5,7 +5,15 @@ import { store } from "@/state/store";
 import { QueryClient, QueryClientProvider } from "react-query";
 
 const DefaultLayout = ({ children }: { children: React.ReactNode }) => {
-  const queryClient = new QueryClient();
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: {
+        refetchOnWindowFocus: false,
+        refetchOnReconnect: false,
+        refetchOnMount: false,
+      },
+    },
+  });
 
   return (
     <Provider store={store}>

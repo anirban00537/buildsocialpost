@@ -3,26 +3,25 @@ import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Button } from "@/components/ui/button";
 import { RootState } from "@/state/store";
-import { useAuthUser, useLogout, useMagicLinkLogin } from "@/hooks/useAuth";
+import { useAuthUser, useLogout, useGoogleLogin } from "@/hooks/useAuth";
 
 const LoginPage = () => {
-  const [email, setEmail] = useState("");
   const [success, setSuccess] = useState<string>("");
   const dispatch = useDispatch();
   const {
-    sendMagicLink,
-    loading: magicLinkLoading,
-    error: magicLinkError,
-  } = useMagicLinkLogin();
+    loginWithGoogle,
+    loading: googleLoginLoading,
+    error: googleLoginError,
+  } = useGoogleLogin();
   const { logout, loading: logoutLoading, error: logoutError } = useLogout();
   const { loading: userLoading, error: userError } = useAuthUser();
   const user: any = useSelector((state: RootState) => state.user.userinfo);
   const loggedIn = useSelector((state: RootState) => state.user.loggedin);
 
-  const handleSendMagicLink = async () => {
+  const handleGoogleLogin = async () => {
     try {
-      await sendMagicLink(email);
-      setSuccess("Magic link sent! Check your email.");
+      await loginWithGoogle();
+      setSuccess("Logged in successfully!");
     } catch (error) {
       setSuccess("");
     }
@@ -63,30 +62,23 @@ const LoginPage = () => {
           <div>
             <div className="text-center mb-6">
               <p className="text-lg font-semibold text-gray-800">
-                Magic Link Login
+                Google Login
               </p>
             </div>
-            {magicLinkError && (
-              <p className="text-center text-red-500">{magicLinkError}</p>
+            {googleLoginError && (
+              <p className="text-center text-red-500">{googleLoginError}</p>
             )}
             {success && <p className="text-center text-green-500">{success}</p>}
-            <form className="space-y-4">
-              <input
-                type="email"
-                placeholder="Email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition duration-300"
-              />
-              <Button
-                type="button"
-                onClick={handleSendMagicLink}
-                className="w-full"
-                disabled={magicLinkLoading}
-              >
-                {magicLinkLoading ? "Sending magic link..." : "Send Magic Link"}
-              </Button>
-            </form>
+            <Button
+              type="button"
+              onClick={handleGoogleLogin}
+              className="w-full"
+              disabled={googleLoginLoading}
+            >
+              {googleLoginLoading
+                ? "Logging in with Google..."
+                : "Login with Google"}
+            </Button>
           </div>
         )}
       </div>
