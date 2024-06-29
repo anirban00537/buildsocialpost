@@ -8,19 +8,30 @@ const textContainerVariants = {
     opacity: 1,
     transition: {
       staggerChildren: 0.3,
+      when: "beforeChildren",
     },
   },
 };
 
 const textVariants = {
   hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } },
+};
+
+const videoVariants = {
+  hidden: { opacity: 0, scale: 0.8, rotate: -10 },
+  visible: {
+    opacity: 1,
+    scale: 1,
+    rotate: 0,
+    transition: { duration: 1, ease: "easeOut" },
+  },
 };
 
 const Hero = () => {
   return (
     <motion.section
-      className="py-28 "
+      className="py-28"
       initial="hidden"
       animate="visible"
       transition={{ duration: 0.5 }}
@@ -41,9 +52,12 @@ const Hero = () => {
             variants={textVariants}
           >
             Create Social media carousels in a few clicks.
-            <div className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-teal-400">
+            <motion.div
+              className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-teal-400"
+              variants={textVariants}
+            >
               with our AI tool.
-            </div>
+            </motion.div>
           </motion.h2>
           <motion.p className="text-lg" variants={textVariants}>
             Our AI tool helps you generate content, customize designs, and
@@ -61,9 +75,12 @@ const Hero = () => {
             </Link>
           </motion.div>
         </motion.div>
-        <div className="w-auto rounded-3xl flex justify-center bg-primary p-2">
+        <motion.div
+          className="w-auto rounded-3xl flex justify-center bg-primary p-2"
+          variants={videoVariants}
+        >
           <video
-            className="rounded-lg "
+            className="rounded-lg"
             width="900"
             height="600"
             controls={false}
@@ -74,7 +91,7 @@ const Hero = () => {
             <source src="/intro.mp4" type="video/mp4" />
             Your browser does not support the video tag.
           </video>
-        </div>
+        </motion.div>
       </div>
     </motion.section>
   );
