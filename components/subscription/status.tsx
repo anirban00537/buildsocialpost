@@ -35,9 +35,11 @@ const SubscriptionInfo = () => {
     );
   }
 
+  const endDateString = new Date(endDate).toDateString();
+
   return (
     <div className="ml-auto flex items-center gap-2 px-4 py-2 text-sm  border  border-primary rounded-md text-primary transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 ">
-      Subscribed until {endDate.toDateString()}
+      Subscribed until {endDateString}
     </div>
   );
 };

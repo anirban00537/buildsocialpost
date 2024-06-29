@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { db, auth } from "@/lib/firebase";
 import {
   logout,
@@ -8,14 +8,10 @@ import {
   setSubscribed,
   setUser,
 } from "@/state/slice/user.slice";
-import { useRouter } from "next/navigation";
-import { RootState } from "@/state/store";
 import { useQuery, useMutation } from "react-query";
 import colorPresets from "@/lib/color-presets";
 import { setBackground } from "@/state/slice/carousel.slice";
 import {
-  doc,
-  getDoc,
   collection,
   query,
   where,
@@ -46,7 +42,6 @@ const getUser = async (): Promise<User | null> => {
 };
 
 // Function to fetch subscription status
-// Function to fetch subscription status
 const fetchSubscriptionStatus = async (userId: string) => {
   try {
     const q = query(
@@ -60,8 +55,8 @@ const fetchSubscriptionStatus = async (userId: string) => {
     if (!querySnapshot.empty) {
       const doc = querySnapshot.docs[0];
       const data = doc.data();
-      const endDate = new Date(data.endDate);
-      const isExpired = endDate < new Date();
+      const endDate = new Date(data.endDate).toISOString(); // Convert Date to string
+      const isExpired = new Date(endDate) < new Date();
       return { isSubscribed: !isExpired, endDate };
     } else {
       return { isSubscribed: false, endDate: null };
@@ -71,8 +66,6 @@ const fetchSubscriptionStatus = async (userId: string) => {
     return { isSubscribed: false, endDate: null, error: error.message };
   }
 };
-
-
 
 // Hook for logging out the user
 const useLogout = () => {

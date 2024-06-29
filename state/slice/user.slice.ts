@@ -6,7 +6,7 @@ interface UserState {
   loggedin: boolean;
   loading: boolean;
   subscribed: boolean;
-  endDate: Date | null;
+  endDate: string | null;
 }
 
 // Define the initial state using the UserState interface
@@ -37,7 +37,7 @@ const userSlice = createSlice({
     setSubscribed: (state, action: PayloadAction<boolean>) => {
       state.subscribed = action.payload;
     },
-    setEndDate: (state, action: PayloadAction<Date | null>) => {
+    setEndDate: (state, action: PayloadAction<string | null>) => {
       state.endDate = action.payload;
     },
   },
