@@ -6,12 +6,21 @@ import { initializeApp, cert, getApps } from "firebase-admin/app";
 import { db } from "@/lib/firebase";
 
 // Initialize Firebase Admin SDK
+if (!process.env.NEXT_PUBLIC_FIREBASE_PRIVATE_KEY) {
+  throw new Error(
+    "The NEXT_PUBLIC_FIREBASE_PRIVATE_KEY environment variable is not defined"
+  );
+}
+
 if (!getApps().length) {
   initializeApp({
     credential: cert({
       projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
       clientEmail: process.env.NEXT_PUBLIC_FIREBASE_CLIENT_EMAIL,
-      privateKey: process.env.NEXT_PUBLIC_FIREBASE_PRIVATE_KEY,
+      privateKey: process.env.NEXT_PUBLIC_FIREBASE_PRIVATE_KEY.replace(
+        /\\n/g,
+        "\n"
+      ),
     }),
   });
 }
