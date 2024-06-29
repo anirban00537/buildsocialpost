@@ -46,25 +46,33 @@ const getUser = async (): Promise<User | null> => {
 };
 
 // Function to fetch subscription status
+// Function to fetch subscription status
 const fetchSubscriptionStatus = async (userId: string) => {
-  const q = query(
-    collection(db, "subscriptions"),
-    where("userId", "==", userId),
-    orderBy("endDate", "desc"),
-    limit(1)
-  );
+  try {
+    const q = query(
+      collection(db, "subscriptions"),
+      where("userId", "==", userId),
+      orderBy("endDate", "desc"),
+      limit(1)
+    );
 
-  const querySnapshot = await getDocs(q);
-  if (!querySnapshot.empty) {
-    const doc = querySnapshot.docs[0];
-    const data = doc.data();
-    const endDate = new Date(data.endDate);
-    const isExpired = endDate < new Date();
-    return { isSubscribed: !isExpired, endDate };
-  } else {
-    return { isSubscribed: false, endDate: null };
+    const querySnapshot = await getDocs(q);
+    if (!querySnapshot.empty) {
+      const doc = querySnapshot.docs[0];
+      const data = doc.data();
+      const endDate = new Date(data.endDate);
+      const isExpired = endDate < new Date();
+      return { isSubscribed: !isExpired, endDate };
+    } else {
+      return { isSubscribed: false, endDate: null };
+    }
+  } catch (error: any) {
+    console.error("Error fetching subscription status:", error);
+    return { isSubscribed: false, endDate: null, error: error.message };
   }
 };
+
+
 
 // Hook for logging out the user
 const useLogout = () => {
@@ -99,7 +107,8 @@ const useAuthUser = () => {
   } = useQuery("user", getUser, {
     onSuccess: (data) => {
       if (data) {
-        dispatch(setUser(data));
+        const { uid, email, displayName, photoURL } = data;
+        dispatch(setUser({ uid, email, displayName, photoURL }));
       }
     },
     onError: (error: any) => {
@@ -161,7 +170,8 @@ const useGoogleLogin = () => {
       const provider = new GoogleAuthProvider();
       const result = await signInWithPopup(auth, provider);
       const user = result.user;
-      dispatch(setUser(user));
+      const { uid, email, displayName, photoURL } = user;
+      dispatch(setUser({ uid, email, displayName, photoURL }));
     },
     {
       onError: (error: any) => {
