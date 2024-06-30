@@ -15,7 +15,7 @@ export const initialSlides: Slide[] = [
     description:
       "Make sure your profile is complete and showcases your skills. Use a professional photo and a compelling headline.",
     imageUrl:
-      "https://images.unsplash.com/photo-1567016547360-7cc0f2ddc60f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwzNjUyOXwwfDF8c2VhcmNofDF8fHByb2ZpbGV8ZW58MHx8fHwxNjI5ODkzNTU1&ixlib=rb-1.2.1&q=80&w=400",
+      "https://images.unsplash.com/photo-1718879329566-82d40c4175d6?q=80&w=1888&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
   },
   {
     type: "slide",
@@ -31,7 +31,7 @@ export const initialSlides: Slide[] = [
     description:
       "Connect with professionals in your industry. Personalize your connection requests and build meaningful relationships.",
     imageUrl:
-      "https://images.unsplash.com/photo-1531497865147-0226f3df54c8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwzNjUyOXwwfDF8c2VhcmNofDF8fG5ldHdvcmt8ZW58MHx8fHwxNjI5ODkzNTU1&ixlib=rb-1.2.1&q=80&w=400",
+      "https://images.unsplash.com/photo-1719658414203-83fdaf1bdb33?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
   },
   {
     type: "slide",
@@ -47,7 +47,7 @@ export const initialSlides: Slide[] = [
     description:
       "Track your performance using LinkedIn Analytics. Understand what works and refine your strategy accordingly.",
     imageUrl:
-      "https://images.unsplash.com/photo-1517142089942-ba376ce32a2d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwzNjUyOXwwfDF8c2VhcmNofDF8fGFuYWx5dGljc3xlbnwwfHx8fDE2Mjk4OTM1NTU&ixlib=rb-1.2.1&q=80&w=400",
+      "https://images.unsplash.com/photo-1719352354062-0a35d9db5773?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
   },
   {
     type: "slide",
