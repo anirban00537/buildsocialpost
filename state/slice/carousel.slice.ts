@@ -15,7 +15,7 @@ interface CarouselState {
     alignment: "left" | "center" | "right";
     fontSize: number;
     fontStyle: "normal" | "italic";
-    fontWeight: number;
+    fontWeight: number | string;
   };
   layout: {
     height: number;
@@ -41,7 +41,7 @@ const initialState: CarouselState = {
     alignment: "left",
     fontSize: 14,
     fontStyle: "normal",
-    fontWeight: 400,
+    fontWeight: "bold",
   },
   layout: {
     height: 640,
