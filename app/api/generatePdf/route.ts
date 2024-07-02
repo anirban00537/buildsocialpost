@@ -81,7 +81,7 @@ export async function POST(req: Request) {
         "Content-Disposition": "attachment; filename=slides.pdf",
       },
     });
-  } catch (error) {
+  } catch (error: any) {
     console.error(error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
