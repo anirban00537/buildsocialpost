@@ -1,9 +1,12 @@
 import { useState, useCallback, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/state/store";
+import { jsPDF } from "jspdf";
+import { toPng } from "html-to-image";
 import JSZip from "jszip";
 import { saveAs } from "file-saver";
 import { Slide } from "@/types";
+
 import {
   insertSlide,
   copySlide,
@@ -11,7 +14,6 @@ import {
   updateSlide,
   updateGeneralSettings,
 } from "@/state/slice/carousel.slice";
-import { toPng } from "html-to-image";
 
 const useCarousel = () => {
   const dispatch = useDispatch();
@@ -55,9 +57,14 @@ const useCarousel = () => {
 
   const handleUpdateHeadshot = useCallback(
     (headshotUrl: string) => {
-      const updatedSettings = { ...generalSettings, headshotUrl };
+      const updatedSettings = {
+        ...generalSettings,
+        headshotUrl,
+      };
       dispatch(
-        updateGeneralSettings({ updatedGeneralSettings: updatedSettings })
+        updateGeneralSettings({
+          updatedGeneralSettings: updatedSettings,
+        })
       );
     },
     [dispatch, generalSettings]
@@ -105,32 +112,42 @@ const useCarousel = () => {
 
   const exportSlidesToPDF = useCallback(async () => {
     setPdfLoading(true);
-    try {
-      const slidesHtml = slides.map((slide, index) => {
-        const slideElement = document.getElementById(`slide-${index}`);
-        return slideElement ? slideElement.outerHTML : "";
-      });
+    const pdf = new jsPDF("p", "px", [layout.width, layout.height]);
+    const scaleFactor = 3; // Adjust the scale factor for higher quality
 
-      const response = await fetch("/api/generatePdf", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ slides: slidesHtml, layout }),
-      });
+    for (let i = 0; i < slides.length; i++) {
+      const slideElement = document.getElementById(`slide-${i}`);
+      if (slideElement) {
+        try {
+          const pngDataUrl = await toPng(slideElement, {
+            cacheBust: true,
+            pixelRatio: scaleFactor,
+          });
 
-      if (!response.ok) {
-        throw new Error("Failed to generate PDF");
+          if (i !== 0) {
+            pdf.addPage();
+          }
+          pdf.addImage(
+            pngDataUrl,
+            "PNG",
+            0,
+            0,
+            layout.width,
+            layout.height,
+            undefined,
+            "FAST" // Use FAST compression to reduce file size
+          );
+        } catch (error) {
+          console.error("Failed to export slide as image", error);
+        }
+      } else {
+        console.warn(`Slide element with ID slide-${i} not found`);
       }
-
-      const blob = await response.blob();
-      saveAs(blob, "carousel_slides.pdf");
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setPdfLoading(false);
     }
-  }, [slides, layout]);
+
+    pdf.save("carousel_slides.pdf");
+    setPdfLoading(false);
+  }, [slides, layout.width, layout.height]);
 
   return {
     swiperRef,
