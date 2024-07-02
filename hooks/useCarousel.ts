@@ -2,7 +2,9 @@ import { useState, useCallback, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/state/store";
 import { jsPDF } from "jspdf";
-import { toSvg } from "html-to-image";
+import { toPng } from "html-to-image";
+import JSZip from "jszip";
+import { saveAs } from "file-saver";
 import { Slide } from "@/types";
 
 import {
@@ -22,7 +24,8 @@ const useCarousel = () => {
   const { slides, generalSettings } = useSelector(
     (state: RootState) => state.slides
   );
-  const [exportLoading, setExportLoading] = useState(false);
+  const [zipLoading, setZipLoading] = useState(false);
+  const [pdfLoading, setPdfLoading] = useState(false);
 
   const handleInsertSlide = useCallback(
     (index: number) => {
@@ -76,61 +79,23 @@ const useCarousel = () => {
     [swiperRef]
   );
 
-  const exportSlidesToPDF = useCallback(async () => {
-    setExportLoading(true);
-    const pdf = new jsPDF("p", "px", [layout.width, layout.height]);
-    const scaleFactor = 5; // Increase scale factor to improve quality
+  const exportSlidesToZip = useCallback(async () => {
+    setZipLoading(true);
+    const zip = new JSZip();
+    const scaleFactor = 3; // Adjust the scale factor for higher quality
 
     for (let i = 0; i < slides.length; i++) {
       const slideElement = document.getElementById(`slide-${i}`);
       if (slideElement) {
         try {
-          const svgDataUrl = await toSvg(slideElement, { cacheBust: true });
-          console.log(`SVG Data URL for slide ${i}:`, svgDataUrl);
+          const pngDataUrl = await toPng(slideElement, {
+            cacheBust: true,
+            pixelRatio: scaleFactor,
+          });
 
-          const image = new Image();
-          image.src = svgDataUrl;
-
-          image.onload = () => {
-            const canvas = document.createElement("canvas");
-            const width = layout.width * scaleFactor;
-            const height = layout.height * scaleFactor;
-            canvas.width = width;
-            canvas.height = height;
-
-            const context = canvas.getContext("2d");
-            if (context) {
-              context.drawImage(image, 0, 0, width, height);
-              const pngDataUrl = canvas.toDataURL("image/png");
-              console.log(`PNG Data URL for slide ${i}:`, pngDataUrl);
-
-              if (i !== 0) {
-                pdf.addPage();
-              }
-              pdf.addImage(
-                pngDataUrl,
-                "PNG",
-                0,
-                0,
-                layout.width,
-                layout.height,
-                undefined,
-                "FAST" // Use FAST compression to reduce file size
-              );
-
-              // Save the PDF after the last slide is processed
-              if (i === slides.length - 1) {
-                pdf.save("carousel_slides.pdf");
-                setExportLoading(false);
-              }
-            } else {
-              console.error("Canvas context is null");
-            }
-          };
-
-          image.onerror = (error) => {
-            console.error(`Failed to load image for slide ${i}`, error);
-          };
+          const response = await fetch(pngDataUrl);
+          const blob = await response.blob();
+          zip.file(`slide-${i}.png`, blob);
         } catch (error) {
           console.error("Failed to export slide as image", error);
         }
@@ -138,6 +103,50 @@ const useCarousel = () => {
         console.warn(`Slide element with ID slide-${i} not found`);
       }
     }
+
+    zip.generateAsync({ type: "blob" }).then((content) => {
+      saveAs(content, "slides.zip");
+      setZipLoading(false);
+    });
+  }, [slides, layout.width, layout.height]);
+
+  const exportSlidesToPDF = useCallback(async () => {
+    setPdfLoading(true);
+    const pdf = new jsPDF("p", "px", [layout.width, layout.height]);
+    const scaleFactor = 3; // Adjust the scale factor for higher quality
+
+    for (let i = 0; i < slides.length; i++) {
+      const slideElement = document.getElementById(`slide-${i}`);
+      if (slideElement) {
+        try {
+          const pngDataUrl = await toPng(slideElement, {
+            cacheBust: true,
+            pixelRatio: scaleFactor,
+          });
+
+          if (i !== 0) {
+            pdf.addPage();
+          }
+          pdf.addImage(
+            pngDataUrl,
+            "PNG",
+            0,
+            0,
+            layout.width,
+            layout.height,
+            undefined,
+            "FAST" // Use FAST compression to reduce file size
+          );
+        } catch (error) {
+          console.error("Failed to export slide as image", error);
+        }
+      } else {
+        console.warn(`Slide element with ID slide-${i} not found`);
+      }
+    }
+
+    pdf.save("carousel_slides.pdf");
+    setPdfLoading(false);
   }, [slides, layout.width, layout.height]);
 
   return {
@@ -151,8 +160,10 @@ const useCarousel = () => {
     handleUpdateSlide,
     handleUpdateHeadshot,
     handleSlideClick,
+    exportSlidesToZip,
     exportSlidesToPDF,
-    exportLoading,
+    zipLoading,
+    pdfLoading,
     textSettings,
     layout,
   };
