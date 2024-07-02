@@ -4,7 +4,6 @@ import {
   AlignRightIcon,
   BoldIcon,
   ItalicIcon,
-  UnderlineIcon,
   Shield,
 } from "lucide-react";
 import React, { useState } from "react";
@@ -37,9 +36,18 @@ const SettingsSection = () => {
   const [fontStyle, setFontStyle] = useState(
     textSettings.fontStyle || "normal"
   );
-  const [fontWeight, setFontWeight] = useState(textSettings.fontWeight || 400);
+
+  // Ensure fontWeight is a number
+  const initialFontWeight =
+    typeof textSettings.fontWeight === "number"
+      ? textSettings.fontWeight
+      : textSettings.fontWeight === "bold"
+      ? 700
+      : 400;
+  const [fontWeight, setFontWeight] = useState<number>(initialFontWeight);
+
   const [selectedWeight, setSelectedWeight] = useState(
-    fontWeight > 500 ? "bold" : "normal"
+    fontWeight === 700 || fontWeight > 500 ? "bold" : "normal"
   );
 
   const handleAlignmentChange = (alignment: "left" | "center" | "right") => {

@@ -41,7 +41,7 @@ const initialState: CarouselState = {
     alignment: "left",
     fontSize: 14,
     fontStyle: "normal",
-    fontWeight: "bold",
+    fontWeight: 400, // Changed from "bold" to 400
   },
   layout: {
     height: 640,
@@ -49,6 +49,7 @@ const initialState: CarouselState = {
     pattern: "/backgrounds/background1.svg",
   },
 };
+
 
 const carouselSlice = createSlice({
   name: "carousel",
