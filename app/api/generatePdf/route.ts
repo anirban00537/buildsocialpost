@@ -10,6 +10,7 @@ export async function POST(req: Request) {
     await req.json();
 
   if (!slides || !layout) {
+    console.error("Slides or layout data missing");
     return NextResponse.json(
       { error: "Slides or layout data missing" },
       { status: 400 }
@@ -51,11 +52,13 @@ export async function POST(req: Request) {
         </html>
       `;
       await page.setContent(content, { waitUntil: "networkidle0", timeout: 0 });
+
       const pdfBuffer = await page.pdf({
-        width: layout.width,
-        height: layout.height,
+        width: `${layout.width}px`,
+        height: `${layout.height}px`,
         printBackground: true,
-        pageRanges: "1",
+        preferCSSPageSize: true,
+        scale: 2, // Increase the scale factor for better quality
       });
 
       pdfDocs.push(pdfBuffer);
@@ -82,9 +85,9 @@ export async function POST(req: Request) {
       },
     });
   } catch (error) {
-    console.error(error);
+    console.error("Failed to generate PDF:", error);
     return NextResponse.json(
-      { error: JSON.stringify(error) },
+      { error: "Failed to generate PDF" },
       { status: 500 }
     );
   }
