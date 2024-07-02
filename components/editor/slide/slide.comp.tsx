@@ -241,7 +241,6 @@ const SlideComponent: React.FC<SlideProps> = ({
                   objectFit: "contain",
                   background: "rgba(255, 255, 255, 0.3)",
                   backdropFilter: "blur(10px)",
-
                   padding: "8px",
                   borderRadius: "8px",
                 }}
@@ -346,6 +345,21 @@ const SlideComponent: React.FC<SlideProps> = ({
           />
         </div>
       )}
+      {/* Glow div that spans across two slides */}
+      <div
+        style={{
+          position: "absolute",
+          top: "16px",
+          right: "-100px", // Position it such that it spans across two slides
+          width: "200px",
+          height: "200px",
+          borderRadius: "50%",
+          backgroundColor: color4,
+          boxShadow: `0 0 15px ${color4}`,
+          opacity: 0.5,
+          zIndex: 5,
+        }}
+      ></div>
     </div>
   );
 };
