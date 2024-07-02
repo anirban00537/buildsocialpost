@@ -1,4 +1,3 @@
-// useCarousel.js
 import { useState, useCallback, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/state/store";
@@ -104,34 +103,34 @@ const useCarousel = () => {
     });
   }, [slides, layout.width, layout.height]);
 
-const exportSlidesToPDF = useCallback(async () => {
-  setPdfLoading(true);
-  try {
-    const slidesHtml = slides.map((slide, index) => {
-      const slideElement = document.getElementById(`slide-${index}`);
-      return slideElement ? slideElement.outerHTML : "";
-    });
+  const exportSlidesToPDF = useCallback(async () => {
+    setPdfLoading(true);
+    try {
+      const slidesHtml = slides.map((slide, index) => {
+        const slideElement = document.getElementById(`slide-${index}`);
+        return slideElement ? slideElement.outerHTML : "";
+      });
 
-    const response = await fetch("/api/generatePdf", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ slides: slidesHtml, layout }),
-    });
+      const response = await fetch("/api/generatePdf", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ slides: slidesHtml, layout }),
+      });
 
-    if (!response.ok) {
-      throw new Error("Failed to generate PDF");
+      if (!response.ok) {
+        throw new Error("Failed to generate PDF");
+      }
+
+      const blob = await response.blob();
+      saveAs(blob, "carousel_slides.pdf");
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setPdfLoading(false);
     }
-
-    const blob = await response.blob();
-    saveAs(blob, "carousel_slides.pdf");
-  } catch (error) {
-    console.error(error);
-  } finally {
-    setPdfLoading(false);
-  }
-}, [slides, layout]);
+  }, [slides, layout]);
 
   return {
     swiperRef,
