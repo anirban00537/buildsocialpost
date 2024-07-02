@@ -1,4 +1,3 @@
-// app/api/generatePdf/route.ts
 import { NextResponse } from "next/server";
 import puppeteer from "puppeteer";
 import { PDFDocument } from "pdf-lib";
@@ -30,16 +29,19 @@ export async function POST(req: Request) {
       const content = `
         <html>
         <head>
+          <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
           <style>
             body, html {
               margin: 0;
               padding: 0;
               width: ${layout.width}px;
               height: ${layout.height}px;
+              font-family: 'Poppins', sans-serif;
             }
             .slide {
               width: ${layout.width}px;
               height: ${layout.height}px;
+              page-break-after: always;
             }
           </style>
         </head>
