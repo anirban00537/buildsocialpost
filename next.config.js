@@ -1,4 +1,3 @@
-// next.config.js
 module.exports = {
   webpack: (config, { isServer }) => {
     if (!isServer) {
@@ -12,5 +11,8 @@ module.exports = {
   env: {
     PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: "true",
     PUPPETEER_EXECUTABLE_PATH: "/usr/bin/chromium-browser",
+  },
+  images: {
+    domains: ["images.unsplash.com"],
   },
 };
