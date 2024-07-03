@@ -1,6 +1,6 @@
-// app/api/generatePdf/route.ts
 import { NextResponse } from "next/server";
-import puppeteer from "puppeteer";
+import chrome from "chrome-aws-lambda";
+import puppeteer from "puppeteer-core";
 import { PDFDocument } from "pdf-lib";
 
 export async function POST(req: Request) {
@@ -17,15 +17,19 @@ export async function POST(req: Request) {
     );
   }
 
+  let browser = null;
+
   try {
-    const browser = await puppeteer.launch({
-      headless: true,
-      args: ["--no-sandbox", "--disable-setuid-sandbox"],
+    browser = await puppeteer.launch({
+      args: chrome.args,
+      executablePath: await chrome.executablePath,
+      headless: chrome.headless,
     });
+
     const page = await browser.newPage();
 
     // Navigate to the /editor page
-    await page.goto("https://buildcarousel.com/editor", {
+    await page.goto("http://localhost:3000/editor", {
       waitUntil: "networkidle0",
       timeout: 0,
     });
@@ -108,5 +112,9 @@ export async function POST(req: Request) {
       { error: "Failed to generate PDF" },
       { status: 500 }
     );
+  } finally {
+    if (browser !== null) {
+      await browser.close();
+    }
   }
 }
