@@ -25,7 +25,7 @@ export async function POST(req: Request) {
     const page = await browser.newPage();
 
     // Navigate to the /editor page
-    await page.goto("http://localhost:3000/editor", {
+    await page.goto("https://buildcarousel.com/editor", {
       waitUntil: "networkidle0",
       timeout: 0,
     });
