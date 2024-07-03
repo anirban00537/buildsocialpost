@@ -3,7 +3,7 @@ const puppeteer = require("puppeteer");
 const { PDFDocument } = require("pdf-lib");
 const cors = require("cors")({ origin: true });
 
-exports.generatePdf = functions.https.onRequest((req, res) => {
+exports.generatePdf = functions.https.onRequest((req: any, res: any) => {
   cors(req, res, async () => {
     if (req.method !== "POST") {
       return res.status(405).send({ error: "Method not allowed" });
@@ -29,13 +29,13 @@ exports.generatePdf = functions.https.onRequest((req, res) => {
         timeout: 0,
       });
 
-      const slides = await page.evaluate((ids) => {
+      const slides = await page.evaluate((ids:any) => {
         return ids
-          .map((id) => {
+          .map((id:any) => {
             const element = document.getElementById(id);
             return element ? element.outerHTML : "";
           })
-          .filter((html) => html !== "");
+          .filter((html:any) => html !== "");
       }, slideIds);
 
       const pdfDocs = [];
@@ -90,7 +90,7 @@ exports.generatePdf = functions.https.onRequest((req, res) => {
           pdf,
           pdf.getPageIndices()
         );
-        copiedPages.forEach((page) => mergedPdf.addPage(page));
+        copiedPages.forEach((page: any) => mergedPdf.addPage(page));
       }
 
       const mergedPdfBytes = await mergedPdf.save();
