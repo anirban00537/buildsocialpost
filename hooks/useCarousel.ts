@@ -113,13 +113,16 @@ const useCarousel = () => {
     setPdfLoading(true);
     try {
       const slideIds = slides.map((_, index) => `slide-${index}`);
-      const response = await fetch("/api/generatePdf", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ slideIds, layout }),
-      });
+      const response = await fetch(
+        "https://us-central1-buildcarousel-4e9ec.cloudfunctions.net/generatePdf",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ slideIds, layout }),
+        }
+      );
 
       if (!response.ok) {
         throw new Error("Failed to generate PDF");
