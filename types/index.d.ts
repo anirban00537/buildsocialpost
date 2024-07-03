@@ -34,3 +34,24 @@ export interface IntroSlide {
   paragraph: string;
   imageUrl: string | null;
 }
+export interface CarouselState {
+  slides: Slide[];
+  generalSettings: generalSettings;
+  background: {
+    color1: string;
+    color2: string;
+    color3: string;
+    color4: string;
+  };
+  textSettings: {
+    alignment: "left" | "center" | "right";
+    fontSize: number;
+    fontStyle: "normal" | "italic";
+    fontWeight: number | string;
+  };
+  layout: {
+    height: number;
+    width: number;
+    pattern: string;
+  };
+}

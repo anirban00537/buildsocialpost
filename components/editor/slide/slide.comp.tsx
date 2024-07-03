@@ -55,6 +55,34 @@ const SlideComponent: React.FC<SlideProps> = ({
         zIndex: 1,
       }}
     >
+      {index % 2 === 1 ? (
+        <div
+          style={{
+            left: "0px",
+            transform: "translateX(-50%)",
+            position: "absolute",
+            bottom: "0px",
+            width: "320px",
+            height: "320px",
+            borderRadius: "50%",
+            background: `radial-gradient(circle at 50% 50%, ${color3} 0%, transparent 70%)`,
+          }}
+        ></div>
+      ) : (
+        <div
+          style={{
+            right: "0px",
+            transform: "translateX(50%)",
+            position: "absolute",
+            bottom: "0px",
+            width: "320px",
+            height: "320px",
+            borderRadius: "50%",
+            background: `radial-gradient(circle at 50% 50%, ${color3} 0%, transparent 70%)`,
+          }}
+        ></div>
+      )}
+
       <div
         style={{
           position: "absolute",
@@ -150,8 +178,6 @@ const SlideComponent: React.FC<SlideProps> = ({
                 width: "100%",
                 marginBottom: "8px",
                 fontSize: `${fontSize}px`,
-                // fontStyle: fontStyle,
-                // fontWeight: fontWeight,
                 backgroundColor: "transparent",
                 border: "none",
                 color: color2,
@@ -205,7 +231,6 @@ const SlideComponent: React.FC<SlideProps> = ({
                 width: "100%",
                 fontSize: `${fontSize}px`,
                 fontStyle: fontStyle,
-                // fontWeight: fontWeight,
                 backgroundColor: "transparent",
                 border: "none",
                 marginBottom: "8px",
@@ -345,21 +370,6 @@ const SlideComponent: React.FC<SlideProps> = ({
           />
         </div>
       )}
-      {/* Glow div that spans across two slides */}
-      <div
-        style={{
-          position: "absolute",
-          top: "16px",
-          right: "-100px", // Position it such that it spans across two slides
-          width: "200px",
-          height: "200px",
-          borderRadius: "50%",
-          backgroundColor: color4,
-          boxShadow: `0 0 15px ${color4}`,
-          opacity: 0.5,
-          zIndex: 5,
-        }}
-      ></div>
     </div>
   );
 };
