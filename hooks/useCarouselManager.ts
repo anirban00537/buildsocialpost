@@ -1,115 +1,156 @@
-// hooks/useFirestoreCarousel.ts
-import { useState, useEffect, useCallback } from "react";
+import { useEffect, useState, useCallback } from "react";
 import {
   collection,
   doc,
   getDoc,
   setDoc,
+  updateDoc,
   deleteDoc,
-  getDocs,
-  DocumentReference,
-  DocumentData,
-  QuerySnapshot,
 } from "firebase/firestore";
-import { Slide, generalSettings } from "@/types";
 import { db } from "@/lib/firebase";
+import { useRouter } from "next/navigation";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@/state/store";
+import { CarouselState, Slide, generalSettings } from "@/types";
+import { addAllSlides, setProperty } from "@/state/slice/carousel.slice";
 
-interface CarouselData {
-  slides: Slide[];
-  generalSettings: generalSettings;
-  background: {
-    color1: string;
-    color2: string;
-    color3: string;
-    color4: string;
-  };
-  textSettings: {
-    alignment: "left" | "center" | "right";
-    fontSize: number;
-    fontStyle: "normal" | "italic";
-    fontWeight: number;
-  };
-  layout: {
-    height: number;
-    width: number;
-    pattern: string;
-  };
-}
-
-const useFirestoreCarousel = () => {
-  const [loading, setLoading] = useState<boolean>(false);
+export const useCarouselManager = () => {
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [carouselData, setCarouselData] = useState<CarouselData | null>(null);
-  const [allCarousels, setAllCarousels] = useState<CarouselData[]>([]);
+  const [carousel, setCarousel] = useState<CarouselState | null>(null);
+  const router = useRouter();
+  const dispatch = useDispatch();
 
-  const getCarouselById = useCallback(async (id: string) => {
-    setLoading(true);
-    try {
-      const docRef: DocumentReference<DocumentData> = doc(db, "carousels", id);
-      const docSnap = await getDoc(docRef);
-      if (docSnap.exists()) {
-        setCarouselData(docSnap.data() as CarouselData);
-      } else {
-        setError("No such document!");
-      }
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Unknown error");
-    } finally {
-      setLoading(false);
-    }
-  }, []);
+  const { textSettings, layout, background, generalSettings, slides } =
+    useSelector((state: RootState) => state.slides);
+
+  const convertToFirestoreData = (
+    data: CarouselState
+  ): { [key: string]: any } => {
+    return {
+      textSettings: data.textSettings,
+      layout: data.layout,
+      background: data.background,
+      generalSettings: data.generalSettings,
+      slides: data.slides,
+    };
+  };
 
   const createOrUpdateCarousel = useCallback(
-    async (id: string, data: CarouselData) => {
+    async (id?: string) => {
       setLoading(true);
+      setError(null);
       try {
-        await setDoc(doc(db, "carousels", id), data);
+        if (id) {
+          // Update existing carousel
+          const docRef = doc(db, "carousels", id);
+          await updateDoc(
+            docRef,
+            convertToFirestoreData({
+              textSettings,
+              layout,
+              background,
+              generalSettings,
+              slides,
+            })
+          );
+          setCarousel({
+            textSettings,
+            layout,
+            background,
+            generalSettings,
+            slides,
+          });
+        } else {
+          // Create new carousel
+          const docRef = doc(collection(db, "carousels"));
+          await setDoc(
+            docRef,
+            convertToFirestoreData({
+              textSettings,
+              layout,
+              background,
+              generalSettings,
+              slides,
+            })
+          );
+          setCarousel({
+            textSettings,
+            layout,
+            background,
+            generalSettings,
+            slides,
+          });
+          router.push(`?id=${docRef.id}`); // Add the document ID to the URL
+        }
       } catch (err) {
-        setError(err instanceof Error ? err.message : "Unknown error");
+        setError("Failed to save carousel");
+        console.error("Error saving carousel:", err);
       } finally {
         setLoading(false);
       }
     },
-    []
+    [router, textSettings, layout, background, generalSettings, slides]
+  );
+
+  const getCarouselDetailsById = useCallback(
+    async (id: string) => {
+      setLoading(true);
+      setError(null);
+      try {
+        const docRef = doc(db, "carousels", id);
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+          const data = docSnap.data() as CarouselState;
+          setCarousel(data);
+
+          // Dispatch actions to update Redux store
+          dispatch(addAllSlides(data.slides));
+          dispatch(
+            setProperty({ key: "generalSettings", value: data.generalSettings })
+          );
+          dispatch(setProperty({ key: "background", value: data.background }));
+          dispatch(
+            setProperty({ key: "textSettings", value: data.textSettings })
+          );
+          dispatch(setProperty({ key: "layout", value: data.layout }));
+        } else {
+          setError("Carousel not found");
+        }
+      } catch (err) {
+        setError("Failed to fetch carousel details");
+        console.error("Error fetching carousel details:", err);
+      } finally {
+        setLoading(false);
+      }
+    },
+    [dispatch]
   );
 
   const deleteCarousel = useCallback(async (id: string) => {
     setLoading(true);
+    setError(null);
     try {
-      await deleteDoc(doc(db, "carousels", id));
+      const docRef = doc(db, "carousels", id);
+      await deleteDoc(docRef);
+      setCarousel(null);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Unknown error");
+      setError("Failed to delete carousel");
+      console.error("Error deleting carousel:", err);
     } finally {
       setLoading(false);
     }
   }, []);
 
-  const getAllCarousels = useCallback(async () => {
-    setLoading(true);
-    try {
-      const querySnapshot: QuerySnapshot<DocumentData> = await getDocs(collection(db, "carousels"));
-      const carousels: CarouselData[] = [];
-      querySnapshot.forEach((doc) => {
-        carousels.push(doc.data() as CarouselData);
-      });
-      setAllCarousels(carousels);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Unknown error");
-    } finally {
-      setLoading(false);
-    }
-  }, []);
+  // Fetch carousel details if id is provided
+ 
 
   return {
-    carouselData,
-    allCarousels,
     loading,
     error,
-    getCarouselById,
+    carousel,
     createOrUpdateCarousel,
+    getCarouselDetailsById,
     deleteCarousel,
-    getAllCarousels,
   };
 };
-
-export default useFirestoreCarousel;

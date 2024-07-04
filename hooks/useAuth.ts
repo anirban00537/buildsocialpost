@@ -135,11 +135,11 @@ const useAuthUser = () => {
     }
   );
 
-  useEffect(() => {
-    const randomPreset =
-      colorPresets[Math.floor(Math.random() * colorPresets.length)];
-    dispatch(setBackground(randomPreset));
-  }, [dispatch]);
+  // useEffect(() => {
+  //   const randomPreset =
+  //     colorPresets[Math.floor(Math.random() * colorPresets.length)];
+  //   dispatch(setBackground(randomPreset));
+  // }, [dispatch]);
 
   useEffect(() => {
     dispatch(setLoading(userLoading || subscriptionLoading));

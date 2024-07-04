@@ -1,3 +1,4 @@
+// state/slice/carousel.slice.ts
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { generalSettings, Slide } from "@/types";
 import { initialSlides } from "@/lib/data";
@@ -50,6 +51,10 @@ const initialState: CarouselState = {
   },
 };
 
+type UpdatePayload = {
+  key: keyof CarouselState;
+  value: any;
+};
 
 const carouselSlice = createSlice({
   name: "carousel",
@@ -122,6 +127,10 @@ const carouselSlice = createSlice({
     setPattern: (state, action: PayloadAction<string>) => {
       state.layout.pattern = action.payload;
     },
+    setProperty: (state, action: PayloadAction<UpdatePayload>) => {
+      const { key, value } = action.payload;
+      (state as any)[key] = value;
+    },
   },
 });
 
@@ -132,6 +141,7 @@ export const {
   updateSlide,
   updateGeneralSettings,
   addAllSlides,
+  setProperty,
   setTextSettings,
   setLayoutHeightAndWidth,
   setBackground,

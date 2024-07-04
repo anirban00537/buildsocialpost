@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 import {
   DropdownMenu,
   DropdownMenuItem,
@@ -16,39 +16,8 @@ import { useAuthUser, useLogout } from "@/hooks/useAuth";
 import useCarousel from "@/hooks/useCarousel";
 import { useSelector } from "react-redux";
 import { RootState } from "@/state/store";
-
-const colors: { [key: string]: string } = {
-  A: "#FFB6C1",
-  B: "#FF69B4",
-  C: "#FF1493",
-  D: "#C71585",
-  E: "#DB7093",
-  F: "#FF6347",
-  G: "#FF4500",
-  H: "#FF8C00",
-  I: "#FFD700",
-  J: "#ADFF2F",
-  K: "#7FFF00",
-  L: "#7CFC00",
-  M: "#00FA9A",
-  N: "#00FF7F",
-  O: "#3CB371",
-  P: "#20B2AA",
-  Q: "#00CED1",
-  R: "#1E90FF",
-  S: "#4682B4",
-  T: "#5F9EA0",
-  U: "#6A5ACD",
-  V: "#8A2BE2",
-  W: "#9400D3",
-  X: "#9932CC",
-  Y: "#8B008B",
-  Z: "#556B2F",
-};
-
-const getColorByAlphabet = (alphabet: string): string => {
-  return colors[alphabet.toUpperCase()] || "#000000"; // Default to black if not found
-};
+import { useSearchParams } from "next/navigation";
+import { useCarouselManager } from "@/hooks/useCarouselManager";
 
 const getInitials = (email: string): string => {
   return email ? email.charAt(0).toUpperCase() : "U";
@@ -57,11 +26,18 @@ const getInitials = (email: string): string => {
 const EditorNavbar: React.FC = () => {
   const { exportSlidesToPDF, exportSlidesToZip, pdfLoading, zipLoading } =
     useCarousel();
+  const { createOrUpdateCarousel, getCarouselDetailsById } =
+    useCarouselManager();
   const { logout } = useLogout();
   const user = useSelector((state: RootState) => state.user.userinfo);
   const initials = user?.email ? getInitials(user.email) : null;
-  const bgColor = initials ? getColorByAlphabet(initials) : "#000000"; // Default to black if no initials
-
+  const searchParams = useSearchParams();
+  const carouselId = searchParams.get("id");
+  useEffect(() => {
+    if (carouselId) {
+      getCarouselDetailsById(carouselId);
+    }
+  }, [carouselId]);
   return (
     <header className="bg-white sticky top-0 h-[65px] flex items-center justify-between border-b border-gray-200 z-40 px-4">
       <div className="flex items-center gap-4">
@@ -131,6 +107,15 @@ const EditorNavbar: React.FC = () => {
           )}
         </Button>
 
+        <Button
+          onClick={() => {
+            //@ts-ignore
+            createOrUpdateCarousel(carouselId);
+          }}
+        >
+          Save Carousel
+        </Button>
+
         <SubscriptionInfo />
         {user && user.email ? (
           <DropdownMenu>
@@ -143,10 +128,7 @@ const EditorNavbar: React.FC = () => {
                     alt="User Avatar"
                   />
                 ) : (
-                  <div
-                    className="w-8 h-8 rounded-full flex items-center justify-center text-white"
-                    style={{ backgroundColor: bgColor }}
-                  >
+                  <div className="w-8 h-8 rounded-full flex items-center justify-center text-white">
                     {initials}
                   </div>
                 )}
