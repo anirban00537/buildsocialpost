@@ -50,8 +50,8 @@ exports.generatePdf = functions.https.onRequest((req, res) => {
               body, html {
                 margin: 0;
                 padding: 0;
-                width: ${layout.width}px;
-                height: ${layout.height}px;
+                width: ${layout.width + 80}px;
+                height: ${layout.height + 80}px;
                 font-family: 'Poppins', sans-serif;
               }
               .slide {
