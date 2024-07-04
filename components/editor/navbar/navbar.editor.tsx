@@ -8,14 +8,14 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { User, LogOut, CreditCard } from "lucide-react";
+import { User, LogOut, CreditCard, List } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import SubscriptionInfo from "@/components/subscription/status";
 import useCarousel from "@/hooks/useCarousel";
 import { useSelector } from "react-redux";
 import { RootState } from "@/state/store";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import { useCarouselManager } from "@/hooks/useCarouselManager";
 import { useLogout } from "@/hooks/useAuth";
 
@@ -29,6 +29,8 @@ const EditorNavbar: React.FC = () => {
   const {
     createOrUpdateCarousel,
     getCarouselDetailsById,
+    getAllCarousels,
+    carousels,
     loading: saveLoading,
   } = useCarouselManager();
   const { logout } = useLogout();
@@ -36,6 +38,7 @@ const EditorNavbar: React.FC = () => {
   const initials = user?.email ? getInitials(user.email) : null;
   const searchParams = useSearchParams();
   const carouselId = searchParams.get("id");
+  const router = useRouter();
 
   useEffect(() => {
     if (carouselId) {
@@ -43,12 +46,39 @@ const EditorNavbar: React.FC = () => {
     }
   }, [carouselId, getCarouselDetailsById]);
 
+  useEffect(() => {
+    getAllCarousels();
+  }, [getAllCarousels]);
+
+  const handleCarouselSelect = (id: string) => {
+    router.push(`?id=${id}`);
+  };
+
   return (
     <header className="bg-white sticky top-0 h-[65px] flex items-center justify-between border-b border-gray-200 z-40 px-4">
       <div className="flex items-center gap-4">
         <Link href="/">
           <img src="/logo.svg" alt="Logo" className="h-14 object-cover" />
         </Link>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="outline">
+              <List className="w-4 h-4 mr-2" /> Carousels
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent className="w-56">
+            <DropdownMenuLabel>Select a Carousel</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            {carousels.map((carousel) => (
+              <DropdownMenuItem
+                key={carousel.id}
+                onClick={() => handleCarouselSelect(carousel.id)}
+              >
+                {carousel.data.generalSettings.name || "Unnamed Carousel"}
+              </DropdownMenuItem>
+            ))}
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
 
       <div className="ml-auto flex items-center gap-4">

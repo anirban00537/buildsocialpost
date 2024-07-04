@@ -3,9 +3,11 @@ import {
   collection,
   doc,
   getDoc,
+  getDocs,
   setDoc,
   updateDoc,
   deleteDoc,
+  query,
 } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { useRouter } from "next/navigation";
@@ -18,6 +20,9 @@ export const useCarouselManager = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [carousel, setCarousel] = useState<CarouselState | null>(null);
+  const [carousels, setCarousels] = useState<
+    { id: string; data: CarouselState }[]
+  >([]);
   const router = useRouter();
   const dispatch = useDispatch();
 
@@ -145,12 +150,33 @@ export const useCarouselManager = () => {
     }
   }, []);
 
+  const getAllCarousels = useCallback(async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const q = query(collection(db, "carousels"));
+      const querySnapshot = await getDocs(q);
+      const carouselsList = querySnapshot.docs.map((doc) => ({
+        id: doc.id,
+        data: doc.data() as CarouselState,
+      }));
+      setCarousels(carouselsList);
+    } catch (err) {
+      setError("Failed to fetch carousels");
+      console.error("Error fetching carousels:", err);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
   return {
     loading,
     error,
     carousel,
+    carousels,
     createOrUpdateCarousel,
     getCarouselDetailsById,
     deleteCarousel,
+    getAllCarousels,
   };
 };
