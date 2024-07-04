@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from "react";
+import { useState, useCallback } from "react";
 import {
   collection,
   doc,
@@ -11,7 +11,7 @@ import { db } from "@/lib/firebase";
 import { useRouter } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/state/store";
-import { CarouselState, Slide, generalSettings } from "@/types";
+import { CarouselState } from "@/types";
 import { addAllSlides, setProperty } from "@/state/slice/carousel.slice";
 
 export const useCarouselManager = () => {
@@ -107,7 +107,10 @@ export const useCarouselManager = () => {
           // Dispatch actions to update Redux store
           dispatch(addAllSlides(data.slides));
           dispatch(
-            setProperty({ key: "generalSettings", value: data.generalSettings })
+            setProperty({
+              key: "generalSettings",
+              value: data.generalSettings,
+            })
           );
           dispatch(setProperty({ key: "background", value: data.background }));
           dispatch(
@@ -141,9 +144,6 @@ export const useCarouselManager = () => {
       setLoading(false);
     }
   }, []);
-
-  // Fetch carousel details if id is provided
- 
 
   return {
     loading,

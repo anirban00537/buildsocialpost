@@ -12,12 +12,12 @@ import { User, LogOut, CreditCard } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import SubscriptionInfo from "@/components/subscription/status";
-import { useAuthUser, useLogout } from "@/hooks/useAuth";
 import useCarousel from "@/hooks/useCarousel";
 import { useSelector } from "react-redux";
 import { RootState } from "@/state/store";
 import { useSearchParams } from "next/navigation";
 import { useCarouselManager } from "@/hooks/useCarouselManager";
+import { useLogout } from "@/hooks/useAuth";
 
 const getInitials = (email: string): string => {
   return email ? email.charAt(0).toUpperCase() : "U";
@@ -26,18 +26,23 @@ const getInitials = (email: string): string => {
 const EditorNavbar: React.FC = () => {
   const { exportSlidesToPDF, exportSlidesToZip, pdfLoading, zipLoading } =
     useCarousel();
-  const { createOrUpdateCarousel, getCarouselDetailsById } =
-    useCarouselManager();
+  const {
+    createOrUpdateCarousel,
+    getCarouselDetailsById,
+    loading: saveLoading,
+  } = useCarouselManager();
   const { logout } = useLogout();
   const user = useSelector((state: RootState) => state.user.userinfo);
   const initials = user?.email ? getInitials(user.email) : null;
   const searchParams = useSearchParams();
   const carouselId = searchParams.get("id");
+
   useEffect(() => {
     if (carouselId) {
       getCarouselDetailsById(carouselId);
     }
-  }, [carouselId]);
+  }, [carouselId, getCarouselDetailsById]);
+
   return (
     <header className="bg-white sticky top-0 h-[65px] flex items-center justify-between border-b border-gray-200 z-40 px-4">
       <div className="flex items-center gap-4">
@@ -47,7 +52,10 @@ const EditorNavbar: React.FC = () => {
       </div>
 
       <div className="ml-auto flex items-center gap-4">
-        <Button onClick={exportSlidesToPDF} disabled={pdfLoading}>
+        <Button
+          onClick={exportSlidesToPDF}
+          disabled={pdfLoading || saveLoading}
+        >
           {pdfLoading ? (
             <div className="flex items-center gap-3">
               <svg
@@ -77,7 +85,10 @@ const EditorNavbar: React.FC = () => {
           )}
         </Button>
 
-        <Button onClick={exportSlidesToZip} disabled={zipLoading}>
+        <Button
+          onClick={exportSlidesToZip}
+          disabled={zipLoading || saveLoading}
+        >
           {zipLoading ? (
             <div className="flex items-center gap-3">
               <svg
@@ -109,11 +120,38 @@ const EditorNavbar: React.FC = () => {
 
         <Button
           onClick={() => {
-            //@ts-ignore
+            // @ts-ignore
             createOrUpdateCarousel(carouselId);
           }}
+          disabled={saveLoading}
         >
-          Save Carousel
+          {saveLoading ? (
+            <div className="flex items-center gap-3">
+              <svg
+                className="animate-spin h-5 w-5 mr-3"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <circle
+                  className="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  strokeWidth="4"
+                ></circle>
+                <path
+                  className="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                ></path>
+              </svg>
+              Saving...
+            </div>
+          ) : (
+            "Save Carousel"
+          )}
         </Button>
 
         <SubscriptionInfo />
