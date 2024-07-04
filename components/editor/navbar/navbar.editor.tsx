@@ -1,5 +1,6 @@
+// components/EditorNavbar.tsx
 "use client";
-import React, { useEffect } from "react";
+import React, { Suspense, useEffect } from "react";
 import {
   DropdownMenu,
   DropdownMenuItem,
@@ -23,7 +24,7 @@ const getInitials = (email: string): string => {
   return email ? email.charAt(0).toUpperCase() : "U";
 };
 
-const EditorNavbar: React.FC = () => {
+const EditorNavbarContent: React.FC = () => {
   const { exportSlidesToPDF, exportSlidesToZip, pdfLoading, zipLoading } =
     useCarousel();
   const {
@@ -226,6 +227,14 @@ const EditorNavbar: React.FC = () => {
         )}
       </div>
     </header>
+  );
+};
+
+const EditorNavbar: React.FC = () => {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <EditorNavbarContent />
+    </Suspense>
   );
 };
 
