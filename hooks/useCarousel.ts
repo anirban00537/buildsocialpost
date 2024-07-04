@@ -4,6 +4,8 @@ import { RootState } from "@/state/store";
 import JSZip from "jszip";
 import { saveAs } from "file-saver";
 import { Slide } from "@/types";
+import { jsPDF } from "jspdf";
+import html2canvas from "html2canvas";
 
 import {
   insertSlide,
@@ -111,31 +113,42 @@ const useCarousel = () => {
 
   const exportSlidesToPDF = useCallback(async () => {
     setPdfLoading(true);
-    try {
-      const slideIds = slides.map((_, index) => `slide-${index}`);
-      const response = await fetch(
-        "https://us-central1-buildcarousel-4e9ec.cloudfunctions.net/generatePdf",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ slideIds, layout }),
+    const pdf = new jsPDF("p", "px", [layout.width, layout.height]);
+    const scaleFactor = 3; // Adjust the scale factor for higher quality
+
+    for (let i = 0; i < slides.length; i++) {
+      const slideElement = document.getElementById(`slide-${i}`);
+      if (slideElement) {
+        try {
+          const pngDataUrl = await toPng(slideElement, {
+            cacheBust: true,
+            pixelRatio: scaleFactor,
+          });
+
+          if (i !== 0) {
+            pdf.addPage();
+          }
+          pdf.addImage(
+            pngDataUrl,
+            "PNG",
+            0,
+            0,
+            layout.width,
+            layout.height,
+            undefined,
+            "FAST" // Use FAST compression to reduce file size
+          );
+        } catch (error) {
+          console.error("Failed to export slide as image", error);
         }
-      );
-
-      if (!response.ok) {
-        throw new Error("Failed to generate PDF");
+      } else {
+        console.warn(`Slide element with ID slide-${i} not found`);
       }
-
-      const blob = await response.blob();
-      saveAs(blob, "carousel_slides.pdf");
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setPdfLoading(false);
     }
-  }, [slides, layout]);
+
+    pdf.save("carousel_slides.pdf");
+    setPdfLoading(false);
+  }, [slides, layout.width, layout.height]);
 
   return {
     swiperRef,
