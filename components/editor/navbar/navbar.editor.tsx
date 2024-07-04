@@ -1,6 +1,5 @@
-// components/EditorNavbar.tsx
 "use client";
-import React, { Suspense, useEffect } from "react";
+import React, { Suspense, useEffect, useState } from "react";
 import {
   DropdownMenu,
   DropdownMenuItem,
@@ -9,16 +8,30 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { User, LogOut, CreditCard, List } from "lucide-react";
+import {
+  User,
+  LogOut,
+  CreditCard,
+  List,
+  Download,
+  ArrowDown,
+  SquareArrowDown,
+  ChevronsUpDown,
+  Edit,
+  FileText,
+  Image,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import SubscriptionInfo from "@/components/subscription/status";
 import useCarousel from "@/hooks/useCarousel";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/state/store";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useCarouselManager } from "@/hooks/useCarouselManager";
 import { useLogout } from "@/hooks/useAuth";
+import { setName } from "@/state/slice/carousel.slice";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 
 const getInitials = (email: string): string => {
   return email ? email.charAt(0).toUpperCase() : "U";
@@ -36,10 +49,14 @@ const EditorNavbarContent: React.FC = () => {
   } = useCarouselManager();
   const { logout } = useLogout();
   const user = useSelector((state: RootState) => state.user.userinfo);
+  const { name } = useSelector((state: RootState) => state.slides);
   const initials = user?.email ? getInitials(user.email) : null;
   const searchParams = useSearchParams();
   const carouselId = searchParams.get("id");
   const router = useRouter();
+  const dispatch = useDispatch();
+  const [carouselName, setCarouselName] = useState("");
+  const [editCarouselId, setEditCarouselId] = useState<string | null>(null);
 
   useEffect(() => {
     if (carouselId) {
@@ -55,111 +72,114 @@ const EditorNavbarContent: React.FC = () => {
     router.push(`?id=${id}`);
   };
 
+  const handleEditClick = (id: string, currentName: string) => {
+    setEditCarouselId(id);
+    setCarouselName(currentName);
+  };
+
+  const handleSaveEdit = () => {
+    if (editCarouselId) {
+      createOrUpdateCarousel(carouselName, editCarouselId);
+      setEditCarouselId(null);
+    }
+  };
+
   return (
-    <header className="bg-white sticky top-0 h-[65px] flex items-center justify-between border-b border-gray-200 z-40 px-4">
+    <header className="bg-white sticky top-0 h-[65px] flex items-center justify-between border-b border-gray-200 z-40 px-4 shadow-sm">
       <div className="flex items-center gap-4">
         <Link href="/">
           <img src="/logo.svg" alt="Logo" className="h-14 object-cover" />
         </Link>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline">
-              <List className="w-4 h-4 mr-2" /> Carousels
+            <Button
+              variant="ghost"
+              className="border border-gray-200 flex items-center gap-2 hover:bg-primary/50"
+            >
+              <ChevronsUpDown className="w-4 h-4 text-gray-400" />
+              {name || "Unnamed Carousel"}
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent className="w-56">
             <DropdownMenuLabel>Select a Carousel</DropdownMenuLabel>
             <DropdownMenuSeparator />
             {carousels.map((carousel) => (
-              <DropdownMenuItem
+              <div
                 key={carousel.id}
-                onClick={() => handleCarouselSelect(carousel.id)}
+                className="flex justify-between items-center"
               >
-                {carousel.data.generalSettings.name || "Unnamed Carousel"}
-              </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={() => handleCarouselSelect(carousel.id)}
+                >
+                  {carousel.data.name || "Unnamed Carousel"}
+                </DropdownMenuItem>
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <Button
+                      variant="ghost"
+                      className="p-2"
+                      onClick={() =>
+                        handleEditClick(carousel.id, carousel.data.name || "")
+                      }
+                    >
+                      <Edit className="w-4 h-4 text-gray-400" />
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent>
+                    <div className="flex flex-col gap-4">
+                      <h2 className="text-lg font-medium">
+                        Edit Carousel Name
+                      </h2>
+                      <input
+                        type="text"
+                        value={carouselName}
+                        onChange={(e) => setCarouselName(e.target.value)}
+                        className="border px-2 py-1 rounded"
+                        placeholder="Carousel Name"
+                      />
+                      <Button onClick={handleSaveEdit} disabled={saveLoading}>
+                        Save
+                      </Button>
+                    </div>
+                  </DialogContent>
+                </Dialog>
+              </div>
             ))}
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
 
       <div className="ml-auto flex items-center gap-4">
-        <Button
-          onClick={exportSlidesToPDF}
-          disabled={pdfLoading || saveLoading}
-        >
-          {pdfLoading ? (
-            <div className="flex items-center gap-3">
-              <svg
-                className="animate-spin h-5 w-5 mr-3"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-              >
-                <circle
-                  className="opacity-25"
-                  cx="12"
-                  cy="12"
-                  r="10"
-                  stroke="currentColor"
-                  strokeWidth="4"
-                ></circle>
-                <path
-                  className="opacity-75"
-                  fill="currentColor"
-                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                ></path>
-              </svg>
-              Downloading PDF...
-            </div>
-          ) : (
-            "Download PDF"
-          )}
-        </Button>
-
-        <Button
-          onClick={exportSlidesToZip}
-          disabled={zipLoading || saveLoading}
-        >
-          {zipLoading ? (
-            <div className="flex items-center gap-3">
-              <svg
-                className="animate-spin h-5 w-5 mr-3"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-              >
-                <circle
-                  className="opacity-25"
-                  cx="12"
-                  cy="12"
-                  r="10"
-                  stroke="currentColor"
-                  strokeWidth="4"
-                ></circle>
-                <path
-                  className="opacity-75"
-                  fill="currentColor"
-                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                ></path>
-              </svg>
-              Downloading Zip...
-            </div>
-          ) : (
-            "Download Zip"
-          )}
-        </Button>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="outline">
+              <Download className="w-4 h-4 mr-2" /> Download
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent className="w-56">
+            <DropdownMenuItem onClick={exportSlidesToPDF} disabled={pdfLoading}>
+              <FileText className="w-4 h-4 mr-2" />
+              {pdfLoading ? "Downloading PDF..." : "Download PDF"}
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={exportSlidesToZip} disabled={zipLoading}>
+              <Image className="w-4 h-4 mr-2" />
+              {zipLoading ? "Downloading Zip..." : "Download Zip"}
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
 
         <Button
           onClick={() => {
-            // @ts-ignore
-            createOrUpdateCarousel(carouselId);
+            //@ts-ignore
+            createOrUpdateCarousel(name, carouselId);
           }}
           disabled={saveLoading}
+          className="flex items-center gap-2"
         >
           {saveLoading ? (
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2">
               <svg
-                className="animate-spin h-5 w-5 mr-3"
+                className="animate-spin h-5 w-5"
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
                 viewBox="0 0 24 24"
@@ -197,7 +217,7 @@ const EditorNavbarContent: React.FC = () => {
                     alt="User Avatar"
                   />
                 ) : (
-                  <div className="w-8 h-8 rounded-full flex items-center justify-center text-white">
+                  <div className="w-8 h-8 rounded-full flex items-center justify-center bg-primary text-white">
                     {initials}
                   </div>
                 )}
@@ -206,22 +226,25 @@ const EditorNavbarContent: React.FC = () => {
             <DropdownMenuContent className="w-56">
               <DropdownMenuLabel>{user.displayName}</DropdownMenuLabel>
               <DropdownMenuSeparator />
-              <DropdownMenuItem>
-                <User className="w-4 h-4 mr-2" />
+              <DropdownMenuItem className="flex items-center gap-2">
+                <User className="w-4 h-4" />
                 Profile
               </DropdownMenuItem>
-              <DropdownMenuItem>
-                <CreditCard className="w-4 h-4 mr-2" />
+              <DropdownMenuItem className="flex items-center gap-2">
+                <CreditCard className="w-4 h-4" />
                 Billing
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => logout()}>
-                <LogOut className="w-4 h-4 mr-2" />
+              <DropdownMenuItem
+                onClick={() => logout()}
+                className="flex items-center gap-2"
+              >
+                <LogOut className="w-4 h-4" />
                 Logout
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         ) : (
-          <Link href="/login" className="gap-1.5 text-sm">
+          <Link href="/login" className="text-sm">
             <Button variant="outline">Sign in</Button>
           </Link>
         )}

@@ -4,6 +4,7 @@ import { generalSettings, Slide } from "@/types";
 import { initialSlides } from "@/lib/data";
 
 interface CarouselState {
+  name: string; // Add name property
   slides: Slide[];
   generalSettings: generalSettings;
   background: {
@@ -26,6 +27,7 @@ interface CarouselState {
 }
 
 const initialState: CarouselState = {
+  name: "Default Carousel", // Initial name
   slides: initialSlides,
   generalSettings: {
     headshotUrl: "https://avatars.githubusercontent.com/u/11111111?v=4",
@@ -42,7 +44,7 @@ const initialState: CarouselState = {
     alignment: "left",
     fontSize: 14,
     fontStyle: "normal",
-    fontWeight: 400, // Changed from "bold" to 400
+    fontWeight: 400,
   },
   layout: {
     height: 640,
@@ -131,6 +133,9 @@ const carouselSlice = createSlice({
       const { key, value } = action.payload;
       (state as any)[key] = value;
     },
+    setName: (state, action: PayloadAction<string>) => {
+      state.name = action.payload;
+    },
   },
 });
 
@@ -146,5 +151,6 @@ export const {
   setLayoutHeightAndWidth,
   setBackground,
   setPattern,
+  setName,
 } = carouselSlice.actions;
 export default carouselSlice.reducer;

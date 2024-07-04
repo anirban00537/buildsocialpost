@@ -8,6 +8,7 @@ import {
   updateDoc,
   deleteDoc,
   query,
+  where,
 } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { useRouter } from "next/navigation";
@@ -25,14 +26,17 @@ export const useCarouselManager = () => {
   >([]);
   const router = useRouter();
   const dispatch = useDispatch();
+  const user = useSelector((state: RootState) => state.user.userinfo);
 
-  const { textSettings, layout, background, generalSettings, slides } =
+  const { textSettings, layout, background, generalSettings, slides, name } =
     useSelector((state: RootState) => state.slides);
 
   const convertToFirestoreData = (
     data: CarouselState
   ): { [key: string]: any } => {
     return {
+      userId: user?.uid,
+      name: data.name,
       textSettings: data.textSettings,
       layout: data.layout,
       background: data.background,
@@ -42,9 +46,16 @@ export const useCarouselManager = () => {
   };
 
   const createOrUpdateCarousel = useCallback(
-    async (id?: string) => {
+    async (newName?: string, id?: string) => {
       setLoading(true);
       setError(null);
+
+      if (!user?.uid) {
+        setError("User not authenticated");
+        setLoading(false);
+        return;
+      }
+
       try {
         if (id) {
           // Update existing carousel
@@ -52,6 +63,7 @@ export const useCarouselManager = () => {
           await updateDoc(
             docRef,
             convertToFirestoreData({
+              name: newName || name,
               textSettings,
               layout,
               background,
@@ -60,6 +72,7 @@ export const useCarouselManager = () => {
             })
           );
           setCarousel({
+            name: newName || name,
             textSettings,
             layout,
             background,
@@ -72,6 +85,7 @@ export const useCarouselManager = () => {
           await setDoc(
             docRef,
             convertToFirestoreData({
+              name: newName || name,
               textSettings,
               layout,
               background,
@@ -80,6 +94,7 @@ export const useCarouselManager = () => {
             })
           );
           setCarousel({
+            name: newName || name,
             textSettings,
             layout,
             background,
@@ -95,7 +110,16 @@ export const useCarouselManager = () => {
         setLoading(false);
       }
     },
-    [router, textSettings, layout, background, generalSettings, slides]
+    [
+      router,
+      name,
+      textSettings,
+      layout,
+      background,
+      generalSettings,
+      slides,
+      user?.uid,
+    ]
   );
 
   const getCarouselDetailsById = useCallback(
@@ -110,6 +134,7 @@ export const useCarouselManager = () => {
           setCarousel(data);
 
           // Dispatch actions to update Redux store
+          dispatch(setProperty({ key: "name", value: data.name }));
           dispatch(addAllSlides(data.slides));
           dispatch(
             setProperty({
@@ -154,20 +179,27 @@ export const useCarouselManager = () => {
     setLoading(true);
     setError(null);
     try {
-      const q = query(collection(db, "carousels"));
-      const querySnapshot = await getDocs(q);
-      const carouselsList = querySnapshot.docs.map((doc) => ({
-        id: doc.id,
-        data: doc.data() as CarouselState,
-      }));
-      setCarousels(carouselsList);
+      if (user?.uid) {
+        const q = query(
+          collection(db, "carousels"),
+          where("userId", "==", user.uid)
+        );
+        const querySnapshot = await getDocs(q);
+        const carouselsList = querySnapshot.docs.map((doc) => ({
+          id: doc.id,
+          data: doc.data() as CarouselState,
+        }));
+        setCarousels(carouselsList);
+      } else {
+        setError("User not authenticated");
+      }
     } catch (err) {
       setError("Failed to fetch carousels");
       console.error("Error fetching carousels:", err);
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [user?.uid]);
 
   return {
     loading,

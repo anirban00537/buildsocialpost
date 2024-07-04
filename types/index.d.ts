@@ -35,6 +35,7 @@ export interface IntroSlide {
   imageUrl: string | null;
 }
 export interface CarouselState {
+  name: string;
   slides: Slide[];
   generalSettings: generalSettings;
   background: {

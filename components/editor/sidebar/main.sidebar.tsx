@@ -17,7 +17,7 @@ const MainSidebar: React.FC = () => {
 
   return (
     <aside className="flex flex-col md:flex-row h-screen w-full md:w-[420px] bg-gray-50">
-      <div className="md:sticky md:top-0 w-full md:w-[100px] order-first md:order-first bg-white shadow-md">
+      <div className="md:sticky md:top-0 w-full md:w-[70px] order-first md:order-first bg-white shadow-md">
         <div className="flex md:flex-col w-full h-full justify-start items-center md:border-r border-b md:border-b-0 border-gray-200">
           {[
             { name: "ai-settings", icon: <Settings size={24} /> },
