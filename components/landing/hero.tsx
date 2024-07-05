@@ -136,7 +136,8 @@ const Hero = () => {
             loop
           >
             <source
-              src="https://firebasestorage.googleapis.com/v0/b/buildcarousel-4e9ec.appspot.com/o/Untitled%20video%20-%20Made%20with%20Clipchamp%20(2).mp4?alt=media&token=9487d6dc-20d9-4f06-ae43-ee4f6a8055e1"
+              // src="https://firebasestorage.googleapis.com/v0/b/buildcarousel-4e9ec.appspot.com/o/Untitled%20video%20-%20Made%20with%20Clipchamp%20(2).mp4?alt=media&token=9487d6dc-20d9-4f06-ae43-ee4f6a8055e1"
+              src="/intro.mp4"
               type="video/mp4"
             />
             Your browser does not support the video tag.
