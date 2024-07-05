@@ -12,10 +12,7 @@ import {
   User,
   LogOut,
   CreditCard,
-  List,
   Download,
-  ArrowDown,
-  SquareArrowDown,
   ChevronsUpDown,
   Edit,
   FileText,
@@ -30,14 +27,13 @@ import { RootState } from "@/state/store";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useCarouselManager } from "@/hooks/useCarouselManager";
 import { useLogout } from "@/hooks/useAuth";
-import { setName } from "@/state/slice/carousel.slice";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 
 const getInitials = (email: string): string => {
   return email ? email.charAt(0).toUpperCase() : "U";
 };
 
-const EditorNavbarContent: React.FC = () => {
+const EditorNavbar: React.FC = () => {
   const { exportSlidesToPDF, exportSlidesToZip, pdfLoading, zipLoading } =
     useCarousel();
   const {
@@ -250,14 +246,6 @@ const EditorNavbarContent: React.FC = () => {
         )}
       </div>
     </header>
-  );
-};
-
-const EditorNavbar: React.FC = () => {
-  return (
-    <Suspense fallback={<div>Loading...</div>}>
-      <EditorNavbarContent />
-    </Suspense>
   );
 };
 
