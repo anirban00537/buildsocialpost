@@ -28,6 +28,7 @@ import { useCarouselManager } from "@/hooks/useCarouselManager";
 import { useLogout } from "@/hooks/useAuth";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import useCarousel from "@/hooks/useCarousel";
+import { setName } from "@/state/slice/carousel.slice";
 
 const getInitials = (email: string): string =>
   email ? email.charAt(0).toUpperCase() : "U";
@@ -50,8 +51,8 @@ const EditorNavbar: FC = () => {
   const carouselId = searchParams.get("id");
   const router = useRouter();
   const dispatch = useDispatch();
-  const [carouselName, setCarouselName] = useState("");
   const [editCarouselId, setEditCarouselId] = useState<string | null>(null);
+  const [isViewAllModalOpen, setIsViewAllModalOpen] = useState(false);
 
   useEffect(() => {
     if (carouselId) getCarouselDetailsById(carouselId);
@@ -65,14 +66,11 @@ const EditorNavbar: FC = () => {
     router.push(`?id=${id}`);
   };
 
-  const handleEditClick = (id: string, currentName: string) => {
-    setEditCarouselId(id);
-    setCarouselName(currentName);
-  };
+ 
 
   const handleSaveEdit = () => {
     if (editCarouselId) {
-      createOrUpdateCarousel(carouselName, editCarouselId);
+      createOrUpdateCarousel(name, editCarouselId);
       setEditCarouselId(null);
     }
   };
@@ -94,50 +92,16 @@ const EditorNavbar: FC = () => {
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent className="w-56">
-            <DropdownMenuLabel>Select a Carousel</DropdownMenuLabel>
+            <DropdownMenuItem onClick={() => setIsViewAllModalOpen(true)}>
+              View All Carousels
+            </DropdownMenuItem>
             <DropdownMenuSeparator />
-            {carousels.map((carousel) => (
-              <div
-                key={carousel.id}
-                className="flex justify-between items-center"
-              >
-                <DropdownMenuItem
-                  onClick={() => handleCarouselSelect(carousel.id)}
-                >
-                  {carousel.data.name || "Unnamed Carousel"}
-                </DropdownMenuItem>
-                <Dialog>
-                  <DialogTrigger asChild>
-                    <Button
-                      variant="ghost"
-                      className="p-2"
-                      onClick={() =>
-                        handleEditClick(carousel.id, carousel.data.name || "")
-                      }
-                    >
-                      <Edit className="w-4 h-4 text-gray-400" />
-                    </Button>
-                  </DialogTrigger>
-                  <DialogContent>
-                    <div className="flex flex-col gap-4">
-                      <h2 className="text-lg font-medium">
-                        Edit Carousel Name
-                      </h2>
-                      <input
-                        type="text"
-                        value={carouselName}
-                        onChange={(e) => setCarouselName(e.target.value)}
-                        className="border px-2 py-1 rounded"
-                        placeholder="Carousel Name"
-                      />
-                      <Button onClick={handleSaveEdit} disabled={saveLoading}>
-                        Save
-                      </Button>
-                    </div>
-                  </DialogContent>
-                </Dialog>
-              </div>
-            ))}
+            <DropdownMenuItem
+              onClick={() => setEditCarouselId(carouselId ?? "")}
+            >
+              Edit Carousel
+            </DropdownMenuItem>
+            <DropdownMenuItem>Create New Carousel</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
@@ -239,6 +203,51 @@ const EditorNavbar: FC = () => {
           </Link>
         )}
       </div>
+
+      {/* View All Carousels Modal */}
+      <Dialog open={isViewAllModalOpen} onOpenChange={setIsViewAllModalOpen}>
+        <DialogContent>
+          <div className="flex flex-col gap-4">
+            <h2 className="text-lg font-medium">All Carousels</h2>
+            {carousels.map((carousel) => (
+              <div
+                key={carousel.id}
+                className="flex justify-between items-center"
+              >
+                <span>{carousel.data.name || "Unnamed Carousel"}</span>
+                <Button
+                  variant="ghost"
+                  onClick={() => handleCarouselSelect(carousel.id)}
+                >
+                  Open
+                </Button>
+              </div>
+            ))}
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Edit Carousel Modal */}
+      <Dialog
+        open={!!editCarouselId}
+        onOpenChange={() => setEditCarouselId(null)}
+      >
+        <DialogContent>
+          <div className="flex flex-col gap-4">
+            <h2 className="text-lg font-medium">Edit Carousel Name</h2>
+            <input
+              type="text"
+              value={name}
+              onChange={(e) => dispatch(setName(e.target.value))}
+              className="border px-2 py-1 rounded"
+              placeholder="Carousel Name"
+            />
+            <Button onClick={handleSaveEdit} disabled={saveLoading}>
+              Save
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </header>
   );
 };
