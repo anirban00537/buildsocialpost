@@ -14,7 +14,7 @@ import { db } from "@/lib/firebase";
 import { useRouter } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/state/store";
-import { CarouselState } from "@/types";
+import { CarouselState, FirestoreCarouselState } from "@/types";
 import { addAllSlides, setProperty } from "@/state/slice/carousel.slice";
 
 export const useCarouselManager = () => {
@@ -32,18 +32,17 @@ export const useCarouselManager = () => {
     useSelector((state: RootState) => state.slides);
 
   const convertToFirestoreData = (
-    data: CarouselState
-  ): { [key: string]: any } => {
-    return {
-      userId: user?.uid,
-      name: data.name,
-      textSettings: data.textSettings,
-      layout: data.layout,
-      background: data.background,
-      generalSettings: data.generalSettings,
-      slides: data.slides,
-    };
-  };
+    data: CarouselState,
+    userId: string
+  ): FirestoreCarouselState => ({
+    userId,
+    name: data.name,
+    textSettings: data.textSettings,
+    layout: data.layout,
+    background: data.background,
+    generalSettings: data.generalSettings,
+    slides: data.slides,
+  });
 
   const createOrUpdateCarousel = useCallback(
     async (newName?: string, id?: string) => {
@@ -56,53 +55,41 @@ export const useCarouselManager = () => {
         return;
       }
 
+      const carouselData: CarouselState = {
+        name: newName || name,
+        textSettings,
+        layout,
+        background,
+        generalSettings,
+        slides,
+      };
+
       try {
+        const firestoreData = convertToFirestoreData(carouselData, user.uid);
+
+        let docRef;
         if (id) {
           // Update existing carousel
-          const docRef = doc(db, "carousels", id);
-          await updateDoc(
-            docRef,
-            convertToFirestoreData({
-              name: newName || name,
-              textSettings,
-              layout,
-              background,
-              generalSettings,
-              slides,
-            })
-          );
-          setCarousel({
-            name: newName || name,
-            textSettings,
-            layout,
-            background,
-            generalSettings,
-            slides,
-          });
+          docRef = doc(db, "carousels", id);
+          await updateDoc(docRef, { ...firestoreData });
         } else {
           // Create new carousel
-          const docRef = doc(collection(db, "carousels"));
-          await setDoc(
-            docRef,
-            convertToFirestoreData({
-              name: newName || name,
-              textSettings,
-              layout,
-              background,
-              generalSettings,
-              slides,
-            })
-          );
-          setCarousel({
-            name: newName || name,
-            textSettings,
-            layout,
-            background,
-            generalSettings,
-            slides,
-          });
+          docRef = doc(collection(db, "carousels"));
+          await setDoc(docRef, { ...firestoreData });
           router.push(`?id=${docRef.id}`); // Add the document ID to the URL
         }
+
+        // Update the carousel list
+        const updatedCarousel = { id: docRef.id, data: carouselData };
+        setCarousels((prevCarousels) =>
+          id
+            ? prevCarousels.map((carousel) =>
+                carousel.id === id ? updatedCarousel : carousel
+              )
+            : [...prevCarousels, updatedCarousel]
+        );
+
+        setCarousel(carouselData);
       } catch (err) {
         setError("Failed to save carousel");
         console.error("Error saving carousel:", err);
@@ -111,14 +98,14 @@ export const useCarouselManager = () => {
       }
     },
     [
-      router,
+      user?.uid,
       name,
       textSettings,
       layout,
       background,
       generalSettings,
       slides,
-      user?.uid,
+      router,
     ]
   );
 
@@ -137,10 +124,7 @@ export const useCarouselManager = () => {
           dispatch(setProperty({ key: "name", value: data.name }));
           dispatch(addAllSlides(data.slides));
           dispatch(
-            setProperty({
-              key: "generalSettings",
-              value: data.generalSettings,
-            })
+            setProperty({ key: "generalSettings", value: data.generalSettings })
           );
           dispatch(setProperty({ key: "background", value: data.background }));
           dispatch(
@@ -167,6 +151,9 @@ export const useCarouselManager = () => {
       const docRef = doc(db, "carousels", id);
       await deleteDoc(docRef);
       setCarousel(null);
+      setCarousels((prevCarousels) =>
+        prevCarousels.filter((carousel) => carousel.id !== id)
+      );
     } catch (err) {
       setError("Failed to delete carousel");
       console.error("Error deleting carousel:", err);

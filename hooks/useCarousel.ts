@@ -5,8 +5,7 @@ import JSZip from "jszip";
 import { saveAs } from "file-saver";
 import { Slide } from "@/types";
 import { jsPDF } from "jspdf";
-import html2canvas from "html2canvas";
-
+import { toPng } from "html-to-image";
 import {
   insertSlide,
   copySlide,
@@ -14,7 +13,6 @@ import {
   updateSlide,
   updateGeneralSettings,
 } from "@/state/slice/carousel.slice";
-import { toPng } from "html-to-image";
 
 const useCarousel = () => {
   const dispatch = useDispatch();

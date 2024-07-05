@@ -1,5 +1,5 @@
 "use client";
-import React, { Suspense, useEffect, useState } from "react";
+import React, { useEffect, useState, FC } from "react";
 import {
   DropdownMenu,
   DropdownMenuItem,
@@ -21,19 +21,18 @@ import {
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import SubscriptionInfo from "@/components/subscription/status";
-import useCarousel from "@/hooks/useCarousel";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/state/store";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useCarouselManager } from "@/hooks/useCarouselManager";
 import { useLogout } from "@/hooks/useAuth";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import useCarousel from "@/hooks/useCarousel";
 
-const getInitials = (email: string): string => {
-  return email ? email.charAt(0).toUpperCase() : "U";
-};
+const getInitials = (email: string): string =>
+  email ? email.charAt(0).toUpperCase() : "U";
 
-const EditorNavbar: React.FC = () => {
+const EditorNavbar: FC = () => {
   const { exportSlidesToPDF, exportSlidesToZip, pdfLoading, zipLoading } =
     useCarousel();
   const {
@@ -55,9 +54,7 @@ const EditorNavbar: React.FC = () => {
   const [editCarouselId, setEditCarouselId] = useState<string | null>(null);
 
   useEffect(() => {
-    if (carouselId) {
-      getCarouselDetailsById(carouselId);
-    }
+    if (carouselId) getCarouselDetailsById(carouselId);
   }, [carouselId, getCarouselDetailsById]);
 
   useEffect(() => {
@@ -165,10 +162,7 @@ const EditorNavbar: React.FC = () => {
         </DropdownMenu>
 
         <Button
-          onClick={() => {
-            //@ts-ignore
-            createOrUpdateCarousel(name, carouselId);
-          }}
+          onClick={() => createOrUpdateCarousel(name, carouselId ?? undefined)}
           disabled={saveLoading}
           className="flex items-center gap-2"
         >

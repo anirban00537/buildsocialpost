@@ -56,3 +56,6 @@ export interface CarouselState {
     pattern: string;
   };
 }
+export interface FirestoreCarouselState extends CarouselState {
+  userId: string;
+}
