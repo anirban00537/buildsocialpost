@@ -59,12 +59,12 @@ const FeaturesSection: React.FC = () => {
   return (
     <motion.section
       id="features"
-      className="py-14 "
+      className="py-14 bg-white"
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
     >
-      <div className="max-w-screen-xl mx-auto px-4 text-center bg-white border rounded-3xl p-20">
+      <div className="max-w-screen-xl mx-auto px-4 text-center bg-primary/5 shadow-md border rounded-3xl p-20">
         <h2 className="text-3xl font-semibold text-gray-800">Features</h2>
         <p className="text-lg text-gray-600 mt-4 max-w-2xl mx-auto">
           Explore the key features that make our AI-powered tool uniquely
@@ -80,7 +80,7 @@ const FeaturesSection: React.FC = () => {
               viewport={{ once: true }}
               transition={{ duration: 0.5 }}
             >
-              <div className="p-4 border rounded-full text-blue-600 bg-gray-100">
+              <div className="p-4 border rounded-full text-primary bg-gray-100">
                 {item.icon}
               </div>
               <p className="mt-4 text-lg font-medium">{item.name}</p>

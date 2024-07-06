@@ -27,19 +27,19 @@ const colorPresets: BackgroundColors[] = [
  
   {
     color1: "#87ceeb", // SkyBlue - Background Color
-    color2: "#000000", // Black - Text Color
+    color2: "#ecf0f1", // Black - Text Color
     color3: "#add8e6", // LightBlue - Text Color
     color4: "#87cefa", // LightSkyBlue - Background Color
   },
   {
     color1: "#da70d6", // Orchid - Background Color
-    color2: "#000000", // Black - Text Color
+    color2: "#ecf0f1", // Black - Text Color
     color3: "#dda0dd", // Plum - Text Color
     color4: "#ee82ee", // Violet - Background Color
   },
   {
     color1: "#ffdead", // NavajoWhite - Background Color
-    color2: "#000000", // Black - Text Color
+    color2: "#ecf0f1", // Black - Text Color
     color3: "#ffe4b5", // Moccasin - Text Color
     color4: "#ffebcd", // BlanchedAlmond - Background Color
   },
@@ -51,7 +51,7 @@ const colorPresets: BackgroundColors[] = [
   },
   {
     color1: "#ffd700", // Gold - Background Color
-    color2: "#000000", // Black - Text Color
+    color2: "#ecf0f1", // Black - Text Color
     color3: "#ffa500", // Orange - Text Color
     color4: "#ff8c00", // DarkOrange - Background Color
   },

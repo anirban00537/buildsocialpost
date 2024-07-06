@@ -55,7 +55,7 @@ const BackgroundColorsSection = () => {
   };
 
   return (
-    <form className="grid w-full items-start gap-4 p-3 pb-36 rounded-lg bg-white shadow-lg max-h-screen overflow-y-auto">
+    <form className="grid w-full items-start gap-4 p-3 pb-36 rounded-lg bg-white max-h-screen overflow-y-auto">
       <legend className="text-lg font-semibold ">Background</legend>
       <div className="border p-2 rounded-lg">
         <label

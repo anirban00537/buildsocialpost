@@ -31,7 +31,7 @@ const SlideComponent: React.FC<SlideProps> = ({
     : {
         backgroundImage: `url(${pattern})`,
         backgroundPosition: "center",
-        opacity: 0.07,
+        opacity: 0.04,
         backgroundRepeat: "repeat",
       };
 
@@ -65,7 +65,7 @@ const SlideComponent: React.FC<SlideProps> = ({
             width: "320px",
             height: "320px",
             borderRadius: "50%",
-            background: `radial-gradient(circle at 50% 50%, ${color3} 0%, transparent 70%)`,
+            background: `radial-gradient(circle at 50% 50%, ${color4} 0%, transparent 60%)`,
           }}
         ></div>
       ) : (
@@ -78,7 +78,7 @@ const SlideComponent: React.FC<SlideProps> = ({
             width: "320px",
             height: "320px",
             borderRadius: "50%",
-            background: `radial-gradient(circle at 50% 50%, ${color3} 0%, transparent 70%)`,
+            background: `radial-gradient(circle at 50% 50%, ${color4} 0%, transparent 60%)`,
           }}
         ></div>
       )}

@@ -66,8 +66,6 @@ const EditorNavbar: FC = () => {
     router.push(`?id=${id}`);
   };
 
- 
-
   const handleSaveEdit = () => {
     if (editCarouselId) {
       createOrUpdateCarousel(name, editCarouselId);
@@ -109,8 +107,9 @@ const EditorNavbar: FC = () => {
       <div className="ml-auto flex items-center gap-4">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline">
-              <Download className="w-4 h-4 mr-2" /> Download
+            <Button variant="outline" size="sm">
+              <Download className="w-4 h-4 mr-2" />{" "}
+              {pdfLoading || zipLoading ? "Downloading...." : "Download"}
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent className="w-56">
@@ -129,6 +128,7 @@ const EditorNavbar: FC = () => {
           onClick={() => createOrUpdateCarousel(name, carouselId ?? undefined)}
           disabled={saveLoading}
           className="flex items-center gap-2"
+          size="sm"
         >
           {saveLoading ? (
             <div className="flex items-center gap-2">
@@ -199,7 +199,9 @@ const EditorNavbar: FC = () => {
           </DropdownMenu>
         ) : (
           <Link href="/login" className="text-sm">
-            <Button variant="outline">Sign in</Button>
+            <Button variant="outline" size="sm">
+              Sign in
+            </Button>
           </Link>
         )}
       </div>
@@ -242,7 +244,11 @@ const EditorNavbar: FC = () => {
               className="border px-2 py-1 rounded"
               placeholder="Carousel Name"
             />
-            <Button onClick={handleSaveEdit} disabled={saveLoading}>
+            <Button
+              onClick={handleSaveEdit}
+              disabled={saveLoading}
+              className="ml-auto flex items-center gap-2 px-4  text-sm text-white bg-gradient-to-r from-primary to-teal-500 hover:from-blue-600 hover:to-teal-600 transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+            >
               Save
             </Button>
           </div>
