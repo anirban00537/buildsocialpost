@@ -31,7 +31,7 @@ const SlideComponent: React.FC<SlideProps> = ({
     : {
         backgroundImage: `url(${pattern})`,
         backgroundPosition: "center",
-        opacity: 0.04,
+        opacity: 0.06,
         backgroundRepeat: "repeat",
       };
 
