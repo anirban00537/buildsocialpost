@@ -1,5 +1,6 @@
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
+import { useRouter } from "next/navigation";
 import { db, auth } from "@/lib/firebase";
 import {
   logout,
@@ -9,7 +10,6 @@ import {
   setUser,
 } from "@/state/slice/user.slice";
 import { useQuery, useMutation } from "react-query";
-import colorPresets from "@/lib/color-presets";
 import { setBackground } from "@/state/slice/carousel.slice";
 import {
   collection,
@@ -70,13 +70,17 @@ const fetchSubscriptionStatus = async (userId: string) => {
 // Hook for logging out the user
 const useLogout = () => {
   const [error, setError] = useState<string>("");
+  const [success, setSuccess] = useState<string>("");
   const dispatch = useDispatch();
+  const router = useRouter();
 
   const { mutate: logoutUser, isLoading: loading } = useMutation(
     async () => await signOut(auth),
     {
       onSuccess: () => {
         dispatch(logout());
+        setSuccess("");
+        router.push("/login");
       },
       onError: (error: any) => {
         setError(error.message || "Logout failed. Please try again.");
@@ -84,7 +88,7 @@ const useLogout = () => {
     }
   );
 
-  return { logout: logoutUser, loading, error };
+  return { logout: logoutUser, loading, error, success };
 };
 
 // Hook for fetching authenticated user and their subscription status
@@ -135,12 +139,6 @@ const useAuthUser = () => {
     }
   );
 
-  // useEffect(() => {
-  //   const randomPreset =
-  //     colorPresets[Math.floor(Math.random() * colorPresets.length)];
-  //   dispatch(setBackground(randomPreset));
-  // }, [dispatch]);
-
   useEffect(() => {
     dispatch(setLoading(userLoading || subscriptionLoading));
   }, [userLoading, subscriptionLoading, dispatch]);
@@ -156,7 +154,9 @@ const useAuthUser = () => {
 // Hook for Google login
 const useGoogleLogin = () => {
   const [error, setError] = useState<string>("");
+  const [success, setSuccess] = useState<string>("");
   const dispatch = useDispatch();
+  const router = useRouter();
 
   const { mutate: loginWithGoogle, isLoading: loading } = useMutation(
     async () => {
@@ -167,6 +167,10 @@ const useGoogleLogin = () => {
       dispatch(setUser({ uid, email, displayName, photoURL }));
     },
     {
+      onSuccess: () => {
+        setSuccess("Logged in successfully!");
+        router.push("/editor");
+      },
       onError: (error: any) => {
         setError(
           error.message || "Failed to log in with Google. Please try again."
@@ -175,7 +179,7 @@ const useGoogleLogin = () => {
     }
   );
 
-  return { loginWithGoogle, loading, error };
+  return { loginWithGoogle, loading, error, success };
 };
 
 export { useLogout, useAuthUser, useGoogleLogin };
