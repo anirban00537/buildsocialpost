@@ -8,7 +8,11 @@ import {
   PopoverTrigger,
   PopoverContent,
 } from "@/components/ui/popover";
-import colorPresets, { BackgroundColors } from "@/lib/color-presets";
+import {
+  BackgroundColors,
+  lightColorPresets,
+  darkColorPresets,
+} from "@/lib/color-presets";
 
 const BackgroundColorsSection = () => {
   const dispatch = useDispatch();
@@ -21,8 +25,6 @@ const BackgroundColorsSection = () => {
     color3: false,
     color4: false,
   });
-
-
 
   const handleColorChange = (
     colorKey: keyof BackgroundColors,
@@ -103,10 +105,58 @@ const BackgroundColorsSection = () => {
           htmlFor="preset"
           className="block text-sm font-medium text-gray-700 mb-2"
         >
-          Select Color Preset
+          Light Preset
         </label>
         <div className="grid grid-cols-4 gap-2">
-          {colorPresets.map((preset, index) => (
+          {lightColorPresets.map((preset: BackgroundColors, index: number) => (
+            <div
+              key={index}
+              className="w-full h-8 border p-1 cursor-pointer rounded-md grid grid-cols-4 transition-transform transform hover:scale-105 hover:shadow-lg"
+              onClick={() => handlePresetSelect(preset)}
+            >
+              <div
+                className="transition-colors duration-200 ease-in-out rounded-l-md"
+                style={{
+                  backgroundColor: preset.color1,
+                  width: "100%",
+                  height: "100%",
+                }}
+              ></div>
+              <div
+                className="transition-colors duration-200 ease-in-out"
+                style={{
+                  backgroundColor: preset.color2,
+                  width: "100%",
+                  height: "100%",
+                }}
+              ></div>
+              <div
+                className="transition-colors duration-200 ease-in-out"
+                style={{
+                  backgroundColor: preset.color3,
+                  width: "100%",
+                  height: "100%",
+                }}
+              ></div>
+              <div
+                className="transition-colors duration-200 ease-in-out rounded-r-md"
+                style={{
+                  backgroundColor: preset.color4,
+                  width: "100%",
+                  height: "100%",
+                }}
+              ></div>
+            </div>
+          ))}
+        </div>
+        <label
+          htmlFor="preset"
+          className="block text-sm font-medium text-gray-700 mb-2"
+        >
+          Dark Preset
+        </label>
+        <div className="grid grid-cols-4 gap-2">
+          {darkColorPresets.map((preset: BackgroundColors, index: number) => (
             <div
               key={index}
               className="w-full h-8 border p-1 cursor-pointer rounded-md grid grid-cols-4 transition-transform transform hover:scale-105 hover:shadow-lg"

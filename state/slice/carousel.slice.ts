@@ -1,10 +1,16 @@
-// state/slice/carousel.slice.ts
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { generalSettings, Slide } from "@/types";
 import { initialSlides } from "@/lib/data";
 
+interface TextSettings {
+  alignment: "left" | "center" | "right";
+  fontSize: number;
+  fontStyle: "normal" | "italic";
+  fontWeight: number | string;
+}
+
 interface CarouselState {
-  name: string; // Add name property
+  name: string;
   slides: Slide[];
   generalSettings: generalSettings;
   background: {
@@ -13,12 +19,9 @@ interface CarouselState {
     color3: string;
     color4: string;
   };
-  textSettings: {
-    alignment: "left" | "center" | "right";
-    fontSize: number;
-    fontStyle: "normal" | "italic";
-    fontWeight: number | string;
-  };
+  titleTextSettings: TextSettings;
+  descriptionTextSettings: TextSettings;
+  taglineTextSettings: TextSettings;
   layout: {
     height: number;
     width: number;
@@ -27,7 +30,7 @@ interface CarouselState {
 }
 
 const initialState: CarouselState = {
-  name: "Default Carousel", // Initial name
+  name: "Default Carousel",
   slides: initialSlides,
   generalSettings: {
     headshotUrl: "https://avatars.githubusercontent.com/u/11111111?v=4",
@@ -35,27 +38,34 @@ const initialState: CarouselState = {
     handle: "@anirban00537",
   },
   background: {
-    color1: "#fff3c1",
-    color2: "#494949",
-    color3: "#ffffff",
-    color4: "#07d7e5",
+    color1: "#1A1A1D", // Dark Charcoal
+    color2: "#F4F4F4", // Light Gray
+    color3: "#4E4E50", // Slate Gray
+    color4: "#C3073F", // Red
   },
-  textSettings: {
+  titleTextSettings: {
     alignment: "left",
-    fontSize: 14,
+    fontSize: 32,
     fontStyle: "normal",
-    fontWeight: 400,
+    fontWeight: "bold",
+  },
+  descriptionTextSettings: {
+    alignment: "left",
+    fontSize: 16,
+    fontStyle: "normal",
+    fontWeight: "normal",
+  },
+  taglineTextSettings: {
+    alignment: "left",
+    fontSize: 16,
+    fontStyle: "normal",
+    fontWeight: "normal",
   },
   layout: {
     height: 640,
     width: 500,
     pattern: "/backgrounds/background1.svg",
   },
-};
-
-type UpdatePayload = {
-  key: keyof CarouselState;
-  value: any;
 };
 
 const carouselSlice = createSlice({
@@ -97,16 +107,17 @@ const carouselSlice = createSlice({
     addAllSlides: (state, action: PayloadAction<Slide[]>) => {
       state.slides = action.payload;
     },
-    setTextSettings: (
+    setTitleTextSettings: (state, action: PayloadAction<TextSettings>) => {
+      state.titleTextSettings = action.payload;
+    },
+    setDescriptionTextSettings: (
       state,
-      action: PayloadAction<{
-        alignment: "left" | "center" | "right";
-        fontSize: number;
-        fontStyle: "normal" | "italic";
-        fontWeight: number;
-      }>
+      action: PayloadAction<TextSettings>
     ) => {
-      state.textSettings = action.payload;
+      state.descriptionTextSettings = action.payload;
+    },
+    setTaglineTextSettings: (state, action: PayloadAction<TextSettings>) => {
+      state.taglineTextSettings = action.payload;
     },
     setLayoutHeightAndWidth: (
       state,
@@ -129,10 +140,6 @@ const carouselSlice = createSlice({
     setPattern: (state, action: PayloadAction<string>) => {
       state.layout.pattern = action.payload;
     },
-    setProperty: (state, action: PayloadAction<UpdatePayload>) => {
-      const { key, value } = action.payload;
-      (state as any)[key] = value;
-    },
     setName: (state, action: PayloadAction<string>) => {
       state.name = action.payload;
     },
@@ -146,8 +153,9 @@ export const {
   updateSlide,
   updateGeneralSettings,
   addAllSlides,
-  setProperty,
-  setTextSettings,
+  setTitleTextSettings,
+  setDescriptionTextSettings,
+  setTaglineTextSettings,
   setLayoutHeightAndWidth,
   setBackground,
   setPattern,

@@ -17,11 +17,13 @@ const SlideComponent: React.FC<SlideProps> = ({
   updateSlide,
   slideNumber,
 }) => {
-  const { textSettings, layout } = useSelector(
-    (state: RootState) => state.slides
-  );
+  const {
+    titleTextSettings,
+    descriptionTextSettings,
+    taglineTextSettings,
+    layout,
+  } = useSelector((state: RootState) => state.slides);
   const { generalSettings } = useSelector((state: RootState) => state.slides);
-  const { alignment, fontSize, fontStyle, fontWeight } = textSettings;
   const { pattern } = layout;
   const backgroundImageStyle = slide.backgroundImage
     ? {
@@ -56,18 +58,32 @@ const SlideComponent: React.FC<SlideProps> = ({
       }}
     >
       {index % 2 === 1 ? (
-        <div
-          style={{
-            left: "0px",
-            transform: "translateX(-50%)",
-            position: "absolute",
-            bottom: "0px",
-            width: "320px",
-            height: "320px",
-            borderRadius: "50%",
-            background: `radial-gradient(circle at 50% 50%, ${color4} 0%, transparent 60%)`,
-          }}
-        ></div>
+        <>
+          <div
+            style={{
+              left: "0px",
+              transform: "translateX(-50%)",
+              position: "absolute",
+              bottom: "0px",
+              width: "320px",
+              height: "320px",
+              borderRadius: "50%",
+              background: `radial-gradient(circle at 50% 50%, ${color4} 0%, transparent 60%)`,
+            }}
+          ></div>
+          <div
+            style={{
+              right: "0px",
+              transform: "translateX(70%)",
+              position: "absolute",
+              top: "-140px",
+              width: "420px",
+              height: "420px",
+              borderRadius: "50%",
+              background: `radial-gradient(circle at 50% 50%, ${color4} 0%, transparent 60%)`,
+            }}
+          ></div>
+        </>
       ) : (
         <div
           style={{
@@ -115,13 +131,13 @@ const SlideComponent: React.FC<SlideProps> = ({
           display: "flex",
           flexDirection: "column",
           alignItems:
-            alignment === "center"
+            titleTextSettings.alignment === "center"
               ? "center"
-              : alignment === "left"
+              : titleTextSettings.alignment === "left"
               ? "flex-start"
               : "flex-end",
           justifyContent: "center",
-          textAlign: alignment,
+          textAlign: titleTextSettings.alignment,
           width: "100%",
           height: "100%",
           padding: "42px",
@@ -157,9 +173,9 @@ const SlideComponent: React.FC<SlideProps> = ({
                 fontWeight: "bold",
                 color: color2,
                 alignSelf:
-                  alignment === "center"
+                  titleTextSettings.alignment === "center"
                     ? "center"
-                    : alignment === "left"
+                    : titleTextSettings.alignment === "left"
                     ? "flex-start"
                     : "flex-end",
               }}
@@ -177,7 +193,7 @@ const SlideComponent: React.FC<SlideProps> = ({
               style={{
                 width: "100%",
                 marginBottom: "8px",
-                fontSize: `${fontSize}px`,
+                fontSize: `${taglineTextSettings.fontSize}px`,
                 backgroundColor: "transparent",
                 border: "none",
                 color: color2,
@@ -185,7 +201,7 @@ const SlideComponent: React.FC<SlideProps> = ({
                 wordBreak: "break-word",
                 whiteSpace: "normal",
                 resize: "none",
-                textAlign: alignment,
+                textAlign: taglineTextSettings.alignment,
               }}
             >
               {slide.tagline || "Your Tagline Here"}
@@ -201,9 +217,9 @@ const SlideComponent: React.FC<SlideProps> = ({
               style={{
                 width: "100%",
                 marginBottom: "8px",
-                fontSize: `${fontSize + 24}px`,
-                fontStyle: fontStyle,
-                fontWeight: fontWeight,
+                fontSize: `${titleTextSettings.fontSize}px`,
+                fontStyle: titleTextSettings.fontStyle,
+                fontWeight: titleTextSettings.fontWeight,
                 backgroundColor: "transparent",
                 border: "none",
                 color: color2,
@@ -211,7 +227,7 @@ const SlideComponent: React.FC<SlideProps> = ({
                 wordBreak: "break-word",
                 whiteSpace: "normal",
                 resize: "none",
-                textAlign: alignment,
+                textAlign: titleTextSettings.alignment,
               }}
             >
               {slide.title || "Title"}
@@ -229,8 +245,9 @@ const SlideComponent: React.FC<SlideProps> = ({
               }
               style={{
                 width: "100%",
-                fontSize: `${fontSize}px`,
-                fontStyle: fontStyle,
+                fontSize: `${descriptionTextSettings.fontSize}px`,
+                fontStyle: descriptionTextSettings.fontStyle,
+                fontWeight: descriptionTextSettings.fontWeight,
                 backgroundColor: "transparent",
                 border: "none",
                 marginBottom: "8px",
@@ -239,7 +256,7 @@ const SlideComponent: React.FC<SlideProps> = ({
                 wordBreak: "break-word",
                 whiteSpace: "normal",
                 resize: "none",
-                textAlign: alignment,
+                textAlign: descriptionTextSettings.alignment,
               }}
             >
               {slide.description ||
