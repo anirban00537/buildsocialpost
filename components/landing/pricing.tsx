@@ -118,7 +118,7 @@ const PlanSection: React.FC = () => {
       <div className="mt-16">
         <div className="max-w-screen-md mx-auto">
           <motion.div
-            className="p-6 rounded-lg shadow-lg bg-white text-center transition-shadow duration-300 ease-in-out hover:shadow-xl"
+            className="p-6 rounded-lg shadow bg-white text-center transition-shadow duration-300 ease-in-out hover:shadow-xl"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}>

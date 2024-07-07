@@ -1,88 +1,100 @@
 "use client";
-import { useState, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { Button } from "@/components/ui/button";
-import { RootState } from "@/state/store";
-import { useAuthUser, useLogout, useGoogleLogin } from "@/hooks/useAuth";
+import React from "react";
+import { useGoogleLogin } from "@/hooks/useAuth";
 
 const LoginPage = () => {
-  const [success, setSuccess] = useState<string>("");
-  const dispatch = useDispatch();
   const {
     loginWithGoogle,
     loading: googleLoginLoading,
     error: googleLoginError,
+    success: googleLoginSuccess,
   } = useGoogleLogin();
-  const { logout, loading: logoutLoading, error: logoutError } = useLogout();
-  const { loading: userLoading, error: userError } = useAuthUser();
-  const user: any = useSelector((state: RootState) => state.user.userinfo);
-  const loggedIn = useSelector((state: RootState) => state.user.loggedin);
 
-  const handleGoogleLogin = async () => {
-    try {
-      await loginWithGoogle();
-      setSuccess("Logged in successfully!");
-    } catch (error) {
-      setSuccess("");
-    }
+  const handleGoogleLogin = async (
+    event: React.MouseEvent<HTMLButtonElement>
+  ) => {
+    event.preventDefault();
+    loginWithGoogle();
   };
-
-  const handleLogout = async () => {
-    try {
-      await logout();
-      setSuccess("");
-    } catch (error) {
-      setSuccess("");
-    }
-  };
-
-  if (userLoading) {
-    return <div>Loading...</div>;
-  }
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-purple-500 via-pink-500 to-red-500 p-4">
-      <div className="w-full max-w-md p-8 space-y-6 bg-white rounded-2xl shadow-2xl">
-        {loggedIn ? (
-          <div className="text-center">
-            <p className="text-lg font-semibold text-gray-800">
-              Logged in as {user.email}
+    <main className="w-full h-screen flex bg-gradient-to-r bg-primary/10  flex-col items-center justify-center px-4">
+      <div className="max-w-md w-full bg-white border p-10 rounded-lg shadow-xl text-gray-600 space-y-8">
+        <div className="text-center">
+          <img src="/logo.svg" width={150} className="mx-auto" alt="Logo" />
+          <div className="mt-5 space-y-2">
+            <h3 className="text-gray-800 text-3xl font-bold sm:text-4xl">
+              Log in to your account
+            </h3>
+            <p className="">
+              Don't have an account?{" "}
+              <a
+                href="#"
+                className="font-medium text-indigo-600 hover:text-indigo-500"
+              >
+                Sign up
+              </a>
             </p>
-            <Button
-              className="w-full mt-4"
-              onClick={handleLogout}
-              disabled={logoutLoading}
-            >
-              {logoutLoading ? "Logging out..." : "Logout"}
-            </Button>
-            {success && <p className="mt-4 text-green-500">{success}</p>}
-            {logoutError && <p className="mt-4 text-red-500">{logoutError}</p>}
           </div>
-        ) : (
-          <div>
-            <div className="text-center mb-6">
-              <p className="text-lg font-semibold text-gray-800">
-                Google Login
-              </p>
-            </div>
-            {googleLoginError && (
-              <p className="text-center text-red-500">{googleLoginError}</p>
-            )}
-            {success && <p className="text-center text-green-500">{success}</p>}
-            <Button
-              type="button"
-              onClick={handleGoogleLogin}
-              className="w-full"
-              disabled={googleLoginLoading}
+        </div>
+
+        <div className="relative my-6">
+          <span className="block w-full h-px bg-gray-300"></span>
+        </div>
+        <div className="space-y-4 text-sm font-medium">
+          {googleLoginError && (
+            <p className="text-center text-red-500">{googleLoginError}</p>
+          )}
+          {googleLoginSuccess && (
+            <p className="text-center text-green-500">{googleLoginSuccess}</p>
+          )}
+          <button
+            className="w-full flex items-center justify-center gap-x-3 py-3 border rounded-lg hover:bg-gray-50 duration-150 active:bg-gray-100"
+            onClick={handleGoogleLogin}
+            disabled={googleLoginLoading}
+          >
+            <svg
+              className="w-5 h-5"
+              viewBox="0 0 48 48"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
             >
-              {googleLoginLoading
-                ? "Logging in with Google..."
-                : "Login with Google"}
-            </Button>
-          </div>
-        )}
+              <g clipPath="url(#clip0_17_40)">
+                <path
+                  d="M47.532 24.5528C47.532 22.9214 47.3997 21.2811 47.1175 19.6761H24.48V28.9181H37.4434C36.9055 31.8988 35.177 34.5356 32.6461 36.2111V42.2078H40.3801C44.9217 38.0278 47.532 31.8547 47.532 24.5528Z"
+                  fill="#4285F4"
+                />
+                <path
+                  d="M24.48 48.0016C30.9529 48.0016 36.4116 45.8764 40.3888 42.2078L32.6549 36.2111C30.5031 37.675 27.7252 38.5039 24.4888 38.5039C18.2275 38.5039 12.9187 34.2798 11.0139 28.6006H3.03296V34.7825C7.10718 42.8868 15.4056 48.0016 24.48 48.0016Z"
+                  fill="#34A853"
+                />
+                <path
+                  d="M11.0051 28.6006C9.99973 25.6199 9.99973 22.3922 11.0051 19.4115V13.2296H3.03298C-0.371021 20.0112 -0.371021 28.0009 3.03298 34.7825L11.0051 28.6006Z"
+                  fill="#FBBC04"
+                />
+                <path
+                  d="M24.48 9.49932C27.9016 9.44641 31.2086 10.7339 33.6866 13.0973L40.5387 6.24523C36.2 2.17101 30.4414 -0.068932 24.48 0.00161733C15.4055 0.00161733 7.10718 5.11644 3.03296 13.2296L11.005 19.4115C12.901 13.7235 18.2187 9.49932 24.48 9.49932Z"
+                  fill="#EA4335"
+                />
+              </g>
+              <defs>
+                <clipPath id="clip0_17_40">
+                  <rect width="48" height="48" fill="white" />
+                </clipPath>
+              </defs>
+            </svg>
+            {googleLoginLoading
+              ? "Logging in with Google..."
+              : "Continue with Google"}
+          </button>
+        </div>
+        <div className="text-center mt-6">
+          <a href="#" className="text-indigo-600 hover:text-indigo-500">
+            Forgot password?
+          </a>
+        </div>
       </div>
-    </div>
+    </main>
   );
 };
 

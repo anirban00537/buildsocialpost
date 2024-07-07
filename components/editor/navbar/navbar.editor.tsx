@@ -42,6 +42,7 @@ const EditorNavbar: FC = () => {
     getAllCarousels,
     carousels,
     loading: saveLoading,
+    deleteCarousel,
   } = useCarouselManager();
   const { logout } = useLogout();
   const user = useSelector((state: RootState) => state.user.userinfo);
@@ -65,8 +66,6 @@ const EditorNavbar: FC = () => {
   const handleCarouselSelect = (id: string) => {
     router.push(`?id=${id}`);
   };
-
- 
 
   const handleSaveEdit = () => {
     if (editCarouselId) {
@@ -109,8 +108,9 @@ const EditorNavbar: FC = () => {
       <div className="ml-auto flex items-center gap-4">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline">
-              <Download className="w-4 h-4 mr-2" /> Download
+            <Button variant="outline" size="sm">
+              <Download className="w-4 h-4 mr-2" />{" "}
+              {pdfLoading || zipLoading ? "Downloading...." : "Download"}
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent className="w-56">
@@ -129,6 +129,7 @@ const EditorNavbar: FC = () => {
           onClick={() => createOrUpdateCarousel(name, carouselId ?? undefined)}
           disabled={saveLoading}
           className="flex items-center gap-2"
+          size="sm"
         >
           {saveLoading ? (
             <div className="flex items-center gap-2">
@@ -199,7 +200,9 @@ const EditorNavbar: FC = () => {
           </DropdownMenu>
         ) : (
           <Link href="/login" className="text-sm">
-            <Button variant="outline">Sign in</Button>
+            <Button variant="outline" size="sm">
+              Sign in
+            </Button>
           </Link>
         )}
       </div>
@@ -209,18 +212,31 @@ const EditorNavbar: FC = () => {
         <DialogContent>
           <div className="flex flex-col gap-4">
             <h2 className="text-lg font-medium">All Carousels</h2>
+            {carousels.length === 0 && (
+              <div className="flex justify-center items-center h-16">
+                <p>No carousels found</p>
+              </div>
+            )}
             {carousels.map((carousel) => (
               <div
                 key={carousel.id}
                 className="flex justify-between items-center"
               >
                 <span>{carousel.data.name || "Unnamed Carousel"}</span>
-                <Button
-                  variant="ghost"
-                  onClick={() => handleCarouselSelect(carousel.id)}
-                >
-                  Open
-                </Button>
+                <div className="flex gap-2">
+                  <Button
+                    variant="default"
+                    onClick={() => handleCarouselSelect(carousel.id)}
+                  >
+                    Open
+                  </Button>
+                  <Button
+                    variant="destructive"
+                    onClick={() => deleteCarousel(carousel.id)}
+                  >
+                    Delete
+                  </Button>
+                </div>
               </div>
             ))}
           </div>
@@ -242,7 +258,11 @@ const EditorNavbar: FC = () => {
               className="border px-2 py-1 rounded"
               placeholder="Carousel Name"
             />
-            <Button onClick={handleSaveEdit} disabled={saveLoading}>
+            <Button
+              onClick={handleSaveEdit}
+              disabled={saveLoading}
+              className="ml-auto flex items-center gap-2 px-4  text-sm text-white bg-gradient-to-r from-primary to-teal-500 hover:from-blue-600 hover:to-teal-600 transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+            >
               Save
             </Button>
           </div>

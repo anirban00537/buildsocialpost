@@ -41,7 +41,7 @@ const config: Config = {
           foreground: "#737373", // Example hex value, replace with actual values
         },
         accent: {
-          DEFAULT: "#38b2ac", // Example hex value, replace with actual values
+          DEFAULT: "#3490dc", // Example hex value, replace with actual values
           foreground: "#ffffff", // Example hex value, replace with actual values
         },
         popover: {

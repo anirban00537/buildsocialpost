@@ -41,7 +41,7 @@ const MainSidebar: React.FC = () => {
           ))}
         </div>
       </div>
-      <aside className="flex-1 border bg-white overflow-hidden transition-all transform">
+      <aside className="flex-1 border border-l-0 bg-white overflow-hidden transition-all transform">
         {activeTab === "ai-settings" && <AiSettingsComponent />}
         {activeTab === "templates" && <TemplateSection />}
         {activeTab === "design" && <DesignSection />}

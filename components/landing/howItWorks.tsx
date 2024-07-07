@@ -55,7 +55,7 @@ const HowItWorksSection: React.FC = () => {
   return (
     <motion.section
       id="how-it-works"
-      className="py-28 bg-gradient-to-r from-blue-50 to-teal-50"
+      className="py-28 bg-gradient-to-r "
       initial="hidden"
       animate="visible"
       variants={containerVariants}>
