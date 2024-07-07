@@ -11,6 +11,210 @@ interface SlideProps {
   slideNumber?: number;
 }
 
+interface TextProps {
+  content: string;
+  onBlur: (event: React.FocusEvent<HTMLDivElement>) => void;
+  fontSize: number;
+  fontStyle: string;
+  fontWeight: string | number;
+  alignment: "left" | "center" | "right";
+  placeholder: string;
+}
+
+const Text: React.FC<TextProps> = ({
+  content,
+  onBlur,
+  fontSize,
+  fontStyle,
+  fontWeight,
+  alignment,
+  placeholder,
+}) => {
+  return (
+    <div
+      contentEditable
+      suppressContentEditableWarning
+      onBlur={onBlur}
+      style={{
+        width: "100%",
+        marginBottom: "8px",
+        fontSize: `${fontSize}px`,
+        fontStyle: fontStyle,
+        fontWeight: fontWeight,
+        backgroundColor: "transparent",
+        border: "none",
+        color: "inherit",
+        outline: "none",
+        wordBreak: "break-word",
+        whiteSpace: "normal",
+        resize: "none",
+        textAlign: alignment,
+      }}
+    >
+      {content || placeholder}
+    </div>
+  );
+};
+
+interface ImageProps {
+  imageUrl: string | null;
+}
+
+const Image: React.FC<ImageProps> = ({ imageUrl }) => {
+  if (!imageUrl) return null;
+
+  return (
+    <div
+      style={{
+        width: "100%",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "flex-end",
+        flexShrink: 1,
+        overflow: "hidden",
+      }}
+    >
+      <img
+        src={imageUrl}
+        alt="Slide image"
+        style={{
+          maxWidth: "100%",
+          maxHeight: "100%",
+          objectFit: "contain",
+          background: "rgba(255, 255, 255, 0.3)",
+          backdropFilter: "blur(10px)",
+          padding: "8px",
+          borderRadius: "8px",
+        }}
+      />
+    </div>
+  );
+};
+
+interface BackgroundProps {
+  backgroundImageStyle: React.CSSProperties;
+  color1: string;
+  pattern: string;
+  backgroundImage?: string | null;
+}
+
+const Background: React.FC<BackgroundProps> = ({
+  backgroundImageStyle,
+  color1,
+  pattern,
+  backgroundImage,
+}) => {
+  return (
+    <>
+      <div
+        style={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          zIndex: 0,
+          ...backgroundImageStyle,
+        }}
+      />
+      {backgroundImage && (
+        <div
+          style={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            zIndex: 1,
+            backgroundColor: color1,
+            opacity: 0.5,
+          }}
+        />
+      )}
+    </>
+  );
+};
+
+interface GeneralInfoProps {
+  headshotUrl: string;
+  name: string;
+  handle: string;
+  color2: string;
+  color4: string;
+}
+
+const GeneralInfo: React.FC<GeneralInfoProps> = ({
+  headshotUrl,
+  name,
+  handle,
+  color2,
+  color4,
+}) => {
+  return (
+    <div
+      style={{
+        position: "absolute",
+        bottom: "32px",
+        left: "16px",
+        display: "flex",
+        alignItems: "center",
+        gap: "16px",
+      }}
+    >
+      <img
+        src={headshotUrl}
+        alt="Headshot"
+        style={{
+          width: "40px",
+          height: "40px",
+          borderRadius: "50%",
+          border: `2px solid ${color4}`,
+        }}
+      />
+      <div style={{ display: "flex", flexDirection: "column" }}>
+        <div
+          style={{
+            fontSize: `14px`,
+            fontWeight: "600",
+            color: color2,
+          }}
+        >
+          {name || "Anirban Roy"}
+        </div>
+        <div
+          style={{
+            fontSize: `12px`,
+            fontStyle: "italic",
+            color: color2,
+          }}
+        >
+          {handle || "@anirban00537"}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+interface GradientCircleProps {
+  positionStyles: React.CSSProperties;
+  color4: string;
+}
+
+const GradientCircle: React.FC<GradientCircleProps> = ({
+  positionStyles,
+  color4,
+}) => {
+  return (
+    <div
+      style={{
+        ...positionStyles,
+        borderRadius: "50%",
+        background: `radial-gradient(circle at 50% 50%, ${color4} 0%, transparent 60%)`,
+      }}
+    ></div>
+  );
+};
+
 const SlideComponent: React.FC<SlideProps> = ({
   slide,
   index,
@@ -59,71 +263,49 @@ const SlideComponent: React.FC<SlideProps> = ({
     >
       {index % 2 === 1 ? (
         <>
-          <div
-            style={{
+          <GradientCircle
+            positionStyles={{
               left: "0px",
               transform: "translateX(-50%)",
               position: "absolute",
               bottom: "0px",
               width: "320px",
               height: "320px",
-              borderRadius: "50%",
-              background: `radial-gradient(circle at 50% 50%, ${color4} 0%, transparent 60%)`,
             }}
-          ></div>
-          <div
-            style={{
+            color4={color4}
+          />
+          <GradientCircle
+            positionStyles={{
               right: "0px",
               transform: "translateX(70%)",
               position: "absolute",
               top: "-140px",
               width: "420px",
               height: "420px",
-              borderRadius: "50%",
-              background: `radial-gradient(circle at 50% 50%, ${color4} 0%, transparent 60%)`,
             }}
-          ></div>
+            color4={color4}
+          />
         </>
       ) : (
-        <div
-          style={{
+        <GradientCircle
+          positionStyles={{
             right: "0px",
             transform: "translateX(50%)",
             position: "absolute",
             bottom: "0px",
             width: "320px",
             height: "320px",
-            borderRadius: "50%",
-            background: `radial-gradient(circle at 50% 50%, ${color4} 0%, transparent 60%)`,
           }}
-        ></div>
-      )}
-
-      <div
-        style={{
-          position: "absolute",
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          zIndex: 0,
-          ...backgroundImageStyle,
-        }}
-      />
-      {slide.backgroundImage && (
-        <div
-          style={{
-            position: "absolute",
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            zIndex: 1,
-            backgroundColor: color1,
-            opacity: 0.5,
-          }}
+          color4={color4}
         />
       )}
+
+      <Background
+        backgroundImageStyle={backgroundImageStyle}
+        color1={color1}
+        pattern={pattern}
+        backgroundImage={slide.backgroundImage}
+      />
       <div
         style={{
           position: "relative",
@@ -184,158 +366,61 @@ const SlideComponent: React.FC<SlideProps> = ({
             </p>
           )}
           {slide.tagline && (
-            <div
-              contentEditable
-              suppressContentEditableWarning
+            <Text
+              content={slide.tagline}
               onBlur={(e) =>
                 updateSlide(index, { ...slide, tagline: e.target.innerText })
               }
-              style={{
-                width: "100%",
-                marginBottom: "8px",
-                fontSize: `${taglineTextSettings.fontSize}px`,
-                backgroundColor: "transparent",
-                border: "none",
-                color: color2,
-                outline: "none",
-                wordBreak: "break-word",
-                whiteSpace: "normal",
-                resize: "none",
-                textAlign: taglineTextSettings.alignment,
-              }}
-            >
-              {slide.tagline || "Your Tagline Here"}
-            </div>
+              fontSize={taglineTextSettings.fontSize}
+              fontStyle={taglineTextSettings.fontStyle}
+              fontWeight={taglineTextSettings.fontWeight}
+              alignment={taglineTextSettings.alignment}
+              placeholder="Your Tagline Here"
+            />
           )}
           {slide.title && (
-            <div
-              contentEditable
-              suppressContentEditableWarning
+            <Text
+              content={slide.title}
               onBlur={(e) =>
                 updateSlide(index, { ...slide, title: e.target.innerText })
               }
-              style={{
-                width: "100%",
-                marginBottom: "8px",
-                fontSize: `${titleTextSettings.fontSize}px`,
-                fontStyle: titleTextSettings.fontStyle,
-                fontWeight: titleTextSettings.fontWeight,
-                backgroundColor: "transparent",
-                border: "none",
-                color: color2,
-                outline: "none",
-                wordBreak: "break-word",
-                whiteSpace: "normal",
-                resize: "none",
-                textAlign: titleTextSettings.alignment,
-              }}
-            >
-              {slide.title || "Title"}
-            </div>
+              fontSize={titleTextSettings.fontSize}
+              fontStyle={titleTextSettings.fontStyle}
+              fontWeight={titleTextSettings.fontWeight}
+              alignment={titleTextSettings.alignment}
+              placeholder="Title"
+            />
           )}
           {slide.description && (
-            <div
-              contentEditable
-              suppressContentEditableWarning
+            <Text
+              content={slide.description}
               onBlur={(e) =>
                 updateSlide(index, {
                   ...slide,
                   description: e.target.innerText,
                 })
               }
-              style={{
-                width: "100%",
-                fontSize: `${descriptionTextSettings.fontSize}px`,
-                fontStyle: descriptionTextSettings.fontStyle,
-                fontWeight: descriptionTextSettings.fontWeight,
-                backgroundColor: "transparent",
-                border: "none",
-                marginBottom: "8px",
-                color: color2,
-                outline: "none",
-                wordBreak: "break-word",
-                whiteSpace: "normal",
-                resize: "none",
-                textAlign: descriptionTextSettings.alignment,
-              }}
-            >
-              {slide.description ||
-                "Your introductory paragraph here. Describe your content briefly."}
-            </div>
+              fontSize={descriptionTextSettings.fontSize}
+              fontStyle={descriptionTextSettings.fontStyle}
+              fontWeight={descriptionTextSettings.fontWeight}
+              alignment={descriptionTextSettings.alignment}
+              placeholder="Your introductory paragraph here. Describe your content briefly."
+            />
           )}
-          {slide.imageUrl && (
-            <div
-              style={{
-                width: "100%",
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "flex-end",
-                flexShrink: 1,
-                overflow: "hidden",
-              }}
-            >
-              <img
-                src={slide.imageUrl}
-                alt="Slide image"
-                style={{
-                  maxWidth: "100%",
-                  maxHeight: "100%",
-                  objectFit: "contain",
-                  background: "rgba(255, 255, 255, 0.3)",
-                  backdropFilter: "blur(10px)",
-                  padding: "8px",
-                  borderRadius: "8px",
-                }}
-              />
-            </div>
-          )}
+          <Image imageUrl={slide.imageUrl || null} />
         </div>
       </div>
       {generalSettings.headshotUrl &&
         generalSettings.name &&
         generalSettings.handle &&
         slide?.type !== "slide" && (
-          <div
-            style={{
-              position: "absolute",
-              bottom: "32px",
-              left: "16px",
-              display: "flex",
-              alignItems: "center",
-              gap: "16px",
-            }}
-          >
-            <img
-              src={generalSettings.headshotUrl}
-              alt="Headshot"
-              style={{
-                width: "40px",
-                height: "40px",
-                borderRadius: "50%",
-                border: `2px solid ${color4}`,
-              }}
-            />
-            <div style={{ display: "flex", flexDirection: "column" }}>
-              <div
-                style={{
-                  fontSize: `14px`,
-                  fontWeight: "600",
-                  color: color2,
-                }}
-              >
-                {generalSettings.name || "Anirban Roy"}
-              </div>
-              <div
-                style={{
-                  fontSize: `12px`,
-                  fontStyle: "italic",
-                  color: color2,
-                }}
-              >
-                {generalSettings.handle || "@anirban00537"}
-              </div>
-            </div>
-          </div>
+          <GeneralInfo
+            headshotUrl={generalSettings.headshotUrl}
+            name={generalSettings.name}
+            handle={generalSettings.handle}
+            color2={color2}
+            color4={color4}
+          />
         )}
       <div
         style={{

@@ -42,6 +42,7 @@ const EditorNavbar: FC = () => {
     getAllCarousels,
     carousels,
     loading: saveLoading,
+    deleteCarousel,
   } = useCarouselManager();
   const { logout } = useLogout();
   const user = useSelector((state: RootState) => state.user.userinfo);
@@ -211,18 +212,31 @@ const EditorNavbar: FC = () => {
         <DialogContent>
           <div className="flex flex-col gap-4">
             <h2 className="text-lg font-medium">All Carousels</h2>
+            {carousels.length === 0 && (
+              <div className="flex justify-center items-center h-16">
+                <p>No carousels found</p>
+              </div>
+            )}
             {carousels.map((carousel) => (
               <div
                 key={carousel.id}
                 className="flex justify-between items-center"
               >
                 <span>{carousel.data.name || "Unnamed Carousel"}</span>
-                <Button
-                  variant="ghost"
-                  onClick={() => handleCarouselSelect(carousel.id)}
-                >
-                  Open
-                </Button>
+                <div className="flex gap-2">
+                  <Button
+                    variant="default"
+                    onClick={() => handleCarouselSelect(carousel.id)}
+                  >
+                    Open
+                  </Button>
+                  <Button
+                    variant="destructive"
+                    onClick={() => deleteCarousel(carousel.id)}
+                  >
+                    Delete
+                  </Button>
+                </div>
               </div>
             ))}
           </div>

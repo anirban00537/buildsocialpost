@@ -162,6 +162,8 @@ export const useCarouselManager = () => {
           dispatch(setProperty({ key: "layout", value: data.layout }));
         } else {
           setError("Carousel not found");
+          // Remove the id from the query parameters
+          router.push("/editor");
         }
       } catch (err) {
         setError("Failed to fetch carousel details");
@@ -170,7 +172,7 @@ export const useCarouselManager = () => {
         setLoading(false);
       }
     },
-    [dispatch]
+    [dispatch, router]
   );
 
   const deleteCarousel = useCallback(async (id: string) => {
