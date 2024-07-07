@@ -28,8 +28,16 @@ export const useCarouselManager = () => {
   const dispatch = useDispatch();
   const user = useSelector((state: RootState) => state.user.userinfo);
 
-  const { textSettings, layout, background, generalSettings, slides, name } =
-    useSelector((state: RootState) => state.slides);
+  const {
+    titleTextSettings,
+    descriptionTextSettings,
+    taglineTextSettings,
+    layout,
+    background,
+    generalSettings,
+    slides,
+    name,
+  } = useSelector((state: RootState) => state.slides);
 
   const convertToFirestoreData = (
     data: CarouselState,
@@ -37,7 +45,9 @@ export const useCarouselManager = () => {
   ): FirestoreCarouselState => ({
     userId,
     name: data.name,
-    textSettings: data.textSettings,
+    titleTextSettings: data.titleTextSettings,
+    descriptionTextSettings: data.descriptionTextSettings,
+    taglineTextSettings: data.taglineTextSettings,
     layout: data.layout,
     background: data.background,
     generalSettings: data.generalSettings,
@@ -57,7 +67,9 @@ export const useCarouselManager = () => {
 
       const carouselData: CarouselState = {
         name: newName || name,
-        textSettings,
+        titleTextSettings,
+        descriptionTextSettings,
+        taglineTextSettings,
         layout,
         background,
         generalSettings,
@@ -100,7 +112,9 @@ export const useCarouselManager = () => {
     [
       user?.uid,
       name,
-      textSettings,
+      titleTextSettings,
+      descriptionTextSettings,
+      taglineTextSettings,
       layout,
       background,
       generalSettings,
@@ -128,7 +142,22 @@ export const useCarouselManager = () => {
           );
           dispatch(setProperty({ key: "background", value: data.background }));
           dispatch(
-            setProperty({ key: "textSettings", value: data.textSettings })
+            setProperty({
+              key: "titleTextSettings",
+              value: data.titleTextSettings,
+            })
+          );
+          dispatch(
+            setProperty({
+              key: "descriptionTextSettings",
+              value: data.descriptionTextSettings,
+            })
+          );
+          dispatch(
+            setProperty({
+              key: "taglineTextSettings",
+              value: data.taglineTextSettings,
+            })
           );
           dispatch(setProperty({ key: "layout", value: data.layout }));
         } else {

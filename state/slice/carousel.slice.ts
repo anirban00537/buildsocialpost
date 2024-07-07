@@ -1,33 +1,13 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { generalSettings, Slide } from "@/types";
+import {
+  CarouselState,
+  Slide,
+  TextSettings,
+  BackgroundColors,
+  LayoutSettings,
+  GeneralSettings,
+} from "@/types";
 import { initialSlides } from "@/lib/data";
-
-interface TextSettings {
-  alignment: "left" | "center" | "right";
-  fontSize: number;
-  fontStyle: "normal" | "italic";
-  fontWeight: number | string;
-}
-
-interface CarouselState {
-  name: string;
-  slides: Slide[];
-  generalSettings: generalSettings;
-  background: {
-    color1: string;
-    color2: string;
-    color3: string;
-    color4: string;
-  };
-  titleTextSettings: TextSettings;
-  descriptionTextSettings: TextSettings;
-  taglineTextSettings: TextSettings;
-  layout: {
-    height: number;
-    width: number;
-    pattern: string;
-  };
-}
 
 const initialState: CarouselState = {
   name: "Default Carousel",
@@ -68,24 +48,27 @@ const initialState: CarouselState = {
   },
 };
 
+type UpdatePayload = {
+  key: keyof CarouselState;
+  value: any;
+};
+
 const carouselSlice = createSlice({
   name: "carousel",
   initialState,
   reducers: {
     insertSlide: (state, action: PayloadAction<number>) => {
-      state.slides.splice(action.payload + 1, 0, {
+      const newSlide: Slide = {
+        title: "New Slide",
+        tagline: "New Tagline",
+        description: "New Description",
         type: "slide",
-        title: "New Slide " + (state.slides.length + 1),
-        tagline: "tagline",
-        description: "Description",
-        imageUrl:
-          "https://images.unsplash.com/photo-1716718406268-6ece312abee0?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-        backgroundImage:
-          "https://plus.unsplash.com/premium_photo-1681190675120-4d2e44599aab?q=80&w=1976&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      });
+      };
+      state.slides.splice(action.payload, 0, newSlide);
     },
     copySlide: (state, action: PayloadAction<number>) => {
-      state.slides.push(state.slides[action.payload]);
+      const copiedSlide = { ...state.slides[action.payload] };
+      state.slides.splice(action.payload + 1, 0, copiedSlide);
     },
     deleteSlide: (state, action: PayloadAction<number>) => {
       state.slides.splice(action.payload, 1);
@@ -97,12 +80,8 @@ const carouselSlice = createSlice({
       const { index, updatedSlide } = action.payload;
       state.slides[index] = updatedSlide;
     },
-    updateGeneralSettings: (
-      state,
-      action: PayloadAction<{ updatedGeneralSettings: generalSettings }>
-    ) => {
-      const { updatedGeneralSettings } = action.payload;
-      state.generalSettings = updatedGeneralSettings;
+    updateGeneralSettings: (state, action: PayloadAction<GeneralSettings>) => {
+      state.generalSettings = action.payload;
     },
     addAllSlides: (state, action: PayloadAction<Slide[]>) => {
       state.slides = action.payload;
@@ -126,15 +105,7 @@ const carouselSlice = createSlice({
       state.layout.height = action.payload.height;
       state.layout.width = action.payload.width;
     },
-    setBackground: (
-      state,
-      action: PayloadAction<{
-        color1: string;
-        color2: string;
-        color3: string;
-        color4: string;
-      }>
-    ) => {
+    setBackground: (state, action: PayloadAction<BackgroundColors>) => {
       state.background = action.payload;
     },
     setPattern: (state, action: PayloadAction<string>) => {
@@ -142,6 +113,10 @@ const carouselSlice = createSlice({
     },
     setName: (state, action: PayloadAction<string>) => {
       state.name = action.payload;
+    },
+    setProperty: (state, action: PayloadAction<UpdatePayload>) => {
+      const { key, value } = action.payload;
+      (state as any)[key] = value;
     },
   },
 });
@@ -160,5 +135,7 @@ export const {
   setBackground,
   setPattern,
   setName,
+  setProperty,
 } = carouselSlice.actions;
+
 export default carouselSlice.reducer;

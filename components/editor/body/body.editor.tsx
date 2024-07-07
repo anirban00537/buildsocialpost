@@ -31,9 +31,7 @@ const CarouselEditor: React.FC = () => {
   const {
     swiperRef,
     slides,
-    generalSettings,
     layout,
-    textSettings,
     handleSlideClick,
     handleInsertSlide,
     handleCopySlide,

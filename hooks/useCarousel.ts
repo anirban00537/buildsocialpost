@@ -16,9 +16,13 @@ import {
 
 const useCarousel = () => {
   const dispatch = useDispatch();
-  const { textSettings, layout, background } = useSelector(
-    (state: RootState) => state.slides
-  );
+  const {
+    taglineTextSettings,
+    descriptionTextSettings,
+    titleTextSettings,
+    layout,
+    background,
+  } = useSelector((state: RootState) => state.slides);
   const swiperRef = useRef<any>(null);
   const { slides, generalSettings } = useSelector(
     (state: RootState) => state.slides
@@ -60,11 +64,7 @@ const useCarousel = () => {
         ...generalSettings,
         headshotUrl,
       };
-      dispatch(
-        updateGeneralSettings({
-          updatedGeneralSettings: updatedSettings,
-        })
-      );
+      dispatch(updateGeneralSettings(updatedSettings));
     },
     [dispatch, generalSettings]
   );
@@ -163,7 +163,9 @@ const useCarousel = () => {
     exportSlidesToPDF,
     zipLoading,
     pdfLoading,
-    textSettings,
+    taglineTextSettings,
+    descriptionTextSettings,
+    titleTextSettings,
     layout,
   };
 };
