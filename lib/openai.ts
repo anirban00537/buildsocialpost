@@ -30,6 +30,7 @@ export const generateCaruselContentFromTopic = async (
           - Use a consistent tone that matches the specified mood (${mood}).
           - Avoid any additional text or explanations beyond the specified format.
           
+          
           Format:
 
           [Intro]
@@ -49,7 +50,8 @@ export const generateCaruselContentFromTopic = async (
           title: [max 60 characters]
           description: [200-300 characters]
 
-          The content should be in ${language} and convey a ${mood} mood. Do not include any additional text or explanations.`,
+          The content should be in ${language} and convey a ${mood} mood. Do not include any additional text or explanations. Clearly mark important keywords from the title, tagline, and description with double quotes ("").
+          `,
         },
       ],
       max_tokens: maxTokens,
