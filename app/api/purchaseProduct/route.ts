@@ -41,7 +41,8 @@ export async function POST(req: Request) {
     const decodedToken = await getAuth().verifyIdToken(token);
     const userId = decodedToken.uid;
 
-    const reqData: { productId: string } = await req.json();
+    const reqData: { productId: string; redirectUrl: string } =
+      await req.json();
     if (!reqData.productId) {
       return new Response(JSON.stringify({ error: "productId is required" }), {
         status: 400,
@@ -56,6 +57,7 @@ export async function POST(req: Request) {
             custom: {
               user_id: userId,
             },
+            redirect_url: "https://buildcarousel.com/editor",
           },
         },
         relationships: {
