@@ -57,6 +57,8 @@ export async function POST(req: Request) {
             custom: {
               user_id: userId,
             },
+          },
+          product_options: {
             redirect_url: "https://buildcarousel.com/editor",
           },
         },
