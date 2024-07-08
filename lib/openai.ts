@@ -9,7 +9,6 @@ export const generateCaruselContentFromTopic = async (
   numSlides: number,
   temperature = 0.4,
   language = "en",
-  model = "gpt-3.5-turbo",
   mood = "neutral"
 ) => {
   try {
@@ -17,11 +16,21 @@ export const generateCaruselContentFromTopic = async (
     const maxTokens = Math.min(numSlides * maxTokensPerSlide, 1000); // Ensure max tokens do not exceed 1000
 
     const response = await openai.chat.completions.create({
-      model: model,
+      model: "gpt-4o-2024-05-13",
       messages: [
         {
           role: "user",
           content: `You are an expert LinkedIn carousel content creator. Generate ${numSlides} engaging and informative carousel slides on the topic "${topic}". The ${numSlides} slides should exclude the intro and outro. Use the following format and guidelines:
+
+          Guidelines:
+          - Each slide should focus on a single idea or concept.
+          - Ensure that the content is concise, clear, and engaging.
+          - Reorganize and rephrase content to fit the slide format naturally.
+          - Add appropriate emojis to the titles and descriptions to enhance readability and engagement.
+          - Use a consistent tone that matches the specified mood (${mood}).
+          - Avoid any additional text or explanations beyond the specified format.
+          
+          Format:
 
           [Intro]
           type: intro

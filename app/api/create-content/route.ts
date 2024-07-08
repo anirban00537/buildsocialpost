@@ -5,7 +5,7 @@ import {
 
 export async function POST(req: Request) {
   try {
-    const { topic, numSlides,  temperature, language, model, mood } =
+    const { topic, numSlides,  temperature, language, mood } =
       await req.json();
 
     if (!topic || !numSlides) {
@@ -22,7 +22,7 @@ export async function POST(req: Request) {
       numSlides,
       temperature,
       language,
-      model,
+      // model,
       mood
     );
     // Generate carousel content

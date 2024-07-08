@@ -27,8 +27,8 @@ const AiSettingsComponent = () => {
     temperature,
     setLanguage,
     language,
-    setModel,
-    model,
+    // setModel,
+    // model,
     setMood,
     mood,
     loading,
@@ -54,7 +54,7 @@ const AiSettingsComponent = () => {
           />
         </div>
 
-        <div className="space-y-2">
+        {/* <div className="space-y-2">
           <Label htmlFor="model" className="text-sm">
             Model
           </Label>
@@ -81,7 +81,7 @@ const AiSettingsComponent = () => {
               </SelectItem>
             </SelectContent>
           </Select>
-        </div>
+        </div> */}
 
         <div className="grid gap-3">
           <Label htmlFor="slides">Slides</Label>

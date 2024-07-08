@@ -352,6 +352,7 @@ const SlideComponent: React.FC<SlideProps> = ({
                 alignItems: "center",
                 justifyContent: "center",
                 fontSize: `${14}px`,
+                marginBottom: "8px",
                 fontWeight: "bold",
                 color: color2,
                 alignSelf:

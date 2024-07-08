@@ -7,7 +7,7 @@ export const useGenerateContent = () => {
   const [numSlides, setNumSlides] = useState(5);
   const [temperature, setTemperature] = useState(0.2);
   const [language, setLanguage] = useState("en");
-  const [model, setModel] = useState("gpt-3.5-turbo");
+  // const [model, setModel] = useState("gpt-3.5-turbo");
   const [mood, setMood] = useState("Neutral");
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
@@ -26,7 +26,7 @@ export const useGenerateContent = () => {
           numSlides,
           temperature,
           language,
-          model,
+          // model,
           mood,
         }),
       });
@@ -54,8 +54,8 @@ export const useGenerateContent = () => {
     temperature,
     setLanguage,
     language,
-    setModel,
-    model,
+    // setModel,
+    // model,
     setMood,
     mood,
     loading,
