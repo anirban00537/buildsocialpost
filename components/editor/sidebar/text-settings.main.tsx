@@ -14,11 +14,10 @@ import {
   setTaglineTextSettings,
   setLayoutHeightAndWidth,
 } from "@/state/slice/carousel.slice";
-import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
 import { carouselsSize } from "@/lib/coreConstants";
 
-const SettingsSection = () => {
+const TextSettingsSection = () => {
   const dispatch = useDispatch();
   const titleTextSettings = useSelector(
     (state: RootState) => state.slides.titleTextSettings
@@ -195,17 +194,19 @@ const SettingsSection = () => {
   };
 
   return (
-    <form className="grid w-full items-start gap-4 p-4 rounded-lg bg-white">
-      <legend className="text-lg font-semibold">Text Settings</legend>
-      <div className="border rounded-md gap-6 p-2">
-        <div className="flex gap-6 ">
+    <form className="grid w-full items-start gap-6 p-6 rounded-lg bg-white">
+      <legend className="text-lg font-semibold text-gray-700">
+        Text Settings
+      </legend>
+      <div className="grid gap-6 border p-4 bg-gray-50 rounded-lg shadow-md">
+        <div className="flex gap-4">
           {["title", "description", "tagline"].map((section) => (
             <button
               key={section}
               type="button"
               className={`px-3 py-1 text-sm rounded-md ${
                 selectedSection === section
-                  ? "bg-primary text-white"
+                  ? "bg-blue-100 text-blue-500"
                   : "bg-gray-100 hover:bg-gray-200"
               }`}
               onClick={() => handleSectionChange(section as any)}
@@ -235,7 +236,7 @@ const SettingsSection = () => {
               type="button"
               className={`border p-2 flex items-center justify-center rounded-md transition-all duration-150 ${
                 fontStyle === "normal"
-                  ? "bg-primary text-white"
+                  ? "bg-blue-100 text-blue-500"
                   : "hover:bg-gray-100"
               }`}
               onClick={() => handleFontStyleChange("normal")}
@@ -246,7 +247,7 @@ const SettingsSection = () => {
               type="button"
               className={`border p-2 flex items-center justify-center rounded-md transition-all duration-150 ${
                 fontStyle === "italic"
-                  ? "bg-primary text-white"
+                  ? "bg-blue-100 text-blue-500"
                   : "hover:bg-gray-100"
               }`}
               onClick={() => handleFontStyleChange("italic")}
@@ -262,7 +263,7 @@ const SettingsSection = () => {
               type="button"
               className={`border p-2 flex items-center justify-center rounded-md transition-all duration-150 ${
                 selectedWeight === "normal"
-                  ? "bg-primary text-white"
+                  ? "bg-blue-100 text-blue-500"
                   : "hover:bg-gray-100"
               }`}
               onClick={() => handleWeightTabChange("normal")}
@@ -273,7 +274,7 @@ const SettingsSection = () => {
               type="button"
               className={`border p-2 flex items-center justify-center rounded-md transition-all duration-150 ${
                 selectedWeight === "bold"
-                  ? "bg-primary text-white"
+                  ? "bg-blue-100 text-blue-500"
                   : "hover:bg-gray-100"
               }`}
               onClick={() => handleWeightTabChange("bold")}
@@ -284,7 +285,7 @@ const SettingsSection = () => {
         </div>
       </div>
 
-      <div className="space-y-2 mt-5 border rounded-md p-2">
+      <div className="space-y-2 mt-5 border p-4 bg-gray-50 rounded-lg shadow-md">
         <div className="text-[14px] font-medium">Text Alignment</div>
         <div className="grid grid-cols-3 gap-3">
           {[
@@ -310,7 +311,7 @@ const SettingsSection = () => {
                 key={alignment}
                 className={`border p-2 flex items-center justify-center rounded-md transition-all duration-150 ${
                   textSettings.alignment === alignment
-                    ? "bg-primary text-white"
+                    ? "bg-blue-100 text-blue-500"
                     : "hover:bg-gray-100"
                 }`}
                 onClick={() => handleAlignmentChange(alignment)}
@@ -325,4 +326,4 @@ const SettingsSection = () => {
   );
 };
 
-export default SettingsSection;
+export default TextSettingsSection;

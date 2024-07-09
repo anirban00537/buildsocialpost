@@ -87,7 +87,7 @@ const Pricing = () => {
                 </div>
               </div>
               <button
-                className="mt-6 px-5 py-3 rounded-lg w-full font-semibold text-sm duration-150 bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-purple-500 hover:to-indigo-500 text-white shadow-lg"
+                className="mt-6 px-5 py-3 rounded-lg w-full font-semibold text-sm duration-150 bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-purple-500 hover:to-indigo-500 text-white shadow-md"
                 onClick={buyProduct}
                 disabled={loading}
               >
