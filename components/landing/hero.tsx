@@ -114,12 +114,12 @@ const Hero = () => {
             className="items-center gap-x-3 space-y-3 sm:flex sm:space-y-0 justify-center"
             variants={textVariants}
           >
-            <Link
+            {/* <Link
               href="/editor"
               className="block py-2 px-4 text-center text-white font-medium bg-primary duration-150 hover:bg-primary/90 rounded-lg"
             >
               Let's get started
-            </Link>
+            </Link> */}
           </motion.div>
         </motion.div>
         <motion.div

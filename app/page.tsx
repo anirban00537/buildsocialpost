@@ -115,7 +115,7 @@ const Page = () => {
                 href="javascript:void(0)"
                 className="py-2 px-5 rounded-lg font-medium text-white text-center bg-primary hover:bg-primary/90  duration-150 block md:py-3 md:inline"
               >
-                Get started
+               Launcing Soon
               </a>
             </li>
           </ul>
@@ -146,12 +146,12 @@ const Page = () => {
               Create professional carousels easily with our AI-powered tool.
             </p>
             <div className="items-center gap-x-3 space-y-3 sm:flex sm:justify-center sm:space-y-0">
-              <Link
+              {/* <Link
                 href="/editor"
                 className="block py-2 px-4 text-center text-white font-medium bg-primary duration-150 hover:bg-primary/90  rounded-lg hover:shadow-none"
               >
                 Let's get started
-              </Link>
+              </Link> */}
               <a
                 href="#"
                 className="flex items-center justify-center gap-x-2 py-2 px-4 text-gray-700 hover:text-gray-500 font-medium duration-150 active:bg-gray-100 border rounded-lg"
