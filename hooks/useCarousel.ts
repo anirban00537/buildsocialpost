@@ -11,7 +11,6 @@ import {
   copySlide,
   deleteSlide,
   updateSlide,
-  updateGeneralSettings,
 } from "@/state/slice/carousel.slice";
 
 const useCarousel = () => {
@@ -24,7 +23,7 @@ const useCarousel = () => {
     background,
   } = useSelector((state: RootState) => state.slides);
   const swiperRef = useRef<any>(null);
-  const { slides, generalSettings } = useSelector(
+  const { slides } = useSelector(
     (state: RootState) => state.slides
   );
   const [zipLoading, setZipLoading] = useState(false);
@@ -58,16 +57,6 @@ const useCarousel = () => {
     [dispatch]
   );
 
-  const handleUpdateHeadshot = useCallback(
-    (headshotUrl: string) => {
-      const updatedSettings = {
-        ...generalSettings,
-        headshotUrl,
-      };
-      dispatch(updateGeneralSettings(updatedSettings));
-    },
-    [dispatch, generalSettings]
-  );
 
   const handleSlideClick = useCallback(
     (index: number) => {
@@ -151,13 +140,11 @@ const useCarousel = () => {
   return {
     swiperRef,
     slides,
-    generalSettings,
     background,
     handleInsertSlide,
     handleCopySlide,
     handleDeleteSlide,
     handleUpdateSlide,
-    handleUpdateHeadshot,
     handleSlideClick,
     exportSlidesToZip,
     exportSlidesToPDF,

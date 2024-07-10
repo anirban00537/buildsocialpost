@@ -1,19 +1,11 @@
 "use client";
 import React, { useEffect, useState, FC } from "react";
-import {
-  DropdownMenu,
-  DropdownMenuItem,
-  DropdownMenuContent,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import {
   User,
   LogOut,
   CreditCard,
   Download,
-  ChevronsUpDown,
   Edit,
   FileText,
   Image,
@@ -26,9 +18,16 @@ import { RootState } from "@/state/store";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useCarouselManager } from "@/hooks/useCarouselManager";
 import { useLogout } from "@/hooks/useAuth";
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import useCarousel from "@/hooks/useCarousel";
 import { setName } from "@/state/slice/carousel.slice";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 const getInitials = (email: string): string =>
   email ? email.charAt(0).toUpperCase() : "U";
@@ -52,8 +51,9 @@ const EditorNavbar: FC = () => {
   const carouselId = searchParams.get("id");
   const router = useRouter();
   const dispatch = useDispatch();
-  const [editCarouselId, setEditCarouselId] = useState<string | null>(null);
+  const [selectedCarousel, setSelectedCarousel] = useState<any | null>(null);
   const [isViewAllModalOpen, setIsViewAllModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
   useEffect(() => {
     if (carouselId) getCarouselDetailsById(carouselId);
@@ -63,15 +63,29 @@ const EditorNavbar: FC = () => {
     getAllCarousels();
   }, [getAllCarousels]);
 
-  const handleCarouselSelect = (id: string) => {
-    router.push(`?id=${id}`);
+  const handleOpenCarousel = (carousel: any) => {
+    router.push(`?id=${carousel.id}`);
+    setIsViewAllModalOpen(false);
+  };
+
+  const handleEditCarousel = (carousel: any) => {
+    setSelectedCarousel(carousel);
+    dispatch(setName(carousel.data.name));
+    setIsEditModalOpen(true);
   };
 
   const handleSaveEdit = () => {
-    if (editCarouselId) {
-      createOrUpdateCarousel(name, editCarouselId);
-      setEditCarouselId(null);
+    if (selectedCarousel) {
+      createOrUpdateCarousel(name, selectedCarousel.id);
+      setIsEditModalOpen(false);
+      setSelectedCarousel(null);
     }
+  };
+
+  const handleDeleteCarousel = (carouselId: string) => {
+    deleteCarousel(carouselId);
+    setSelectedCarousel(null);
+    setIsViewAllModalOpen(true); // Refresh the list
   };
 
   return (
@@ -80,50 +94,25 @@ const EditorNavbar: FC = () => {
         <Link href="/">
           <img src="/logo.svg" alt="Logo" className="h-14 object-cover" />
         </Link>
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button
-              variant="ghost"
-              className="border border-gray-200 flex items-center gap-2 hover:bg-primary/50"
-            >
-              <ChevronsUpDown className="w-4 h-4 text-gray-400" />
-              {name || "Unnamed Carousel"}
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent className="w-56">
-            <DropdownMenuItem onClick={() => setIsViewAllModalOpen(true)}>
-              View All Carousels
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem
-              onClick={() => setEditCarouselId(carouselId ?? "")}
-            >
-              Edit Carousel
-            </DropdownMenuItem>
-            <DropdownMenuItem>Create New Carousel</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <Button
+          onClick={() => setIsViewAllModalOpen(true)}
+          className="border border-gray-200 flex items-center gap-2 hover:bg-primary/50"
+          variant="outline"
+        >
+          {name || "Unnamed Carousel"}
+        </Button>
       </div>
 
       <div className="ml-auto flex items-center gap-4">
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="outline" size="sm">
-              <Download className="w-4 h-4 mr-2" />{" "}
-              {pdfLoading || zipLoading ? "Downloading...." : "Download"}
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent className="w-56">
-            <DropdownMenuItem onClick={exportSlidesToPDF} disabled={pdfLoading}>
-              <FileText className="w-4 h-4 mr-2" />
-              {pdfLoading ? "Downloading PDF..." : "Download PDF"}
-            </DropdownMenuItem>
-            <DropdownMenuItem onClick={exportSlidesToZip} disabled={zipLoading}>
-              <Image className="w-4 h-4 mr-2" />
-              {zipLoading ? "Downloading Zip..." : "Download Zip"}
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <Button variant="outline" size="sm" onClick={exportSlidesToPDF}>
+          <Download className="w-4 h-4 mr-2" />
+          {pdfLoading ? "Downloading PDF..." : "Download PDF"}
+        </Button>
+
+        <Button variant="outline" size="sm" onClick={exportSlidesToZip}>
+          <Image className="w-4 h-4 mr-2" />
+          {zipLoading ? "Downloading Zip..." : "Download Zip"}
+        </Button>
 
         <Button
           onClick={() => createOrUpdateCarousel(name, carouselId ?? undefined)}
@@ -220,23 +209,10 @@ const EditorNavbar: FC = () => {
             {carousels.map((carousel) => (
               <div
                 key={carousel.id}
-                className="flex justify-between items-center"
+                className="flex justify-between items-center cursor-pointer p-2 hover:bg-gray-100 rounded"
+                onClick={() => setSelectedCarousel(carousel)}
               >
                 <span>{carousel.data.name || "Unnamed Carousel"}</span>
-                <div className="flex gap-2">
-                  <Button
-                    variant="default"
-                    onClick={() => handleCarouselSelect(carousel.id)}
-                  >
-                    Open
-                  </Button>
-                  <Button
-                    variant="destructive"
-                    onClick={() => deleteCarousel(carousel.id)}
-                  >
-                    Delete
-                  </Button>
-                </div>
               </div>
             ))}
           </div>
@@ -245,8 +221,40 @@ const EditorNavbar: FC = () => {
 
       {/* Edit Carousel Modal */}
       <Dialog
-        open={!!editCarouselId}
-        onOpenChange={() => setEditCarouselId(null)}
+        open={!!selectedCarousel}
+        onOpenChange={() => setSelectedCarousel(null)}
+      >
+        <DialogContent>
+          <div className="flex flex-col gap-4">
+            <h2 className="text-lg font-medium">
+              {selectedCarousel?.data.name || "Unnamed Carousel"}
+            </h2>
+            <Button
+              variant="default"
+              onClick={() => handleOpenCarousel(selectedCarousel)}
+            >
+              Open Carousel
+            </Button>
+            <Button
+              variant="default"
+              onClick={() => handleEditCarousel(selectedCarousel)}
+            >
+              Edit Carousel
+            </Button>
+            <Button
+              variant="destructive"
+              onClick={() => handleDeleteCarousel(selectedCarousel.id)}
+            >
+              Delete Carousel
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Edit Carousel Name Modal */}
+      <Dialog
+        open={isEditModalOpen}
+        onOpenChange={() => setIsEditModalOpen(false)}
       >
         <DialogContent>
           <div className="flex flex-col gap-4">
@@ -261,7 +269,7 @@ const EditorNavbar: FC = () => {
             <Button
               onClick={handleSaveEdit}
               disabled={saveLoading}
-              className="ml-auto flex items-center gap-2 px-4  text-sm text-white bg-gradient-to-r from-primary to-teal-500 hover:from-blue-600 hover:to-teal-600 transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+              className="ml-auto flex items-center gap-2 px-4 text-sm text-white bg-gradient-to-r from-primary to-teal-500 hover:from-blue-600 hover:to-teal-600 transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
             >
               Save
             </Button>
