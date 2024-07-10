@@ -22,11 +22,6 @@ export interface Slide {
   type: "intro" | "slide" | "outro";
 }
 
-export interface GeneralSettings {
-  headshotUrl: string;
-  name: string;
-  handle: string;
-}
 
 export interface IntroSlide {
   tagline: string;
@@ -58,7 +53,6 @@ export interface LayoutSettings {
 export interface CarouselState {
   name: string;
   slides: Slide[];
-  generalSettings: GeneralSettings;
   background: BackgroundColors;
   titleTextSettings: TextSettings;
   descriptionTextSettings: TextSettings;

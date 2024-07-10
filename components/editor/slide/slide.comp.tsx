@@ -28,7 +28,9 @@ const SlideComponent: React.FC<SlideProps> = ({
     taglineTextSettings,
     layout,
   } = useSelector((state: RootState) => state.slides);
-  const { generalSettings } = useSelector((state: RootState) => state.slides);
+  const { handle, headshot, name } = useSelector(
+    (state: RootState) => state.branding
+  );
   const { pattern } = layout;
   const backgroundImageStyle = slide.backgroundImage
     ? {
@@ -212,18 +214,15 @@ const SlideComponent: React.FC<SlideProps> = ({
           <Image imageUrl={slide.imageUrl || null} />
         </div>
       </div>
-      {generalSettings.headshotUrl &&
-        generalSettings.name &&
-        generalSettings.handle &&
-        slide?.type !== "slide" && (
-          <GeneralInfo
-            headshotUrl={generalSettings.headshotUrl}
-            name={generalSettings.name}
-            handle={generalSettings.handle}
-            color2={color2}
-            color4={color4}
-          />
-        )}
+      {slide?.type !== "slide" && (
+        <GeneralInfo
+          headshot={headshot}
+          name={name}
+          handle={handle}
+          color2={color2}
+          color4={color4}
+        />
+      )}
       <div
         style={{
           position: "absolute",

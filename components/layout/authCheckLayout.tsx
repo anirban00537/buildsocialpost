@@ -2,7 +2,6 @@
 import { useAuthUser } from "@/hooks/useAuth";
 import React from "react";
 import FullScreenLoading from "../loading/fullscreen.loading";
-
 const AuthCheckLayout = ({ children }: { children: React.ReactNode }) => {
   const { loading } = useAuthUser();
 

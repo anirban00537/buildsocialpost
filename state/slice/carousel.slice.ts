@@ -5,18 +5,12 @@ import {
   TextSettings,
   BackgroundColors,
   LayoutSettings,
-  GeneralSettings,
 } from "@/types";
 import { initialSlides } from "@/lib/data";
 
 const initialState: CarouselState = {
   name: "Default Carousel",
   slides: initialSlides,
-  generalSettings: {
-    headshotUrl: "https://avatars.githubusercontent.com/u/11111111?v=4",
-    name: "Anirban Roy",
-    handle: "@anirban00537",
-  },
   background: {
     color1: "#1A1A1D", // Dark Charcoal
     color2: "#F4F4F4", // Light Gray
@@ -80,9 +74,7 @@ const carouselSlice = createSlice({
       const { index, updatedSlide } = action.payload;
       state.slides[index] = updatedSlide;
     },
-    updateGeneralSettings: (state, action: PayloadAction<GeneralSettings>) => {
-      state.generalSettings = action.payload;
-    },
+
     addAllSlides: (state, action: PayloadAction<Slide[]>) => {
       state.slides = action.payload;
     },
@@ -126,7 +118,6 @@ export const {
   copySlide,
   deleteSlide,
   updateSlide,
-  updateGeneralSettings,
   addAllSlides,
   setTitleTextSettings,
   setDescriptionTextSettings,

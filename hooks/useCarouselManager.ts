@@ -34,7 +34,6 @@ export const useCarouselManager = () => {
     taglineTextSettings,
     layout,
     background,
-    generalSettings,
     slides,
     name,
   } = useSelector((state: RootState) => state.slides);
@@ -50,7 +49,6 @@ export const useCarouselManager = () => {
     taglineTextSettings: data.taglineTextSettings,
     layout: data.layout,
     background: data.background,
-    generalSettings: data.generalSettings,
     slides: data.slides,
   });
 
@@ -72,7 +70,6 @@ export const useCarouselManager = () => {
         taglineTextSettings,
         layout,
         background,
-        generalSettings,
         slides,
       };
 
@@ -117,7 +114,6 @@ export const useCarouselManager = () => {
       taglineTextSettings,
       layout,
       background,
-      generalSettings,
       slides,
       router,
     ]
@@ -137,9 +133,6 @@ export const useCarouselManager = () => {
           // Dispatch actions to update Redux store
           dispatch(setProperty({ key: "name", value: data.name }));
           dispatch(addAllSlides(data.slides));
-          dispatch(
-            setProperty({ key: "generalSettings", value: data.generalSettings })
-          );
           dispatch(setProperty({ key: "background", value: data.background }));
           dispatch(
             setProperty({

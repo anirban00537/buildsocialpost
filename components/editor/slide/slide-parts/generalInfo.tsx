@@ -1,7 +1,7 @@
 import React from "react";
 
 interface GeneralInfoProps {
-  headshotUrl: string;
+  headshot: string | null;
   name: string;
   handle: string;
   color2: string;
@@ -9,7 +9,7 @@ interface GeneralInfoProps {
 }
 
 const GeneralInfo: React.FC<GeneralInfoProps> = ({
-  headshotUrl,
+  headshot = "images/headshot.png",
   name,
   handle,
   color2,
@@ -26,16 +26,18 @@ const GeneralInfo: React.FC<GeneralInfoProps> = ({
         gap: "16px",
       }}
     >
-      <img
-        src={headshotUrl}
-        alt="Headshot"
-        style={{
-          width: "40px",
-          height: "40px",
-          borderRadius: "50%",
-          border: `2px solid ${color4}`,
-        }}
-      />
+      {headshot && (
+        <img
+          src={headshot}
+          alt="Headshot"
+          style={{
+            width: "40px",
+            height: "40px",
+            borderRadius: "50%",
+            border: `2px solid ${color4}`,
+          }}
+        />
+      )}
       <div style={{ display: "flex", flexDirection: "column" }}>
         <div
           style={{

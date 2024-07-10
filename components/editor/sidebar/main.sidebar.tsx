@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import { Airplay, FileText, Text, Layout } from "lucide-react"; // Correct icons imported
+import { Airplay, PenTool, Type, Image } from "lucide-react";
 import AiSettingsComponent from "./ai.main";
-import TemplateSection from "./template.main";
+import BrandingSection from "./branding.main";
 import TextSettingsSection from "./text-settings.main";
 import BackgroundColorsSection from "./background.main";
 
@@ -14,9 +14,9 @@ const MainSidebar: React.FC = () => {
         <div className="flex md:flex-col w-full h-full justify-start items-center md:border-r border-b md:border-b-0 border-gray-200">
           {[
             { name: "ai-settings", icon: <Airplay size={24} /> },
-            { name: "templates", icon: <FileText size={24} /> },
-            { name: "text-settings", icon: <Text size={24} /> },
-            { name: "background", icon: <Layout size={24} /> }, // Correct icon used
+            { name: "branding", icon: <PenTool size={24} /> },
+            { name: "text-settings", icon: <Type size={24} /> },
+            { name: "background", icon: <Image size={24} /> },
           ].map((tab) => (
             <button
               key={tab.name}
@@ -35,7 +35,7 @@ const MainSidebar: React.FC = () => {
       </div>
       <aside className="flex-1 border border-l-0 bg-white overflow-hidden transition-all transform">
         {activeTab === "ai-settings" && <AiSettingsComponent />}
-        {activeTab === "templates" && <TemplateSection />}
+        {activeTab === "branding" && <BrandingSection />}
         {activeTab === "text-settings" && <TextSettingsSection />}
         {activeTab === "background" && <BackgroundColorsSection />}
       </aside>

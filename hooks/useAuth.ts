@@ -1,3 +1,4 @@
+// hooks/useAuthUser.ts
 import { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { useRouter } from "next/navigation";
@@ -10,7 +11,6 @@ import {
   setUser,
 } from "@/state/slice/user.slice";
 import { useQuery, useMutation } from "react-query";
-import { setBackground } from "@/state/slice/carousel.slice";
 import {
   collection,
   query,
@@ -18,6 +18,8 @@ import {
   orderBy,
   limit,
   getDocs,
+  doc,
+  getDoc,
 } from "firebase/firestore";
 import {
   signOut,
@@ -26,6 +28,7 @@ import {
   onAuthStateChanged,
   User,
 } from "firebase/auth";
+import { setBranding } from "@/state/slice/branding.slice";
 
 // Function to fetch user data
 const getUser = async (): Promise<User | null> => {
@@ -64,6 +67,28 @@ const fetchSubscriptionStatus = async (userId: string) => {
   } catch (error: any) {
     console.error("Error fetching subscription status:", error);
     return { isSubscribed: false, endDate: null, error: error.message };
+  }
+};
+
+// Function to fetch branding settings
+const fetchBrandingSettings = async (userId: string) => {
+  try {
+    const docRef = doc(db, "users", userId);
+    const docSnap = await getDoc(docRef);
+
+    if (docSnap.exists()) {
+      const data = docSnap.data();
+      return {
+        name: data.branding?.name || "",
+        handle: data.branding?.handle || "",
+        headshot: data.branding?.headshot || null,
+      };
+    } else {
+      return { name: "", handle: "", headshot: null };
+    }
+  } catch (error: any) {
+    console.error("Error fetching branding settings:", error);
+    return { name: "", handle: "", headshot: null, error: error.message };
   }
 };
 
@@ -139,14 +164,35 @@ const useAuthUser = () => {
     }
   );
 
+  const {
+    data: brandingData,
+    isLoading: brandingLoading,
+    error: brandingError,
+  } = useQuery(
+    ["brandingSettings", userId],
+    () =>
+      userId
+        ? fetchBrandingSettings(userId)
+        : Promise.reject(new Error("User ID is undefined")),
+    {
+      enabled: !!userId,
+      onSuccess: (data) => {
+        dispatch(setBranding(data));
+      },
+      onError: (error: any) => {
+        setError(error.message || "Failed to fetch branding settings.");
+      },
+    }
+  );
+
   useEffect(() => {
-    dispatch(setLoading(userLoading || subscriptionLoading));
-  }, [userLoading, subscriptionLoading, dispatch]);
+    dispatch(setLoading(userLoading || subscriptionLoading || brandingLoading));
+  }, [userLoading, subscriptionLoading, brandingLoading, dispatch]);
 
   return {
-    error: userError || subscriptionError,
+    error: userError || subscriptionError || brandingError,
     user: userData,
-    loading: userLoading || subscriptionLoading,
+    loading: userLoading || subscriptionLoading || brandingLoading,
     fetchUser: refetchUser,
   };
 };
