@@ -37,7 +37,7 @@ const useBranding = () => {
     }) => {
       if (user && user.uid) {
         await setDoc(
-          doc(db, "users", user.uid),
+          doc(db, "user_branding", user.uid),
           { branding: brandingData },
           { merge: true }
         );

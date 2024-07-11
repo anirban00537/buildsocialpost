@@ -73,7 +73,7 @@ const fetchSubscriptionStatus = async (userId: string) => {
 // Function to fetch branding settings
 const fetchBrandingSettings = async (userId: string) => {
   try {
-    const docRef = doc(db, "users", userId);
+    const docRef = doc(db, "user_branding", userId);
     const docSnap = await getDoc(docRef);
 
     if (docSnap.exists()) {
