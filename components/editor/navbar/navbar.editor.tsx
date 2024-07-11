@@ -9,6 +9,7 @@ import {
   Edit,
   FileText,
   Image,
+  Trash,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
@@ -210,43 +211,36 @@ const EditorNavbar: FC = () => {
               <div
                 key={carousel.id}
                 className="flex justify-between items-center cursor-pointer p-2 hover:bg-gray-100 rounded"
-                onClick={() => setSelectedCarousel(carousel)}
               >
                 <span>{carousel.data.name || "Unnamed Carousel"}</span>
+                <div className="flex gap-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => handleOpenCarousel(carousel)}
+                  >
+                    <FileText className="w-4 h-4" />
+                    Open
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => handleEditCarousel(carousel)}
+                  >
+                    <Edit className="w-4 h-4" />
+                    Edit
+                  </Button>
+                  <Button
+                    variant="destructive"
+                    size="sm"
+                    onClick={() => handleDeleteCarousel(carousel.id)}
+                  >
+                    <Trash className="w-4 h-4" />
+                    Delete
+                  </Button>
+                </div>
               </div>
             ))}
-          </div>
-        </DialogContent>
-      </Dialog>
-
-      {/* Edit Carousel Modal */}
-      <Dialog
-        open={!!selectedCarousel}
-        onOpenChange={() => setSelectedCarousel(null)}
-      >
-        <DialogContent>
-          <div className="flex flex-col gap-4">
-            <h2 className="text-lg font-medium">
-              {selectedCarousel?.data.name || "Unnamed Carousel"}
-            </h2>
-            <Button
-              variant="default"
-              onClick={() => handleOpenCarousel(selectedCarousel)}
-            >
-              Open Carousel
-            </Button>
-            <Button
-              variant="default"
-              onClick={() => handleEditCarousel(selectedCarousel)}
-            >
-              Edit Carousel
-            </Button>
-            <Button
-              variant="destructive"
-              onClick={() => handleDeleteCarousel(selectedCarousel.id)}
-            >
-              Delete Carousel
-            </Button>
           </div>
         </DialogContent>
       </Dialog>
