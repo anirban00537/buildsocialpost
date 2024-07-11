@@ -16,7 +16,7 @@ const BrandingSection: React.FC = () => {
     handleHandleChange,
     handleImageUpload,
     handleSubmit,
-    user
+    user,
   } = useBranding();
 
   return (

@@ -1,6 +1,13 @@
-import { useState, ChangeEvent } from "react";
+import { useState, ChangeEvent, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { doc, setDoc } from "firebase/firestore";
+import {
+  getStorage,
+  ref,
+  uploadBytes,
+  getDownloadURL,
+  deleteObject,
+} from "firebase/storage";
 import { db } from "@/lib/firebase";
 import toast from "react-hot-toast";
 import { RootState } from "@/state/store";
@@ -13,6 +20,13 @@ const useBranding = () => {
     (state: RootState) => state.branding
   );
   const user = useSelector((state: RootState) => state.user.userinfo);
+  const [originalHeadshot, setOriginalHeadshot] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (headshot && !headshot.startsWith("blob:")) {
+      setOriginalHeadshot(headshot);
+    }
+  }, [headshot]);
 
   const handleNameChange = (event: ChangeEvent<HTMLInputElement>) => {
     dispatch(setName(event.target.value));
@@ -35,10 +49,35 @@ const useBranding = () => {
       handle: string;
       headshot: string | null;
     }) => {
+      let finalHeadshot = brandingData.headshot;
+
+      // Check if the headshot is a local URL and upload to Firebase Storage if necessary
+      if (brandingData.headshot && brandingData.headshot.startsWith("blob:")) {
+        if (user && user.uid) {
+          const response = await fetch(brandingData.headshot);
+          const blob = await response.blob();
+          const storage = getStorage();
+          const storageRef = ref(
+            storage,
+            `headshots/${user.uid}/${Date.now()}`
+          );
+          await uploadBytes(storageRef, blob);
+          finalHeadshot = await getDownloadURL(storageRef);
+
+          // Delete the old image from Firebase Storage if it exists
+          if (originalHeadshot) {
+            const oldImageRef = ref(storage, originalHeadshot);
+            await deleteObject(oldImageRef);
+          }
+        } else {
+          throw new Error("User not authenticated");
+        }
+      }
+
       if (user && user.uid) {
         await setDoc(
           doc(db, "user_branding", user.uid),
-          { branding: brandingData },
+          { branding: { ...brandingData, headshot: finalHeadshot } },
           { merge: true }
         );
       } else {
