@@ -9,6 +9,7 @@ import {
   Edit,
   FileText,
   Image,
+  Trash,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
@@ -53,7 +54,7 @@ const EditorNavbar: FC = () => {
   const dispatch = useDispatch();
   const [selectedCarousel, setSelectedCarousel] = useState<any | null>(null);
   const [isViewAllModalOpen, setIsViewAllModalOpen] = useState(false);
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
 
   useEffect(() => {
     if (carouselId) getCarouselDetailsById(carouselId);
@@ -71,13 +72,13 @@ const EditorNavbar: FC = () => {
   const handleEditCarousel = (carousel: any) => {
     setSelectedCarousel(carousel);
     dispatch(setName(carousel.data.name));
-    setIsEditModalOpen(true);
+    setIsEditing(true);
   };
 
-  const handleSaveEdit = () => {
+  const handleSaveEdit = async () => {
     if (selectedCarousel) {
-      createOrUpdateCarousel(name, selectedCarousel.id);
-      setIsEditModalOpen(false);
+      await createOrUpdateCarousel(name, selectedCarousel.id);
+      setIsEditing(false);
       setSelectedCarousel(null);
     }
   };
@@ -209,70 +210,81 @@ const EditorNavbar: FC = () => {
             {carousels.map((carousel) => (
               <div
                 key={carousel.id}
-                className="flex justify-between items-center cursor-pointer p-2 hover:bg-gray-100 rounded"
-                onClick={() => setSelectedCarousel(carousel)}
+                className="flex justify-between items-center p-2 hover:bg-gray-100 rounded"
               >
-                <span>{carousel.data.name || "Unnamed Carousel"}</span>
+                {isEditing && selectedCarousel?.id === carousel.id ? (
+                  <div className="flex w-full justify-between items-center">
+                    <input
+                      type="text"
+                      value={name}
+                      onChange={(e) => dispatch(setName(e.target.value))}
+                      className="border px-2 py-1 rounded flex-grow mr-2"
+                      placeholder="Carousel Name"
+                    />
+                    <Button
+                      onClick={handleSaveEdit}
+                      disabled={saveLoading}
+                      className="flex items-center gap-2"
+                    >
+                      {saveLoading ? (
+                        <svg
+                          className="animate-spin h-5 w-5"
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                        >
+                          <circle
+                            className="opacity-25"
+                            cx="12"
+                            cy="12"
+                            r="10"
+                            stroke="currentColor"
+                            strokeWidth="4"
+                          ></circle>
+                          <path
+                            className="opacity-75"
+                            fill="currentColor"
+                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                          ></path>
+                        </svg>
+                      ) : (
+                        "Save"
+                      )}
+                    </Button>
+                  </div>
+                ) : (
+                  <>
+                    <span>{carousel.data.name || "Unnamed Carousel"}</span>
+                    <div className="flex gap-2">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handleOpenCarousel(carousel)}
+                      >
+                        <FileText className="w-4 h-4" />
+                        Open
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handleEditCarousel(carousel)}
+                      >
+                        <Edit className="w-4 h-4" />
+                        Edit
+                      </Button>
+                      <Button
+                        variant="destructive"
+                        size="sm"
+                        onClick={() => handleDeleteCarousel(carousel.id)}
+                      >
+                        <Trash className="w-4 h-4" />
+                        Delete
+                      </Button>
+                    </div>
+                  </>
+                )}
               </div>
             ))}
-          </div>
-        </DialogContent>
-      </Dialog>
-
-      {/* Edit Carousel Modal */}
-      <Dialog
-        open={!!selectedCarousel}
-        onOpenChange={() => setSelectedCarousel(null)}
-      >
-        <DialogContent>
-          <div className="flex flex-col gap-4">
-            <h2 className="text-lg font-medium">
-              {selectedCarousel?.data.name || "Unnamed Carousel"}
-            </h2>
-            <Button
-              variant="default"
-              onClick={() => handleOpenCarousel(selectedCarousel)}
-            >
-              Open Carousel
-            </Button>
-            <Button
-              variant="default"
-              onClick={() => handleEditCarousel(selectedCarousel)}
-            >
-              Edit Carousel
-            </Button>
-            <Button
-              variant="destructive"
-              onClick={() => handleDeleteCarousel(selectedCarousel.id)}
-            >
-              Delete Carousel
-            </Button>
-          </div>
-        </DialogContent>
-      </Dialog>
-
-      {/* Edit Carousel Name Modal */}
-      <Dialog
-        open={isEditModalOpen}
-        onOpenChange={() => setIsEditModalOpen(false)}
-      >
-        <DialogContent>
-          <div className="flex flex-col gap-4">
-            <h2 className="text-lg font-medium">Edit Carousel Name</h2>
-            <input
-              type="text"
-              value={name}
-              onChange={(e) => dispatch(setName(e.target.value))}
-              className="border px-2 py-1 rounded"
-              placeholder="Carousel Name"
-            />
-            <Button
-              onClick={handleSaveEdit}
-              disabled={saveLoading}
-              className="ml-auto flex items-center gap-2 px-4 text-sm text-white bg-gradient-to-r from-primary to-teal-500 hover:from-blue-600 hover:to-teal-600 transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-            >
-              Save
-            </Button>
           </div>
         </DialogContent>
       </Dialog>
