@@ -1,9 +1,17 @@
 "use client";
 import { useAuthUser } from "@/hooks/useAuth";
-import React from "react";
+import React, { ReactNode } from "react";
 import FullScreenLoading from "../loading/fullscreen.loading";
-const AuthCheckLayout = ({ children }: { children: React.ReactNode }) => {
+import useAnalytics from "@/hooks/useAnalytics";
+
+interface AuthCheckLayoutProps {
+  children: ReactNode;
+}
+
+const AuthCheckLayout: React.FC<AuthCheckLayoutProps> = ({ children }) => {
   const { loading } = useAuthUser();
+
+  useAnalytics();
 
   return (
     <div>
