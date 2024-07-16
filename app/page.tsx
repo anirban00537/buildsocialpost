@@ -18,6 +18,7 @@ import HowItWorksSection from "@/components/landing/howItWorks";
 import PlanSection from "@/components/landing/pricing";
 import Testimonial from "@/components/landing/testimonial";
 import Hero from "@/components/landing/hero";
+import { InfiniteCarouselsPreview } from "@/components/landing/carouselsPreview";
 
 const Page = () => {
   const navigation = [
@@ -115,7 +116,7 @@ const Page = () => {
                 href="javascript:void(0)"
                 className="py-2 px-5 rounded-lg font-medium text-white text-center bg-primary hover:bg-primary/90  duration-150 block md:py-3 md:inline"
               >
-               Launcing Soon
+                Launcing Soon
               </a>
             </li>
           </ul>
@@ -123,7 +124,7 @@ const Page = () => {
 
         <Hero />
       </div>
-
+      <InfiniteCarouselsPreview />
       <FeaturesSection />
 
       <HowItWorksSection />
