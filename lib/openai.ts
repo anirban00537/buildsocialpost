@@ -16,7 +16,7 @@ export const generateCaruselContentFromTopic = async (
     const maxTokens = Math.min(numSlides * maxTokensPerSlide, 1000); // Ensure max tokens do not exceed 1000
 
     const response = await openai.chat.completions.create({
-      model: "gpt-4o-2024-05-13",
+      model: "gpt-4o-mini-2024-07-18",
       messages: [
         {
           role: "user",

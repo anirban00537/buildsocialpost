@@ -93,7 +93,7 @@ const EditorNavbar: FC = () => {
     <header className="bg-white sticky top-0 h-[65px] flex items-center justify-between border-b border-gray-200 z-40 px-4 shadow-sm">
       <div className="flex items-center gap-4">
         <Link href="/">
-          <img src="/logo.svg" alt="Logo" className="h-14 object-cover" />
+          <img src="/logo.svg" alt="Logo" className="h-9 object-cover" />
         </Link>
         <Button
           onClick={() => setIsViewAllModalOpen(true)}
