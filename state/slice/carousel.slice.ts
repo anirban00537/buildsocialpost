@@ -74,7 +74,6 @@ const carouselSlice = createSlice({
       const { index, updatedSlide } = action.payload;
       state.slides[index] = updatedSlide;
     },
-
     addAllSlides: (state, action: PayloadAction<Slide[]>) => {
       state.slides = action.payload;
     },
@@ -110,6 +109,22 @@ const carouselSlice = createSlice({
       const { key, value } = action.payload;
       (state as any)[key] = value;
     },
+    moveSlideLeft: (state, action: PayloadAction<number>) => {
+      const index = action.payload;
+      if (index > 0) {
+        const temp = state.slides[index];
+        state.slides[index] = state.slides[index - 1];
+        state.slides[index - 1] = temp;
+      }
+    },
+    moveSlideRight: (state, action: PayloadAction<number>) => {
+      const index = action.payload;
+      if (index < state.slides.length - 1) {
+        const temp = state.slides[index];
+        state.slides[index] = state.slides[index + 1];
+        state.slides[index + 1] = temp;
+      }
+    },
   },
 });
 
@@ -127,6 +142,8 @@ export const {
   setPattern,
   setName,
   setProperty,
+  moveSlideLeft,
+  moveSlideRight,
 } = carouselSlice.actions;
 
 export default carouselSlice.reducer;

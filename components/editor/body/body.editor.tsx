@@ -21,6 +21,8 @@ import {
   Trash2,
   Copy,
   Download,
+  ArrowLeft,
+  ArrowRight,
 } from "lucide-react";
 import useCarousel from "@/hooks/useCarousel";
 import SlideComponent from "../slide/slide.comp";
@@ -37,6 +39,8 @@ const CarouselEditor: React.FC = () => {
     handleCopySlide,
     handleDeleteSlide,
     handleUpdateSlide,
+    handleMoveSlideLeft,
+    handleMoveSlideRight,
   } = useCarousel();
 
   return (
@@ -101,6 +105,18 @@ const CarouselEditor: React.FC = () => {
                     onClick={() => handleDeleteSlide(index)}
                   >
                     <Trash2 size={15} />
+                  </button>
+                  <button
+                    className="flex items-center justify-center border-slate-400 text-slate-400 border  rounded-md hover:bg-blue-700  h-6 w-6 z-10"
+                    onClick={() => handleMoveSlideLeft(index)}
+                  >
+                    <ArrowLeft size={15} />
+                  </button>
+                  <button
+                    className="flex items-center justify-center border-slate-400 text-slate-400 border  rounded-md hover:bg-blue-700  h-6 w-6 z-10"
+                    onClick={() => handleMoveSlideRight(index)}
+                  >
+                    <ArrowRight size={15} />
                   </button>
                 </div>
               </SwiperSlide>

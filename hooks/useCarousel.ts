@@ -11,6 +11,8 @@ import {
   copySlide,
   deleteSlide,
   updateSlide,
+  moveSlideLeft,
+  moveSlideRight,
 } from "@/state/slice/carousel.slice";
 
 const useCarousel = () => {
@@ -23,9 +25,7 @@ const useCarousel = () => {
     background,
   } = useSelector((state: RootState) => state.slides);
   const swiperRef = useRef<any>(null);
-  const { slides } = useSelector(
-    (state: RootState) => state.slides
-  );
+  const { slides } = useSelector((state: RootState) => state.slides);
   const [zipLoading, setZipLoading] = useState(false);
   const [pdfLoading, setPdfLoading] = useState(false);
 
@@ -57,6 +57,19 @@ const useCarousel = () => {
     [dispatch]
   );
 
+  const handleMoveSlideLeft = useCallback(
+    (index: number) => {
+      dispatch(moveSlideLeft(index));
+    },
+    [dispatch]
+  );
+
+  const handleMoveSlideRight = useCallback(
+    (index: number) => {
+      dispatch(moveSlideRight(index));
+    },
+    [dispatch]
+  );
 
   const handleSlideClick = useCallback(
     (index: number) => {
@@ -154,6 +167,8 @@ const useCarousel = () => {
     descriptionTextSettings,
     titleTextSettings,
     layout,
+    handleMoveSlideLeft,
+    handleMoveSlideRight,
   };
 };
 
