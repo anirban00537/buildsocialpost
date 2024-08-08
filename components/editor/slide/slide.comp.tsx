@@ -1,5 +1,5 @@
 import React from "react";
-import { ChevronRight } from "lucide-react"; // Importing the right arrow icon
+import { ChevronRight } from "lucide-react";
 import { Slide } from "@/types";
 import { useSelector } from "react-redux";
 import { RootState } from "@/state/store";
@@ -172,8 +172,8 @@ const SlideComponent: React.FC<SlideProps> = ({
           {slide.tagline && (
             <Text
               content={slide.tagline}
-              onBlur={(e) =>
-                updateSlide(index, { ...slide, tagline: e.target.innerText })
+              onBlur={(content: string) =>
+                updateSlide(index, { ...slide, tagline: content })
               }
               fontSize={taglineTextSettings.fontSize}
               fontStyle={taglineTextSettings.fontStyle}
@@ -185,8 +185,8 @@ const SlideComponent: React.FC<SlideProps> = ({
           {slide.title && (
             <Text
               content={slide.title}
-              onBlur={(e) =>
-                updateSlide(index, { ...slide, title: e.target.innerText })
+              onBlur={(content: string) =>
+                updateSlide(index, { ...slide, title: content })
               }
               fontSize={titleTextSettings.fontSize}
               fontStyle={titleTextSettings.fontStyle}
@@ -198,10 +198,10 @@ const SlideComponent: React.FC<SlideProps> = ({
           {slide.description && (
             <Text
               content={slide.description}
-              onBlur={(e) =>
+              onBlur={(content: string) =>
                 updateSlide(index, {
                   ...slide,
-                  description: e.target.innerText,
+                  description: content,
                 })
               }
               fontSize={descriptionTextSettings.fontSize}

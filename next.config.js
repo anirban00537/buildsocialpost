@@ -13,6 +13,10 @@ module.exports = {
     PUPPETEER_EXECUTABLE_PATH: "/usr/bin/chromium-browser",
   },
   images: {
-    domains: ["images.unsplash.com", "media.licdn.com"],
+    domains: [
+      "images.unsplash.com",
+      "media.licdn.com",
+      "firebasestorage.googleapis.com",
+    ],
   },
 };
