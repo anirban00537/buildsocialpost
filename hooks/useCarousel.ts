@@ -1,4 +1,4 @@
-import { useState, useCallback, useRef } from "react";
+import { useState, useCallback, useRef, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/state/store";
 import JSZip from "jszip";
@@ -28,6 +28,7 @@ const useCarousel = () => {
   const { slides } = useSelector((state: RootState) => state.slides);
   const [zipLoading, setZipLoading] = useState(false);
   const [pdfLoading, setPdfLoading] = useState(false);
+  const { color4 } = background;
 
   const handleInsertSlide = useCallback(
     (index: number) => {
@@ -149,6 +150,13 @@ const useCarousel = () => {
     pdf.save("carousel_slides.pdf");
     setPdfLoading(false);
   }, [slides, layout.width, layout.height]);
+
+  useEffect(() => {
+    const strongTags = document.querySelectorAll("strong");
+    strongTags.forEach((tag) => {
+      tag.style.color = color4;
+    });
+  }, [slides, color4]);
 
   return {
     swiperRef,

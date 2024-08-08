@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useEditor, EditorContent, BubbleMenu } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 
@@ -48,6 +48,12 @@ const Text: React.FC<TextProps> = ({
     },
   });
 
+  useEffect(() => {
+    if (editor && content) {
+      editor.commands.setContent(content, false);
+    }
+  }, [editor, content]);
+
   const applyStyle = (style: string) => {
     if (!editor) return;
 
@@ -64,24 +70,24 @@ const Text: React.FC<TextProps> = ({
   };
 
   return (
-    <div style={{ position: "relative" }}>
+    <div style={{ position: "relative", width: "100%" }}>
       <EditorContent editor={editor} />
       {editor && (
         <BubbleMenu editor={editor} tippyOptions={{ duration: 100 }}>
           <button onClick={() => applyStyle("bold")} style={buttonStyle}>
-            <b>B</b>
+            <b style={{ color: "black" }}>B</b>
           </button>
           <button onClick={() => applyStyle("italic")} style={buttonStyle}>
-            <i>I</i>
+            <i style={{ color: "black" }}>I</i>
           </button>
           <button
             onClick={() => applyStyle("strikeThrough")}
             style={buttonStyle}
           >
-            <s>S</s>
+            <s style={{ color: "black" }}>S</s>
           </button>
           <button onClick={() => applyStyle("underline")} style={buttonStyle}>
-            <u>U</u>
+            <u style={{ color: "black" }}>U</u>
           </button>
         </BubbleMenu>
       )}
@@ -95,6 +101,7 @@ const buttonStyle = {
   borderRadius: "3px",
   padding: "2px 5px",
   cursor: "pointer",
+  color: "black", // Set the text color to black
 };
 
 export default Text;

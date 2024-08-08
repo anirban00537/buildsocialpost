@@ -4,7 +4,7 @@ import { Slide } from "@/types";
 import { useSelector } from "react-redux";
 import { RootState } from "@/state/store";
 import GradientCircle from "./slide-parts/gradientCircle";
-import Text from "./slide-parts/text";
+import Text from "./slide-parts/text"; // Updated import
 import Image from "./slide-parts/image";
 import Background from "./slide-parts/background";
 import GeneralInfo from "./slide-parts/generalInfo";
