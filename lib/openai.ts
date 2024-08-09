@@ -26,7 +26,7 @@ export const generateCaruselContentFromTopic = async (
           - Each slide should focus on a single idea or concept.
           - Ensure that the content is concise, clear, and engaging.
           - Reorganize and rephrase content to fit the slide format naturally.
-          - Add appropriate emojis to the titles and descriptions to enhance readability and engagement.
+          - **Wrap the most important keywords, phrases, and concepts in both the title and description within <strong></strong> tags.** This is crucial for highlighting key points.
           - Use a consistent tone that matches the specified mood (${mood}).
           - Avoid any additional text or explanations beyond the specified format.
           
@@ -41,8 +41,8 @@ export const generateCaruselContentFromTopic = async (
 
           [Slide {n}]
           type: slide
-          title: [max 60 characters]
-          description: [200-300 characters]
+          title: [max 60 characters, with important text wrapped in <strong></strong> tags]
+          description: [200-300 characters, with important text wrapped in <strong></strong> tags]
 
           [Outro]
           type: outro
@@ -50,7 +50,7 @@ export const generateCaruselContentFromTopic = async (
           title: [max 60 characters]
           description: [200-300 characters]
 
-          The content should be in ${language} and convey a ${mood} mood. Do not include any additional text or explanations.
+          The content should be in ${language} and convey a ${mood} mood. Ensure that important text is wrapped in <strong></strong> tags as instructed. Do not include any additional text or explanations.
           `,
         },
       ],
@@ -68,6 +68,7 @@ export const generateCaruselContentFromTopic = async (
     throw error;
   }
 };
+
 
 type Slide = {
   tagline?: string;

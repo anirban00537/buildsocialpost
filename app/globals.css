@@ -118,3 +118,10 @@
   display: none;
 }
 
+:root {
+  --color4: #fff; /* Default value, will be overwritten by JS */
+}
+
+strong {
+  color: var(--color4);
+}

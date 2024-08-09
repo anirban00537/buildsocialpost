@@ -152,11 +152,8 @@ const useCarousel = () => {
   }, [slides, layout.width, layout.height]);
 
   useEffect(() => {
-    const strongTags = document.querySelectorAll("strong");
-    strongTags.forEach((tag) => {
-      tag.style.color = color4;
-    });
-  }, [slides, color4]);
+    document.documentElement.style.setProperty("--color4", color4);
+  }, [color4]);
 
   return {
     swiperRef,

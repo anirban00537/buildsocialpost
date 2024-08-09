@@ -19,7 +19,7 @@ const initialState: CarouselState = {
   },
   titleTextSettings: {
     alignment: "left",
-    fontSize: 32,
+    fontSize: 48,
     fontStyle: "normal",
     fontWeight: "bold",
   },

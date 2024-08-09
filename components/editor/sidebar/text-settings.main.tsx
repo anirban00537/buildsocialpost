@@ -219,7 +219,7 @@ const TextSettingsSection = () => {
           <div className="text-[14px] font-medium">Font Size</div>
           <div className="flex items-center gap-2">
             <Slider
-              max={30}
+              max={88}
               min={10}
               step={1}
               value={[fontSize]}
