@@ -1,18 +1,7 @@
 "use client";
 import React, { useEffect, useState, FC } from "react";
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
-import {
-  User,
-  LogOut,
-  CreditCard,
-  Download,
-  Edit,
-  FileText,
-  Image,
-  Trash,
-} from "lucide-react";
-import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { Button } from "@/components/ui/button";
 import SubscriptionInfo from "@/components/subscription/status";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/state/store";
@@ -20,7 +9,7 @@ import { useSearchParams, useRouter } from "next/navigation";
 import { useCarouselManager } from "@/hooks/useCarouselManager";
 import { useLogout } from "@/hooks/useAuth";
 import useCarousel from "@/hooks/useCarousel";
-import { setName } from "@/state/slice/carousel.slice";
+
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -29,6 +18,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Download, Image } from "lucide-react";
+import CarouselListModal from "@/components/editor/CarouselListModal";
 
 const getInitials = (email: string): string =>
   email ? email.charAt(0).toUpperCase() : "U";
@@ -51,10 +42,7 @@ const EditorNavbar: FC = () => {
   const searchParams = useSearchParams();
   const carouselId = searchParams.get("id");
   const router = useRouter();
-  const dispatch = useDispatch();
-  const [selectedCarousel, setSelectedCarousel] = useState<any | null>(null);
   const [isViewAllModalOpen, setIsViewAllModalOpen] = useState(false);
-  const [isEditing, setIsEditing] = useState(false);
 
   useEffect(() => {
     if (carouselId) getCarouselDetailsById(carouselId);
@@ -63,31 +51,6 @@ const EditorNavbar: FC = () => {
   useEffect(() => {
     getAllCarousels();
   }, [getAllCarousels]);
-
-  const handleOpenCarousel = (carousel: any) => {
-    router.push(`?id=${carousel.id}`);
-    setIsViewAllModalOpen(false);
-  };
-
-  const handleEditCarousel = (carousel: any) => {
-    setSelectedCarousel(carousel);
-    dispatch(setName(carousel.data.name));
-    setIsEditing(true);
-  };
-
-  const handleSaveEdit = async () => {
-    if (selectedCarousel) {
-      await createOrUpdateCarousel(name, selectedCarousel.id);
-      setIsEditing(false);
-      setSelectedCarousel(null);
-    }
-  };
-
-  const handleDeleteCarousel = (carouselId: string) => {
-    deleteCarousel(carouselId);
-    setSelectedCarousel(null);
-    setIsViewAllModalOpen(true); // Refresh the list
-  };
 
   return (
     <header className="bg-white sticky top-0 h-[65px] flex items-center justify-between border-b border-gray-200 z-40 px-4 shadow-sm">
@@ -172,18 +135,15 @@ const EditorNavbar: FC = () => {
               <DropdownMenuLabel>{user.displayName}</DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuItem className="flex items-center gap-2">
-                <User className="w-4 h-4" />
                 Profile
               </DropdownMenuItem>
               <DropdownMenuItem className="flex items-center gap-2">
-                <CreditCard className="w-4 h-4" />
                 Billing
               </DropdownMenuItem>
               <DropdownMenuItem
                 onClick={() => logout()}
                 className="flex items-center gap-2"
               >
-                <LogOut className="w-4 h-4" />
                 Logout
               </DropdownMenuItem>
             </DropdownMenuContent>
@@ -198,96 +158,14 @@ const EditorNavbar: FC = () => {
       </div>
 
       {/* View All Carousels Modal */}
-      <Dialog open={isViewAllModalOpen} onOpenChange={setIsViewAllModalOpen}>
-        <DialogContent>
-          <div className="flex flex-col gap-4">
-            <h2 className="text-lg font-medium">All Carousels</h2>
-            {carousels.length === 0 && (
-              <div className="flex justify-center items-center h-16">
-                <p>No carousels found</p>
-              </div>
-            )}
-            {carousels.map((carousel) => (
-              <div
-                key={carousel.id}
-                className="flex justify-between items-center p-2 hover:bg-gray-100 rounded"
-              >
-                {isEditing && selectedCarousel?.id === carousel.id ? (
-                  <div className="flex w-full justify-between items-center">
-                    <input
-                      type="text"
-                      value={name}
-                      onChange={(e) => dispatch(setName(e.target.value))}
-                      className="border px-2 py-1 rounded flex-grow mr-2"
-                      placeholder="Carousel Name"
-                    />
-                    <Button
-                      onClick={handleSaveEdit}
-                      disabled={saveLoading}
-                      className="flex items-center gap-2"
-                    >
-                      {saveLoading ? (
-                        <svg
-                          className="animate-spin h-5 w-5"
-                          xmlns="http://www.w3.org/2000/svg"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                        >
-                          <circle
-                            className="opacity-25"
-                            cx="12"
-                            cy="12"
-                            r="10"
-                            stroke="currentColor"
-                            strokeWidth="4"
-                          ></circle>
-                          <path
-                            className="opacity-75"
-                            fill="currentColor"
-                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                          ></path>
-                        </svg>
-                      ) : (
-                        "Save"
-                      )}
-                    </Button>
-                  </div>
-                ) : (
-                  <>
-                    <span>{carousel.data.name || "Unnamed Carousel"}</span>
-                    <div className="flex gap-2">
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => handleOpenCarousel(carousel)}
-                      >
-                        <FileText className="w-4 h-4" />
-                        Open
-                      </Button>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => handleEditCarousel(carousel)}
-                      >
-                        <Edit className="w-4 h-4" />
-                        Edit
-                      </Button>
-                      <Button
-                        variant="destructive"
-                        size="sm"
-                        onClick={() => handleDeleteCarousel(carousel.id)}
-                      >
-                        <Trash className="w-4 h-4" />
-                        Delete
-                      </Button>
-                    </div>
-                  </>
-                )}
-              </div>
-            ))}
-          </div>
-        </DialogContent>
-      </Dialog>
+      <CarouselListModal
+        carousels={carousels}
+        isViewAllModalOpen={isViewAllModalOpen}
+        setIsViewAllModalOpen={setIsViewAllModalOpen}
+        createOrUpdateCarousel={createOrUpdateCarousel}
+        deleteCarousel={deleteCarousel}
+        saveLoading={saveLoading}
+      />
     </header>
   );
 };
