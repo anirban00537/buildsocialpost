@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import SwiperCore from "swiper";
 import {
   Navigation,
@@ -20,12 +20,13 @@ import {
   Plus,
   Trash2,
   Copy,
-  Download,
   ArrowLeft,
   ArrowRight,
+  Image as ImageIcon,
 } from "lucide-react";
 import useCarousel from "@/hooks/useCarousel";
 import SlideComponent from "../slide/slide.comp";
+import ImageUploadModal from "../ImageUploadModal";
 
 SwiperCore.use([Navigation, Pagination, Scrollbar, A11y, Autoplay]);
 
@@ -42,6 +43,25 @@ const CarouselEditor: React.FC = () => {
     handleMoveSlideLeft,
     handleMoveSlideRight,
   } = useCarousel();
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [activeSlideIndex, setActiveSlideIndex] = useState<number | null>(null);
+
+  const handleImageIconClick = (index: number) => {
+    setActiveSlideIndex(index);
+    setIsModalOpen(true);
+  };
+
+  const handleImageSelect = (url: string) => {
+    if (activeSlideIndex !== null) {
+      const updatedSlide = {
+        ...slides[activeSlideIndex],
+        backgroundImage: url,
+      };
+      handleUpdateSlide(activeSlideIndex, updatedSlide);
+    }
+    setIsModalOpen(false);
+  };
 
   return (
     <main className="flex h-full overflow-hidden">
@@ -70,6 +90,9 @@ const CarouselEditor: React.FC = () => {
                 style={{
                   width: layout.width + "px",
                   height: layout.height + "px",
+                  backgroundImage: `url(${slide.backgroundImage || ""})`,
+                  backgroundSize: "cover",
+                  backgroundPosition: "center",
                 }}
               >
                 <div
@@ -89,34 +112,40 @@ const CarouselEditor: React.FC = () => {
                 </div>
                 <div className="flex items-center justify-start mt-3 space-x-2">
                   <button
-                    className="flex items-center justify-center border-slate-400 text-slate-400 border  rounded-md hover:bg-blue-700  h-6 w-6 z-10"
+                    className="flex items-center justify-center border-slate-400 text-slate-400 border rounded-md hover:bg-blue-700 h-6 w-6 z-10"
                     onClick={() => handleInsertSlide(index)}
                   >
                     <Plus size={22} />
                   </button>
                   <button
-                    className="flex items-center justify-center border-slate-400 text-slate-400 border  rounded-md hover:bg-blue-700  h-6 w-6 z-10"
+                    className="flex items-center justify-center border-slate-400 text-slate-400 border rounded-md hover:bg-blue-700 h-6 w-6 z-10"
                     onClick={() => handleCopySlide(index)}
                   >
                     <Copy size={12} />
                   </button>
                   <button
-                    className="flex items-center justify-center border-red-300 text-red-300 border  rounded-md hover:bg-blue-700  h-6 w-6 z-10"
+                    className="flex items-center justify-center border-red-300 text-red-300 border rounded-md hover:bg-blue-700 h-6 w-6 z-10"
                     onClick={() => handleDeleteSlide(index)}
                   >
                     <Trash2 size={15} />
                   </button>
                   <button
-                    className="flex items-center justify-center border-slate-400 text-slate-400 border  rounded-md hover:bg-blue-700  h-6 w-6 z-10"
+                    className="flex items-center justify-center border-slate-400 text-slate-400 border rounded-md hover:bg-blue-700 h-6 w-6 z-10"
                     onClick={() => handleMoveSlideLeft(index)}
                   >
                     <ArrowLeft size={15} />
                   </button>
                   <button
-                    className="flex items-center justify-center border-slate-400 text-slate-400 border  rounded-md hover:bg-blue-700  h-6 w-6 z-10"
+                    className="flex items-center justify-center border-slate-400 text-slate-400 border rounded-md hover:bg-blue-700 h-6 w-6 z-10"
                     onClick={() => handleMoveSlideRight(index)}
                   >
                     <ArrowRight size={15} />
+                  </button>
+                  <button
+                    className="flex items-center justify-center border-slate-400 text-slate-400 border rounded-md hover:bg-blue-700 h-6 w-6 z-10"
+                    onClick={() => handleImageIconClick(index)}
+                  >
+                    <ImageIcon size={15} />
                   </button>
                 </div>
               </SwiperSlide>
@@ -130,6 +159,11 @@ const CarouselEditor: React.FC = () => {
           </button>
         </div>
       </div>
+      <ImageUploadModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onImageSelect={handleImageSelect}
+      />
     </main>
   );
 };

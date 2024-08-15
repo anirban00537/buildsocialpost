@@ -125,7 +125,7 @@ const SlideComponent: React.FC<SlideProps> = ({
           textAlign: titleTextSettings.alignment,
           width: "100%",
           height: "100%",
-          padding: "42px",
+          padding: "32px",
           boxSizing: "border-box",
         }}
       >
@@ -213,16 +213,17 @@ const SlideComponent: React.FC<SlideProps> = ({
           )}
           <Image imageUrl={slide.imageUrl || null} />
         </div>
+        {slide?.type !== "slide" && (
+          <GeneralInfo
+            headshot={headshot}
+            name={name}
+            handle={handle}
+            color2={color2}
+            color4={color4}
+          />
+        )}
       </div>
-      {slide?.type !== "slide" && (
-        <GeneralInfo
-          headshot={headshot}
-          name={name}
-          handle={handle}
-          color2={color2}
-          color4={color4}
-        />
-      )}
+
       <div
         style={{
           position: "absolute",
