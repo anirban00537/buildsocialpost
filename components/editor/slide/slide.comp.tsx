@@ -220,6 +220,7 @@ const SlideComponent: React.FC<SlideProps> = ({
             handle={handle}
             color2={color2}
             color4={color4}
+            slide={slide}
           />
         )}
       </div>
@@ -246,34 +247,7 @@ const SlideComponent: React.FC<SlideProps> = ({
           buildcarousel.com
         </a>
       </div>
-      {slide?.type === "intro" && (
-        <div
-          style={{
-            position: "absolute",
-            bottom: "42px",
-            right: "26px",
-            cursor: "pointer",
-            borderRadius: "10px",
-            backgroundColor: color4,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            fontWeight: "bold",
-            padding: "2px",
-            paddingLeft: "12px",
-            paddingRight: "8px",
-            fontSize: "14px",
-            color: color2,
-          }}
-        >
-          Swipe
-          <ChevronRight
-            size={23}
-            color={color2}
-            className="hover:scale-110 transition-transform"
-          />
-        </div>
-      )}
+    
     </div>
   );
 };
