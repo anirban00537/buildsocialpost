@@ -21,7 +21,7 @@ import {
 import { useMutation } from "react-query";
 import toast from "react-hot-toast";
 import Image from "next/image";
-import { storage, db } from "@/lib/firebase"; // Firebase storage and Firestore import
+import { storage, db } from "@/lib/firebase";
 import { X, ChevronLeft, ChevronRight } from "lucide-react";
 import { useSelector } from "react-redux";
 import { RootState } from "@/state/store";
@@ -29,7 +29,7 @@ import { RootState } from "@/state/store";
 interface ImageUploadModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onImageSelect: (url: string) => void; // Callback when image is selected as background
+  onImageSelect: (url: string) => void;
 }
 
 const ImageUploadModal: React.FC<ImageUploadModalProps> = ({
@@ -43,12 +43,12 @@ const ImageUploadModal: React.FC<ImageUploadModalProps> = ({
     { url: string; id: string }[]
   >([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const imagesPerPage = 6; // Number of images per page
+  const imagesPerPage = 6;
 
   // Fetch images from Firestore based on uid
   useEffect(() => {
     const fetchImages = async () => {
-      if (!uid) return; // Exit if no user is logged in
+      if (!uid) return;
 
       const imagesQuery = query(
         collection(db, "images"),
@@ -82,7 +82,7 @@ const ImageUploadModal: React.FC<ImageUploadModalProps> = ({
         // Save the image URL to Firestore with the user's uid
         const docRef = await addDoc(collection(db, "images"), {
           url: downloadURL,
-          uid, // Associate the image with the user's uid
+          uid,
         });
 
         uploadedURLs.push({ url: downloadURL, id: docRef.id });
@@ -133,6 +133,7 @@ const ImageUploadModal: React.FC<ImageUploadModalProps> = ({
     accept: {
       "image/*": [".jpeg", ".jpg", ".png", ".gif", ".bmp", ".tiff", ".webp"],
     },
+    disabled: uploadLoading, // Disable input while uploading
   });
 
   // Pagination logic
@@ -169,65 +170,76 @@ const ImageUploadModal: React.FC<ImageUploadModalProps> = ({
           <>
             <div
               {...getRootProps()}
-              className="border-2 border-dashed border-gray-300 p-4 rounded-lg cursor-pointer hover:border-gray-400"
+              className={`border-2 border-dashed p-4 rounded-lg cursor-pointer ${
+                uploadLoading ? "cursor-not-allowed" : "hover:border-gray-400"
+              }`}
             >
               <input {...getInputProps()} />
               <p className="text-center text-gray-500">
-                Drag & drop images here, or click to select files
+                {uploadLoading
+                  ? "Uploading..."
+                  : "Drag & drop images here, or click to select files"}
               </p>
             </div>
 
-            {uploadLoading && (
-              <p className="mt-2 text-center text-gray-500">Uploading...</p>
-            )}
-
-            <div className="mt-4 grid grid-cols-3 gap-4">
-              {currentImages.map(({ url, id }, index) => (
-                <div key={id} className="relative">
-                  <div
-                    className="cursor-pointer"
-                    onClick={() => onImageSelect(url)}
-                  >
-                    <img
-                      src={url}
-                      alt={`Uploaded ${index}`}
-                      width={150}
-                      height={150}
-                      className="rounded-lg"
-                    />
-                  </div>
-                  <button
-                    onClick={() => handleDeleteImage(id, url)}
-                    className="absolute top-1 right-1 bg-red-500 text-white rounded-full p-1 hover:bg-red-700"
-                  >
-                    <X className="h-4 w-4" />
-                  </button>
+            {uploadedImages.length === 0 ? (
+              <p className="mt-4 text-center text-gray-500">
+                No images uploaded yet.
+              </p>
+            ) : (
+              <>
+                <div className="mt-4 grid grid-cols-3 gap-4">
+                  {currentImages.map(({ url, id }, index) => (
+                    <div key={id} className="relative">
+                      <div
+                        className="cursor-pointer"
+                        onClick={() => onImageSelect(url)}
+                      >
+                        <img
+                          src={url}
+                          alt={`Uploaded ${index}`}
+                          width={150}
+                          height={150}
+                          className="rounded-lg"
+                        />
+                      </div>
+                      <button
+                        onClick={() => handleDeleteImage(id, url)}
+                        className="absolute top-1 right-1 bg-red-500 text-white rounded-full p-1 hover:bg-red-700 disabled:opacity-50"
+                        disabled={uploadLoading}
+                      >
+                        <X className="h-4 w-4" />
+                      </button>
+                    </div>
+                  ))}
                 </div>
-              ))}
-            </div>
 
-            {/* Pagination Controls */}
-            <div className="flex justify-between items-center mt-4">
-              <Button
-                variant="outline"
-                onClick={handlePreviousPage}
-                disabled={currentPage === 1}
-              >
-                <ChevronLeft className="w-4 h-4" />
-                Previous
-              </Button>
-              <span>
-                Page {currentPage} of {totalPages}
-              </span>
-              <Button
-                variant="outline"
-                onClick={handleNextPage}
-                disabled={currentPage === totalPages}
-              >
-                Next
-                <ChevronRight className="w-4 h-4" />
-              </Button>
-            </div>
+                {/* Pagination Controls */}
+                {totalPages > 1 && (
+                  <div className="flex justify-between items-center mt-4">
+                    <Button
+                      variant="outline"
+                      onClick={handlePreviousPage}
+                      disabled={currentPage === 1}
+                    >
+                      <ChevronLeft className="w-4 h-4" />
+                      Previous
+                    </Button>
+                    <span>
+                      Page {currentPage} of {totalPages}
+                    </span>
+                    <Button
+                      variant="outline"
+                      onClick={handleNextPage}
+                      disabled={currentPage === totalPages}
+                    >
+                      Next
+                      <ChevronRight className="w-4 h-4" />
+                    </Button>
+                  </div>
+                )}
+              </>
+            )}
           </>
         )}
 
