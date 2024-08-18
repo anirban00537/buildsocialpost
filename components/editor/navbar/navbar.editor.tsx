@@ -1,15 +1,14 @@
 "use client";
-import React, { useEffect, useState, FC } from "react";
+import React, { useEffect, useState, FC, useCallback } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import SubscriptionInfo from "@/components/subscription/status";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { RootState } from "@/state/store";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useCarouselManager } from "@/hooks/useCarouselManager";
 import { useLogout } from "@/hooks/useAuth";
 import useCarousel from "@/hooks/useCarousel";
-
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -18,11 +17,89 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Download, Image } from "lucide-react";
 import CarouselListModal from "@/components/editor/CarouselListModal";
+import { Download, Image, User, CreditCard, LogOut } from "lucide-react";
 
+// Utility function to get user initials
 const getInitials = (email: string): string =>
   email ? email.charAt(0).toUpperCase() : "U";
+
+// UserDropdown Component
+const UserDropdown: FC<{ user: any; onLogout: () => void }> = ({
+  user,
+  onLogout,
+}) => (
+  <DropdownMenu>
+    <DropdownMenuTrigger asChild>
+      <span>
+        {user.photoURL ? (
+          <img
+            className="w-8 h-8 rounded-full"
+            src={user.photoURL}
+            alt="User Avatar"
+          />
+        ) : (
+          <div className="w-8 h-8 rounded-full flex items-center justify-center bg-primary text-white">
+            {getInitials(user.email)}
+          </div>
+        )}
+      </span>
+    </DropdownMenuTrigger>
+    <DropdownMenuContent className="w-56">
+      <DropdownMenuLabel>{user.displayName}</DropdownMenuLabel>
+      <DropdownMenuSeparator />
+      <DropdownMenuItem className="flex items-center gap-2">
+        <User className="w-4 h-4" />
+        Profile
+      </DropdownMenuItem>
+      <DropdownMenuItem className="flex items-center gap-2">
+        <CreditCard className="w-4 h-4" />
+        Billing
+      </DropdownMenuItem>
+      <DropdownMenuItem onClick={onLogout} className="flex items-center gap-2">
+        <LogOut className="w-4 h-4" />
+        Logout
+      </DropdownMenuItem>
+    </DropdownMenuContent>
+  </DropdownMenu>
+);
+
+// DownloadDropdown Component
+const DownloadDropdown: FC<{
+  onDownloadPDF: () => void;
+  onDownloadZip: () => void;
+  pdfLoading: boolean;
+  zipLoading: boolean;
+}> = ({ onDownloadPDF, onDownloadZip, pdfLoading, zipLoading }) => {
+  const [isDownloading, setIsDownloading] = useState(false);
+
+  useEffect(() => {
+    if (pdfLoading || zipLoading) {
+      setIsDownloading(true);
+    } else {
+      setIsDownloading(false);
+    }
+  }, [pdfLoading, zipLoading]);
+
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button variant="outline" size="sm">
+          <Download className="w-4 h-4 mr-2" />
+          {isDownloading ? "Downloading..." : "Download"}
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent>
+        <DropdownMenuItem onClick={onDownloadPDF} disabled={pdfLoading}>
+          {pdfLoading ? "Downloading PDF..." : "Download PDF"}
+        </DropdownMenuItem>
+        <DropdownMenuItem onClick={onDownloadZip} disabled={zipLoading}>
+          {zipLoading ? "Downloading Zip..." : "Download Zip"}
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+};
 
 const EditorNavbar: FC = () => {
   const { exportSlidesToPDF, exportSlidesToZip, pdfLoading, zipLoading } =
@@ -45,12 +122,18 @@ const EditorNavbar: FC = () => {
   const [isViewAllModalOpen, setIsViewAllModalOpen] = useState(false);
 
   useEffect(() => {
-    if (carouselId) getCarouselDetailsById(carouselId);
+    if (carouselId) {
+      getCarouselDetailsById(carouselId);
+    }
   }, [carouselId, getCarouselDetailsById]);
 
   useEffect(() => {
     getAllCarousels();
   }, [getAllCarousels]);
+
+  const handleSaveCarousel = useCallback(() => {
+    createOrUpdateCarousel(name, carouselId ?? undefined);
+  }, [name, carouselId, createOrUpdateCarousel]);
 
   return (
     <header className="bg-white sticky top-0 h-[65px] flex items-center justify-between border-b border-gray-200 z-40 px-4 shadow-sm">
@@ -68,18 +151,15 @@ const EditorNavbar: FC = () => {
       </div>
 
       <div className="ml-auto flex items-center gap-4">
-        <Button variant="outline" size="sm" onClick={exportSlidesToPDF}>
-          <Download className="w-4 h-4 mr-2" />
-          {pdfLoading ? "Downloading PDF..." : "Download PDF"}
-        </Button>
-
-        <Button variant="outline" size="sm" onClick={exportSlidesToZip}>
-          <Image className="w-4 h-4 mr-2" />
-          {zipLoading ? "Downloading Zip..." : "Download Zip"}
-        </Button>
+        <DownloadDropdown
+          onDownloadPDF={exportSlidesToPDF}
+          onDownloadZip={exportSlidesToZip}
+          pdfLoading={pdfLoading}
+          zipLoading={zipLoading}
+        />
 
         <Button
-          onClick={() => createOrUpdateCarousel(name, carouselId ?? undefined)}
+          onClick={handleSaveCarousel}
           disabled={saveLoading}
           className="flex items-center gap-2"
           size="sm"
@@ -115,39 +195,7 @@ const EditorNavbar: FC = () => {
 
         <SubscriptionInfo />
         {user && user.email ? (
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <span>
-                {user.photoURL ? (
-                  <img
-                    className="w-8 h-8 rounded-full"
-                    src={user.photoURL}
-                    alt="User Avatar"
-                  />
-                ) : (
-                  <div className="w-8 h-8 rounded-full flex items-center justify-center bg-primary text-white">
-                    {initials}
-                  </div>
-                )}
-              </span>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-56">
-              <DropdownMenuLabel>{user.displayName}</DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem className="flex items-center gap-2">
-                Profile
-              </DropdownMenuItem>
-              <DropdownMenuItem className="flex items-center gap-2">
-                Billing
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                onClick={() => logout()}
-                className="flex items-center gap-2"
-              >
-                Logout
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <UserDropdown user={user} onLogout={logout} />
         ) : (
           <Link href="/login" className="text-sm">
             <Button variant="outline" size="sm">
