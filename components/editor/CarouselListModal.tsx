@@ -1,9 +1,7 @@
-import React, { FC, useState, useEffect } from "react";
+import React, { FC, useState } from "react";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { ChevronLeft, ChevronRight, Edit, FileText, Trash } from "lucide-react";
-import { useDispatch } from "react-redux";
-import { setName } from "@/state/slice/carousel.slice";
+import { ChevronLeft, ChevronRight, FileText, Trash } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 interface CarouselListModalProps {
@@ -24,32 +22,13 @@ const CarouselListModal: FC<CarouselListModalProps> = ({
   saveLoading,
 }) => {
   const [selectedCarousel, setSelectedCarousel] = useState<any | null>(null);
-  const [isEditing, setIsEditing] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
-  const dispatch = useDispatch();
   const router = useRouter();
 
   const handleOpenCarousel = (carousel: any) => {
     router.push(`?id=${carousel.id}`);
     setIsViewAllModalOpen(false);
-  };
-
-  const handleEditCarousel = (carousel: any) => {
-    setSelectedCarousel(carousel);
-    dispatch(setName(carousel.data.name));
-    setIsEditing(true);
-  };
-
-  const handleSaveEdit = async () => {
-    if (selectedCarousel) {
-      await createOrUpdateCarousel(
-        selectedCarousel.data.name,
-        selectedCarousel.id
-      );
-      setIsEditing(false);
-      setSelectedCarousel(null);
-    }
   };
 
   const handleDeleteCarousel = (carouselId: string) => {
@@ -82,77 +61,27 @@ const CarouselListModal: FC<CarouselListModalProps> = ({
               key={carousel.id}
               className="flex justify-between items-center p-2 hover:bg-gray-100 rounded"
             >
-              {isEditing && selectedCarousel?.id === carousel.id ? (
-                <div className="flex w-full justify-between items-center">
-                  <input
-                    type="text"
-                    value={carousel.data.name}
-                    onChange={(e) => dispatch(setName(e.target.value))}
-                    className="border px-2 py-1 rounded flex-grow mr-2"
-                    placeholder="Carousel Name"
-                  />
+              <>
+                <span>{carousel.data.name || "Unnamed Carousel"}</span>
+                <div className="flex gap-2">
                   <Button
-                    onClick={handleSaveEdit}
-                    disabled={saveLoading}
-                    className="flex items-center gap-2"
+                    variant="outline"
+                    size="sm"
+                    onClick={() => handleOpenCarousel(carousel)}
                   >
-                    {saveLoading ? (
-                      <svg
-                        className="animate-spin h-5 w-5"
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                      >
-                        <circle
-                          className="opacity-25"
-                          cx="12"
-                          cy="12"
-                          r="10"
-                          stroke="currentColor"
-                          strokeWidth="4"
-                        ></circle>
-                        <path
-                          className="opacity-75"
-                          fill="currentColor"
-                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                        ></path>
-                      </svg>
-                    ) : (
-                      "Save"
-                    )}
+                    <FileText className="w-3 h-3 mr-1" />
+                    Open
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => handleDeleteCarousel(carousel.id)}
+                  >
+                    <Trash className="w-3 h-3 mr-1" />
+                    Delete
                   </Button>
                 </div>
-              ) : (
-                <>
-                  <span>{carousel.data.name || "Unnamed Carousel"}</span>
-                  <div className="flex gap-2">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => handleOpenCarousel(carousel)}
-                    >
-                      <FileText className="w-4 h-4" />
-                      Open
-                    </Button>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => handleEditCarousel(carousel)}
-                    >
-                      <Edit className="w-4 h-4" />
-                      Edit
-                    </Button>
-                    <Button
-                      variant="destructive"
-                      size="sm"
-                      onClick={() => handleDeleteCarousel(carousel.id)}
-                    >
-                      <Trash className="w-4 h-4" />
-                      Delete
-                    </Button>
-                  </div>
-                </>
-              )}
+              </>
             </div>
           ))}
 
@@ -164,7 +93,7 @@ const CarouselListModal: FC<CarouselListModalProps> = ({
               onClick={() => handlePageChange(currentPage - 1)}
               disabled={currentPage === 1}
             >
-              <ChevronLeft className="w-4 h-4" />
+              <ChevronLeft className="w-3 h-3 mr-" />
               Previous
             </Button>
             <span>
@@ -179,7 +108,7 @@ const CarouselListModal: FC<CarouselListModalProps> = ({
               }
             >
               Next
-              <ChevronRight className="w-4 h-4" />
+              <ChevronRight className="w-3 h-3 mr-" />
             </Button>
           </div>
         </div>

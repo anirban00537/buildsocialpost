@@ -3,7 +3,7 @@ import React, { useEffect, useState, FC, useCallback } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import SubscriptionInfo from "@/components/subscription/status";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/state/store";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useCarouselManager } from "@/hooks/useCarouselManager";
@@ -19,6 +19,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import CarouselListModal from "@/components/editor/CarouselListModal";
 import { Download, Image, User, CreditCard, LogOut } from "lucide-react";
+import { setProperty } from "@/state/slice/carousel.slice";
 
 // Utility function to get user initials
 const getInitials = (email: string): string =>
@@ -118,7 +119,7 @@ const EditorNavbar: FC = () => {
   const initials = user?.email ? getInitials(user.email) : null;
   const searchParams = useSearchParams();
   const carouselId = searchParams.get("id");
-  const router = useRouter();
+  const dispatch = useDispatch();
   const [isViewAllModalOpen, setIsViewAllModalOpen] = useState(false);
 
   useEffect(() => {
@@ -137,17 +138,28 @@ const EditorNavbar: FC = () => {
 
   return (
     <header className="bg-white sticky top-0 h-[65px] flex items-center justify-between border-b border-gray-200 z-40 px-4 shadow-sm">
-      <div className="flex items-center gap-4">
+      <div className="flex items-center ">
         <Link href="/">
-          <img src="/logo.svg" alt="Logo" className="h-9 object-cover" />
+          <img src="/logo.svg" alt="Logo" className="h-9 object-cover mr-5" />
         </Link>
         <Button
           onClick={() => setIsViewAllModalOpen(true)}
-          className="border border-gray-200 flex items-center gap-2 hover:bg-primary/50"
-          variant="outline"
+          className="border border-gray-200 flex items-center gap-2 text-sm hover:bg-primary/50"
+          variant="ghost"
         >
-          {name || "Unnamed Carousel"}
+          Saved Carousels
         </Button>
+        <span className=" px-2  rounded-md">/</span>
+
+        <input
+          type="text"
+          placeholder="Search"
+          className="border border-gray-200 px-2 py-[7px] rounded-md"
+          value={name}
+          onChange={(e) =>
+            dispatch(setProperty({ key: "name", value: e.target.value }))
+          }
+        />
       </div>
 
       <div className="ml-auto flex items-center gap-4">
