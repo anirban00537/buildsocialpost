@@ -1,5 +1,4 @@
 import { Poppins } from "next/font/google";
-import "./globals.css";
 import DefaultLayout from "@/components/layout/default.layout";
 import AuthCheckLayout from "@/components/layout/authCheckLayout";
 const poppins = Poppins({
@@ -18,16 +17,10 @@ export const metadata = {
     "Create and share your own LinkedIn, TikTok, Instagram and Facebook carousel with ease",
 };
 
-export default function RootLayout({
+export default function EditorLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  return (
-    <html lang="en" className={`${poppins.className} `}>
-      <body className="">
-        <DefaultLayout>{children}</DefaultLayout>
-      </body>
-    </html>
-  );
+  return <AuthCheckLayout>{children}</AuthCheckLayout>;
 }

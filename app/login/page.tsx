@@ -1,8 +1,10 @@
 "use client";
 import React from "react";
 import { useGoogleLogin } from "@/hooks/useAuth";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Button } from "@/components/ui/button";
 
-const LoginPage = () => {
+const LoginPage: React.FC = () => {
   const {
     loginWithGoogle,
     loading: googleLoginLoading,
@@ -18,14 +20,14 @@ const LoginPage = () => {
   };
 
   return (
-    <main className="w-full h-screen flex bg-gradient-to-r bg-primary/10  flex-col items-center justify-center px-4">
-      <div className="max-w-md w-full bg-white border p-10 rounded-lg shadow-xl text-gray-600 space-y-8">
+    <main className="w-full min-h-screen flex bg-gradient-to-r from-primary/10 to-secondary/10 flex-col items-center justify-center px-4">
+      <div className="max-w-md w-full bg-white border p-8 rounded-lg shadow-xl text-gray-600 space-y-6">
         <div className="text-center">
           <img src="/logo.svg" width={150} className="mx-auto" alt="Logo" />
           <div className="mt-5 space-y-2">
-            <h3 className="text-gray-800 text-3xl font-bold sm:text-4xl">
+            <h1 className="text-gray-800 text-3xl font-bold sm:text-4xl">
               Log in to your account
-            </h3>
+            </h1>
             <p className="">
               Don't have an account?{" "}
               <a
@@ -41,17 +43,23 @@ const LoginPage = () => {
         <div className="relative my-6">
           <span className="block w-full h-px bg-gray-300"></span>
         </div>
-        <div className="space-y-4 text-sm font-medium">
+
+        <form onSubmit={(e) => e.preventDefault()} className="space-y-4">
           {googleLoginError && (
-            <p className="text-center text-red-500">{googleLoginError}</p>
+            <Alert variant="destructive">
+              <AlertDescription>{googleLoginError}</AlertDescription>
+            </Alert>
           )}
           {googleLoginSuccess && (
-            <p className="text-center text-green-500">{googleLoginSuccess}</p>
+            <Alert>
+              <AlertDescription>{googleLoginSuccess}</AlertDescription>
+            </Alert>
           )}
-          <button
-            className="w-full flex items-center justify-center gap-x-3 py-3 border rounded-lg hover:bg-gray-50 duration-150 active:bg-gray-100"
+          <Button
+            className="w-full flex items-center justify-center gap-x-3 py-3"
             onClick={handleGoogleLogin}
             disabled={googleLoginLoading}
+            aria-label="Sign in with Google"
           >
             <svg
               className="w-5 h-5"
@@ -83,11 +91,36 @@ const LoginPage = () => {
                 </clipPath>
               </defs>
             </svg>
-            {googleLoginLoading
-              ? "Logging in with Google..."
-              : "Continue with Google"}
-          </button>
-        </div>
+            {googleLoginLoading ? (
+              <span className="flex items-center">
+                <svg
+                  className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                  ></circle>
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                  ></path>
+                </svg>
+                Logging in...
+              </span>
+            ) : (
+              "Continue with Google"
+            )}
+          </Button>
+        </form>
+
         <div className="text-center mt-6">
           <a href="#" className="text-indigo-600 hover:text-indigo-500">
             Forgot password?

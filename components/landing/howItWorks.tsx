@@ -1,88 +1,74 @@
 import React from "react";
-import { motion } from "framer-motion";
+import { Paintbrush, Sliders, Sparkles, Share2 } from "lucide-react";
 
-const steps = [
-  {
-    icon: <i className="fas fa-paint-brush text-blue-500"></i>,
-    title: "Step 1: Choose a Template",
-    description:
-      "Select from a variety of professionally designed templates to start your carousel.",
-    color: "text-blue-500",
-  },
-  {
-    icon: <i className="fas fa-edit text-green-500"></i>,
-    title: "Step 2: Customize Your Design",
-    description:
-      "Use our dynamic color palettes and text customization features to make your carousel unique.",
-    color: "text-green-500",
-  },
-  {
-    icon: <i className="fas fa-magic text-red-500"></i>,
-    title: "Step 3: Generate Content",
-    description:
-      "Let our AI generate engaging content for your carousel slides.",
-    color: "text-red-500",
-  },
-  {
-    icon: <i className="fas fa-download text-purple-500"></i>,
-    title: "Step 4: Download and Share",
-    description:
-      "Download your carousel as an image or PDF and share it on your social media platforms.",
-    color: "text-purple-500",
-  },
-];
-
-const containerVariants = {
-  hidden: { opacity: 1 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.3,
+const HowItWorksSection = () => {
+  const steps = [
+    {
+      icon: <Paintbrush className="w-8 h-8" />,
+      number: "01",
+      title: "Choose a Template",
+      description:
+        "Select from a variety of professionally designed templates to start your carousel.",
     },
-  },
-};
+    {
+      icon: <Sliders className="w-8 h-8" />,
+      number: "02",
+      title: "Customize Your Design",
+      description:
+        "Use our dynamic color palettes and text customization features to make your carousel unique.",
+    },
+    {
+      icon: <Sparkles className="w-8 h-8" />,
+      number: "03",
+      title: "Generate Content",
+      description:
+        "Let our AI generate engaging content for your carousel slides.",
+    },
+    {
+      icon: <Share2 className="w-8 h-8" />,
+      number: "04",
+      title: "Download and Share",
+      description:
+        "Download your carousel as an image or PDF and share it on your social media platforms.",
+    },
+  ];
 
-const itemVariants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.6, type: "spring" },
-  },
-};
-
-const HowItWorksSection: React.FC = () => {
   return (
-    <motion.section
-      id="how-it-works"
-      className="py-28 bg-gradient-to-r "
-      initial="hidden"
-      animate="visible"
-      variants={containerVariants}>
-      <div className="max-w-screen-xl mx-auto px-4 text-center">
-        <h2 className="text-4xl font-bold text-gray-800">How It Works</h2>
-        <p className="mt-4 text-lg text-gray-600">
-          Our AI carousel maker simplifies the creation process into a few easy
-          steps.
-        </p>
-        <motion.div className="mt-12 flex flex-wrap justify-center gap-12">
-          {steps.map((step, idx) => (
-            <motion.div
-              key={idx}
-              className="max-w-sm p-6 bg-white rounded-lg"
-              variants={itemVariants}>
-              <div className="flex items-center justify-center mb-4">
-                <span className={`text-5xl ${step.color}`}>{step.icon}</span>
+    <section className="py-16 bg-gradient-to-b from-gray-50 to-white">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-center mb-12">
+          <h2 className="text-3xl font-bold text-gray-900 sm:text-4xl">
+            How It Works
+          </h2>
+          <p className="mt-4 text-xl text-gray-600 max-w-3xl mx-auto">
+            Our AI carousel maker simplifies the creation process into a few
+            easy steps.
+          </p>
+        </div>
+
+        <div className="mt-16">
+          <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">
+            {steps.map((step, index) => (
+              <div
+                key={index}
+                className="flex flex-col items-center text-center"
+              >
+                <div className="flex items-center justify-center w-16 h-16 rounded-full bg-primary/10 text-primary mb-4">
+                  {step.icon}
+                </div>
+                <div className="text-sm font-semibold text-primary mb-2">
+                  Step {step.number}
+                </div>
+                <h4 className="text-xl font-semibold text-gray-900 mb-2">
+                  {step.title}
+                </h4>
+                <p className="text-gray-600">{step.description}</p>
               </div>
-              <h3 className="text-2xl font-semibold text-gray-800">
-                {step.title}
-              </h3>
-              <p className="mt-4 text-gray-600">{step.description}</p>
-            </motion.div>
-          ))}
-        </motion.div>
+            ))}
+          </div>
+        </div>
       </div>
-    </motion.section>
+    </section>
   );
 };
 

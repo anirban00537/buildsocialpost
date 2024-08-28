@@ -1,4 +1,3 @@
-// hooks/useAuthUser.ts
 import { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { useRouter } from "next/navigation";
@@ -45,7 +44,13 @@ const getUser = async (): Promise<User | null> => {
 };
 
 // Function to fetch subscription status
-const fetchSubscriptionStatus = async (userId: string) => {
+const fetchSubscriptionStatus = async (
+  userId: string
+): Promise<{
+  isSubscribed: boolean;
+  endDate: string | null;
+  error?: string;
+}> => {
   try {
     const q = query(
       collection(db, "subscriptions"),
@@ -58,7 +63,7 @@ const fetchSubscriptionStatus = async (userId: string) => {
     if (!querySnapshot.empty) {
       const doc = querySnapshot.docs[0];
       const data = doc.data();
-      const endDate = new Date(data.endDate).toISOString(); // Convert Date to string
+      const endDate = new Date(data.endDate).toISOString();
       const isExpired = new Date(endDate) < new Date();
       return { isSubscribed: !isExpired, endDate };
     } else {
@@ -71,7 +76,14 @@ const fetchSubscriptionStatus = async (userId: string) => {
 };
 
 // Function to fetch branding settings
-const fetchBrandingSettings = async (userId: string) => {
+const fetchBrandingSettings = async (
+  userId: string
+): Promise<{
+  name: string;
+  handle: string;
+  headshot: string | null;
+  error?: string;
+}> => {
   try {
     const docRef = doc(db, "user_branding", userId);
     const docSnap = await getDoc(docRef);
@@ -99,15 +111,15 @@ const useLogout = () => {
   const dispatch = useDispatch();
   const router = useRouter();
 
-  const { mutate: logoutUser, isLoading: loading } = useMutation(
+  const { mutate: logoutUser, isLoading: loading } = useMutation<void, Error>(
     async () => await signOut(auth),
     {
       onSuccess: () => {
         dispatch(logout());
-        setSuccess("");
+        setSuccess("Logged out successfully");
         router.push("/login");
       },
-      onError: (error: any) => {
+      onError: (error: Error) => {
         setError(error.message || "Logout failed. Please try again.");
       },
     }
@@ -126,15 +138,18 @@ const useAuthUser = () => {
     isLoading: userLoading,
     error: userError,
     refetch: refetchUser,
-  } = useQuery("user", getUser, {
+  } = useQuery<User | null, Error>("user", getUser, {
     onSuccess: (data) => {
       if (data) {
         const { uid, email, displayName, photoURL } = data;
         dispatch(setUser({ uid, email, displayName, photoURL }));
+      } else {
+        dispatch(logout());
       }
     },
-    onError: (error: any) => {
+    onError: (error: Error) => {
       setError(error.message || "Failed to fetch the current user.");
+      dispatch(logout());
     },
   });
 
@@ -156,7 +171,7 @@ const useAuthUser = () => {
         dispatch(setSubscribed(data.isSubscribed));
         dispatch(setEndDate(data.endDate));
       },
-      onError: (error: any) => {
+      onError: (error: Error) => {
         setError(error.message || "Failed to fetch subscription status.");
         dispatch(setSubscribed(false));
         dispatch(setEndDate(null));
@@ -179,7 +194,7 @@ const useAuthUser = () => {
       onSuccess: (data) => {
         dispatch(setBranding(data));
       },
-      onError: (error: any) => {
+      onError: (error: Error) => {
         setError(error.message || "Failed to fetch branding settings.");
       },
     }
@@ -187,10 +202,14 @@ const useAuthUser = () => {
 
   useEffect(() => {
     dispatch(setLoading(userLoading || subscriptionLoading || brandingLoading));
-  }, [userLoading, subscriptionLoading, brandingLoading, dispatch]);
+  }, [userLoading, subscriptionLoading, brandingLoading]);
 
   return {
-    error: userError || subscriptionError || brandingError,
+    error:
+      error ||
+      userError?.message ||
+      subscriptionError?.message ||
+      brandingError?.message,
     user: userData,
     loading: userLoading || subscriptionLoading || brandingLoading,
     fetchUser: refetchUser,
@@ -204,7 +223,10 @@ const useGoogleLogin = () => {
   const dispatch = useDispatch();
   const router = useRouter();
 
-  const { mutate: loginWithGoogle, isLoading: loading } = useMutation(
+  const { mutate: loginWithGoogle, isLoading: loading } = useMutation<
+    void,
+    Error
+  >(
     async () => {
       const provider = new GoogleAuthProvider();
       const result = await signInWithPopup(auth, provider);
@@ -217,7 +239,7 @@ const useGoogleLogin = () => {
         setSuccess("Logged in successfully!");
         router.push("/editor");
       },
-      onError: (error: any) => {
+      onError: (error: Error) => {
         setError(
           error.message || "Failed to log in with Google. Please try again."
         );

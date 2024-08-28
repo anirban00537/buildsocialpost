@@ -2,6 +2,7 @@ import Link from "next/link";
 import React from "react";
 import { motion } from "framer-motion";
 import { AnimatedTooltip } from "../ui/animated-tooltip";
+import { ArrowRight, Sparkles } from "lucide-react";
 
 const textContainerVariants = {
   hidden: { opacity: 0 },
@@ -20,7 +21,7 @@ const textVariants = {
 };
 
 const videoVariants = {
-  hidden: { opacity: 0, scale: 0.8, rotate: -10 },
+  hidden: { opacity: 0, scale: 0.8, rotate: -5 },
   visible: {
     opacity: 1,
     scale: 1,
@@ -28,6 +29,7 @@ const videoVariants = {
     transition: { duration: 1, ease: "easeOut" },
   },
 };
+
 const people = [
   {
     id: 1,
@@ -72,76 +74,88 @@ const people = [
       "https://images.unsplash.com/photo-1544725176-7c40e5a71c5e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=3534&q=80",
   },
 ];
+
 const Hero = () => {
   return (
     <motion.section
-      className="py-28"
+      className="py-20  overflow-hidden"
       initial="hidden"
       animate="visible"
       transition={{ duration: 0.5 }}
     >
-      <div className="max-w-screen-2xl mx-auto flex flex-col items-center text-center text-gray-600 gap-y-12 px-4 md:px-8">
+      <div className="max-w-7xl mx-auto flex flex-col items-center text-center px-4 md:px-8">
         <motion.div
-          className="space-y-5 sm:max-w-lg lg:max-w-5xl"
+          className="space-y-8 sm:max-w-2xl lg:max-w-3xl"
           variants={textContainerVariants}
         >
           <motion.h1
-            className="text-base text-primary font-medium"
+            className="text-lg text-primary font-semibold flex items-center justify-center"
             variants={textVariants}
           >
+            <Sparkles className="mr-2 w-6 h-6" />
             Create Stunning Carousels with AI
           </motion.h1>
           <motion.h2
-            className="text-5xl text-gray-800 leading-[58px] font-extrabold md:text-7xl"
+            className="text-5xl text-gray-900 leading-tight font-extrabold md:text-6xl lg:text-7xl"
             variants={textVariants}
           >
-            Create Social Media Carousels{" "}
-            <motion.span
-              className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-teal-400"
-              variants={textVariants}
-            >
-              With AI
-            </motion.span>
+            Design Social Media Carousels{" "}
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-teal-400">
+              With AI Magic
+            </span>
           </motion.h2>
-          <motion.p className="text-2xl" variants={textVariants}>
-            Our AI tool helps you generate content, customize designs, and
-            download your creations, simplifying your design process.
+          <motion.p
+            className="text-xl text-gray-600 max-w-2xl mx-auto"
+            variants={textVariants}
+          >
+            Our AI-powered tool streamlines your design process, helping you
+            generate content, customize designs, and create stunning carousels
+            in minutes.
           </motion.p>
-          <div className="flex flex-row items-center justify-center mb-10 w-full">
-            <AnimatedTooltip items={people} />
-          </div>
           <motion.div
-            className="items-center gap-x-3 space-y-3 sm:flex sm:space-y-0 justify-center"
+            className="flex flex-col sm:flex-row items-center justify-center gap-4"
             variants={textVariants}
           >
             <Link
               href="/editor"
-              className="block py-2 px-4 text-center text-white font-medium bg-primary duration-150 hover:bg-primary/90 rounded-lg"
+              className="group flex items-center justify-center py-3 px-6 text-lg text-white font-medium bg-primary rounded-full hover:bg-primary/80 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
             >
-              Let's get started
+              Get started
+              <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
             </Link>
+            <a
+              href="#demo"
+              className="text-lg text-primary font-medium hover:text-primary/80 transition-colors duration-300"
+            >
+              Watch demo
+            </a>
           </motion.div>
         </motion.div>
+
+        <div className="mt-12 mb-8">
+          <p className="text-gray-600 mb-4">Trusted by creators worldwide</p>
+          <div className="flex flex-wrap justify-center gap-4">
+            <AnimatedTooltip items={people} />
+          </div>
+        </div>
+
         <motion.div
-          className="w-auto rounded-3xl flex justify-center bg-primary p-2"
+          className="w-full max-w-4xl rounded-2xl bg-gradient-to-r from-blue-600 to-teal-400 p-1 shadow-2xl"
           variants={videoVariants}
         >
-          <video
-            className="rounded-lg"
-            width="900"
-            height="600"
-            controls={false}
-            autoPlay={true}
-            muted
-            loop
-          >
-            <source
-              // src="https://firebasestorage.googleapis.com/v0/b/buildcarousel-4e9ec.appspot.com/o/Untitled%20video%20-%20Made%20with%20Clipchamp%20(2).mp4?alt=media&token=9487d6dc-20d9-4f06-ae43-ee4f6a8055e1"
-              src="/intro.mp4"
-              type="video/mp4"
-            />
-            Your browser does not support the video tag.
-          </video>
+          <div className="rounded-xl overflow-hidden bg-white">
+            <video
+              className="w-full h-auto"
+              controls={false}
+              autoPlay={true}
+              muted
+              loop
+              playsInline
+            >
+              <source src="/intro.mp4" type="video/mp4" />
+              Your browser does not support the video tag.
+            </video>
+          </div>
         </motion.div>
       </div>
     </motion.section>

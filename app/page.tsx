@@ -55,8 +55,8 @@ const Page = () => {
             <a href="javascript:void(0)">
               <Image
                 src="/logo.svg"
-                width={120}
-                height={120}
+                width={60}
+                height={60}
                 alt="buildcarousel.com"
               />
             </a>
@@ -126,11 +126,8 @@ const Page = () => {
       </div>
       <InfiniteCarouselsPreview />
       <FeaturesSection />
-
       <HowItWorksSection />
-
       <PlanSection />
-
       <Testimonial />
 
       <footer className="pt-10 bg-white">

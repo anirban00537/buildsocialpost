@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState, FC, useCallback } from "react";
+import React, { useEffect, useState, useCallback, useMemo } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import SubscriptionInfo from "@/components/subscription/status";
@@ -18,7 +18,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import CarouselListModal from "@/components/editor/CarouselListModal";
-import { Download, Image, User, CreditCard, LogOut } from "lucide-react";
+import { Download, User, CreditCard, LogOut } from "lucide-react";
 import { setProperty } from "@/state/slice/carousel.slice";
 
 // Utility function to get user initials
@@ -26,61 +26,55 @@ const getInitials = (email: string): string =>
   email ? email.charAt(0).toUpperCase() : "U";
 
 // UserDropdown Component
-const UserDropdown: FC<{ user: any; onLogout: () => void }> = ({
-  user,
-  onLogout,
-}) => (
-  <DropdownMenu>
-    <DropdownMenuTrigger asChild>
-      <span>
-        {user.photoURL ? (
-          <img
-            className="w-8 h-8 rounded-full"
-            src={user.photoURL}
-            alt="User Avatar"
-          />
-        ) : (
-          <div className="w-8 h-8 rounded-full flex items-center justify-center bg-primary text-white">
-            {getInitials(user.email)}
-          </div>
-        )}
-      </span>
-    </DropdownMenuTrigger>
-    <DropdownMenuContent className="w-56">
-      <DropdownMenuLabel>{user.displayName}</DropdownMenuLabel>
-      <DropdownMenuSeparator />
-      <DropdownMenuItem className="flex items-center gap-2">
-        <User className="w-4 h-4" />
-        Profile
-      </DropdownMenuItem>
-      <DropdownMenuItem className="flex items-center gap-2">
-        <CreditCard className="w-4 h-4" />
-        Billing
-      </DropdownMenuItem>
-      <DropdownMenuItem onClick={onLogout} className="flex items-center gap-2">
-        <LogOut className="w-4 h-4" />
-        Logout
-      </DropdownMenuItem>
-    </DropdownMenuContent>
-  </DropdownMenu>
+const UserDropdown: React.FC<{ user: any; onLogout: () => void }> = React.memo(
+  ({ user, onLogout }) => (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button variant="ghost" className="h-8 w-8 rounded-full">
+          {user.photoURL ? (
+            <img
+              className="h-8 w-8 rounded-full"
+              src={user.photoURL}
+              alt="User Avatar"
+            />
+          ) : (
+            <div className="h-8 w-8 rounded-full flex items-center justify-center bg-primary text-white">
+              {getInitials(user.email)}
+            </div>
+          )}
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent className="w-56" align="end">
+        <DropdownMenuLabel>{user.displayName || user.email}</DropdownMenuLabel>
+        <DropdownMenuSeparator />
+        <DropdownMenuItem className="flex items-center gap-2">
+          <User className="w-4 h-4" />
+          Profile
+        </DropdownMenuItem>
+        <DropdownMenuItem className="flex items-center gap-2">
+          <CreditCard className="w-4 h-4" />
+          Billing
+        </DropdownMenuItem>
+        <DropdownMenuItem
+          onClick={onLogout}
+          className="flex items-center gap-2"
+        >
+          <LogOut className="w-4 h-4" />
+          Logout
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  )
 );
 
 // DownloadDropdown Component
-const DownloadDropdown: FC<{
+const DownloadDropdown: React.FC<{
   onDownloadPDF: () => void;
   onDownloadZip: () => void;
   pdfLoading: boolean;
   zipLoading: boolean;
-}> = ({ onDownloadPDF, onDownloadZip, pdfLoading, zipLoading }) => {
-  const [isDownloading, setIsDownloading] = useState(false);
-
-  useEffect(() => {
-    if (pdfLoading || zipLoading) {
-      setIsDownloading(true);
-    } else {
-      setIsDownloading(false);
-    }
-  }, [pdfLoading, zipLoading]);
+}> = React.memo(({ onDownloadPDF, onDownloadZip, pdfLoading, zipLoading }) => {
+  const isDownloading = pdfLoading || zipLoading;
 
   return (
     <DropdownMenu>
@@ -100,9 +94,9 @@ const DownloadDropdown: FC<{
       </DropdownMenuContent>
     </DropdownMenu>
   );
-};
+});
 
-const EditorNavbar: FC = () => {
+const EditorNavbar: React.FC = () => {
   const { exportSlidesToPDF, exportSlidesToZip, pdfLoading, zipLoading } =
     useCarousel();
   const {
@@ -116,7 +110,6 @@ const EditorNavbar: FC = () => {
   const { logout } = useLogout();
   const user = useSelector((state: RootState) => state.user.userinfo);
   const { name } = useSelector((state: RootState) => state.slides);
-  const initials = user?.email ? getInitials(user.email) : null;
   const searchParams = useSearchParams();
   const carouselId = searchParams.get("id");
   const dispatch = useDispatch();
@@ -136,9 +129,18 @@ const EditorNavbar: FC = () => {
     createOrUpdateCarousel(name, carouselId ?? undefined);
   }, [name, carouselId, createOrUpdateCarousel]);
 
+  const handleNameChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      dispatch(setProperty({ key: "name", value: e.target.value }));
+    },
+    [dispatch]
+  );
+
+  const memoizedCarousels = useMemo(() => carousels, [carousels]);
+
   return (
     <header className="bg-white sticky top-0 h-[65px] flex items-center justify-between border-b border-gray-200 z-40 px-4 shadow-sm">
-      <div className="flex items-center ">
+      <div className="flex items-center">
         <Link href="/">
           <img src="/logo.svg" alt="Logo" className="h-9 object-cover mr-5" />
         </Link>
@@ -149,16 +151,15 @@ const EditorNavbar: FC = () => {
         >
           Saved Carousels
         </Button>
-        <span className=" px-2  rounded-md">/</span>
+        <span className="px-2 rounded-md">/</span>
 
         <input
           type="text"
           placeholder="Search"
           className="border border-gray-200 px-2 py-[7px] rounded-md"
           value={name}
-          onChange={(e) =>
-            dispatch(setProperty({ key: "name", value: e.target.value }))
-          }
+          onChange={handleNameChange}
+          aria-label="Search carousels"
         />
       </div>
 
@@ -217,9 +218,8 @@ const EditorNavbar: FC = () => {
         )}
       </div>
 
-      {/* View All Carousels Modal */}
       <CarouselListModal
-        carousels={carousels}
+        carousels={memoizedCarousels}
         isViewAllModalOpen={isViewAllModalOpen}
         setIsViewAllModalOpen={setIsViewAllModalOpen}
         createOrUpdateCarousel={createOrUpdateCarousel}
@@ -230,4 +230,4 @@ const EditorNavbar: FC = () => {
   );
 };
 
-export default EditorNavbar;
+export default React.memo(EditorNavbar);
