@@ -71,36 +71,53 @@ const SlideComponent: React.FC<SlideProps> = ({
               left: "0px",
               transform: "translateX(-50%)",
               position: "absolute",
-              bottom: "0px",
+              top: "-60px",
               width: "320px",
               height: "320px",
             }}
             color4={color4}
+            color2={color2}
           />
           <GradientCircle
             positionStyles={{
               right: "0px",
-              transform: "translateX(70%)",
+              transform: "translateX(50%)",
               position: "absolute",
-              top: "-140px",
-              width: "420px",
-              height: "420px",
+              bottom: "-60px",
+              width: "320px",
+              height: "320px",
             }}
             color4={color4}
+            color2={color2}
           />
         </>
       ) : (
-        <GradientCircle
-          positionStyles={{
-            right: "0px",
-            transform: "translateX(50%)",
-            position: "absolute",
-            bottom: "0px",
-            width: "320px",
-            height: "320px",
-          }}
-          color4={color4}
-        />
+        <>
+          <GradientCircle
+            positionStyles={{
+              right: "0px",
+              transform: "translateX(50%)",
+              position: "absolute",
+              top: "-60px",
+              width: "320px",
+              height: "320px",
+            }}
+            color4={color4}
+            color2={color2}
+          />
+          <GradientCircle
+            positionStyles={{
+              left: "0px",
+              transform: "translateX(-50%)",
+              position: "absolute",
+              bottom: "-60px",
+              width: "320px",
+              height: "320px",
+            }}
+            color4={color4}
+            color2={color2}
+          />
+        </>
       )}
 
       <Background
@@ -247,7 +264,6 @@ const SlideComponent: React.FC<SlideProps> = ({
           buildcarousel.com
         </a>
       </div>
-    
     </div>
   );
 };

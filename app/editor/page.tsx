@@ -13,7 +13,7 @@ function Dashboard() {
         <div className="md:flex flex-col items-center justify-center md:items-start md:justify-start md:flex-grow-0 md:flex-basis-1/3 md:mt-[63px] md:fixed md:top-0 md:left-0 md:h-screen z-30">
           <MainSidebar />
         </div>
-        <main className="flex-1 max-h-full p-5 ml-[390px]  bg-slate-50 overflow-hidden overflow-y-scroll">
+        <main className="flex-1 max-h-full p-5 ml-[390px]  bg-slate-100 overflow-hidden overflow-y-scroll">
           <div>
             <EditorBody />
           </div>
