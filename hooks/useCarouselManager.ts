@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import {
   collection,
   doc,
@@ -51,7 +51,10 @@ export const useCarouselManager = () => {
     layout: data.layout,
     background: data.background,
     slides: data.slides,
-    sharedSelectedElement,
+    sharedSelectedElement: {
+      id: data.sharedSelectedElement?.id,
+      opacity: data.sharedSelectedElement?.opacity,
+    },
   });
 
   const createOrUpdateCarousel = useCallback(
@@ -81,17 +84,14 @@ export const useCarouselManager = () => {
 
         let docRef;
         if (id) {
-          // Update existing carousel
           docRef = doc(db, "carousels", id);
           await updateDoc(docRef, { ...firestoreData });
         } else {
-          // Create new carousel
           docRef = doc(collection(db, "carousels"));
           await setDoc(docRef, { ...firestoreData });
-          router.push(`?id=${docRef.id}`); // Add the document ID to the URL
+          router.push(`?id=${docRef.id}`);
         }
 
-        // Update the carousel list
         const updatedCarousel = { id: docRef.id, data: carouselData };
         setCarousels((prevCarousels) =>
           id
@@ -104,7 +104,6 @@ export const useCarouselManager = () => {
         setCarousel(carouselData);
       } catch (err) {
         setError("Failed to save carousel");
-        console.error("Error saving carousel:", err);
       } finally {
         setLoading(false);
       }
@@ -119,6 +118,7 @@ export const useCarouselManager = () => {
       background,
       slides,
       router,
+      sharedSelectedElement,
     ]
   );
 
@@ -133,7 +133,6 @@ export const useCarouselManager = () => {
           const data = docSnap.data() as CarouselState;
           setCarousel(data);
 
-          // Dispatch actions to update Redux store
           dispatch(setProperty({ key: "name", value: data.name }));
           dispatch(addAllSlides(data.slides));
           dispatch(setProperty({ key: "background", value: data.background }));
@@ -161,19 +160,17 @@ export const useCarouselManager = () => {
             setProperty({
               key: "sharedSelectedElement",
               value: {
-                id: data.sharedSelectedElement?.id || null,
-                opacity: data.sharedSelectedElement?.opacity || null,
+                id: data.sharedSelectedElement?.id || 0,
+                opacity: data.sharedSelectedElement?.opacity || 0.5,
               },
             })
           );
         } else {
           setError("Carousel not found");
-          // Remove the id from the query parameters
           router.push("/editor");
         }
       } catch (err) {
         setError("Failed to fetch carousel details");
-        console.error("Error fetching carousel details:", err);
       } finally {
         setLoading(false);
       }
@@ -193,7 +190,6 @@ export const useCarouselManager = () => {
       );
     } catch (err) {
       setError("Failed to delete carousel");
-      console.error("Error deleting carousel:", err);
     } finally {
       setLoading(false);
     }
@@ -219,7 +215,6 @@ export const useCarouselManager = () => {
       }
     } catch (err) {
       setError("Failed to fetch carousels");
-      console.error("Error fetching carousels:", err);
     } finally {
       setLoading(false);
     }

@@ -27,7 +27,7 @@ const CarouselListModal: FC<CarouselListModalProps> = ({
   const router = useRouter();
 
   const handleOpenCarousel = (carousel: any) => {
-    router.push(`?id=${carousel.id}`);
+    router.push(`?id=${carousel?.id}`);
     setIsViewAllModalOpen(false);
   };
 
@@ -41,7 +41,7 @@ const CarouselListModal: FC<CarouselListModalProps> = ({
     setCurrentPage(newPage);
   };
 
-  const paginatedCarousels = carousels.slice(
+  const paginatedCarousels = carousels?.slice(
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
   );
@@ -56,13 +56,13 @@ const CarouselListModal: FC<CarouselListModalProps> = ({
               <p>No carousels found</p>
             </div>
           )}
-          {paginatedCarousels.map((carousel) => (
+          {paginatedCarousels?.map((carousel) => (
             <div
-              key={carousel.id}
+              key={carousel?.id}
               className="flex justify-between items-center p-2 hover:bg-gray-100 rounded"
             >
               <>
-                <span>{carousel.data.name || "Unnamed Carousel"}</span>
+                <span>{carousel?.data?.name || "Unnamed Carousel"}</span>
                 <div className="flex gap-2">
                   <Button
                     variant="outline"
@@ -75,7 +75,7 @@ const CarouselListModal: FC<CarouselListModalProps> = ({
                   <Button
                     variant="outline"
                     size="sm"
-                    onClick={() => handleDeleteCarousel(carousel.id)}
+                    onClick={() => handleDeleteCarousel(carousel?.id)}
                   >
                     <Trash className="w-3 h-3 mr-1" />
                     Delete
@@ -97,14 +97,15 @@ const CarouselListModal: FC<CarouselListModalProps> = ({
               Previous
             </Button>
             <span>
-              Page {currentPage} of {Math.ceil(carousels.length / itemsPerPage)}
+              Page {currentPage} of{" "}
+              {Math?.ceil(carousels?.length / itemsPerPage)}
             </span>
             <Button
               variant="outline"
               size="sm"
               onClick={() => handlePageChange(currentPage + 1)}
               disabled={
-                currentPage === Math.ceil(carousels.length / itemsPerPage)
+                currentPage === Math?.ceil(carousels?.length / itemsPerPage)
               }
             >
               Next
