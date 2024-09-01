@@ -1,3 +1,14 @@
+import {
+  ArrowRight,
+  CircularProgress,
+  Fullscreen,
+  Heart,
+  PlayButton,
+  Settings,
+  Share,
+  Star,
+} from "@/components/icons/shared-icons";
+
 export const carouselsSize = [
   {
     id: 1,
@@ -19,5 +30,48 @@ export const carouselsSize = [
     ratio: "4:5",
     width: 480,
     height: 600,
+  },
+];
+
+export const sharedElements = [
+  {
+    id: 1,
+    name: "arrow right",
+    component: ArrowRight,
+  },
+  {
+    id: 2,
+    name: "circular progress",
+    component: CircularProgress,
+  },
+  {
+    id: 3,
+    name: "fullscreen",
+    component: Fullscreen,
+  },
+  {
+    id: 4,
+    name: "heart",
+    component: Heart,
+  },
+  {
+    id: 5,
+    name: "star",
+    component: Star,
+  },
+  {
+    id: 6,
+    name: "share",
+    component: Share,
+  },
+  {
+    id: 7,
+    name: "settings",
+    component: Settings,
+  },
+  {
+    id: 8,
+    name: "play",
+    component: PlayButton,
   },
 ];

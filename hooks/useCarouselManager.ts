@@ -36,6 +36,7 @@ export const useCarouselManager = () => {
     background,
     slides,
     name,
+    sharedSelectedElement,
   } = useSelector((state: RootState) => state.slides);
 
   const convertToFirestoreData = (
@@ -50,6 +51,7 @@ export const useCarouselManager = () => {
     layout: data.layout,
     background: data.background,
     slides: data.slides,
+    sharedSelectedElement,
   });
 
   const createOrUpdateCarousel = useCallback(
@@ -71,6 +73,7 @@ export const useCarouselManager = () => {
         layout,
         background,
         slides,
+        sharedSelectedElement,
       };
 
       try {
@@ -153,6 +156,16 @@ export const useCarouselManager = () => {
             })
           );
           dispatch(setProperty({ key: "layout", value: data.layout }));
+
+          dispatch(
+            setProperty({
+              key: "sharedSelectedElement",
+              value: {
+                id: data.sharedSelectedElement?.id || null,
+                opacity: data.sharedSelectedElement?.opacity || null,
+              },
+            })
+          );
         } else {
           setError("Carousel not found");
           // Remove the id from the query parameters

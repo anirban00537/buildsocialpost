@@ -22,7 +22,6 @@ export interface Slide {
   type: "intro" | "slide" | "outro";
 }
 
-
 export interface IntroSlide {
   tagline: string;
   title: string;
@@ -58,6 +57,10 @@ export interface CarouselState {
   descriptionTextSettings: TextSettings;
   taglineTextSettings: TextSettings;
   layout: LayoutSettings;
+  sharedSelectedElement: {
+    id: number;
+    opacity: number;
+  };
 }
 
 export interface FirestoreCarouselState extends CarouselState {

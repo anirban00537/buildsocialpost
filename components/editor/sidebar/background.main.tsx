@@ -1,7 +1,12 @@
 import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "@/state/store";
-import { setBackground, setPattern } from "@/state/slice/carousel.slice";
+import {
+  setBackground,
+  setPattern,
+  setSharedSelectedElementId,
+  setSharedSelectedElementOpacity,
+} from "@/state/slice/carousel.slice";
 import { HexColorPicker } from "react-colorful";
 import {
   Popover,
@@ -13,10 +18,17 @@ import {
   lightColorPresets,
   darkColorPresets,
 } from "@/lib/color-presets";
+import { sharedElements } from "@/lib/coreConstants";
+import { Slider } from "@/components/ui/slider";
+import { Label } from "@/components/ui/label";
+import { CircleOff } from "lucide-react";
 
 const BackgroundColorsSection = () => {
   const dispatch = useDispatch();
   const background = useSelector((state: RootState) => state.slides.background);
+  const sharedSelectedElement = useSelector(
+    (state: RootState) => state.slides.sharedSelectedElement
+  );
   const [displayColorPicker, setDisplayColorPicker] = React.useState<{
     [key: string]: boolean;
   }>({
@@ -62,7 +74,7 @@ const BackgroundColorsSection = () => {
   };
 
   return (
-    <div className="p-6 bg-gray-50 rounded-lg ">
+    <div className="p-6 bg-gray-50 rounded-lg overflow-y-auto h-full pb-20">
       <form className="grid gap-6 p-4 bg-white rounded-lg shadow-md">
         <legend className="text-lg font-semibold text-gray-700">
           Background Colors
@@ -263,6 +275,53 @@ const BackgroundColorsSection = () => {
               </div>
             </PopoverContent>
           </Popover>
+        </div>
+      </form>
+      <form className="grid gap-6 p-4 mt-6 bg-white rounded-lg shadow-md">
+        <legend className="text-lg font-semibold text-gray-700">
+          Shared Elements
+        </legend>
+        <div className="border p-2 rounded-lg grid grid-cols-4 gap-4">
+          <div
+            className={`flex justify-center items-center p-2 rounded-lg ${
+              sharedSelectedElement?.id === 0
+                ? "bg-primary/20"
+                : "bg-transparent"
+            }`}
+            onClick={() => {
+              dispatch(setSharedSelectedElementId(0));
+              dispatch(setSharedSelectedElementOpacity(0.4));
+            }}
+          >
+            <CircleOff size={20} />
+          </div>
+          {sharedElements.map((element) => (
+            <div
+              key={element?.id}
+              className={`flex justify-center items-center p-2 rounded-lg ${
+                sharedSelectedElement?.id === element?.id
+                  ? "bg-primary/20"
+                  : "bg-transparent"
+              }`}
+              onClick={() => {
+                dispatch(setSharedSelectedElementId(element.id));
+                dispatch(setSharedSelectedElementOpacity(0.4));
+              }}
+            >
+              <element.component />
+            </div>
+          ))}
+        </div>
+        <div className="grid gap-3">
+          <Label htmlFor="opacity">Opacity</Label>
+          <Slider
+            max={1}
+            step={0.01}
+            value={[sharedSelectedElement?.opacity || 0]}
+            onValueChange={(value) =>
+              dispatch(setSharedSelectedElementOpacity(value[0]))
+            }
+          />
         </div>
       </form>
     </div>

@@ -3,7 +3,7 @@ import { ChevronRight } from "lucide-react";
 import { Slide } from "@/types";
 import { useSelector } from "react-redux";
 import { RootState } from "@/state/store";
-import GradientCircle from "./slide-parts/gradientCircle";
+import SharedElementsComponent from "./slide-parts/sharedElements";
 import Text from "./slide-parts/text"; // Updated import
 import Image from "./slide-parts/image";
 import Background from "./slide-parts/background";
@@ -27,6 +27,7 @@ const SlideComponent: React.FC<SlideProps> = ({
     descriptionTextSettings,
     taglineTextSettings,
     layout,
+    sharedSelectedElement,
   } = useSelector((state: RootState) => state.slides);
   const { handle, headshot, name } = useSelector(
     (state: RootState) => state.branding
@@ -66,7 +67,7 @@ const SlideComponent: React.FC<SlideProps> = ({
     >
       {index % 2 === 1 ? (
         <>
-          <GradientCircle
+          <SharedElementsComponent
             positionStyles={{
               left: "0px",
               transform: "translateX(-50%)",
@@ -76,9 +77,10 @@ const SlideComponent: React.FC<SlideProps> = ({
               height: "320px",
             }}
             color4={color4}
-            color2={color2}
+            id={sharedSelectedElement?.id}
+            opacity={sharedSelectedElement?.opacity}
           />
-          <GradientCircle
+          <SharedElementsComponent
             positionStyles={{
               right: "0px",
               transform: "translateX(50%)",
@@ -88,12 +90,13 @@ const SlideComponent: React.FC<SlideProps> = ({
               height: "320px",
             }}
             color4={color4}
-            color2={color2}
+            id={sharedSelectedElement?.id}
+            opacity={sharedSelectedElement?.opacity}
           />
         </>
       ) : (
         <>
-          <GradientCircle
+          <SharedElementsComponent
             positionStyles={{
               right: "0px",
               transform: "translateX(50%)",
@@ -103,9 +106,10 @@ const SlideComponent: React.FC<SlideProps> = ({
               height: "320px",
             }}
             color4={color4}
-            color2={color2}
+            id={sharedSelectedElement?.id}
+            opacity={sharedSelectedElement?.opacity}
           />
-          <GradientCircle
+          <SharedElementsComponent
             positionStyles={{
               left: "0px",
               transform: "translateX(-50%)",
@@ -115,7 +119,8 @@ const SlideComponent: React.FC<SlideProps> = ({
               height: "320px",
             }}
             color4={color4}
-            color2={color2}
+            id={sharedSelectedElement?.id}
+            opacity={sharedSelectedElement?.opacity}
           />
         </>
       )}

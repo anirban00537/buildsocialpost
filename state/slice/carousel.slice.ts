@@ -7,15 +7,20 @@ import {
   LayoutSettings,
 } from "@/types";
 import { initialSlides } from "@/lib/data";
+import { sharedElements } from "@/lib/coreConstants";
 
 const initialState: CarouselState = {
   name: "Default Carousel",
   slides: initialSlides,
   background: {
-    color1: "#1A1A1D", // Dark Charcoal
-    color2: "#F4F4F4", // Light Gray
-    color3: "#4E4E50", // Slate Gray
-    color4: "#C3073F", // Red
+    color1: "#1A1A1D",
+    color2: "#F4F4F4",
+    color3: "#4E4E50",
+    color4: "#C3073F",
+  },
+  sharedSelectedElement: {
+    id: sharedElements[0].id,
+    opacity: 0.5,
   },
   titleTextSettings: {
     alignment: "left",
@@ -125,6 +130,12 @@ const carouselSlice = createSlice({
         state.slides[index + 1] = temp;
       }
     },
+    setSharedSelectedElementId: (state, action: PayloadAction<number>) => {
+      state.sharedSelectedElement.id = action.payload;
+    },
+    setSharedSelectedElementOpacity: (state, action: PayloadAction<number>) => {
+      state.sharedSelectedElement.opacity = action.payload;
+    },
   },
 });
 
@@ -144,6 +155,8 @@ export const {
   setProperty,
   moveSlideLeft,
   moveSlideRight,
+  setSharedSelectedElementId,
+  setSharedSelectedElementOpacity,
 } = carouselSlice.actions;
 
 export default carouselSlice.reducer;
