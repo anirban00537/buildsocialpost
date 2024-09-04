@@ -1,12 +1,23 @@
 import {
   ArrowRight,
+  Bee,
+  Briefcase,
+  Calendar,
+  Chart,
   CircularProgress,
   Fullscreen,
   Heart,
+  ImageFrame,
+  Layout,
+  Lightbulb,
+  Palette,
   PlayButton,
   Settings,
+  Shapes,
   Share,
   Star,
+  Tie,
+  Typography,
 } from "@/components/icons/shared-icons";
 
 export const carouselsSize = [
@@ -74,4 +85,60 @@ export const sharedElements = [
     name: "play",
     component: PlayButton,
   },
+  {
+    id: 9,
+    name: "bee",
+    component: Bee,
+  },
+  {
+    id: 10,
+    name: "calendar",
+    component: Calendar,
+  },
+  {
+    id: 11,
+    name: "tie",
+    component: Tie,
+  },
+  {
+    id: 12,
+    name: "briefcase",
+    component: Briefcase,
+  },
+  {
+    id: 13,
+    name: "chart",
+    component: Chart,
+  },
+  {
+    id: 14,
+    name: "lightbulb",
+    component: Lightbulb,
+  },
+  {
+    id: 15,
+    name: "palette",
+    component: Palette,
+  },
+  {
+    id: 16,
+    name: "shapes",
+    component: Shapes,
+  },
+  {
+    id: 17,
+    name: "typography",
+    component: Typography,
+  },
+  {
+    id: 18,
+    name: "layout",
+    component: Layout,
+  },
+  {
+    id: 19,
+    name: "image frame",
+    component: ImageFrame,
+  },
+  
 ];

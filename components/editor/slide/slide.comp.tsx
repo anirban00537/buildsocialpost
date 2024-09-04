@@ -179,7 +179,8 @@ const SlideComponent: React.FC<SlideProps> = ({
                 fontSize: `${14}px`,
                 marginBottom: "8px",
                 fontWeight: "bold",
-                color: color2,
+                // color: color2,
+                color: "white",
                 alignSelf:
                   titleTextSettings.alignment === "center"
                     ? "center"

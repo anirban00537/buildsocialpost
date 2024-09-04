@@ -82,13 +82,13 @@ const GeneralInfo: React.FC<GeneralInfoProps> = ({
             paddingLeft: "12px",
             paddingRight: "8px",
             fontSize: "14px",
-            color: color2,
+            color: "white",
           }}
         >
           Swipe
           <ChevronRight
             size={23}
-            color={color2}
+            color={"white"}
             className="hover:scale-110 transition-transform"
           />
         </div>

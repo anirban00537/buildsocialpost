@@ -89,7 +89,7 @@ export const useCarouselManager = () => {
         } else {
           docRef = doc(collection(db, "carousels"));
           await setDoc(docRef, { ...firestoreData });
-          router.push(`?id=${docRef.id}`);
+          window.history.replaceState(null, "", `?id=${docRef.id}`);
         }
 
         const updatedCarousel = { id: docRef.id, data: carouselData };
