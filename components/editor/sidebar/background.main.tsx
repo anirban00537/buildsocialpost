@@ -73,6 +73,14 @@ const BackgroundColorsSection = () => {
     dispatch(setBackground(preset));
   };
 
+  const patterns = [
+    "/backgrounds/background1.svg",
+    "/backgrounds/background2.svg",
+    "/backgrounds/background3.svg",
+    "/backgrounds/background4.svg",
+    "/backgrounds/background5.svg",
+  ];
+
   return (
     <div className="p-6 bg-gray-50 rounded-lg overflow-y-auto h-full pb-20">
       <form className="grid gap-6 p-4 bg-white rounded-lg shadow-md">
@@ -228,53 +236,39 @@ const BackgroundColorsSection = () => {
 
       <form className="grid gap-6 p-4 mt-6 bg-white rounded-lg shadow-md">
         <legend className="text-lg font-semibold text-gray-700">Pattern</legend>
-        <div className="border p-4 rounded-lg">
-          <Popover>
-            <PopoverTrigger asChild>
+        <div className="border p-2 rounded-lg grid grid-cols-4 gap-4">
+          <div
+            className={`flex justify-center items-center p-2 rounded-lg ${
+              selectedTemplate === null ? "bg-primary/20" : "bg-transparent"
+            }`}
+            onClick={() => {
+              handlePatternChange("");
+              setSelectedTemplate(null);
+            }}
+          >
+            <CircleOff size={20} />
+          </div>
+          {patterns.map((pattern, index) => (
+            <div
+              key={index}
+              className={`flex justify-center items-center p-2 rounded-lg ${
+                selectedTemplate === pattern ? "bg-primary/20" : "bg-transparent"
+              }`}
+              onClick={() => {
+                handlePatternChange(pattern);
+                setSelectedTemplate(pattern);
+              }}
+            >
               <div
-                className="border rounded-lg overflow-hidden shadow-sm transform transition duration-500 hover:scale-105"
+                className="w-full h-10 border rounded-md"
                 style={{
-                  background: `url(${
-                    selectedTemplate || "/backgrounds/background1.svg"
-                  })`,
+                  background: `url(${pattern})`,
                   backgroundSize: "cover",
                   backgroundPosition: "center",
-                  height: "100px",
-                  cursor: "pointer",
                 }}
               />
-            </PopoverTrigger>
-            <PopoverContent className="z-50 w-auto h-auto bg-white rounded-lg shadow-md p-4">
-              <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-                {Array(5)
-                  .fill(0)
-                  .map((_, index) => (
-                    <div
-                      key={index}
-                      className="border rounded-lg overflow-hidden shadow-sm transform transition duration-500 hover:scale-105"
-                      style={{
-                        background: `url('/backgrounds/background${
-                          index + 1
-                        }.svg')`,
-                        backgroundSize: "cover",
-                        backgroundPosition: "center",
-                        width: "100px",
-                        height: "100px",
-                        cursor: "pointer",
-                      }}
-                      onClick={() => {
-                        handlePatternChange(
-                          `/backgrounds/background${index + 1}.svg`
-                        );
-                        setSelectedTemplate(
-                          `/backgrounds/background${index + 1}.svg`
-                        );
-                      }}
-                    />
-                  ))}
-              </div>
-            </PopoverContent>
-          </Popover>
+            </div>
+          ))}
         </div>
       </form>
       <form className="grid gap-6 p-4 mt-6 bg-white rounded-lg shadow-md">
