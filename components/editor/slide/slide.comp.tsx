@@ -1,13 +1,14 @@
 import React from "react";
 import { ChevronRight } from "lucide-react";
 import { Slide } from "@/types";
-import { useSelector } from "react-redux";
-import { RootState } from "@/state/store";
+import { useSelector, useDispatch } from "react-redux";
+import { setBackgroundOpacity } from "@/state/slice/carousel.slice";
 import SharedElementsComponent from "./slide-parts/sharedElements";
 import Text from "./slide-parts/text"; // Updated import
 import Image from "./slide-parts/image";
 import Background from "./slide-parts/background";
 import GeneralInfo from "./slide-parts/generalInfo";
+import { RootState } from "@/state/store";
 
 interface SlideProps {
   slide: Slide;
@@ -22,6 +23,7 @@ const SlideComponent: React.FC<SlideProps> = ({
   updateSlide,
   slideNumber,
 }) => {
+  const dispatch = useDispatch();
   const {
     titleTextSettings,
     descriptionTextSettings,
@@ -32,16 +34,17 @@ const SlideComponent: React.FC<SlideProps> = ({
   const { handle, headshot, name } = useSelector(
     (state: RootState) => state.branding
   );
-  const { pattern } = layout;
+  const { pattern, backgroundOpacity } = layout;
   const backgroundImageStyle = slide.backgroundImage
     ? {
         backgroundImage: `url(${slide.backgroundImage})`,
         zIndex: 0,
+        opacity: backgroundOpacity,
       }
     : {
         backgroundImage: `url(${pattern})`,
         backgroundPosition: "center",
-        opacity: 0.07,
+        opacity: 0.07 * backgroundOpacity,
         backgroundRepeat: "repeat",
       };
 

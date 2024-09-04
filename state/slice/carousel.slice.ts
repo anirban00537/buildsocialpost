@@ -44,6 +44,7 @@ const initialState: CarouselState = {
     height: 640,
     width: 500,
     pattern: "/backgrounds/background1.svg",
+    backgroundOpacity: 0.5,
   },
 };
 
@@ -136,6 +137,9 @@ const carouselSlice = createSlice({
     setSharedSelectedElementOpacity: (state, action: PayloadAction<number>) => {
       state.sharedSelectedElement.opacity = action.payload;
     },
+    setBackgroundOpacity: (state, action: PayloadAction<number>) => {
+      state.layout.backgroundOpacity = action.payload;
+    },
   },
 });
 
@@ -157,6 +161,7 @@ export const {
   moveSlideRight,
   setSharedSelectedElementId,
   setSharedSelectedElementOpacity,
+  setBackgroundOpacity,
 } = carouselSlice.actions;
 
 export default carouselSlice.reducer;

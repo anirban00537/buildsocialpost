@@ -47,6 +47,7 @@ export interface LayoutSettings {
   height: number;
   width: number;
   pattern: string;
+  backgroundOpacity: number;
 }
 
 export interface CarouselState {

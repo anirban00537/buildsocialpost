@@ -6,6 +6,7 @@ import {
   setPattern,
   setSharedSelectedElementId,
   setSharedSelectedElementOpacity,
+  setBackgroundOpacity,
 } from "@/state/slice/carousel.slice";
 import { HexColorPicker } from "react-colorful";
 import {
@@ -26,9 +27,11 @@ import { CircleOff } from "lucide-react";
 const BackgroundColorsSection = () => {
   const dispatch = useDispatch();
   const background = useSelector((state: RootState) => state.slides.background);
+  const { pattern } = useSelector((state: RootState) => state.slides.layout);
   const sharedSelectedElement = useSelector(
     (state: RootState) => state.slides.sharedSelectedElement
   );
+  const layout = useSelector((state: RootState) => state.slides.layout);
   const [displayColorPicker, setDisplayColorPicker] = React.useState<{
     [key: string]: boolean;
   }>({
@@ -37,7 +40,6 @@ const BackgroundColorsSection = () => {
     color3: false,
     color4: false,
   });
-  const [selectedTemplate, setSelectedTemplate] = useState<string | null>(null);
 
   const handlePatternChange = (value: string) => {
     dispatch(setPattern(value));
@@ -240,40 +242,48 @@ const BackgroundColorsSection = () => {
         <div className="border p-2 rounded-lg grid grid-cols-4 gap-4">
           <div
             className={`flex justify-center items-center p-2 rounded-lg ${
-              selectedTemplate === null ? "bg-primary/20" : "bg-transparent"
+              pattern === "" ? "bg-primary/20" : "bg-transparent"
             }`}
             onClick={() => {
               handlePatternChange("");
-              setSelectedTemplate(null);
             }}
           >
             <CircleOff size={20} />
           </div>
-          {patterns.map((pattern, index) => (
+          {patterns.map((patternItem, index) => (
             <div
               key={index}
               className={`flex justify-center items-center p-2 rounded-lg ${
-                selectedTemplate === pattern
-                  ? "bg-primary/20"
-                  : "bg-transparent"
+                pattern === patternItem ? "bg-primary/20" : "bg-transparent"
               }`}
               onClick={() => {
-                handlePatternChange(pattern);
-                setSelectedTemplate(pattern);
+                handlePatternChange(patternItem);
               }}
             >
               <div
                 className="w-full h-10 border rounded-md"
                 style={{
-                  background: `url(${pattern})`,
+                  background: `url(${patternItem})`,
                   backgroundSize: "cover",
                   backgroundPosition: "center",
                 }}
               />
+              {}
             </div>
           ))}
         </div>
+        <div className="grid gap-3 mt-4">
+          <Label htmlFor="backgroundOpacity">Background Opacity</Label>
+          <Slider
+            id="backgroundOpacity"
+            max={1}
+            step={0.01}
+            value={[layout.backgroundOpacity]}
+            onValueChange={(value) => dispatch(setBackgroundOpacity(value[0]))}
+          />
+        </div>
       </form>
+
       <form className="grid gap-6 p-4 mt-6 bg-white rounded-lg">
         <legend className="text-lg font-semibold text-gray-700">
           Shared Elements

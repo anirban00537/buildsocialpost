@@ -154,7 +154,17 @@ export const useCarouselManager = () => {
               value: data.taglineTextSettings,
             })
           );
-          dispatch(setProperty({ key: "layout", value: data.layout }));
+          dispatch(
+            setProperty({
+              key: "layout",
+              value: {
+                height: data.layout.height,
+                width: data.layout.width,
+                pattern: data.layout.pattern,
+                backgroundOpacity: data.layout.backgroundOpacity || 0.5,
+              },
+            })
+          );
 
           dispatch(
             setProperty({
