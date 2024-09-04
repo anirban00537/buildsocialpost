@@ -22,7 +22,7 @@ const BrandingSection: React.FC = () => {
   return (
     <div className="w-full h-full p-2">
       <form
-        className="grid w-full items-start gap-6 p-3 rounded-lg bg-white shadow-md"
+        className="grid w-full items-start gap-6 p-3 rounded-lg bg-white"
         onSubmit={handleSubmit}
       >
         <legend className="text-lg font-semibold text-gray-700">

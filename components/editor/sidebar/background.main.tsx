@@ -79,11 +79,12 @@ const BackgroundColorsSection = () => {
     "/backgrounds/background3.svg",
     "/backgrounds/background4.svg",
     "/backgrounds/background5.svg",
+    "/backgrounds/background6.svg",
   ];
 
   return (
     <div className="p-6 bg-gray-50 rounded-lg overflow-y-auto h-full pb-20">
-      <form className="grid gap-6 p-4 bg-white rounded-lg shadow-md">
+      <form className="grid gap-6  rounded-lg">
         <legend className="text-lg font-semibold text-gray-700">
           Background Colors
         </legend>
@@ -104,7 +105,7 @@ const BackgroundColorsSection = () => {
                   <Popover>
                     <PopoverTrigger asChild>
                       <div
-                        className="w-full h-10 border cursor-pointer rounded-md transition-transform transform hover:scale-110 shadow-sm"
+                        className="w-full h-10 border cursor-pointer rounded-md transition-transform transform hover:scale-110"
                         style={{
                           backgroundColor: background[colorKey],
                         }}
@@ -112,7 +113,7 @@ const BackgroundColorsSection = () => {
                       />
                     </PopoverTrigger>
                     <PopoverContent
-                      className="z-50 w-auto h-auto flex items-start justify-start bg-white rounded-lg shadow-md p-2"
+                      className="z-50 w-auto h-auto flex items-start justify-start bg-white rounded-lg p-2"
                       onMouseLeave={() => handleColorPickerClose(colorKey)}
                     >
                       <HexColorPicker
@@ -138,7 +139,7 @@ const BackgroundColorsSection = () => {
                 (preset: BackgroundColors, index: number) => (
                   <div
                     key={index}
-                    className="w-full h-8 border cursor-pointer rounded-md grid grid-cols-4 transition-transform transform hover:scale-105 hover:shadow-md"
+                    className="w-full h-8 border cursor-pointer rounded-md grid grid-cols-4 transition-transform transform hover:scale-105 hover"
                     onClick={() => handlePresetSelect(preset)}
                   >
                     <div
@@ -191,7 +192,7 @@ const BackgroundColorsSection = () => {
                 (preset: BackgroundColors, index: number) => (
                   <div
                     key={index}
-                    className="w-full h-8 border cursor-pointer rounded-md grid grid-cols-4 transition-transform transform hover:scale-105 hover:shadow-md"
+                    className="w-full h-8 border cursor-pointer rounded-md grid grid-cols-4 transition-transform transform hover:scale-105 hover"
                     onClick={() => handlePresetSelect(preset)}
                   >
                     <div
@@ -234,7 +235,7 @@ const BackgroundColorsSection = () => {
         </div>
       </form>
 
-      <form className="grid gap-6 p-4 mt-6 bg-white rounded-lg shadow-md">
+      <form className="grid gap-6 p-4 mt-6 bg-white rounded-lg">
         <legend className="text-lg font-semibold text-gray-700">Pattern</legend>
         <div className="border p-2 rounded-lg grid grid-cols-4 gap-4">
           <div
@@ -252,7 +253,9 @@ const BackgroundColorsSection = () => {
             <div
               key={index}
               className={`flex justify-center items-center p-2 rounded-lg ${
-                selectedTemplate === pattern ? "bg-primary/20" : "bg-transparent"
+                selectedTemplate === pattern
+                  ? "bg-primary/20"
+                  : "bg-transparent"
               }`}
               onClick={() => {
                 handlePatternChange(pattern);
@@ -271,7 +274,7 @@ const BackgroundColorsSection = () => {
           ))}
         </div>
       </form>
-      <form className="grid gap-6 p-4 mt-6 bg-white rounded-lg shadow-md">
+      <form className="grid gap-6 p-4 mt-6 bg-white rounded-lg">
         <legend className="text-lg font-semibold text-gray-700">
           Shared Elements
         </legend>

@@ -183,22 +183,12 @@ const TextSettingsSection = () => {
     );
   };
 
-  const handleLayoutValueChange = (value: string) => {
-    carouselsSize.find((size) => {
-      if (String(size.id) === value) {
-        dispatch(
-          setLayoutHeightAndWidth({ height: size.height, width: size.width })
-        );
-      }
-    });
-  };
-
   return (
     <form className="grid w-full items-start gap-6 p-6 rounded-lg bg-white">
       <legend className="text-lg font-semibold text-gray-700">
         Text Settings
       </legend>
-      <div className="grid gap-6 border p-4 bg-gray-50 rounded-lg shadow-md">
+      <div className="grid gap-6 border p-4 bg-gray-50 rounded-lg ">
         <div className="flex gap-4">
           {["title", "description", "tagline"].map((section) => (
             <button
@@ -285,7 +275,7 @@ const TextSettingsSection = () => {
         </div>
       </div>
 
-      <div className="space-y-2 mt-5 border p-4 bg-gray-50 rounded-lg shadow-md">
+      <div className="space-y-2 mt-5 border p-4 bg-gray-50 rounded-lg ">
         <div className="text-[14px] font-medium">Text Alignment</div>
         <div className="grid grid-cols-3 gap-3">
           {[

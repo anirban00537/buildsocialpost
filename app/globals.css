@@ -125,3 +125,9 @@
 strong {
   color: var(--color4);
 }
+.svgColor {
+  fill: var(--color4);
+  stroke: var(--color4);
+  color: var(--color4);
+  
+}
