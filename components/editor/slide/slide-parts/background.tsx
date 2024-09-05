@@ -26,7 +26,7 @@ const Background: React.FC<BackgroundProps> = ({
           ...backgroundImageStyle,
         }}
       />
-      {backgroundImage && (
+      {/* {backgroundImage && (
         <div
           style={{
             position: "absolute",
@@ -39,7 +39,7 @@ const Background: React.FC<BackgroundProps> = ({
             opacity: 0.5,
           }}
         />
-      )}
+      )} */}
     </>
   );
 };

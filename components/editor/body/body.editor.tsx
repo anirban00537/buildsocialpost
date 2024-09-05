@@ -23,6 +23,7 @@ import {
   ArrowLeft,
   ArrowRight,
   Image as ImageIcon,
+  ImagePlus,
 } from "lucide-react";
 import useCarousel from "@/hooks/useCarousel";
 import SlideComponent from "../slide/slide.comp";
@@ -112,49 +113,63 @@ const CarouselEditor: React.FC = () => {
                 </div>
                 <div className="flex items-center justify-start mt-3 space-x-2">
                   <button
-                    className="flex items-center justify-center border-slate-400 text-slate-400 border rounded-md hover:bg-blue-700 h-6 w-6 z-10"
+                    className="flex items-center justify-center border-slate-800 text-slate-800 border rounded-md hover:bg-primary hover:border-primary hover:text-white h-6 w-6 z-10"
                     onClick={() => handleInsertSlide(index)}
+                    title="Insert new slide"
                   >
                     <Plus size={22} />
                   </button>
                   <button
-                    className="flex items-center justify-center border-slate-400 text-slate-400 border rounded-md hover:bg-blue-700 h-6 w-6 z-10"
+                    className="flex items-center justify-center border-slate-800 text-slate-800 border rounded-md hover:bg-primary hover:border-primary hover:text-white h-6 w-6 z-10"
                     onClick={() => handleCopySlide(index)}
+                    title="Copy slide"
                   >
                     <Copy size={12} />
                   </button>
                   <button
-                    className="flex items-center justify-center border-red-300 text-red-300 border rounded-md hover:bg-blue-700 h-6 w-6 z-10"
+                    className="flex items-center justify-center border-slate-800 text-slate-800 border rounded-md hover:bg-primary hover:border-primary hover:text-white h-6 w-6 z-10"
                     onClick={() => handleDeleteSlide(index)}
+                    title="Delete slide"
                   >
                     <Trash2 size={15} />
                   </button>
                   <button
-                    className="flex items-center justify-center border-slate-400 text-slate-400 border rounded-md hover:bg-blue-700 h-6 w-6 z-10"
+                    className="flex items-center justify-center border-slate-800 text-slate-800 border rounded-md hover:bg-primary hover:border-primary hover:text-white h-6 w-6 z-10"
                     onClick={() => handleMoveSlideLeft(index)}
+                    title="Move slide left"
                   >
                     <ArrowLeft size={15} />
                   </button>
                   <button
-                    className="flex items-center justify-center border-slate-400 text-slate-400 border rounded-md hover:bg-blue-700 h-6 w-6 z-10"
+                    className="flex items-center justify-center border-slate-800 text-slate-800 border rounded-md hover:bg-primary hover:border-primary hover:text-white h-6 w-6 z-10"
                     onClick={() => handleMoveSlideRight(index)}
+                    title="Move slide right"
                   >
                     <ArrowRight size={15} />
                   </button>
                   <button
-                    className="flex items-center justify-center border-slate-400 text-slate-400 border rounded-md hover:bg-blue-700 h-6 w-6 z-10"
+                    className="flex items-center justify-center border-slate-800 text-slate-800 border rounded-md hover:bg-primary hover:border-primary hover:text-white h-6 w-6 z-10"
                     onClick={() => handleImageIconClick(index)}
+                    title="Change background image"
                   >
                     <ImageIcon size={15} />
                   </button>
+                  <button
+                    className="flex items-center justify-center border-slate-800 text-slate-800 border rounded-md hover:bg-primary hover:border-primary hover:text-white h-6 w-6 z-10"
+                    onClick={() => handleImageIconClick(index)}
+                    title="Add image to slide"
+                  >
+                    <ImagePlus size={15} />
+                  </button>
+                  
                 </div>
               </SwiperSlide>
             ))}
           </Swiper>
-          <button className="custom-prev absolute top-1/2 left-0 transform -translate-y-1/2 p-2 bg-blue-500 text-white rounded-full hover:bg-blue-700 z-20">
+          <button className="custom-prev absolute top-1/2 left-0 transform -translate-y-1/2 p-2 bg-blue-500 text-white rounded-full hover:bg-primary hover:border-primary hover:text-white z-20">
             <ChevronLeft size={24} />
           </button>
-          <button className="custom-next absolute top-1/2 right-0 transform -translate-y-1/2 p-2 bg-blue-500 text-white rounded-full hover:bg-blue-700 z-20">
+          <button className="custom-next absolute top-1/2 right-0 transform -translate-y-1/2 p-2 bg-blue-500 text-white rounded-full hover:bg-primary hover:border-primary hover:text-white z-20">
             <ChevronRight size={24} />
           </button>
         </div>

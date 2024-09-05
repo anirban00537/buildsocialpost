@@ -37,7 +37,7 @@ const SlideComponent: React.FC<SlideProps> = ({
   const { pattern, backgroundOpacity } = layout;
   const backgroundImageStyle = slide.backgroundImage
     ? {
-        backgroundImage: `url(${slide.backgroundImage})`,
+        backgroundImage: `url("${slide.backgroundImage}")`,
         zIndex: 0,
         opacity: backgroundOpacity,
       }

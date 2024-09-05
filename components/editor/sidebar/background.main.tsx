@@ -276,7 +276,7 @@ const BackgroundColorsSection = () => {
           <Label htmlFor="backgroundOpacity">Background Opacity</Label>
           <Slider
             id="backgroundOpacity"
-            max={1}
+            max={2}
             step={0.01}
             value={[layout.backgroundOpacity]}
             onValueChange={(value) => dispatch(setBackgroundOpacity(value[0]))}
