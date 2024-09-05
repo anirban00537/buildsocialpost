@@ -3,6 +3,7 @@ import React from "react";
 import { motion } from "framer-motion";
 import { AnimatedTooltip } from "../ui/animated-tooltip";
 import { ArrowRight, Sparkles } from "lucide-react";
+import Image from "next/image";
 
 const textContainerVariants = {
   hidden: { opacity: 0 },
@@ -93,7 +94,7 @@ const Hero = () => {
 
   return (
     <motion.section
-      className="py-20  overflow-hidden"
+      className="py-20 overflow-hidden"
       initial="hidden"
       animate="visible"
       transition={{ duration: 0.5 }}
@@ -125,10 +126,7 @@ const Hero = () => {
             >
               {platforms[currentPlatform].name}
             </motion.span>{" "}
-            Carousels{" "}
-            <span className=" bg-clip-text ">
-              With AI
-            </span>
+            Carousels <span className=" bg-clip-text ">With AI</span>
           </motion.h2>
           <motion.p
             className="text-xl text-gray-600 max-w-2xl mx-auto"
@@ -138,49 +136,33 @@ const Hero = () => {
             generate content, customize designs, and create stunning carousels
             in minutes.
           </motion.p>
+
           <motion.div
-            className="flex flex-col sm:flex-row items-center justify-center gap-4"
+            className="mt-8 p-6  rounded-lg"
             variants={textVariants}
           >
-            <Link
-              href="/editor"
-              className="group flex items-center justify-center py-3 px-6 text-lg text-white font-medium bg-primary rounded-full hover:bg-primary/80 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
-            >
-              Get started
-              <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
-            </Link>
-            <a
-              href="#demo"
-              className="text-lg text-primary font-medium hover:text-primary/80 transition-colors duration-300"
-            >
-              Watch demo
-            </a>
+            <h3 className="text-2xl font-bold text-gray-800 mb-2">
+              Launching Soon!
+            </h3>
+            <p className="text-gray-600 mb-4">
+              We are working on it. Stay tuned.
+            </p>
           </motion.div>
         </motion.div>
 
-        <div className="mt-12 mb-8">
+        {/* <div className="mt-12 mb-8">
           <p className="text-gray-600 mb-4">Trusted by creators worldwide</p>
           <div className="flex flex-wrap justify-center gap-4">
             <AnimatedTooltip items={people} />
           </div>
-        </div>
+        </div> */}
 
         <motion.div
           className="w-full max-w-4xl rounded-2xl bg-gradient-to-r from-blue-600 to-teal-400 p-1 shadow-2xl"
           variants={videoVariants}
         >
           <div className="rounded-xl overflow-hidden bg-white">
-            <video
-              className="w-full h-auto"
-              controls={false}
-              autoPlay={true}
-              muted
-              loop
-              playsInline
-            >
-              <source src="/intro.mp4" type="video/mp4" />
-              Your browser does not support the video tag.
-            </video>
+            <Image src={'/demo.png'} width={1920} height={1080} alt="Demo" />
           </div>
         </motion.div>
       </div>

@@ -55,8 +55,8 @@ const Page = () => {
             <a href="javascript:void(0)">
               <Image
                 src="/logo.svg"
-                width={60}
-                height={60}
+                width={150}
+                height={150}
                 alt="buildcarousel.com"
               />
             </a>
