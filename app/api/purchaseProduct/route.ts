@@ -5,7 +5,6 @@ import { getAuth } from "firebase-admin/auth";
 import { initializeApp, cert, getApps } from "firebase-admin/app";
 import { db } from "@/lib/firebase";
 
-// Initialize Firebase Admin SDK
 if (!process.env.NEXT_PUBLIC_FIREBASE_PRIVATE_KEY) {
   throw new Error(
     "The NEXT_PUBLIC_FIREBASE_PRIVATE_KEY environment variable is not defined"

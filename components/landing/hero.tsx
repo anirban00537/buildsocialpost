@@ -75,7 +75,22 @@ const people = [
   },
 ];
 
+const platforms = [
+  { name: "LinkedIn", gradient: "from-blue-600 to-blue-400" },
+  { name: "TikTok", gradient: "from-[#010101] via-[#FF0050] to-[#00F2EA]" }, // Updated TikTok colors
+  { name: "Instagram", gradient: "from-yellow-400 via-pink-500 to-purple-500" },
+];
+
 const Hero = () => {
+  const [currentPlatform, setCurrentPlatform] = React.useState(0);
+
+  React.useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentPlatform((prev) => (prev + 1) % platforms.length);
+    }, 2000);
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <motion.section
       className="py-20  overflow-hidden"
@@ -97,11 +112,22 @@ const Hero = () => {
           </motion.h1>
           <motion.h2
             className="text-5xl text-gray-900 leading-tight font-extrabold md:text-6xl lg:text-7xl"
+            style={{ lineHeight: "1.2" }}
             variants={textVariants}
           >
-            Design Social Media Carousels{" "}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-teal-400">
-              With AI Magic
+            Design{" "}
+            <motion.span
+              key={currentPlatform}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+              className={`inline-block text-transparent bg-clip-text bg-gradient-to-r ${platforms[currentPlatform].gradient}`}
+            >
+              {platforms[currentPlatform].name}
+            </motion.span>{" "}
+            Carousels{" "}
+            <span className=" bg-clip-text ">
+              With AI
             </span>
           </motion.h2>
           <motion.p
