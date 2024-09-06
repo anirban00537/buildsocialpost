@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { useDropzone } from "react-dropzone";
 import {
   getStorage,
@@ -43,23 +44,32 @@ const ImageUploadModal: React.FC<ImageUploadModalProps> = ({
     { url: string; id: string }[]
   >([]);
   const [currentPage, setCurrentPage] = useState(1);
+  const [jumpToPage, setJumpToPage] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const imagesPerPage = 6;
 
   // Fetch images from Firestore based on uid
   useEffect(() => {
     const fetchImages = async () => {
       if (!uid) return;
-
-      const imagesQuery = query(
-        collection(db, "images"),
-        where("uid", "==", uid)
-      );
-      const querySnapshot = await getDocs(imagesQuery);
-      const images: { url: string; id: string }[] = [];
-      querySnapshot.forEach((doc) => {
-        images.push({ url: doc.data().url, id: doc.id });
-      });
-      setUploadedImages(images);
+      setIsLoading(true);
+      try {
+        const imagesQuery = query(
+          collection(db, "images"),
+          where("uid", "==", uid)
+        );
+        const querySnapshot = await getDocs(imagesQuery);
+        const images: { url: string; id: string }[] = [];
+        querySnapshot.forEach((doc) => {
+          images.push({ url: doc.data().url, id: doc.id });
+        });
+        setUploadedImages(images);
+      } catch (error) {
+        console.error("Error fetching images: ", error);
+        toast.error("Failed to fetch images.");
+      } finally {
+        setIsLoading(false);
+      }
     };
 
     if (isOpen && uid) {
@@ -145,16 +155,50 @@ const ImageUploadModal: React.FC<ImageUploadModalProps> = ({
   );
   const totalPages = Math.ceil(uploadedImages.length / imagesPerPage);
 
-  const handleNextPage = () => {
-    if (currentPage < totalPages) {
-      setCurrentPage(currentPage + 1);
+  const handlePageChange = (page: number) => {
+    if (page >= 1 && page <= totalPages) {
+      setCurrentPage(page);
     }
   };
 
-  const handlePreviousPage = () => {
-    if (currentPage > 1) {
-      setCurrentPage(currentPage - 1);
+  const handleJumpToPage = (e: React.FormEvent) => {
+    e.preventDefault();
+    const pageNumber = parseInt(jumpToPage, 10);
+    if (pageNumber >= 1 && pageNumber <= totalPages) {
+      setCurrentPage(pageNumber);
+      setJumpToPage("");
+    } else {
+      toast.error(
+        `Please enter a valid page number between 1 and ${totalPages}`
+      );
     }
+  };
+
+  const renderPageNumbers = () => {
+    const pageNumbers = [];
+    const maxVisiblePages = 5;
+
+    let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
+    let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
+
+    if (endPage - startPage + 1 < maxVisiblePages) {
+      startPage = Math.max(1, endPage - maxVisiblePages + 1);
+    }
+
+    for (let i = startPage; i <= endPage; i++) {
+      pageNumbers.push(
+        <Button
+          key={i}
+          variant={i === currentPage ? "default" : "outline"}
+          onClick={() => handlePageChange(i)}
+          className="mx-1"
+        >
+          {i}
+        </Button>
+      );
+    }
+
+    return pageNumbers;
   };
 
   return (
@@ -182,7 +226,11 @@ const ImageUploadModal: React.FC<ImageUploadModalProps> = ({
               </p>
             </div>
 
-            {uploadedImages.length === 0 ? (
+            {isLoading ? (
+              <p className="mt-4 text-center text-gray-500">
+                Loading images...
+              </p>
+            ) : uploadedImages.length === 0 ? (
               <p className="mt-4 text-center text-gray-500">
                 No images uploaded yet.
               </p>
@@ -195,12 +243,13 @@ const ImageUploadModal: React.FC<ImageUploadModalProps> = ({
                         className="cursor-pointer"
                         onClick={() => onImageSelect(url)}
                       >
-                        <img
+                        <Image
                           src={url}
                           alt={`Uploaded ${index}`}
                           width={150}
                           height={150}
                           className="rounded-lg"
+                          loading="lazy"
                         />
                       </div>
                       <button
@@ -216,26 +265,45 @@ const ImageUploadModal: React.FC<ImageUploadModalProps> = ({
 
                 {/* Pagination Controls */}
                 {totalPages > 1 && (
-                  <div className="flex justify-between items-center mt-4">
-                    <Button
-                      variant="outline"
-                      onClick={handlePreviousPage}
-                      disabled={currentPage === 1}
+                  <div className="flex flex-col items-center mt-4">
+                    <div className="flex items-center mb-2">
+                      <Button
+                        variant="outline"
+                        onClick={() => handlePageChange(currentPage - 1)}
+                        disabled={currentPage === 1}
+                        className="mr-2"
+                      >
+                        <ChevronLeft className="w-4 h-4" />
+                        Previous
+                      </Button>
+                      {renderPageNumbers()}
+                      <Button
+                        variant="outline"
+                        onClick={() => handlePageChange(currentPage + 1)}
+                        disabled={currentPage === totalPages}
+                        className="ml-2"
+                      >
+                        Next
+                        <ChevronRight className="w-4 h-4" />
+                      </Button>
+                    </div>
+                    <form
+                      onSubmit={handleJumpToPage}
+                      className="flex items-center"
                     >
-                      <ChevronLeft className="w-4 h-4" />
-                      Previous
-                    </Button>
-                    <span>
-                      Page {currentPage} of {totalPages}
-                    </span>
-                    <Button
-                      variant="outline"
-                      onClick={handleNextPage}
-                      disabled={currentPage === totalPages}
-                    >
-                      Next
-                      <ChevronRight className="w-4 h-4" />
-                    </Button>
+                      <Input
+                        type="number"
+                        min="1"
+                        max={totalPages}
+                        value={jumpToPage}
+                        onChange={(e) => setJumpToPage(e.target.value)}
+                        placeholder="Jump to page"
+                        className="w-24 mr-2"
+                      />
+                      <Button type="submit" variant="outline">
+                        Go
+                      </Button>
+                    </form>
                   </div>
                 )}
               </>
