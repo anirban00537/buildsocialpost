@@ -47,9 +47,16 @@ const CarouselEditor: React.FC = () => {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [activeSlideIndex, setActiveSlideIndex] = useState<number | null>(null);
+  const [imageType, setImageType] = useState<"background" | "slide">(
+    "background"
+  );
 
-  const handleImageIconClick = (index: number) => {
+  const handleImageIconClick = (
+    index: number,
+    type: "background" | "slide"
+  ) => {
     setActiveSlideIndex(index);
+    setImageType(type);
     setIsModalOpen(true);
   };
 
@@ -57,7 +64,7 @@ const CarouselEditor: React.FC = () => {
     if (activeSlideIndex !== null) {
       const updatedSlide = {
         ...slides[activeSlideIndex],
-        backgroundImage: url,
+        [imageType === "background" ? "backgroundImage" : "imageUrl"]: url,
       };
       handleUpdateSlide(activeSlideIndex, updatedSlide);
     }
@@ -149,19 +156,18 @@ const CarouselEditor: React.FC = () => {
                   </button>
                   <button
                     className="flex items-center justify-center border-slate-800 text-slate-800 border rounded-md hover:bg-primary hover:border-primary hover:text-white h-6 w-6 z-10"
-                    onClick={() => handleImageIconClick(index)}
+                    onClick={() => handleImageIconClick(index, "background")}
                     title="Change background image"
                   >
                     <ImageIcon size={15} />
                   </button>
                   <button
                     className="flex items-center justify-center border-slate-800 text-slate-800 border rounded-md hover:bg-primary hover:border-primary hover:text-white h-6 w-6 z-10"
-                    onClick={() => handleImageIconClick(index)}
+                    onClick={() => handleImageIconClick(index, "slide")}
                     title="Add image to slide"
                   >
                     <ImagePlus size={15} />
                   </button>
-                  
                 </div>
               </SwiperSlide>
             ))}

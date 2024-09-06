@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useCallback } from "react";
 import { useEditor, EditorContent, BubbleMenu } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 
@@ -48,11 +48,17 @@ const Text: React.FC<TextProps> = ({
     },
   });
 
-  useEffect(() => {
-    if (editor && content) {
+  const updateContent = useCallback(() => {
+    if (editor && content !== editor.getHTML()) {
+      const { from, to } = editor.state.selection;
       editor.commands.setContent(content, false);
+      editor.commands.setTextSelection({ from, to });
     }
   }, [editor, content]);
+
+  useEffect(() => {
+    updateContent();
+  }, [updateContent]);
 
   const applyStyle = (style: string) => {
     if (!editor) return;
@@ -101,7 +107,7 @@ const buttonStyle = {
   borderRadius: "3px",
   padding: "2px 5px",
   cursor: "pointer",
-  color: "black", // Set the text color to black
+  color: "black",
 };
 
 export default Text;
