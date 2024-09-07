@@ -1,18 +1,11 @@
 import { useState, ChangeEvent, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { doc, setDoc } from "firebase/firestore";
-import {
-  getStorage,
-  ref,
-  uploadBytes,
-  getDownloadURL,
-  deleteObject,
-} from "firebase/storage";
-import { db } from "@/lib/firebase";
 import toast from "react-hot-toast";
 import { RootState } from "@/state/store";
 import { setHandle, setHeadshot, setName } from "@/state/slice/branding.slice";
 import { useMutation } from "react-query";
+import { uploadImage, deleteImage } from "@/services/storage";
+import { updateBrandingSettings } from "@/services/firestore";
 
 const useBranding = () => {
   const dispatch = useDispatch();
@@ -49,54 +42,41 @@ const useBranding = () => {
       handle: string;
       headshot: string | null;
     }) => {
+      if (!user?.uid) throw new Error("User not authenticated");
+
       let finalHeadshot = brandingData.headshot;
 
-      // Check if the headshot is a local URL and upload to Firebase Storage if necessary
       if (brandingData.headshot && brandingData.headshot.startsWith("blob:")) {
-        if (user && user.uid) {
-          const response = await fetch(brandingData.headshot);
-          const blob = await response.blob();
-          const storage = getStorage();
-          const storageRef = ref(
-            storage,
-            `headshots/${user.uid}/${Date.now()}`
-          );
-          await uploadBytes(storageRef, blob);
-          finalHeadshot = await getDownloadURL(storageRef);
+        const response = await fetch(brandingData.headshot);
+        const blob = await response.blob();
+        
+        // Generate a unique filename for the image
+        const filename = `${user.uid}_${Date.now()}.${blob.type.split('/')[1]}`;
+        const path = `user_headshots/${filename}`;
+        
+        finalHeadshot = await uploadImage(blob, path);
 
-          // Delete the old image from Firebase Storage if it exists
-          if (originalHeadshot) {
-            const oldImageRef = ref(storage, originalHeadshot);
-            await deleteObject(oldImageRef);
-          }
-        } else {
-          throw new Error("User not authenticated");
+        if (originalHeadshot) {
+          await deleteImage(originalHeadshot);
         }
       }
 
-      if (user && user.uid) {
-        await setDoc(
-          doc(db, "user_branding", user.uid),
-          { branding: { ...brandingData, headshot: finalHeadshot } },
-          { merge: true }
-        );
-      } else {
-        throw new Error("User not authenticated");
-      }
+      await updateBrandingSettings(user.uid, {
+        ...brandingData,
+        headshot: finalHeadshot,
+      });
     },
     {
       onSuccess: () => {
         toast.success("Branding data saved successfully!");
       },
-      onError: (error: any) => {
-        console.error("Error saving branding data: ", error);
-        toast.error("Failed to save branding data.");
+      onError: (error: Error) => {
+        toast.error(error.message || "Failed to save branding data.");
       },
     }
   );
 
-  const handleSubmit = (event: ChangeEvent<HTMLFormElement>) => {
-    event.preventDefault();
+  const handleSave = () => {
     saveBrandingData({ name, handle, headshot });
   };
 
@@ -104,12 +84,11 @@ const useBranding = () => {
     name,
     handle,
     headshot,
-    loading,
     handleNameChange,
     handleHandleChange,
     handleImageUpload,
-    handleSubmit,
-    user,
+    handleSave,
+    loading,
   };
 };
 

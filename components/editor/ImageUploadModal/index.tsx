@@ -23,7 +23,7 @@ import {
 import { useMutation, useQueryClient } from "react-query";
 import toast from "react-hot-toast";
 import Image from "next/image";
-import { storage, db } from "@/lib/firebase";
+import { storage, db } from "@/services/firebase";
 import { X, ChevronLeft, ChevronRight } from "lucide-react";
 import { useSelector } from "react-redux";
 import { RootState } from "@/state/store";
@@ -259,7 +259,7 @@ const ImageUploadModal: React.FC<ImageUploadModalProps> = ({
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={onClose} >
+    <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="w-[800px] max-h-[85vh] overflow-y-auto">
         <h2 className="text-lg font-semibold mb-4">Image Management</h2>
 

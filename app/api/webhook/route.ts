@@ -1,4 +1,4 @@
-import { db } from "@/lib/firebase";
+import { db } from "@/services/firebase";
 import crypto from "crypto";
 import { doc, setDoc } from "firebase/firestore";
 

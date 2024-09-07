@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { useRouter } from "next/navigation";
-import { db, auth } from "@/lib/firebase";
 import {
   logout,
   setEndDate,
@@ -10,99 +9,18 @@ import {
   setUser,
 } from "@/state/slice/user.slice";
 import { useQuery, useMutation } from "react-query";
-import {
-  collection,
-  query,
-  where,
-  orderBy,
-  limit,
-  getDocs,
-  doc,
-  getDoc,
-} from "firebase/firestore";
+import { User } from "firebase/auth";
+import { setBranding } from "@/state/slice/branding.slice";
 import {
   signOut,
-  GoogleAuthProvider,
-  signInWithPopup,
-  onAuthStateChanged,
-  User,
-} from "firebase/auth";
-import { setBranding } from "@/state/slice/branding.slice";
-
-// Function to fetch user data
-const getUser = async (): Promise<User | null> => {
-  return new Promise((resolve, reject) => {
-    const unsubscribe = onAuthStateChanged(
-      auth,
-      (user) => {
-        unsubscribe();
-        resolve(user);
-      },
-      reject
-    );
-  });
-};
-
-// Function to fetch subscription status
-const fetchSubscriptionStatus = async (
-  userId: string
-): Promise<{
-  isSubscribed: boolean;
-  endDate: string | null;
-  error?: string;
-}> => {
-  try {
-    const q = query(
-      collection(db, "subscriptions"),
-      where("userId", "==", userId),
-      orderBy("endDate", "desc"),
-      limit(1)
-    );
-
-    const querySnapshot = await getDocs(q);
-    if (!querySnapshot.empty) {
-      const doc = querySnapshot.docs[0];
-      const data = doc.data();
-      const endDate = new Date(data.endDate).toISOString();
-      const isExpired = new Date(endDate) < new Date();
-      return { isSubscribed: !isExpired, endDate };
-    } else {
-      return { isSubscribed: false, endDate: null };
-    }
-  } catch (error: any) {
-    console.error("Error fetching subscription status:", error);
-    return { isSubscribed: false, endDate: null, error: error.message };
-  }
-};
-
-// Function to fetch branding settings
-const fetchBrandingSettings = async (
-  userId: string
-): Promise<{
-  name: string;
-  handle: string;
-  headshot: string | null;
-  error?: string;
-}> => {
-  try {
-    const docRef = doc(db, "user_branding", userId);
-    const docSnap = await getDoc(docRef);
-
-    if (docSnap.exists()) {
-      const data = docSnap.data();
-      return {
-        name: data.branding?.name || "",
-        handle: data.branding?.handle || "",
-        headshot: data.branding?.headshot || null,
-      };
-    } else {
-      return { name: "", handle: "", headshot: null };
-    }
-  } catch (error: any) {
-    console.error("Error fetching branding settings:", error);
-    return { name: "", handle: "", headshot: null, error: error.message };
-  }
-};
+  signInWithGoogle,
+  onAuthStateChange,
+  getCurrentUser,
+} from "@/services/auth";
+import {
+  fetchSubscriptionStatus,
+  fetchBrandingSettings,
+} from "@/services/firestore";
 
 // Hook for logging out the user
 const useLogout = () => {
@@ -112,7 +30,7 @@ const useLogout = () => {
   const router = useRouter();
 
   const { mutate: logoutUser, isLoading: loading } = useMutation<void, Error>(
-    async () => await signOut(auth),
+    async () => await signOut(),
     {
       onSuccess: () => {
         dispatch(logout());
@@ -138,7 +56,7 @@ const useAuthUser = () => {
     isLoading: userLoading,
     error: userError,
     refetch: refetchUser,
-  } = useQuery<User | null, Error>("user", getUser, {
+  } = useQuery<User | null, Error>("user", getCurrentUser, {
     onSuccess: (data) => {
       if (data) {
         const { uid, email, displayName, photoURL } = data;
@@ -202,7 +120,7 @@ const useAuthUser = () => {
 
   useEffect(() => {
     dispatch(setLoading(userLoading || subscriptionLoading || brandingLoading));
-  }, [userLoading, subscriptionLoading, brandingLoading]);
+  }, [userLoading, subscriptionLoading, brandingLoading, dispatch]);
 
   return {
     error:
@@ -228,8 +146,7 @@ const useGoogleLogin = () => {
     Error
   >(
     async () => {
-      const provider = new GoogleAuthProvider();
-      const result = await signInWithPopup(auth, provider);
+      const result = await signInWithGoogle();
       const user = result.user;
       const { uid, email, displayName, photoURL } = user;
       dispatch(setUser({ uid, email, displayName, photoURL }));
