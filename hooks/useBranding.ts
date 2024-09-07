@@ -1,4 +1,4 @@
-import { useState, ChangeEvent, useEffect } from "react";
+import { useState, ChangeEvent, useEffect, FormEvent } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import toast from "react-hot-toast";
 import { RootState } from "@/state/store";
@@ -76,7 +76,8 @@ const useBranding = () => {
     }
   );
 
-  const handleSave = () => {
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
     saveBrandingData({ name, handle, headshot });
   };
 
@@ -87,8 +88,9 @@ const useBranding = () => {
     handleNameChange,
     handleHandleChange,
     handleImageUpload,
-    handleSave,
+    handleSubmit,
     loading,
+    user,
   };
 };
 
