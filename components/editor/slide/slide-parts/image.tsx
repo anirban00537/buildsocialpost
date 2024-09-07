@@ -25,10 +25,9 @@ const Image: React.FC<ImageProps> = ({ imageUrl }) => {
           maxWidth: "100%",
           maxHeight: "100%",
           objectFit: "contain",
-          background: "rgba(255, 255, 255, 0.3)",
           backdropFilter: "blur(10px)",
-          padding: "8px",
-          borderRadius: "8px",
+          borderRadius: "13px",
+          padding: "10px",
         }}
       />
     </div>

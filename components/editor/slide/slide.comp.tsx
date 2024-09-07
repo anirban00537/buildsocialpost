@@ -151,6 +151,8 @@ const SlideComponent: React.FC<SlideProps> = ({
           width: "100%",
           height: "100%",
           padding: "32px",
+          paddingTop: "50px",
+          paddingBottom: "50px",
           boxSizing: "border-box",
         }}
       >

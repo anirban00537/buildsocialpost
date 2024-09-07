@@ -259,8 +259,8 @@ const ImageUploadModal: React.FC<ImageUploadModalProps> = ({
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="w-[800px] max-h-[80vh] overflow-y-auto">
+    <Dialog open={isOpen} onOpenChange={onClose} >
+      <DialogContent className="w-[800px] max-h-[85vh] overflow-y-auto">
         <h2 className="text-lg font-semibold mb-4">Image Management</h2>
 
         {!uid ? (
