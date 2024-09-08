@@ -97,6 +97,49 @@ export const lightColorPresets: BackgroundColors[] = [
     color3: "#FEFCBF", // Light Yellow
     color4: "#38B2AC", // Teal
   },
+  // New light themes
+  {
+    color1: "#F0FFF4", // Honeydew
+    color2: "#1A4731", // Dark Green
+    color3: "#C6F6D5", // Pale Green
+    color4: "#38A169", // Medium Green
+  },
+  {
+    color1: "#FFF5F5", // Snow
+    color2: "#742A2A", // Dark Red
+    color3: "#FED7D7", // Light Red
+    color4: "#F56565", // Red
+  },
+  {
+    color1: "#F0FFFF", // Azure
+    color2: "#234E52", // Dark Teal
+    color3: "#B2F5EA", // Light Teal
+    color4: "#319795", // Teal
+  },
+  {
+    color1: "#FFFBEB", // Lemon Chiffon
+    color2: "#92400E", // Brown
+    color3: "#FEF3C7", // Pale Yellow
+    color4: "#D97706", // Amber
+  },
+  {
+    color1: "#FDF2F8", // Lavender Blush
+    color2: "#831843", // Dark Magenta
+    color3: "#FCE7F3", // Pink
+    color4: "#DB2777", // Deep Pink
+  },
+  {
+    color1: "#ECFEFF", // Light Cyan
+    color2: "#164E63", // Dark Cyan
+    color3: "#CFFAFE", // Pale Cyan
+    color4: "#06B6D4", // Cyan
+  },
+  {
+    color1: "#FFFBF5", // Seashell
+    color2: "#7C2D12", // Burnt Sienna
+    color3: "#FED7AA", // Peach
+    color4: "#EA580C", // Dark Orange
+  },
 ];
 
 export const darkColorPresets: BackgroundColors[] = [
@@ -190,5 +233,48 @@ export const darkColorPresets: BackgroundColors[] = [
     color2: "#FFFAF0", // Floral White
     color3: "#2D3748", // Dark Slate Gray
     color4: "#F6E05E", // Yellow
+  },
+  // New dark themes
+  {
+    color1: "#1A202C", // Very Dark Blue
+    color2: "#EDF2F7", // Very Light Gray
+    color3: "#2D3748", // Dark Slate Gray
+    color4: "#4FD1C5", // Teal
+  },
+  {
+    color1: "#171923", // Almost Black
+    color2: "#F7FAFC", // Almost White
+    color3: "#2D3748", // Dark Slate Gray
+    color4: "#ED8936", // Orange
+  },
+  {
+    color1: "#000000", // Pure Black
+    color2: "#FFFFFF", // Pure White
+    color3: "#2D3748", // Dark Slate Gray
+    color4: "#48BB78", // Green
+  },
+  {
+    color1: "#0F172A", // Oxford Blue
+    color2: "#F8FAFC", // Very Light Gray
+    color3: "#1E293B", // Dark Blue Gray
+    color4: "#EAB308", // Yellow
+  },
+  {
+    color1: "#14532D", // Dark Green
+    color2: "#ECFDF5", // Mint Cream
+    color3: "#065F46", // Forest Green
+    color4: "#34D399", // Medium Spring Green
+  },
+  {
+    color1: "#3F0F1F", // Dark Burgundy
+    color2: "#FFF1F2", // Misty Rose
+    color3: "#881337", // Burgundy
+    color4: "#FB7185", // Light Coral
+  },
+  {
+    color1: "#1E1B4B", // Midnight Blue
+    color2: "#EEF2FF", // Ghost White
+    color3: "#3730A3", // Royal Blue
+    color4: "#818CF8", // Light Slate Blue
   },
 ];
