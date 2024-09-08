@@ -54,6 +54,7 @@ const SlideComponent: React.FC<SlideProps> = ({
 
   return (
     <div
+      className="cursor-pointer  hover:opacity-40 transition-all"
       style={{
         position: "relative",
         backgroundSize: "cover",
@@ -66,6 +67,7 @@ const SlideComponent: React.FC<SlideProps> = ({
         color: color2,
         backgroundColor: color1,
         zIndex: 1,
+        cursor: "pointer",
       }}
     >
       {index % 2 === 1 ? (
