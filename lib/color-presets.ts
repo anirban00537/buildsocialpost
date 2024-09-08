@@ -140,6 +140,43 @@ export const lightColorPresets: BackgroundColors[] = [
     color3: "#FED7AA", // Peach
     color4: "#EA580C", // Dark Orange
   },
+  {
+    color1: "#F0F9FF", // Alice Blue
+    color2: "#075985", // Dark Blue
+    color3: "#E0F2FE", // Light Blue
+    color4: "#0EA5E9", // Sky Blue
+  },
+  // New light themes
+  {
+    color1: "#FFF7ED", // Old Lace
+    color2: "#9A3412", // Burnt Orange
+    color3: "#FFEDD5", // Peach
+    color4: "#F97316", // Orange
+  },
+  {
+    color1: "#FEFCE8", // Light Yellow
+    color2: "#854D0E", // Dark Goldenrod
+    color3: "#FEF9C3", // Lemon Chiffon
+    color4: "#CA8A04", // Gold
+  },
+  {
+    color1: "#F0FDFA", // Mint Cream
+    color2: "#134E4A", // Dark Teal
+    color3: "#CCFBF1", // Aquamarine
+    color4: "#14B8A6", // Teal
+  },
+  {
+    color1: "#FDF4FF", // Magnolia
+    color2: "#86198F", // Deep Magenta
+    color3: "#FAE8FF", // Pale Magenta
+    color4: "#D946EF", // Bright Magenta
+  },
+  {
+    color1: "#FFFAF3", // Floral White
+    color2: "#78350F", // Dark Brown
+    color3: "#FEF3C7", // Pale Goldenrod
+    color4: "#D97706", // Dark Goldenrod
+  },
 ];
 
 export const darkColorPresets: BackgroundColors[] = [
@@ -276,5 +313,42 @@ export const darkColorPresets: BackgroundColors[] = [
     color2: "#EEF2FF", // Ghost White
     color3: "#3730A3", // Royal Blue
     color4: "#818CF8", // Light Slate Blue
+  },
+  {
+    color1: "#0F172A", // Oxford Blue
+    color2: "#F1F5F9", // Light Gray
+    color3: "#334155", // Slate Gray
+    color4: "#EC4899", // Pink
+  },
+  // New dark themes
+  {
+    color1: "#0C0A09", // Black
+    color2: "#FAFAF9", // Off White
+    color3: "#292524", // Dark Brown
+    color4: "#84CC16", // Lime Green
+  },
+  {
+    color1: "#1E3A8A", // Navy Blue
+    color2: "#EFF6FF", // Alice Blue
+    color3: "#1E40AF", // Royal Blue
+    color4: "#60A5FA", // Cornflower Blue
+  },
+  {
+    color1: "#3F0F1F", // Dark Burgundy
+    color2: "#FFF1F2", // Misty Rose
+    color3: "#881337", // Burgundy
+    color4: "#FB7185", // Light Coral
+  },
+  {
+    color1: "#064E3B", // Dark Green
+    color2: "#ECFDF5", // Honeydew
+    color3: "#065F46", // Forest Green
+    color4: "#34D399", // Medium Spring Green
+  },
+  {
+    color1: "#4C1D95", // Indigo
+    color2: "#F5F3FF", // Lavender
+    color3: "#5B21B6", // Dark Violet
+    color4: "#A78BFA", // Medium Purple
   },
 ];

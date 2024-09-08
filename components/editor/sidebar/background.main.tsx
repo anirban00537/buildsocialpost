@@ -23,6 +23,7 @@ import { sharedElements } from "@/lib/coreConstants";
 import { Slider } from "@/components/ui/slider";
 import { Label } from "@/components/ui/label";
 import { CircleOff } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 const BackgroundColorsSection = () => {
   const dispatch = useDispatch();
@@ -40,6 +41,16 @@ const BackgroundColorsSection = () => {
     color3: false,
     color4: false,
   });
+
+  const [showAllLightPresets, setShowAllLightPresets] = useState(false);
+  const [showAllDarkPresets, setShowAllDarkPresets] = useState(false);
+
+  const visibleLightPresets = showAllLightPresets
+    ? lightColorPresets
+    : lightColorPresets.slice(0, 12);
+  const visibleDarkPresets = showAllDarkPresets
+    ? darkColorPresets
+    : darkColorPresets.slice(0, 12);
 
   const handlePatternChange = (value: string) => {
     dispatch(setPattern(value));
@@ -136,8 +147,8 @@ const BackgroundColorsSection = () => {
             >
               Light Presets
             </label>
-            <div className="grid grid-cols-4 gap-2">
-              {lightColorPresets.map(
+            <div className="grid grid-cols-4 gap-2 mb-2">
+              {visibleLightPresets.map(
                 (preset: BackgroundColors, index: number) => (
                   <div
                     key={index}
@@ -180,6 +191,15 @@ const BackgroundColorsSection = () => {
                 )
               )}
             </div>
+            {lightColorPresets.length > 12 && (
+              <button
+                type="button"
+                className="mt-2 p-2 border border-primary/20 w-full cursor-pointer text-primary rounded-md hover:bg-primary/10 transition-colors"
+                onClick={() => setShowAllLightPresets(!showAllLightPresets)}
+              >
+                {showAllLightPresets ? "Show Less" : "Show More"}
+              </button>
+            )}
           </div>
 
           <div className="mt-6">
@@ -189,8 +209,8 @@ const BackgroundColorsSection = () => {
             >
               Dark Presets
             </label>
-            <div className="grid grid-cols-4 gap-2">
-              {darkColorPresets.map(
+            <div className="grid grid-cols-4 gap-2 mb-2">
+              {visibleDarkPresets.map(
                 (preset: BackgroundColors, index: number) => (
                   <div
                     key={index}
@@ -233,6 +253,15 @@ const BackgroundColorsSection = () => {
                 )
               )}
             </div>
+            {darkColorPresets.length > 12 && (
+              <button
+                type="button"
+                className="mt-2 p-2 border border-primary/20 w-full cursor-pointer text-primary rounded-md hover:bg-primary/10 transition-colors"
+                onClick={() => setShowAllDarkPresets(!showAllDarkPresets)}
+              >
+                {showAllDarkPresets ? "Show Less" : "Show More"}
+              </button>
+            )}
           </div>
         </div>
       </form>
