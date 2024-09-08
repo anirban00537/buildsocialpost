@@ -18,7 +18,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import CarouselListModal from "@/components/editor/CarouselListModal";
-import { Download, User, CreditCard, LogOut } from "lucide-react";
+import { Download, User, CreditCard, LogOut, Save, ArrowRight } from "lucide-react";
 import { setProperty } from "@/state/slice/carousel.slice";
 
 // Utility function to get user initials
@@ -27,44 +27,58 @@ const getInitials = (email: string): string =>
 
 // UserDropdown Component
 const UserDropdown: React.FC<{ user: any; onLogout: () => void }> = React.memo(
-  ({ user, onLogout }) => (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className="h-8 w-8 rounded-full">
-          {user.photoURL ? (
-            <img
-              className="h-8 w-8 rounded-full"
-              src={user.photoURL}
-              alt="User Avatar"
-            />
-          ) : (
-            <div className="h-8 w-8 rounded-full flex items-center justify-center bg-primary text-white">
-              {getInitials(user.email)}
-            </div>
-          )}
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-56" align="end">
-        <DropdownMenuLabel>{user.displayName || user.email}</DropdownMenuLabel>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem className="flex items-center gap-2">
-          <User className="w-4 h-4" />
-          Profile
-        </DropdownMenuItem>
-        <DropdownMenuItem className="flex items-center gap-2">
-          <CreditCard className="w-4 h-4" />
-          Billing
-        </DropdownMenuItem>
-        <DropdownMenuItem
-          onClick={onLogout}
-          className="flex items-center gap-2"
-        >
-          <LogOut className="w-4 h-4" />
-          Logout
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
-  )
+  ({ user, onLogout }) => {
+    const [imageError, setImageError] = useState(false);
+
+    useEffect(() => {
+      // Reset image error state when user changes
+      setImageError(false);
+    }, [user]);
+
+    const handleImageError = () => {
+      setImageError(true);
+    };
+
+    return (
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant="ghost" className="h-8 w-8 p-0 border border-primary rounded-full overflow-hidden">
+            {user.photoURL && !imageError ? (
+              <img
+                className="h-full w-full object-cover"
+                src={user.photoURL}
+                alt="User Avatar"
+                onError={handleImageError}
+              />
+            ) : (
+              <div className="h-full w-full flex items-center justify-center bg-primary text-white text-sm font-medium">
+                {getInitials(user.displayName || user.email)}
+              </div>
+            )}
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent className="w-56" align="end">
+          <DropdownMenuLabel>{user.displayName || user.email}</DropdownMenuLabel>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem className="flex items-center gap-2">
+            <User className="w-4 h-4" />
+            Profile
+          </DropdownMenuItem>
+          <DropdownMenuItem className="flex items-center gap-2">
+            <CreditCard className="w-4 h-4" />
+            Billing
+          </DropdownMenuItem>
+          <DropdownMenuItem
+            onClick={onLogout}
+            className="flex items-center gap-2"
+          >
+            <LogOut className="w-4 h-4" />
+            Logout
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    );
+  }
 );
 
 // DownloadDropdown Component
@@ -79,7 +93,7 @@ const DownloadDropdown: React.FC<{
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline" size="sm">
+        <Button variant="outline" size="xs">
           <Download className="w-4 h-4 mr-2" />
           {isDownloading ? "Downloading..." : "Download"}
         </Button>
@@ -146,17 +160,19 @@ const EditorNavbar: React.FC = () => {
         </Link>
         <Button
           onClick={() => setIsViewAllModalOpen(true)}
-          className="border border-gray-200 flex items-center gap-2 text-sm hover:bg-primary/50"
+          className="border border-gray-200 flex items-center h-8 gap-2 text-sm hover:bg-primary/50"
           variant="ghost"
         >
           Saved Carousels
         </Button>
-        <span className="px-2 rounded-md">/</span>
+        <span className="px-2 rounded-md">
+          <ArrowRight className="w-4 h-4" />
+        </span>
 
         <input
           type="text"
           placeholder="Search"
-          className="border border-gray-200 px-2 py-[7px] rounded-md"
+          className="border border-gray-200 px-2 h-8 rounded-md text-sm"
           value={name}
           onChange={handleNameChange}
           aria-label="Search carousels"
@@ -175,12 +191,12 @@ const EditorNavbar: React.FC = () => {
           onClick={handleSaveCarousel}
           disabled={saveLoading}
           className="flex items-center gap-2"
-          size="sm"
+          size="xs"
         >
           {saveLoading ? (
             <div className="flex items-center gap-2">
               <svg
-                className="animate-spin h-5 w-5"
+                className="animate-spin h-4 w-4"
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
                 viewBox="0 0 24 24"
@@ -199,10 +215,13 @@ const EditorNavbar: React.FC = () => {
                   d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                 ></path>
               </svg>
-              Saving...
+              <span>Saving...</span>
             </div>
           ) : (
-            "Save Carousel"
+            <>
+              <Save className="h-4 w-4" />
+              <span>Save Carousel</span>
+            </>
           )}
         </Button>
 

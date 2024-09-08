@@ -4,6 +4,15 @@ import { Button } from "../ui/button";
 import { DiamondPercent } from "lucide-react";
 import { RootState } from "@/state/store";
 import { useSelector } from "react-redux";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../ui/tooltip";
+
+const DiamondSVG = () => (
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M12 2L2 9L12 22L22 9L12 2Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+    <path d="M2 9H22" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+    <path d="M7 9L12 2L17 9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+  </svg>
+);
 
 const SubscriptionInfo = () => {
   const { subscribed, endDate, loading } = useSelector(
@@ -25,7 +34,7 @@ const SubscriptionInfo = () => {
           <Button
             variant="outline"
             size="sm"
-            className="ml-auto flex items-center gap-2 px-4  text-sm text-white bg-gradient-to-r from-primary to-teal-500 hover:from-blue-600 hover:to-teal-600 transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+            className="ml-auto flex items-center gap-2 px-4 text-sm text-white bg-gradient-to-r from-primary to-teal-500 hover:from-blue-600 hover:to-teal-600 transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
           >
             <DiamondPercent className="w-4 h-4" />
             Remove watermark
@@ -38,9 +47,18 @@ const SubscriptionInfo = () => {
   const endDateString = new Date(endDate).toDateString();
 
   return (
-    <div className="ml-auto flex items-center gap-2 px-4 py-2 text-sm  border  border-primary rounded-md text-primary transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 ">
-      Subscribed until {endDateString}
-    </div>
+    <TooltipProvider>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <div className="ml-auto flex items-center justify-center w-8 h-7 text-sm border border-primary rounded-md text-primary transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2">
+            <DiamondSVG />
+          </div>
+        </TooltipTrigger>
+        <TooltipContent>
+          <p>Subscribed until {endDateString}</p>
+        </TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
   );
 };
 
