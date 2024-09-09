@@ -28,7 +28,7 @@ const SubscriptionInfo = () => {
         buttonElement={
           <Button
             variant="outline"
-            size="sm"
+            size="xs"
             className="ml-auto flex items-center gap-2 px-4 text-sm text-white bg-gradient-to-r from-primary to-teal-500 hover:from-blue-600 hover:to-teal-600 transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
           >
             <DiamondPercent className="w-4 h-4" />

@@ -228,7 +228,7 @@ const EditorNavbar: React.FC = () => {
           <UserDropdown user={user} onLogout={logout} />
         ) : (
           <Link href="/login" className="text-sm">
-            <Button variant="outline" size="sm">
+            <Button variant="outline" size="xs">
               Sign in
             </Button>
           </Link>
