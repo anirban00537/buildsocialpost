@@ -3,6 +3,7 @@ import React from "react";
 import { motion } from "framer-motion";
 import { AnimatedTooltip } from "../ui/animated-tooltip";
 import { ArrowRight, Sparkles } from "lucide-react";
+import Image from "next/image";
 
 const textContainerVariants = {
   hidden: { opacity: 0 },
@@ -170,17 +171,13 @@ const Hero = () => {
           variants={videoVariants}
         >
           <div className="rounded-xl overflow-hidden bg-white">
-            <video
+            <Image
+              src="/demo.png"
+              alt="Carousel AI"
+              width={1000}
+              height={1000}
               className="w-full h-auto"
-              controls={false}
-              autoPlay={true}
-              muted
-              loop
-              playsInline
-            >
-              <source src="/intro.mp4" type="video/mp4" />
-              Your browser does not support the video tag.
-            </video>
+            />
           </div>
         </motion.div>
       </div>
