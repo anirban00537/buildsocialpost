@@ -94,7 +94,9 @@ const ImageUploadModal: React.FC<ImageUploadModalProps> = ({
 
   const calculateTotalUsage = (images: ImageInfo[]) => {
     const totalBytes = images.reduce((acc, image) => acc + image.size, 0);
-    setTotalUsage(totalBytes / MB_TO_BYTES);
+    const totalMB = totalBytes / MB_TO_BYTES;
+    setTotalUsage(totalMB);
+    return totalMB; // Return the calculated value
   };
 
   // Handle image upload and save to Firestore with uid
@@ -141,8 +143,11 @@ const ImageUploadModal: React.FC<ImageUploadModalProps> = ({
     },
     {
       onSuccess: (uploadedImages: ImageInfo[]) => {
-        setUploadedImages((prev) => [...uploadedImages, ...prev]);
-        calculateTotalUsage([...uploadedImages, ...uploadedImages]);
+        setUploadedImages((prev) => {
+          const newImages = [...uploadedImages, ...prev];
+          calculateTotalUsage(newImages); // Calculate total usage with all images
+          return newImages;
+        });
         toast.success("Images uploaded successfully!");
         queryClient.invalidateQueries("images");
       },

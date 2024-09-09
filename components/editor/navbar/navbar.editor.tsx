@@ -20,6 +20,7 @@ import {
 import CarouselListModal from "@/components/editor/CarouselListModal";
 import { Download, User, CreditCard, LogOut, Save, ArrowRight } from "lucide-react";
 import { setProperty } from "@/state/slice/carousel.slice";
+import BillingModal from "@/components/subscription/billingModal";
 
 // Utility function to get user initials
 const getInitials = (email: string): string =>
@@ -64,10 +65,7 @@ const UserDropdown: React.FC<{ user: any; onLogout: () => void }> = React.memo(
             <User className="w-4 h-4" />
             Profile
           </DropdownMenuItem>
-          <DropdownMenuItem className="flex items-center gap-2">
-            <CreditCard className="w-4 h-4" />
-            Billing
-          </DropdownMenuItem>
+          <BillingModal />
           <DropdownMenuItem
             onClick={onLogout}
             className="flex items-center gap-2"
