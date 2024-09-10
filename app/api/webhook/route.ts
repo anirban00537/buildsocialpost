@@ -1,8 +1,9 @@
-import { db } from "@/services/firebase";
+import dbConnect from '@/services/mongodb';
+import Subscription from '@/models/Subscription';
 import crypto from "crypto";
-import { doc, setDoc } from "firebase/firestore";
 
 export async function POST(req: Request) {
+  await dbConnect();
   try {
     const clonedReq = req.clone();
     const eventType = req.headers.get("X-Event-Name");
@@ -35,7 +36,7 @@ export async function POST(req: Request) {
         endDate: endDate.toISOString(),
         createdAt: new Date().toISOString(),
       };
-      await setDoc(doc(db, "subscriptions", userId), subscriptionData);
+      await Subscription.create(subscriptionData);
       console.log("Subscription created:", subscriptionData);
     }
 

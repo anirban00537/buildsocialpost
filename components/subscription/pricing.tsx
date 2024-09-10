@@ -1,8 +1,10 @@
 "use client";
-import { auth } from "@/services/firebase";
-import axios from "axios";
+import { signInWithGoogle } from "@/services/auth";
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useSubscription } from "@/hooks/useSubscription";
+import { useSelector } from "react-redux";
+import { RootState } from "@/state/store";
 
 const plan = {
   name: "Pro plan",
@@ -21,39 +23,36 @@ const plan = {
   ],
 };
 
-const Pricing = () => {
+const Pricing: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+  const { subscribe, isSubscribing, error: subscriptionError } = useSubscription();
+  const user = useSelector((state: RootState) => state.user.userinfo);
 
-  const buyProduct = async () => {
+  const handleSubscribe = async () => {
     setLoading(true);
-    const user = auth.currentUser;
-    if (user) {
-      try {
-        const token = await user.getIdToken();
-        const response = await axios.post(
-          "/api/purchaseProduct",
-          {
-            productId: "399160",
-          },
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        console.log(response, "response");
-        window.open(response.data.checkoutUrl, "_blank");
-      } catch (error) {
-        console.error("Error purchasing product:", error);
-        alert(
-          "An error occurred while purchasing the product. Please try again."
-        );
-      } finally {
-        setLoading(false);
+    try {
+      if (!user) {
+        const result = await signInWithGoogle();
+        if (!result.user) {
+          throw new Error("Failed to sign in");
+        }
       }
-    } else {
-      router.push("/login");
+      
+      // Here you would typically integrate with a payment provider like Stripe
+      // For this example, we'll just create a subscription without payment
+      const subscriptionData = {
+        userId: user?.uid,
+        planId: "pro_plan",
+        startDate: new Date(),
+        endDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30 days from now
+      };
+      
+      await subscribe(subscriptionData);
+      router.push("/editor");
+    } catch (error) {
+      console.error('Error during subscription:', error);
+    } finally {
       setLoading(false);
     }
   };
@@ -88,11 +87,14 @@ const Pricing = () => {
               </div>
               <button
                 className="mt-6 px-5 py-3 rounded-lg w-full font-semibold text-sm duration-150 bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-purple-500 hover:to-indigo-500 text-white shadow-md"
-                onClick={buyProduct}
-                disabled={loading}
+                onClick={handleSubscribe}
+                disabled={loading || isSubscribing}
               >
-                {loading ? "Processing..." : "Buy"}
+                {loading || isSubscribing ? "Processing..." : "Buy"}
               </button>
+              {subscriptionError && (
+                <p className="text-red-500 mt-2">{subscriptionError}</p>
+              )}
             </div>
             <div className="p-6 md:p-8">
               <div className="pb-2 font-medium">
