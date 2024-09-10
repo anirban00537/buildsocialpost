@@ -18,7 +18,14 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import CarouselListModal from "@/components/editor/CarouselListModal";
-import { Download, User, CreditCard, LogOut, Save, ArrowRight } from "lucide-react";
+import {
+  Download,
+  User,
+  CreditCard,
+  LogOut,
+  Save,
+  ArrowRight,
+} from "lucide-react";
 import { setProperty } from "@/state/slice/carousel.slice";
 import BillingModal from "@/components/subscription/billingModal";
 
@@ -43,7 +50,10 @@ const UserDropdown: React.FC<{ user: any; onLogout: () => void }> = React.memo(
     return (
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="ghost" className="h-8 w-8 p-0 border border-primary rounded-full overflow-hidden">
+          <Button
+            variant="ghost"
+            className="h-8 w-8 p-0 border border-primary rounded-full overflow-hidden"
+          >
             {user.photoURL && !imageError ? (
               <img
                 className="h-full w-full object-cover"
@@ -59,7 +69,9 @@ const UserDropdown: React.FC<{ user: any; onLogout: () => void }> = React.memo(
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent className="w-56" align="end">
-          <DropdownMenuLabel>{user.displayName || user.email}</DropdownMenuLabel>
+          <DropdownMenuLabel>
+            {user.displayName || user.email}
+          </DropdownMenuLabel>
           <DropdownMenuSeparator />
           <DropdownMenuItem className="flex items-center gap-2">
             <User className="w-4 h-4" />

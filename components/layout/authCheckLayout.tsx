@@ -1,5 +1,5 @@
 "use client";
-import { useAuthUser } from "@/hooks/useAuth";
+import { useSession } from "next-auth/react";
 import React, { ReactNode } from "react";
 import FullScreenLoading from "../loading/fullscreen.loading";
 import useAnalytics from "@/hooks/useAnalytics";
@@ -9,13 +9,13 @@ interface AuthCheckLayoutProps {
 }
 
 const AuthCheckLayout: React.FC<AuthCheckLayoutProps> = ({ children }) => {
-  const { loading } = useAuthUser();
+  const { status } = useSession();
 
   useAnalytics();
 
   return (
     <div>
-      {loading && <FullScreenLoading />}
+      {status === "loading" && <FullScreenLoading />}
       {children}
     </div>
   );

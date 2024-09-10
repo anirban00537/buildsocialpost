@@ -10,19 +10,13 @@ import {
   setToken,
 } from "@/state/slice/user.slice";
 import { useQuery, useMutation } from "react-query";
-import { User } from "firebase/auth";
 import { setBranding } from "@/state/slice/branding.slice";
-import {
-  signOut,
-  signInWithGoogle,
-  getCurrentUser,
-} from "@/services/auth";
+import { signIn, signOut, useSession } from "next-auth/react";
 import {
   fetchSubscriptionStatus,
   fetchBrandingSettings,
 } from "@/services/firestore";
 
-// Hook for logging out the user
 export const useLogout = () => {
   const [error, setError] = useState<string>("");
   const [success, setSuccess] = useState<string>("");
@@ -49,43 +43,20 @@ export const useLogout = () => {
 export const useAuthUser = () => {
   const [error, setError] = useState<string>("");
   const dispatch = useDispatch();
-
-  const {
-    data: authData,
-    isLoading: userLoading,
-    error: userError,
-    refetch: refetchUser,
-  } = useQuery<{ user: User | null; token: string | null }, Error>("user", getCurrentUser, {
-    onSuccess: (data) => {
-      if (data.user) {
-        const { uid, email, displayName, photoURL } = data.user;
-        dispatch(setUser({ uid, email, displayName, photoURL }));
-        dispatch(setToken(data.token));
-      } else {
-        dispatch(logout());
-      }
-    },
-    onError: (error: Error) => {
-      setError(error.message || "Failed to fetch the current user.");
-      dispatch(logout());
-    },
-  });
-
-  const userId = authData?.user?.uid;
-  const token = authData?.token;
+  const { data: session, status } = useSession();
 
   const {
     data: subscriptionData,
     isLoading: subscriptionLoading,
     error: subscriptionError,
   } = useQuery(
-    ["subscriptionStatus", userId],
+    ["subscriptionStatus", session?.user?.id],
     () =>
-      userId && token
-        ? fetchSubscriptionStatus(userId, token)
-        : Promise.reject(new Error("User ID or token is undefined")),
+      session?.user?.id
+        ? fetchSubscriptionStatus(session.user.id, session.user.id)
+        : Promise.reject(new Error("User ID is undefined")),
     {
-      enabled: !!userId && !!token,
+      enabled: !!session?.user?.id,
       onSuccess: (data) => {
         dispatch(setSubscribed(data.isSubscribed));
         dispatch(setEndDate(data.endDate));
@@ -103,13 +74,13 @@ export const useAuthUser = () => {
     isLoading: brandingLoading,
     error: brandingError,
   } = useQuery(
-    ["brandingSettings", userId],
+    ["brandingSettings", session?.user?.id],
     () =>
-      userId && token
-        ? fetchBrandingSettings(userId, token)
-        : Promise.reject(new Error("User ID or token is undefined")),
+      session?.user?.id
+        ? fetchBrandingSettings(session.user.id, session.user.id)
+        : Promise.reject(new Error("User ID is undefined")),
     {
-      enabled: !!userId && !!token,
+      enabled: !!session?.user?.id,
       onSuccess: (data) => {
         dispatch(setBranding(data));
       },
@@ -120,19 +91,30 @@ export const useAuthUser = () => {
   );
 
   useEffect(() => {
-    dispatch(setLoading(userLoading || subscriptionLoading || brandingLoading));
-  }, [userLoading, subscriptionLoading, brandingLoading, dispatch]);
+    dispatch(
+      setLoading(status === "loading" || subscriptionLoading || brandingLoading)
+    );
+  }, [status, subscriptionLoading, brandingLoading, dispatch]);
+
+  useEffect(() => {
+    if (session?.user) {
+      dispatch(
+        setUser({
+          uid: session.user.id,
+          email: session.user.email || "",
+          displayName: session.user.name || "",
+          photoURL: session.user.image || "",
+        })
+      );
+    } else {
+      dispatch(logout());
+    }
+  }, [session, dispatch]);
 
   return {
-    error:
-      error ||
-      userError?.message ||
-      subscriptionError?.message ||
-      brandingError?.message,
-    user: authData?.user,
-    token: authData?.token,
-    loading: userLoading || subscriptionLoading || brandingLoading,
-    fetchUser: refetchUser,
+    error: error || subscriptionError?.message || brandingError?.message,
+    user: session?.user,
+    loading: status === "loading" || subscriptionLoading || brandingLoading,
   };
 };
 
@@ -140,7 +122,6 @@ export const useGoogleLogin = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
-  const dispatch = useDispatch();
   const router = useRouter();
 
   const loginWithGoogle = async () => {
@@ -148,20 +129,11 @@ export const useGoogleLogin = () => {
     setError(null);
     setSuccess(null);
     try {
-      const { user, token } = await signInWithGoogle();
-      if (user && user.uid) {
-        dispatch(
-          setUser({
-            uid: user.uid,
-            email: user.email || "",
-            displayName: user.displayName || "",
-            photoURL: user.photoURL || "",
-          })
-        );
-        setSuccess("Logged in successfully");
-        router.push("/editor");
+      const result = await signIn("google", { callbackUrl: "/editor" });
+      if (result?.error) {
+        setError(result.error);
       } else {
-        setError("Failed to retrieve user information");
+        setSuccess("Logged in successfully");
       }
     } catch (error) {
       setError(
@@ -174,4 +146,3 @@ export const useGoogleLogin = () => {
 
   return { loginWithGoogle, loading, error, success };
 };
-
