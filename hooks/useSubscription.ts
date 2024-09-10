@@ -23,7 +23,7 @@ const createSubscription = async (subscriptionData: any, token: string) => {
 export const useSubscription = () => {
   const [error, setError] = useState<string | null>(null);
   const queryClient = useQueryClient();
-  const user = useSelector((state: RootState) => state.user.userinfo);
+  const user = useSelector((state: RootState) => state.user.userInfo);
   const token = useSelector((state: RootState) => state.user.token);
 
   const { mutate: subscribe, isLoading: isSubscribing } = useMutation(

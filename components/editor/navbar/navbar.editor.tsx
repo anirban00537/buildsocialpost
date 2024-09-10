@@ -132,7 +132,7 @@ const EditorNavbar: React.FC = () => {
     deleteCarousel,
   } = useCarouselManager();
   const { logout } = useLogout();
-  const user = useSelector((state: RootState) => state.user.userinfo);
+  const user = useSelector((state: RootState) => state.user.userInfo);
   const { name } = useSelector((state: RootState) => state.slides);
   const searchParams = useSearchParams();
   const carouselId = searchParams.get("id");

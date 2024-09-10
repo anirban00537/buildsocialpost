@@ -3,7 +3,9 @@ import EditorBody from "@/components/editor/body/body.editor";
 import React, { Suspense } from "react";
 import MainSidebar from "@/components/editor/sidebar/main.sidebar";
 import EditorNavbar from "@/components/editor/navbar/navbar.editor";
+import { useAuthUser } from "@/hooks/useAuth";
 function Dashboard() {
+  const { user } = useAuthUser();
   return (
     <div className="flex h-screen overflow-hidden bg-white">
       <div className="flex flex-col flex-1 h-full overflow-hidden">
