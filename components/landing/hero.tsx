@@ -1,6 +1,6 @@
 import Link from "next/link";
 import React from "react";
-import { motion } from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
 import { AnimatedTooltip } from "../ui/animated-tooltip";
 import { ArrowRight, Sparkles } from "lucide-react";
 import Image from "next/image";
@@ -84,6 +84,15 @@ const platforms = [
 
 const Hero = () => {
   const [currentPlatform, setCurrentPlatform] = React.useState(0);
+  const demoRef = React.useRef(null);
+  const { scrollYProgress } = useScroll({
+    target: demoRef,
+    offset: ["start end", "end start"]
+  });
+
+  // Adjusted scale range to prevent overflow
+  const scale = useTransform(scrollYProgress, [0, 1], [0.9, 1.1]);
+  const opacity = useTransform(scrollYProgress, [0, 0.5], [0.6, 1]);
 
   React.useEffect(() => {
     const interval = setInterval(() => {
@@ -94,9 +103,9 @@ const Hero = () => {
 
   return (
     <motion.section
-      className="py-20  overflow-hidden"
-      initial="hidden"
-      animate="visible"
+      className="py-20 overflow-hidden"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
     >
       <div className="max-w-7xl mx-auto flex flex-col items-center text-center px-4 md:px-8">
@@ -167,17 +176,21 @@ const Hero = () => {
         </div>
 
         <motion.div
-          className="w-full max-w-4xl rounded-2xl bg-gradient-to-r from-blue-600 to-teal-400 p-1 shadow-2xl"
-          variants={videoVariants}
+          ref={demoRef}
+          className="w-full max-w-4xl mx-auto mt-16"
+          style={{ scale, opacity }}
         >
-          <div className="rounded-xl overflow-hidden bg-white">
-            <Image
-              src="/demo.png"
-              alt="Carousel AI"
-              width={1000}
-              height={1000}
-              className="w-full h-auto"
-            />
+          <div className="rounded-2xl bg-gradient-to-r from-blue-600 to-teal-400 p-1 shadow-2xl">
+            <div className="relative w-full aspect-video rounded-xl overflow-hidden bg-white">
+              <Image
+                src="/demo.png"
+                alt="Carousel AI Demo"
+                layout="responsive"
+                width={1920}
+                height={1080}
+                priority
+              />
+            </div>
           </div>
         </motion.div>
       </div>

@@ -9,6 +9,7 @@ import Image from "./slide-parts/image";
 import Background from "./slide-parts/background";
 import GeneralInfo from "./slide-parts/generalInfo";
 import { RootState } from "@/state/store";
+import { CSSProperties } from 'react';
 
 interface SlideProps {
   slide: Slide;
@@ -35,11 +36,19 @@ const SlideComponent: React.FC<SlideProps> = ({
     (state: RootState) => state.branding
   );
   const { pattern, backgroundOpacity } = layout;
-  const backgroundImageStyle = slide.backgroundImage
+  const backgroundImageStyle: CSSProperties = slide.backgroundImage
     ? {
         backgroundImage: `url("${slide.backgroundImage}")`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat',
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        opacity: 0.3,
         zIndex: 0,
-        opacity: backgroundOpacity,
       }
     : {
         backgroundImage: `url(${pattern})`,
@@ -54,11 +63,8 @@ const SlideComponent: React.FC<SlideProps> = ({
 
   return (
     <div
-      className="cursor-pointer  hover:opacity-90 transition-all"
+      className="cursor-pointer hover:opacity-90 transition-all relative"
       style={{
-        position: "relative",
-        backgroundSize: "cover",
-        backgroundPosition: "center",
         height: "100%",
         width: "100%",
         display: "flex",
@@ -67,9 +73,11 @@ const SlideComponent: React.FC<SlideProps> = ({
         color: color2,
         backgroundColor: color1,
         zIndex: 1,
-        cursor: "pointer",
-      }}
+      } as CSSProperties}
     >
+      {slide.backgroundImage && (
+        <div style={backgroundImageStyle} />
+      )}
       {index % 2 === 1 ? (
         <>
           <SharedElementsComponent
