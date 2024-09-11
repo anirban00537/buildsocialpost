@@ -8,24 +8,20 @@ export async function POST(req: Request) {
 
   try {
     if (!userData.uid) {
-      throw new Error('User ID is required');
+      throw new Error("User ID is required");
     }
 
-    const user = await User.findOneAndUpdate(
-      { uid: userData.uid },
-      {
-        uid: userData.uid,
-        email: userData.email || '',
-        displayName: userData.displayName || '',
-        photoURL: userData.photoURL || '',
-      },
-      { upsert: true, new: true }
-    );
-    return NextResponse.json({ success: true, data: user });
+    const existingUser = await User.findOne({ uid: userData.uid });
+    if (existingUser) {
+      return NextResponse.json({ success: true, data: existingUser, message: "User already exists" });
+    }
+
+    const newUser = await User.create(userData);
+    return NextResponse.json({ success: true, data: newUser, message: "User created successfully" });
   } catch (error) {
-    console.error('Error storing user data:', error);
+    console.error("Error checking/storing user data:", error);
     return NextResponse.json(
-      { success: false, error: 'Failed to store user data' },
+      { success: false, error: "Failed to check/store user data" },
       { status: 500 }
     );
   }

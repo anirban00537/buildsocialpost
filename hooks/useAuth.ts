@@ -36,6 +36,7 @@ export const useGoogleLogin = () => {
   const loginWithGoogle = async () => {
     try {
       const result = await signIn("google", { callbackUrl: "/editor" });
+      console.log(result, "result");
       if (result?.error) {
         throw new Error(result.error);
       }
