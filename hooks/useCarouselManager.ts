@@ -5,10 +5,11 @@ import { RootState } from "@/state/store";
 import { CarouselState } from "@/types";
 import { addAllSlides, setProperty } from "@/state/slice/carousel.slice";
 import { useSession } from "next-auth/react";
+import { setLoading } from "@/state/slice/user.slice";
 
 export const useCarouselManager = () => {
-  const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [saveLoading, setSaveLoading] = useState<boolean>(false);
   const [carousel, setCarousel] = useState<CarouselState | null>(null);
   const [carousels, setCarousels] = useState<
     { id: string; data: CarouselState }[]
@@ -30,12 +31,13 @@ export const useCarouselManager = () => {
 
   const createOrUpdateCarousel = useCallback(
     async (newName?: string, id?: string) => {
-      setLoading(true);
+      setSaveLoading(true);
+
       setError(null);
 
       if (!session) {
         setError("User not authenticated");
-        setLoading(false);
+        setSaveLoading(false);
         return;
       }
 
@@ -79,7 +81,7 @@ export const useCarouselManager = () => {
       } catch (err) {
         setError("Failed to save carousel");
       } finally {
-        setLoading(false);
+        setSaveLoading(false);
       }
     },
     [
@@ -97,7 +99,7 @@ export const useCarouselManager = () => {
 
   const getCarouselDetailsById = useCallback(
     async (id: string) => {
-      setLoading(true);
+      dispatch(setLoading(true));
       setError(null);
       try {
         const response = await fetch(`/api/carousels?id=${id}`);
@@ -152,14 +154,14 @@ export const useCarouselManager = () => {
         setError("Failed to fetch carousel details");
         router.push("/editor");
       } finally {
-        setLoading(false);
+        dispatch(setLoading(false));
       }
     },
     [dispatch, router]
   );
 
   const deleteCarousel = useCallback(async (id: string) => {
-    setLoading(true);
+    dispatch(setLoading(true));
     setError(null);
     try {
       const response = await fetch(`/api/carousels?id=${id}`, {
@@ -175,12 +177,12 @@ export const useCarouselManager = () => {
     } catch (err) {
       setError("Failed to delete carousel");
     } finally {
-      setLoading(false);
+      dispatch(setLoading(false));
     }
   }, []);
 
   const getAllCarousels = useCallback(async () => {
-    setLoading(true);
+    dispatch(setLoading(true));
     setError(null);
     try {
       if (session) {
@@ -189,7 +191,7 @@ export const useCarouselManager = () => {
           throw new Error("Failed to fetch carousels");
         }
         const carouselsList = await response.json();
-        
+
         setCarousels(carouselsList);
       } else {
         setError("User not authenticated");
@@ -197,12 +199,11 @@ export const useCarouselManager = () => {
     } catch (err) {
       setError("Failed to fetch carousels");
     } finally {
-      setLoading(false);
+      dispatch(setLoading(false));
     }
   }, [session]);
 
   return {
-    loading,
     error,
     carousel,
     carousels,
@@ -210,5 +211,6 @@ export const useCarouselManager = () => {
     getCarouselDetailsById,
     deleteCarousel,
     getAllCarousels,
+    saveLoading,
   };
 };

@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useSession, signIn, signOut } from "next-auth/react";
 import {
   setUser,
@@ -9,53 +9,31 @@ import {
   setSubscribed,
   setEndDate,
 } from "@/state/slice/user.slice";
-import { useCarouselManager } from "./useCarouselManager";
 
 export const useAuthUser = () => {
   const dispatch = useDispatch();
-  const { getCarouselDetailsById, loading: saveLoading } = useCarouselManager();
   const { data: session, status } = useSession();
-  const searchParams = typeof window !== 'undefined' ? useSearchParams() : null;
-  const carouselId = searchParams?.get("id");
-  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    getAllInitialData();
-  }, [session, status, dispatch, carouselId]);
 
-  const getAllInitialData = async () => {
-    setIsLoading(true);
-    dispatch(setLoading(true));
-
-    try {
-      if (carouselId && session?.user) {
-        await getCarouselDetailsById(carouselId);
-      }
-      
-      if (session?.user) {
-        await dispatch(
-          setUser({
-            uid: session.user.id,
-            email: session.user.email || "",
-            displayName: session.user.name || "",
-            photoURL: session.user.image || "",
-          })
-        );
-        await fetchSubscriptionStatus(session.user.id, dispatch);
-      } else if (status === "unauthenticated") {
-        dispatch(logout());
-      }
-    } catch (error) {
-      console.error("Error fetching initial data:", error);
-    } finally {
-      setIsLoading(false);
-      dispatch(setLoading(false));
+    if (session?.user) {
+      dispatch(
+        setUser({
+          uid: session.user.id,
+          email: session.user.email || "",
+          displayName: session.user.name || "",
+          photoURL: session.user.image || "",
+        })
+      );
+      fetchSubscriptionStatus(session.user.id, dispatch);
+    } else if (status === "unauthenticated") {
+      dispatch(logout());
     }
-  };
+  }, [session, status, dispatch]);
 
   return {
     user: session?.user,
-    loading: isLoading || status === "loading",
+    loading: status === "loading",
   };
 };
 

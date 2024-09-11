@@ -128,7 +128,7 @@ const EditorNavbar: React.FC = () => {
     getCarouselDetailsById,
     getAllCarousels,
     carousels,
-    loading: saveLoading,
+   saveLoading,
     deleteCarousel,
   } = useCarouselManager();
   const { logout } = useLogout();
@@ -138,6 +138,11 @@ const EditorNavbar: React.FC = () => {
   const carouselId = searchParams.get("id");
   const dispatch = useDispatch();
   const [isViewAllModalOpen, setIsViewAllModalOpen] = useState(false);
+  useEffect(() => {
+    if (carouselId) {
+      getCarouselDetailsById(carouselId);
+    }
+  }, [carouselId]);
 
   useEffect(() => {
     getAllCarousels();
