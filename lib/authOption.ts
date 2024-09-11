@@ -19,6 +19,12 @@ export const authOptions: AuthOptions = {
       }
       return session;
     },
+    signIn: async ({ user, account, profile }: any) => {
+      if (account?.provider === "google") {
+        user.uid = profile.sub; // Use Google's sub as a unique identifier
+      }
+      return true;
+    },
   },
   debug: process.env.NODE_ENV === "development",
 };
