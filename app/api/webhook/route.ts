@@ -1,5 +1,4 @@
 import clientPromise from '@/services/mongodb';
-import Subscription from '@/models/Subscription';
 import crypto from "crypto";
 
 export async function POST(req: Request) {
@@ -37,7 +36,7 @@ export async function POST(req: Request) {
         endDate: endDate.toISOString(),
         createdAt: new Date().toISOString(),
       };
-      await Subscription.create(subscriptionData);
+      await db.collection("subscriptions").insertOne(subscriptionData);
       console.log("Subscription created:", subscriptionData);
     }
 
