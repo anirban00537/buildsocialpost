@@ -1,18 +1,33 @@
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useSession, signIn, signOut } from "next-auth/react";
-import { setUser, setLoading, logout, setSubscribed, setEndDate } from "@/state/slice/user.slice";
+import {
+  setUser,
+  setLoading,
+  logout,
+  setSubscribed,
+  setEndDate,
+} from "@/state/slice/user.slice";
+import { useCarouselManager } from "./useCarouselManager";
 
 export const useAuthUser = () => {
   const dispatch = useDispatch();
+  const { getCarouselDetailsById, loading: saveLoading } = useCarouselManager();
   const { data: session, status } = useSession();
+  const searchParams = useSearchParams();
+  const carouselId = searchParams.get("id");
 
   useEffect(() => {
-    dispatch(setLoading(status === "loading"));
-
+    getAllInitialData();
+  }, [session, status, dispatch, carouselId]);
+  const getAllInitialData = async () => {
+    await dispatch(setLoading(status === "loading"));
+    if (carouselId) {
+      await getCarouselDetailsById(carouselId);
+    }
     if (session?.user) {
-      dispatch(
+      await dispatch(
         setUser({
           uid: session.user.id,
           email: session.user.email || "",
@@ -20,12 +35,12 @@ export const useAuthUser = () => {
           photoURL: session.user.image || "",
         })
       );
-      fetchSubscriptionStatus(session.user.id, dispatch);
+      await fetchSubscriptionStatus(session.user.id, dispatch);
     } else if (status === "unauthenticated") {
       dispatch(logout());
     }
-  }, [session, status, dispatch]);
-
+    await dispatch(setLoading(false));
+  };
   return {
     user: session?.user,
     loading: status === "loading",

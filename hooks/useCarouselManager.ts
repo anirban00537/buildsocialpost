@@ -189,6 +189,7 @@ export const useCarouselManager = () => {
           throw new Error("Failed to fetch carousels");
         }
         const carouselsList = await response.json();
+        
         setCarousels(carouselsList);
       } else {
         setError("User not authenticated");

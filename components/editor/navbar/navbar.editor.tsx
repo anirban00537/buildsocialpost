@@ -140,12 +140,6 @@ const EditorNavbar: React.FC = () => {
   const [isViewAllModalOpen, setIsViewAllModalOpen] = useState(false);
 
   useEffect(() => {
-    if (carouselId) {
-      getCarouselDetailsById(carouselId);
-    }
-  }, [carouselId, getCarouselDetailsById]);
-
-  useEffect(() => {
     getAllCarousels();
   }, [getAllCarousels]);
 
