@@ -9,6 +9,8 @@ import { useSession } from "next-auth/react";
 export const useCarouselManager = () => {
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isSaving, setIsSaving] = useState<boolean>(false);
+  const [isDeleting, setIsDeleting] = useState<boolean>(false);
   const [carousel, setCarousel] = useState<CarouselState | null>(null);
   const [carousels, setCarousels] = useState<
     { id: string; data: CarouselState }[]
@@ -35,7 +37,7 @@ export const useCarouselManager = () => {
         return;
       }
 
-      setIsLoading(true);
+      setIsSaving(true);
       setError(null);
 
       const carouselData: CarouselState = {
@@ -78,7 +80,7 @@ export const useCarouselManager = () => {
       } catch (err) {
         setError("Failed to save carousel");
       } finally {
-        setIsLoading(false);
+        setIsSaving(false);
       }
     },
     [
@@ -104,8 +106,7 @@ export const useCarouselManager = () => {
           throw new Error("Failed to fetch carousel details");
         }
         const data = await response.json();
-        
-        // Set all the data before updating the loading state
+
         setCarousel(data);
         dispatch(setProperty({ key: "name", value: data.name }));
         dispatch(addAllSlides(data.slides));
@@ -158,27 +159,6 @@ export const useCarouselManager = () => {
     [dispatch, router]
   );
 
-  const deleteCarousel = useCallback(async (id: string) => {
-    setIsLoading(true);
-    setError(null);
-    try {
-      const response = await fetch(`/api/carousels?id=${id}`, {
-        method: "DELETE",
-      });
-      if (!response.ok) {
-        throw new Error("Failed to delete carousel");
-      }
-      setCarousel(null);
-      setCarousels((prevCarousels) =>
-        prevCarousels.filter((carousel) => carousel.id !== id)
-      );
-    } catch (err) {
-      setError("Failed to delete carousel");
-    } finally {
-      setIsLoading(false);
-    }
-  }, []);
-
   const getAllCarousels = useCallback(async () => {
     if (!session) {
       setError("User not authenticated");
@@ -201,6 +181,32 @@ export const useCarouselManager = () => {
     }
   }, [session]);
 
+  const deleteCarousel = useCallback(
+    async (id: string) => {
+      setIsDeleting(true);
+      setError(null);
+      try {
+        const response = await fetch(`/api/carousels?id=${id}`, {
+          method: "DELETE",
+        });
+        if (!response.ok) {
+          throw new Error("Failed to delete carousel");
+        }
+
+        setCarousels((prevCarousels) =>
+          prevCarousels.filter((carousel) => carousel.id !== id)
+        );
+
+        await getAllCarousels();
+      } catch (err) {
+        setError("Failed to delete carousel");
+      } finally {
+        setIsDeleting(false);
+      }
+    },
+    [carousel, getAllCarousels]
+  );
+
   return {
     carousel,
     carousels,
@@ -209,6 +215,8 @@ export const useCarouselManager = () => {
     deleteCarousel,
     getAllCarousels,
     isLoading,
+    isSaving,
+    isDeleting,
     error,
   };
 };

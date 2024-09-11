@@ -129,9 +129,11 @@ const EditorNavbar: React.FC = () => {
     getCarouselDetailsById,
     getAllCarousels,
     carousels,
-    isLoading: saveLoading,
+    isLoading,
     deleteCarousel,
     error,
+    isSaving,
+    isDeleting,
   } = useCarouselManager();
   const { logout } = useLogout();
   const user = useSelector((state: RootState) => state.user.userInfo);
@@ -164,7 +166,7 @@ const EditorNavbar: React.FC = () => {
 
   const memoizedCarousels = useMemo(() => carousels, [carousels]);
 
-  if (saveLoading) {
+  if (isLoading) {
     return <FullScreenLoading />;
   }
 
@@ -207,11 +209,11 @@ const EditorNavbar: React.FC = () => {
 
         <Button
           onClick={handleSaveCarousel}
-          disabled={saveLoading}
+          disabled={isSaving}
           className="flex items-center gap-2"
           size="xs"
         >
-          {saveLoading ? (
+          {isSaving ? (
             <div className="flex items-center gap-2">
               <svg
                 className="animate-spin h-4 w-4"
@@ -261,7 +263,7 @@ const EditorNavbar: React.FC = () => {
         setIsViewAllModalOpen={setIsViewAllModalOpen}
         createOrUpdateCarousel={createOrUpdateCarousel}
         deleteCarousel={deleteCarousel}
-        saveLoading={saveLoading}
+        isDeleting={isDeleting}
       />
     </header>
   );

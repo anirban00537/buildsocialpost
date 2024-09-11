@@ -10,7 +10,7 @@ interface CarouselListModalProps {
   setIsViewAllModalOpen: (isOpen: boolean) => void;
   createOrUpdateCarousel: (name: string, id?: string) => Promise<void>;
   deleteCarousel: (carouselId: string) => void;
-  saveLoading: boolean;
+  isDeleting: boolean;
 }
 
 const CarouselListModal: FC<CarouselListModalProps> = ({
@@ -19,7 +19,7 @@ const CarouselListModal: FC<CarouselListModalProps> = ({
   setIsViewAllModalOpen,
   createOrUpdateCarousel,
   deleteCarousel,
-  saveLoading,
+  isDeleting,
 }) => {
   const [selectedCarousel, setSelectedCarousel] = useState<any | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
@@ -76,6 +76,7 @@ const CarouselListModal: FC<CarouselListModalProps> = ({
                     variant="outline"
                     size="sm"
                     onClick={() => handleDeleteCarousel(carousel?._id)}
+                    disabled={isDeleting}
                   >
                     <Trash className="w-3 h-3 mr-1" />
                     Delete
