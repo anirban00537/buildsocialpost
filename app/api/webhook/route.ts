@@ -1,9 +1,10 @@
-import dbConnect from '@/services/mongodb';
+import clientPromise from '@/services/mongodb';
 import Subscription from '@/models/Subscription';
 import crypto from "crypto";
 
 export async function POST(req: Request) {
-  await dbConnect();
+  const client = await clientPromise;
+  const db = client.db();
   try {
     const clonedReq = req.clone();
     const eventType = req.headers.get("X-Event-Name");

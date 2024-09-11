@@ -10,7 +10,6 @@ export const useAuthUser = () => {
 
   useEffect(() => {
     dispatch(setLoading(status === "loading"));
-    console.log(session, "sssssssssssssssssssssss");
     
     if (session?.user) {
       dispatch(setUser({
@@ -36,7 +35,6 @@ export const useGoogleLogin = () => {
   const loginWithGoogle = async () => {
     try {
       const result = await signIn("google", { callbackUrl: "/editor" });
-      console.log(result, "result");
       if (result?.error) {
         throw new Error(result.error);
       }
@@ -49,16 +47,10 @@ export const useGoogleLogin = () => {
 };
 
 export const useLogout = () => {
-  const dispatch = useDispatch();
   const router = useRouter();
 
   const logoutUser = async () => {
-    try {
-      await signOut({ callbackUrl: "/" });
-      dispatch({ type: "user/logout" }); // Dispatch a plain object action
-    } catch (error) {
-      console.error("Logout failed:", error);
-    }
+    await signOut({ callbackUrl: "/" });
   };
 
   return { logout: logoutUser };

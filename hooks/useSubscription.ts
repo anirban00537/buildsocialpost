@@ -1,14 +1,12 @@
 import { useState } from "react";
 import { useMutation, useQueryClient } from "react-query";
-import { useSelector } from "react-redux";
-import { RootState } from "@/state/store";
+import { useSession } from "next-auth/react";
 
-const createSubscription = async (subscriptionData: any, token: string) => {
-  const response = await fetch("/api/subscriptions", {
+const createSubscription = async (subscriptionData: any) => {
+  const response = await fetch("/api/purchaseProduct", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
     },
     body: JSON.stringify(subscriptionData),
   });
@@ -23,20 +21,21 @@ const createSubscription = async (subscriptionData: any, token: string) => {
 export const useSubscription = () => {
   const [error, setError] = useState<string | null>(null);
   const queryClient = useQueryClient();
-  const user = useSelector((state: RootState) => state.user.userInfo);
-  const token = useSelector((state: RootState) => state.user.token);
+  const { data: session } = useSession();
 
   const { mutate: subscribe, isLoading: isSubscribing } = useMutation(
     (subscriptionData: any) => {
-      if (!token) {
+      if (!session) {
         throw new Error("User is not authenticated");
       }
-      return createSubscription(subscriptionData, token);
+      return createSubscription(subscriptionData);
     },
     {
-      onSuccess: () => {
-        queryClient.invalidateQueries(["subscriptionStatus", user?.uid]);
+      onSuccess: (data) => {
+        queryClient.invalidateQueries(["subscriptionStatus", session?.user.id]);
         setError(null);
+        // Redirect to the checkout URL
+        window.location.href = data.checkoutUrl;
       },
       onError: (error: Error) => {
         setError(error.message || "An error occurred while subscribing");
@@ -44,12 +43,12 @@ export const useSubscription = () => {
     }
   );
 
-  const handleSubscribe = (subscriptionData: any) => {
-    if (!token) {
+  const handleSubscribe = (productId: string) => {
+    if (!session) {
       setError("User is not authenticated");
       return;
     }
-    subscribe(subscriptionData);
+    subscribe({ productId });
   };
 
   return { subscribe: handleSubscribe, isSubscribing, error };

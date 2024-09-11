@@ -1,10 +1,9 @@
 "use client";
-import { signInWithGoogle } from "@/services/auth";
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useSubscription } from "@/hooks/useSubscription";
-import { useSelector } from "react-redux";
-import { RootState } from "@/state/store";
+import { useSession } from "next-auth/react";
+import { useGoogleLogin } from "@/hooks/useAuth";
 
 const plan = {
   name: "Pro plan",
@@ -26,32 +25,26 @@ const plan = {
 const Pricing: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
-  const { subscribe, isSubscribing, error: subscriptionError } = useSubscription();
-  const user = useSelector((state: RootState) => state.user.userinfo);
+  const {
+    subscribe,
+    isSubscribing,
+    error: subscriptionError,
+  } = useSubscription();
+  const { data: session } = useSession();
+  const { loginWithGoogle } = useGoogleLogin();
 
   const handleSubscribe = async () => {
     setLoading(true);
     try {
-      if (!user) {
-        const result = await signInWithGoogle();
-        if (!result.user) {
-          throw new Error("Failed to sign in");
-        }
+      if (!session) {
+        await loginWithGoogle();
+        return;
       }
-      
-      // Here you would typically integrate with a payment provider like Stripe
-      // For this example, we'll just create a subscription without payment
-      const subscriptionData = {
-        userId: user?.uid,
-        planId: "pro_plan",
-        startDate: new Date(),
-        endDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30 days from now
-      };
-      
-      await subscribe(subscriptionData);
+
+      await subscribe("399160");
       router.push("/editor");
     } catch (error) {
-      console.error('Error during subscription:', error);
+      console.error("Error during subscription:", error);
     } finally {
       setLoading(false);
     }

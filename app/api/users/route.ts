@@ -1,9 +1,10 @@
 import { NextResponse } from "next/server";
-import dbConnect from "@/services/mongodb";
+import clientPromise from "@/services/mongodb";
 import User from "@/models/User";
 
 export async function POST(req: Request) {
-  await dbConnect();
+  const client = await clientPromise;
+  const db = client.db();
   const userData = await req.json();
 
   try {

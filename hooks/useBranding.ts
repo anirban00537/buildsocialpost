@@ -12,7 +12,7 @@ const useBranding = () => {
   const { name, handle, headshot } = useSelector(
     (state: RootState) => state.branding
   );
-  const user = useSelector((state: RootState) => state.user.userinfo);
+  const user = useSelector((state: RootState) => state.user.userInfo);
   const [originalHeadshot, setOriginalHeadshot] = useState<string | null>(null);
 
   useEffect(() => {

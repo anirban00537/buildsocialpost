@@ -1,46 +1,29 @@
 import { NextResponse } from "next/server";
-import dbConnect from "@/services/mongodb";
-import Subscription from "@/models/Subscription";
-import { auth } from "firebase-admin";
-import { initializeApp, getApps } from "firebase-admin/app";
-
-if (!getApps().length) {
-  initializeApp();
-}
-
-async function verifyToken(req: Request) {
-  const token = req.headers.get("Authorization")?.split("Bearer ")[1];
-  if (!token) {
-    return null;
-  }
-  try {
-    const decodedToken = await auth().verifyIdToken(token);
-    return decodedToken;
-  } catch (error) {
-    console.error("Error verifying token:", error);
-    return null;
-  }
-}
+import clientPromise from "@/services/mongodb";
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { ObjectId } from "mongodb";
 
 export async function GET(req: Request) {
-  const decodedToken = await verifyToken(req);
-  console.log("decodedToken", decodedToken);
-  if (!decodedToken) {
+  const session = await getServerSession(authOptions);
+  if (!session) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  await dbConnect();
   const { searchParams } = new URL(req.url);
   const userId = searchParams.get("userId");
 
-  if (userId !== decodedToken.uid) {
+  if (userId !== session.user.id) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
   try {
-    const subscription = await Subscription.findOne({ userId }).sort({
-      endDate: -1,
-    });
+    const client = await clientPromise;
+    const db = client.db();
+    const subscription = await db
+      .collection("subscriptions")
+      .findOne({ userId }, { sort: { endDate: -1 } });
+
     if (!subscription) {
       return NextResponse.json({
         success: true,
@@ -48,6 +31,7 @@ export async function GET(req: Request) {
         endDate: null,
       });
     }
+
     const isExpired = new Date(subscription.endDate) < new Date();
     return NextResponse.json({
       success: true,
@@ -61,24 +45,36 @@ export async function GET(req: Request) {
     );
   }
 }
-
 export async function POST(req: Request) {
-  const decodedToken = await verifyToken(req);
-  if (!decodedToken) {
+  const session = await getServerSession(authOptions);
+  if (!session) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  await dbConnect();
+  const client = await clientPromise;
+  const db = client.db();
+
   const subscriptionData = await req.json();
 
-  if (subscriptionData.userId !== decodedToken.uid) {
+  if (subscriptionData.userId !== session.user.id) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
   try {
-    const subscription = new Subscription(subscriptionData);
-    await subscription.save();
-    return NextResponse.json({ success: true, data: subscription });
+    const result = await db.collection("subscriptions").insertOne({
+      ...subscriptionData,
+      userId: new ObjectId(subscriptionData.userId),
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    });
+
+    return NextResponse.json({
+      success: true,
+      data: {
+        ...subscriptionData,
+        _id: result.insertedId,
+      },
+    });
   } catch (error) {
     return NextResponse.json(
       { success: false, error: "Failed to create subscription" },

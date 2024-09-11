@@ -1,47 +1,22 @@
 export const dynamic = "force-dynamic";
 import { lemonSqueezyApiInstance } from "@/utils/axios";
-import { doc, setDoc } from "firebase/firestore";
-import { getAuth } from "firebase-admin/auth";
-import { initializeApp, cert, getApps } from "firebase-admin/app";
-import { db } from "@/services/firebase";
-
-if (!process.env.NEXT_PUBLIC_FIREBASE_PRIVATE_KEY) {
-  throw new Error(
-    "The NEXT_PUBLIC_FIREBASE_PRIVATE_KEY environment variable is not defined"
-  );
-}
-
-if (!getApps().length) {
-  initializeApp({
-    credential: cert({
-      projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
-      clientEmail: process.env.NEXT_PUBLIC_FIREBASE_CLIENT_EMAIL,
-      privateKey: process.env.NEXT_PUBLIC_FIREBASE_PRIVATE_KEY.replace(
-        /\\n/g,
-        "\n"
-      ),
-    }),
-  });
-}
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import clientPromise from "@/services/mongodb";
+import { ObjectId } from "mongodb";
 
 export async function POST(req: Request) {
   try {
-    const authHeader = req.headers.get("Authorization");
-    if (!authHeader) {
-      return new Response(
-        JSON.stringify({ error: "Authorization header missing" }),
-        {
-          status: 401,
-        }
-      );
+    const session = await getServerSession(authOptions);
+    if (!session) {
+      return new Response(JSON.stringify({ error: "Unauthorized" }), {
+        status: 401,
+      });
     }
 
-    const token = authHeader.split(" ")[1];
-    const decodedToken = await getAuth().verifyIdToken(token);
-    const userId = decodedToken.uid;
+    const userId = session.user.id;
 
-    const reqData: { productId: string; redirectUrl: string } =
-      await req.json();
+    const reqData: { productId: string; redirectUrl: string } = await req.json();
     if (!reqData.productId) {
       return new Response(JSON.stringify({ error: "productId is required" }), {
         status: 400,
@@ -80,19 +55,23 @@ export async function POST(req: Request) {
 
     const checkoutUrl = response.data.data.attributes.url;
 
-    // Store the subscription data in Firestore
+    // Store the subscription data in MongoDB
+    const client = await clientPromise;
+    const db = client.db();
+
     const endDate = new Date();
     endDate.setMonth(endDate.getMonth() + 1); // Example: setting the subscription duration to 1 month
 
     const subscriptionData = {
-      userId,
+      userId: new ObjectId(userId),
       productId: reqData.productId,
       checkoutUrl,
       status: "pending",
-      endDate: endDate.toISOString(),
-      createdAt: new Date().toISOString(),
+      endDate: endDate,
+      createdAt: new Date(),
     };
-    await setDoc(doc(db, "subscriptions", userId), subscriptionData);
+
+    await db.collection("subscriptions").insertOne(subscriptionData);
 
     return new Response(JSON.stringify({ checkoutUrl }), { status: 200 });
   } catch (error) {

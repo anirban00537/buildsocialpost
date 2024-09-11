@@ -10,13 +10,9 @@ import {
   getDoc,
 } from "firebase/firestore";
 
-export const fetchSubscriptionStatus = async (userId: string, token: string) => {
+export const fetchSubscriptionStatus = async (userId: string) => {
   try {
-    const response = await fetch(`/api/subscriptions?userId=${userId}`, {
-      headers: {
-        'Authorization': `Bearer ${token}`,
-      },
-    });
+    const response = await fetch(`/api/subscriptions?userId=${userId}`);
     if (!response.ok) {
       throw new Error('Failed to fetch subscription status');
     }
@@ -27,13 +23,9 @@ export const fetchSubscriptionStatus = async (userId: string, token: string) => 
   }
 };
 
-export const fetchBrandingSettings = async (userId: string, token: string) => {
+export const fetchBrandingSettings = async (userId: string) => {
   try {
-    const response = await fetch(`/api/user-branding?userId=${userId}`, {
-      headers: {
-        'Authorization': `Bearer ${token}`,
-      },
-    });
+    const response = await fetch(`/api/branding?userId=${userId}`);
     if (!response.ok) {
       throw new Error('Failed to fetch branding settings');
     }
@@ -46,5 +38,26 @@ export const fetchBrandingSettings = async (userId: string, token: string) => {
   } catch (error: any) {
     console.error("Error fetching branding settings:", error);
     return { name: "", handle: "", headshot: null, error: error.message };
+  }
+};
+
+export const updateBrandingSettings = async (userId: string, brandingData: any) => {
+  try {
+    const response = await fetch('/api/branding', {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ userId, ...brandingData }),
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to update branding settings');
+    }
+
+    return await response.json();
+  } catch (error: any) {
+    console.error("Error updating branding settings:", error);
+    throw error;
   }
 };

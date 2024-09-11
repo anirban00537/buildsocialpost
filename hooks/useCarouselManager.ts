@@ -1,21 +1,10 @@
-import { useState, useCallback, useEffect } from "react";
-import {
-  collection,
-  doc,
-  getDoc,
-  getDocs,
-  setDoc,
-  updateDoc,
-  deleteDoc,
-  query,
-  where,
-} from "firebase/firestore";
-import { db } from "@/services/firebase";
+import { useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/state/store";
-import { CarouselState, FirestoreCarouselState } from "@/types";
+import { CarouselState } from "@/types";
 import { addAllSlides, setProperty } from "@/state/slice/carousel.slice";
+import { useSession } from "next-auth/react";
 
 export const useCarouselManager = () => {
   const [loading, setLoading] = useState(false);
@@ -26,7 +15,7 @@ export const useCarouselManager = () => {
   >([]);
   const router = useRouter();
   const dispatch = useDispatch();
-  const user = useSelector((state: RootState) => state.user.userinfo);
+  const { data: session } = useSession();
 
   const {
     titleTextSettings,
@@ -39,30 +28,12 @@ export const useCarouselManager = () => {
     sharedSelectedElement,
   } = useSelector((state: RootState) => state.slides);
 
-  const convertToFirestoreData = (
-    data: CarouselState,
-    userId: string
-  ): FirestoreCarouselState => ({
-    userId,
-    name: data.name,
-    titleTextSettings: data.titleTextSettings,
-    descriptionTextSettings: data.descriptionTextSettings,
-    taglineTextSettings: data.taglineTextSettings,
-    layout: data.layout,
-    background: data.background,
-    slides: data.slides,
-    sharedSelectedElement: {
-      id: data.sharedSelectedElement?.id,
-      opacity: data.sharedSelectedElement?.opacity,
-    },
-  });
-
   const createOrUpdateCarousel = useCallback(
     async (newName?: string, id?: string) => {
       setLoading(true);
       setError(null);
 
-      if (!user?.uid) {
+      if (!session) {
         setError("User not authenticated");
         setLoading(false);
         return;
@@ -80,19 +51,19 @@ export const useCarouselManager = () => {
       };
 
       try {
-        const firestoreData = convertToFirestoreData(carouselData, user.uid);
+        const response = await fetch("/api/carousels", {
+          method: id ? "PUT" : "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(id ? { id, ...carouselData } : carouselData),
+        });
 
-        let docRef;
-        if (id) {
-          docRef = doc(db, "carousels", id);
-          await updateDoc(docRef, { ...firestoreData });
-        } else {
-          docRef = doc(collection(db, "carousels"));
-          await setDoc(docRef, { ...firestoreData });
-          window.history.replaceState(null, "", `?id=${docRef.id}`);
+        if (!response.ok) {
+          throw new Error("Failed to save carousel");
         }
 
-        const updatedCarousel = { id: docRef.id, data: carouselData };
+        const savedCarousel = await response.json();
+
+        const updatedCarousel = { id: savedCarousel.id, data: carouselData };
         setCarousels((prevCarousels) =>
           id
             ? prevCarousels.map((carousel) =>
@@ -102,6 +73,9 @@ export const useCarouselManager = () => {
         );
 
         setCarousel(carouselData);
+        if (!id) {
+          window.history.replaceState(null, "", `?id=${savedCarousel.id}`);
+        }
       } catch (err) {
         setError("Failed to save carousel");
       } finally {
@@ -109,7 +83,7 @@ export const useCarouselManager = () => {
       }
     },
     [
-      user?.uid,
+      session,
       name,
       titleTextSettings,
       descriptionTextSettings,
@@ -117,7 +91,6 @@ export const useCarouselManager = () => {
       layout,
       background,
       slides,
-      router,
       sharedSelectedElement,
     ]
   );
@@ -127,60 +100,57 @@ export const useCarouselManager = () => {
       setLoading(true);
       setError(null);
       try {
-        const docRef = doc(db, "carousels", id);
-        const docSnap = await getDoc(docRef);
-        if (docSnap.exists()) {
-          const data = docSnap.data() as CarouselState;
-          setCarousel(data);
-
-          dispatch(setProperty({ key: "name", value: data.name }));
-          dispatch(addAllSlides(data.slides));
-          dispatch(setProperty({ key: "background", value: data.background }));
-          dispatch(
-            setProperty({
-              key: "titleTextSettings",
-              value: data.titleTextSettings,
-            })
-          );
-          dispatch(
-            setProperty({
-              key: "descriptionTextSettings",
-              value: data.descriptionTextSettings,
-            })
-          );
-          dispatch(
-            setProperty({
-              key: "taglineTextSettings",
-              value: data.taglineTextSettings,
-            })
-          );
-          dispatch(
-            setProperty({
-              key: "layout",
-              value: {
-                height: data.layout.height,
-                width: data.layout.width,
-                pattern: data.layout.pattern,
-                backgroundOpacity: data.layout.backgroundOpacity || 0.5,
-              },
-            })
-          );
-
-          dispatch(
-            setProperty({
-              key: "sharedSelectedElement",
-              value: {
-                id: data.sharedSelectedElement?.id || 0,
-                opacity: data.sharedSelectedElement?.opacity || 0.5,
-              },
-            })
-          );
-        } else {
-          setError("Carousel not found");
-          router.push("/editor");
+        const response = await fetch(`/api/carousels?id=${id}`);
+        if (!response.ok) {
+          throw new Error("Failed to fetch carousel details");
         }
+        const data = await response.json();
+        setCarousel(data);
+
+        dispatch(setProperty({ key: "name", value: data.name }));
+        dispatch(addAllSlides(data.slides));
+        dispatch(setProperty({ key: "background", value: data.background }));
+        dispatch(
+          setProperty({
+            key: "titleTextSettings",
+            value: data.titleTextSettings,
+          })
+        );
+        dispatch(
+          setProperty({
+            key: "descriptionTextSettings",
+            value: data.descriptionTextSettings,
+          })
+        );
+        dispatch(
+          setProperty({
+            key: "taglineTextSettings",
+            value: data.taglineTextSettings,
+          })
+        );
+        dispatch(
+          setProperty({
+            key: "layout",
+            value: {
+              height: data.layout.height,
+              width: data.layout.width,
+              pattern: data.layout.pattern,
+              backgroundOpacity: data.layout.backgroundOpacity || 0.5,
+            },
+          })
+        );
+        dispatch(
+          setProperty({
+            key: "sharedSelectedElement",
+            value: {
+              id: data.sharedSelectedElement?.id || 0,
+              opacity: data.sharedSelectedElement?.opacity || 0.5,
+            },
+          })
+        );
       } catch (err) {
         setError("Failed to fetch carousel details");
+        router.push("/editor");
       } finally {
         setLoading(false);
       }
@@ -192,8 +162,12 @@ export const useCarouselManager = () => {
     setLoading(true);
     setError(null);
     try {
-      const docRef = doc(db, "carousels", id);
-      await deleteDoc(docRef);
+      const response = await fetch(`/api/carousels?id=${id}`, {
+        method: "DELETE",
+      });
+      if (!response.ok) {
+        throw new Error("Failed to delete carousel");
+      }
       setCarousel(null);
       setCarousels((prevCarousels) =>
         prevCarousels.filter((carousel) => carousel.id !== id)
@@ -209,16 +183,12 @@ export const useCarouselManager = () => {
     setLoading(true);
     setError(null);
     try {
-      if (user?.uid) {
-        const q = query(
-          collection(db, "carousels"),
-          where("userId", "==", user.uid)
-        );
-        const querySnapshot = await getDocs(q);
-        const carouselsList = querySnapshot.docs.map((doc) => ({
-          id: doc.id,
-          data: doc.data() as CarouselState,
-        }));
+      if (session) {
+        const response = await fetch("/api/carousels");
+        if (!response.ok) {
+          throw new Error("Failed to fetch carousels");
+        }
+        const carouselsList = await response.json();
         setCarousels(carouselsList);
       } else {
         setError("User not authenticated");
@@ -228,7 +198,7 @@ export const useCarouselManager = () => {
     } finally {
       setLoading(false);
     }
-  }, [user?.uid]);
+  }, [session]);
 
   return {
     loading,
