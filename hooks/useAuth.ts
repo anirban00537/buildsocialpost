@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useSession, signIn, signOut } from "next-auth/react";
@@ -15,35 +15,47 @@ export const useAuthUser = () => {
   const dispatch = useDispatch();
   const { getCarouselDetailsById, loading: saveLoading } = useCarouselManager();
   const { data: session, status } = useSession();
-  const searchParams = useSearchParams();
-  const carouselId = searchParams.get("id");
+  const searchParams = typeof window !== 'undefined' ? useSearchParams() : null;
+  const carouselId = searchParams?.get("id");
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     getAllInitialData();
   }, [session, status, dispatch, carouselId]);
+
   const getAllInitialData = async () => {
-    await dispatch(setLoading(status === "loading"));
-    if (carouselId) {
-      await getCarouselDetailsById(carouselId);
+    setIsLoading(true);
+    dispatch(setLoading(true));
+
+    try {
+      if (carouselId && session?.user) {
+        await getCarouselDetailsById(carouselId);
+      }
+      
+      if (session?.user) {
+        await dispatch(
+          setUser({
+            uid: session.user.id,
+            email: session.user.email || "",
+            displayName: session.user.name || "",
+            photoURL: session.user.image || "",
+          })
+        );
+        await fetchSubscriptionStatus(session.user.id, dispatch);
+      } else if (status === "unauthenticated") {
+        dispatch(logout());
+      }
+    } catch (error) {
+      console.error("Error fetching initial data:", error);
+    } finally {
+      setIsLoading(false);
+      dispatch(setLoading(false));
     }
-    if (session?.user) {
-      await dispatch(
-        setUser({
-          uid: session.user.id,
-          email: session.user.email || "",
-          displayName: session.user.name || "",
-          photoURL: session.user.image || "",
-        })
-      );
-      await fetchSubscriptionStatus(session.user.id, dispatch);
-    } else if (status === "unauthenticated") {
-      dispatch(logout());
-    }
-    await dispatch(setLoading(false));
   };
+
   return {
     user: session?.user,
-    loading: status === "loading",
+    loading: isLoading || status === "loading",
   };
 };
 
