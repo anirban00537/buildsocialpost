@@ -5,11 +5,10 @@ import { RootState } from "@/state/store";
 import { CarouselState } from "@/types";
 import { addAllSlides, setProperty } from "@/state/slice/carousel.slice";
 import { useSession } from "next-auth/react";
-import { setLoading } from "@/state/slice/user.slice";
 
 export const useCarouselManager = () => {
   const [error, setError] = useState<string | null>(null);
-  const [saveLoading, setSaveLoading] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [carousel, setCarousel] = useState<CarouselState | null>(null);
   const [carousels, setCarousels] = useState<
     { id: string; data: CarouselState }[]
@@ -31,15 +30,13 @@ export const useCarouselManager = () => {
 
   const createOrUpdateCarousel = useCallback(
     async (newName?: string, id?: string) => {
-      setSaveLoading(true);
-
-      setError(null);
-
       if (!session) {
         setError("User not authenticated");
-        setSaveLoading(false);
         return;
       }
+
+      setIsLoading(true);
+      setError(null);
 
       const carouselData: CarouselState = {
         name: newName || name,
@@ -64,8 +61,8 @@ export const useCarouselManager = () => {
         }
 
         const savedCarousel = await response.json();
-
         const updatedCarousel = { id: savedCarousel.id, data: carouselData };
+
         setCarousels((prevCarousels) =>
           id
             ? prevCarousels.map((carousel) =>
@@ -81,7 +78,7 @@ export const useCarouselManager = () => {
       } catch (err) {
         setError("Failed to save carousel");
       } finally {
-        setSaveLoading(false);
+        setIsLoading(false);
       }
     },
     [
@@ -99,7 +96,7 @@ export const useCarouselManager = () => {
 
   const getCarouselDetailsById = useCallback(
     async (id: string) => {
-      dispatch(setLoading(true));
+      setIsLoading(true);
       setError(null);
       try {
         const response = await fetch(`/api/carousels?id=${id}`);
@@ -107,8 +104,9 @@ export const useCarouselManager = () => {
           throw new Error("Failed to fetch carousel details");
         }
         const data = await response.json();
+        
+        // Set all the data before updating the loading state
         setCarousel(data);
-
         dispatch(setProperty({ key: "name", value: data.name }));
         dispatch(addAllSlides(data.slides));
         dispatch(setProperty({ key: "background", value: data.background }));
@@ -154,14 +152,14 @@ export const useCarouselManager = () => {
         setError("Failed to fetch carousel details");
         router.push("/editor");
       } finally {
-        dispatch(setLoading(false));
+        setIsLoading(false);
       }
     },
     [dispatch, router]
   );
 
   const deleteCarousel = useCallback(async (id: string) => {
-    dispatch(setLoading(true));
+    setIsLoading(true);
     setError(null);
     try {
       const response = await fetch(`/api/carousels?id=${id}`, {
@@ -177,40 +175,40 @@ export const useCarouselManager = () => {
     } catch (err) {
       setError("Failed to delete carousel");
     } finally {
-      dispatch(setLoading(false));
+      setIsLoading(false);
     }
   }, []);
 
   const getAllCarousels = useCallback(async () => {
-    dispatch(setLoading(true));
+    if (!session) {
+      setError("User not authenticated");
+      return;
+    }
+
+    setIsLoading(true);
     setError(null);
     try {
-      if (session) {
-        const response = await fetch("/api/carousels");
-        if (!response.ok) {
-          throw new Error("Failed to fetch carousels");
-        }
-        const carouselsList = await response.json();
-
-        setCarousels(carouselsList);
-      } else {
-        setError("User not authenticated");
+      const response = await fetch("/api/carousels");
+      if (!response.ok) {
+        throw new Error("Failed to fetch carousels");
       }
+      const carouselsList = await response.json();
+      setCarousels(carouselsList);
     } catch (err) {
       setError("Failed to fetch carousels");
     } finally {
-      dispatch(setLoading(false));
+      setIsLoading(false);
     }
   }, [session]);
 
   return {
-    error,
     carousel,
     carousels,
     createOrUpdateCarousel,
     getCarouselDetailsById,
     deleteCarousel,
     getAllCarousels,
-    saveLoading,
+    isLoading,
+    error,
   };
 };

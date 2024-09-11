@@ -49,11 +49,11 @@ const useBranding = () => {
       if (brandingData.headshot && brandingData.headshot.startsWith("blob:")) {
         const response = await fetch(brandingData.headshot);
         const blob = await response.blob();
-        
+
         // Generate a unique filename for the image
-        const filename = `${user.uid}_${Date.now()}.${blob.type.split('/')[1]}`;
+        const filename = `${user.uid}_${Date.now()}.${blob.type.split("/")[1]}`;
         const path = `user_headshots/${filename}`;
-        
+
         finalHeadshot = await uploadImage(blob, path);
 
         if (originalHeadshot) {
@@ -75,7 +75,6 @@ const useBranding = () => {
       },
     }
   );
-
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     saveBrandingData({ name, handle, headshot });

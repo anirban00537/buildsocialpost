@@ -28,6 +28,7 @@ import {
 } from "lucide-react";
 import { setProperty } from "@/state/slice/carousel.slice";
 import BillingModal from "@/components/subscription/billingModal";
+import FullScreenLoading from "@/components/loading/fullscreen.loading";
 
 // Utility function to get user initials
 const getInitials = (email: string): string =>
@@ -128,8 +129,9 @@ const EditorNavbar: React.FC = () => {
     getCarouselDetailsById,
     getAllCarousels,
     carousels,
-   saveLoading,
+    isLoading: saveLoading,
     deleteCarousel,
+    error,
   } = useCarouselManager();
   const { logout } = useLogout();
   const user = useSelector((state: RootState) => state.user.userInfo);
@@ -138,11 +140,12 @@ const EditorNavbar: React.FC = () => {
   const carouselId = searchParams.get("id");
   const dispatch = useDispatch();
   const [isViewAllModalOpen, setIsViewAllModalOpen] = useState(false);
+
   useEffect(() => {
     if (carouselId) {
       getCarouselDetailsById(carouselId);
     }
-  }, [carouselId]);
+  }, [carouselId, getCarouselDetailsById]);
 
   useEffect(() => {
     getAllCarousels();
@@ -160,6 +163,12 @@ const EditorNavbar: React.FC = () => {
   );
 
   const memoizedCarousels = useMemo(() => carousels, [carousels]);
+
+  if (saveLoading) {
+    return <FullScreenLoading />;
+  }
+
+
 
   return (
     <header className="bg-white sticky top-0 h-[65px] flex items-center justify-between border-b border-gray-200 z-40 px-4 shadow-sm">
