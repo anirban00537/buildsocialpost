@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { useRouter } from "next/navigation";
 import { useSession, signIn, signOut } from "next-auth/react";
-import { setUser, setLoading, logout } from "@/state/slice/user.slice";
+import { setUser, setLoading, logout, setSubscribed, setEndDate } from "@/state/slice/user.slice";
 
 export const useAuthUser = () => {
   const dispatch = useDispatch();
@@ -10,14 +10,17 @@ export const useAuthUser = () => {
 
   useEffect(() => {
     dispatch(setLoading(status === "loading"));
-    
+
     if (session?.user) {
-      dispatch(setUser({
-        uid: session.user.id,
-        email: session.user.email || "",
-        displayName: session.user.name || "",
-        photoURL: session.user.image || "",
-      }));
+      dispatch(
+        setUser({
+          uid: session.user.id,
+          email: session.user.email || "",
+          displayName: session.user.name || "",
+          photoURL: session.user.image || "",
+        })
+      );
+      fetchSubscriptionStatus(session.user.id, dispatch);
     } else if (status === "unauthenticated") {
       dispatch(logout());
     }
@@ -29,6 +32,21 @@ export const useAuthUser = () => {
   };
 };
 
+const fetchSubscriptionStatus = async (userId: string, dispatch: any) => {
+  try {
+    const response = await fetch(`/api/subscriptions?userId=${userId}`);
+    if (!response.ok) {
+      throw new Error("Failed to fetch subscription status");
+    }
+    const data = await response.json();
+    dispatch(setSubscribed(data.isSubscribed));
+    dispatch(setEndDate(data.endDate));
+  } catch (error) {
+    console.error("Error fetching subscription status:", error);
+    dispatch(setSubscribed(false));
+    dispatch(setEndDate(null));
+  }
+};
 export const useGoogleLogin = () => {
   const router = useRouter();
 

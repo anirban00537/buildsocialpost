@@ -50,8 +50,8 @@ const ImageUploadModal: React.FC<ImageUploadModalProps> = ({
   onClose,
   onImageSelect,
 }) => {
-  const { userinfo } = useSelector((state: RootState) => state.user);
-  const uid = userinfo?.uid;
+  const { userInfo } = useSelector((state: RootState) => state.user);
+  const uid = userInfo?.uid;
   const [uploadedImages, setUploadedImages] = useState<ImageInfo[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [jumpToPage, setJumpToPage] = useState("");

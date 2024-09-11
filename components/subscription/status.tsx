@@ -10,7 +10,7 @@ import { DiamondSVG } from "../icons/svg-icons";
 
 
 const SubscriptionInfo = () => {
-  const { subscribed, endDate, loading } = useSelector(
+  const { isSubscribed, endDate, loading } = useSelector(
     (state: RootState) => state.user
   );
 
@@ -22,7 +22,7 @@ const SubscriptionInfo = () => {
     );
   }
 
-  if (!subscribed || !endDate) {
+  if (!isSubscribed || !endDate) {
     return (
       <PricingModal
         buttonElement={
