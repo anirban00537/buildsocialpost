@@ -52,12 +52,16 @@ const useBranding = () => {
         
         // Generate a unique filename for the image
         const filename = `${user.uid}_${Date.now()}.${blob.type.split('/')[1]}`;
-        const path = `user_headshots/${filename}`;
+        const path = `user_headshots/${filename}`; // Changed from 'headshots' to 'user_headshots'
         
         finalHeadshot = await uploadImage(blob, path);
 
         if (originalHeadshot) {
-          await deleteImage(originalHeadshot);
+          // Extract the path from the original headshot URL
+          const originalPath = originalHeadshot.split('user_headshots/')[1];
+          if (originalPath) {
+            await deleteImage(`user_headshots/${originalPath}`);
+          }
         }
       }
 

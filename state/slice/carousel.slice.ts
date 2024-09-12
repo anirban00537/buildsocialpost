@@ -41,8 +41,8 @@ const initialState: CarouselState = {
     fontWeight: "normal",
   },
   layout: {
-    height: 640,
-    width: 500,
+    height: 600,
+    width: 600,
     pattern: "/backgrounds/background1.svg",
     backgroundOpacity: 0.5,
   },
