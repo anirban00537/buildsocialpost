@@ -5,14 +5,14 @@ import { RootState } from "@/state/store";
 import { setHandle, setHeadshot, setName } from "@/state/slice/branding.slice";
 import { useMutation } from "react-query";
 import { uploadImage, deleteImage } from "@/services/storage";
-import { updateBrandingSettings } from "@/services/apis";
+import { updateBrandingSettings } from "@/services/firestore";
 
 const useBranding = () => {
   const dispatch = useDispatch();
   const { name, handle, headshot } = useSelector(
     (state: RootState) => state.branding
   );
-  const user = useSelector((state: RootState) => state.user.userInfo);
+  const user = useSelector((state: RootState) => state.user.userinfo);
   const [originalHeadshot, setOriginalHeadshot] = useState<string | null>(null);
 
   useEffect(() => {
@@ -49,27 +49,16 @@ const useBranding = () => {
       if (brandingData.headshot && brandingData.headshot.startsWith("blob:")) {
         const response = await fetch(brandingData.headshot);
         const blob = await response.blob();
-
+        
         // Generate a unique filename for the image
-        const filename = `${user.uid}_${Date.now()}.${blob.type.split("/")[1]}`;
+        const filename = `${user.uid}_${Date.now()}.${blob.type.split('/')[1]}`;
         const path = `user_headshots/${filename}`;
-
+        
         finalHeadshot = await uploadImage(blob, path);
 
-        if (
-          originalHeadshot &&
-          originalHeadshot.startsWith("https://firebasestorage.googleapis.com")
-        ) {
+        if (originalHeadshot) {
           await deleteImage(originalHeadshot);
         }
-      } else if (
-        brandingData.headshot &&
-        !brandingData.headshot.startsWith(
-          "https://firebasestorage.googleapis.com"
-        )
-      ) {
-        // If it's a web URL (like LinkedIn) and not a Firebase Storage URL, just use it as is
-        finalHeadshot = brandingData.headshot;
       }
 
       await updateBrandingSettings(user.uid, {
@@ -86,6 +75,7 @@ const useBranding = () => {
       },
     }
   );
+
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     saveBrandingData({ name, handle, headshot });

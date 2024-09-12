@@ -14,7 +14,7 @@ import { CreditCard, Diamond } from "lucide-react";
 import { DiamondSVG } from "../icons/svg-icons";
 
 const BillingModal: React.FC = () => {
-  const { isSubscribed, endDate } = useSelector((state: RootState) => state.user);
+  const { subscribed, endDate } = useSelector((state: RootState) => state.user);
 
   const formatDate = (date: string) => {
     return new Date(date).toLocaleDateString("en-US", {
@@ -42,7 +42,7 @@ const BillingModal: React.FC = () => {
           </DialogTitle>
         </DialogHeader>
         <div className="mt-6 text-center">
-          {isSubscribed && endDate ? (
+          {subscribed && endDate ? (
             <div className="space-y-4">
               <div className="p-4 bg-green-50 rounded-lg">
                 <p className="text-green-700 font-medium">

@@ -18,17 +18,9 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import CarouselListModal from "@/components/editor/CarouselListModal";
-import { Download, User, LogOut, Save } from "lucide-react";
-import {
-  FaInstagram,
-  FaFacebookF,
-  FaLinkedinIn,
-  FaTiktok,
-} from "react-icons/fa";
+import { Download, User, CreditCard, LogOut, Save, ArrowRight } from "lucide-react";
 import { setProperty } from "@/state/slice/carousel.slice";
 import BillingModal from "@/components/subscription/billingModal";
-import FullScreenLoading from "@/components/loading/fullscreen.loading";
-import { setLayoutHeightAndWidth } from "@/state/slice/carousel.slice";
 
 // Utility function to get user initials
 const getInitials = (email: string): string =>
@@ -51,10 +43,7 @@ const UserDropdown: React.FC<{ user: any; onLogout: () => void }> = React.memo(
     return (
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button
-            variant="ghost"
-            className="h-8 w-8 p-0 border border-primary rounded-full overflow-hidden"
-          >
+          <Button variant="ghost" className="h-8 w-8 p-0 border border-primary rounded-full overflow-hidden">
             {user.photoURL && !imageError ? (
               <img
                 className="h-full w-full object-cover"
@@ -70,9 +59,7 @@ const UserDropdown: React.FC<{ user: any; onLogout: () => void }> = React.memo(
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent className="w-56" align="end">
-          <DropdownMenuLabel>
-            {user.displayName || user.email}
-          </DropdownMenuLabel>
+          <DropdownMenuLabel>{user.displayName || user.email}</DropdownMenuLabel>
           <DropdownMenuSeparator />
           <DropdownMenuItem className="flex items-center gap-2">
             <User className="w-4 h-4" />
@@ -121,126 +108,6 @@ const DownloadDropdown: React.FC<{
   );
 });
 
-// Add this new component
-const CarouselSizeDropdown: React.FC = () => {
-  const dispatch = useDispatch();
-  const { height, width } = useSelector(
-    (state: RootState) => state.slides.layout
-  );
-
-  const sizes = [
-    {
-      name: "Square",
-      ratio: "1:1",
-      width: 500,
-      height: 500,
-      icons: [FaInstagram, FaLinkedinIn, FaFacebookF],
-    },
-    {
-      name: "Portrait",
-      ratio: "3:4",
-      width: 450,
-      height: 600,
-      icons: [FaInstagram, FaTiktok],
-    },
-    {
-      name: "Carousel",
-      ratio: "4:5",
-      width: 480,
-      height: 600,
-      icons: [FaInstagram, FaFacebookF],
-    },
-    {
-      name: "Story Carousel",
-      ratio: "9:16",
-      width: 480,
-      height: 800,
-      icons: [FaInstagram, FaFacebookF, FaTiktok],
-    },
-    {
-      name: "Landscape",
-      ratio: "4:3",
-      width: 600,
-      height: 450,
-      icons: [FaInstagram, FaFacebookF],
-    },
-    {
-      name: "Presentation",
-      ratio: "16:9",
-      width: 700,
-      height: 438,
-      icons: [FaLinkedinIn, FaInstagram],
-    },
-  ];
-
-  const handleSizeChange = (newWidth: number, newHeight: number) => {
-    dispatch(setLayoutHeightAndWidth({ width: newWidth, height: newHeight }));
-  };
-
-  const currentRatio = `${width}:${height}`;
-  const currentSize = sizes.find(
-    (size) => `${size.width}:${size.height}` === currentRatio
-  );
-
-  const renderIcons = (icons: any[]) => (
-    <div className="flex items-center">
-      {icons.map((Icon, index) => (
-        <Icon key={index} className="w-4 h-4 mr-1 text-gray-600" />
-      ))}
-    </div>
-  );
-
-  return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button
-          variant="outline"
-          size="sm"
-          className="w-48 h-9 px-2 justify-start overflow-hidden"
-        >
-          <div className="flex items-center w-full">
-            <div className="flex items-center mr-2 min-w-[48px]">
-              {currentSize ? (
-                renderIcons(currentSize.icons)
-              ) : (
-                <FaInstagram className="w-4 h-4" />
-              )}
-            </div>
-            <span className="truncate">{currentSize?.name || "Custom"}</span>
-          </div>
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-64 p-2">
-        <DropdownMenuLabel className="text-xs font-semibold text-gray-500 mb-2">
-          Choose size
-        </DropdownMenuLabel>
-        {sizes.map((size) => (
-          <DropdownMenuItem
-            key={size.ratio}
-            onClick={() => handleSizeChange(size.width, size.height)}
-            className="flex items-center py-2 px-1 hover:bg-gray-100 rounded-md cursor-pointer"
-          >
-            <div className="flex-1 flex items-center">
-              <div className="w-24 flex items-center">
-                {renderIcons(size.icons)}
-              </div>
-              <div className="flex flex-col">
-                <span className="font-medium text-sm">{size.name}</span>
-                <span className="text-xs text-gray-500">
-                  {size.width} x {size.height}px
-                </span>
-              </div>
-            </div>
-            <span className="text-sm font-semibold text-blue-500 ml-auto">
-              {size.ratio}
-            </span>
-          </DropdownMenuItem>
-        ))}
-      </DropdownMenuContent>
-    </DropdownMenu>
-  );
-};
-
 const EditorNavbar: React.FC = () => {
   const { exportSlidesToPDF, exportSlidesToZip, pdfLoading, zipLoading } =
     useCarousel();
@@ -249,14 +116,11 @@ const EditorNavbar: React.FC = () => {
     getCarouselDetailsById,
     getAllCarousels,
     carousels,
-    isLoading,
+    loading: saveLoading,
     deleteCarousel,
-    error,
-    isSaving,
-    isDeleting,
   } = useCarouselManager();
   const { logout } = useLogout();
-  const user = useSelector((state: RootState) => state.user.userInfo);
+  const user = useSelector((state: RootState) => state.user.userinfo);
   const { name } = useSelector((state: RootState) => state.slides);
   const searchParams = useSearchParams();
   const carouselId = searchParams.get("id");
@@ -286,10 +150,6 @@ const EditorNavbar: React.FC = () => {
 
   const memoizedCarousels = useMemo(() => carousels, [carousels]);
 
-  if (isLoading) {
-    return <FullScreenLoading />;
-  }
-
   return (
     <header className="bg-white sticky top-0 h-[65px] flex items-center justify-between border-b border-gray-200 z-40 px-4 shadow-sm">
       <div className="flex items-center">
@@ -303,10 +163,14 @@ const EditorNavbar: React.FC = () => {
         >
           Saved Carousels
         </Button>
+        <span className="px-2 rounded-md">
+          <ArrowRight className="w-4 h-4" />
+        </span>
+
         <input
           type="text"
           placeholder="Search"
-          className="border border-gray-200 px-2 h-8 rounded-md text-sm ml-4"
+          className="border border-gray-200 px-2 h-8 rounded-md text-sm"
           value={name}
           onChange={handleNameChange}
           aria-label="Search carousels"
@@ -314,7 +178,6 @@ const EditorNavbar: React.FC = () => {
       </div>
 
       <div className="ml-auto flex items-center gap-4">
-        <CarouselSizeDropdown />
         <DownloadDropdown
           onDownloadPDF={exportSlidesToPDF}
           onDownloadZip={exportSlidesToZip}
@@ -324,11 +187,11 @@ const EditorNavbar: React.FC = () => {
 
         <Button
           onClick={handleSaveCarousel}
-          disabled={isSaving}
+          disabled={saveLoading}
           className="flex items-center gap-2"
           size="xs"
         >
-          {isSaving ? (
+          {saveLoading ? (
             <div className="flex items-center gap-2">
               <svg
                 className="animate-spin h-4 w-4"
@@ -378,7 +241,7 @@ const EditorNavbar: React.FC = () => {
         setIsViewAllModalOpen={setIsViewAllModalOpen}
         createOrUpdateCarousel={createOrUpdateCarousel}
         deleteCarousel={deleteCarousel}
-        isDeleting={isDeleting}
+        saveLoading={saveLoading}
       />
     </header>
   );

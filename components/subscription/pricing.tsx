@@ -1,9 +1,8 @@
 "use client";
+import { auth } from "@/services/firebase";
+import axios from "axios";
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
-import { useSubscription } from "@/hooks/useSubscription";
-import { useSession } from "next-auth/react";
-import { useGoogleLogin } from "@/hooks/useAuth";
 
 const plan = {
   name: "Pro plan",
@@ -22,30 +21,39 @@ const plan = {
   ],
 };
 
-const Pricing: React.FC = () => {
+const Pricing = () => {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
-  const {
-    subscribe,
-    isSubscribing,
-    error: subscriptionError,
-  } = useSubscription();
-  const { data: session } = useSession();
-  const { loginWithGoogle } = useGoogleLogin();
 
-  const handleSubscribe = async () => {
+  const buyProduct = async () => {
     setLoading(true);
-    try {
-      if (!session) {
-        await loginWithGoogle();
-        return;
+    const user = auth.currentUser;
+    if (user) {
+      try {
+        const token = await user.getIdToken();
+        const response = await axios.post(
+          "/api/purchaseProduct",
+          {
+            productId: "399160",
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        console.log(response, "response");
+        window.open(response.data.checkoutUrl, "_blank");
+      } catch (error) {
+        console.error("Error purchasing product:", error);
+        alert(
+          "An error occurred while purchasing the product. Please try again."
+        );
+      } finally {
+        setLoading(false);
       }
-
-      await subscribe("399160");
-      router.push("/editor");
-    } catch (error) {
-      console.error("Error during subscription:", error);
-    } finally {
+    } else {
+      router.push("/login");
       setLoading(false);
     }
   };
@@ -80,14 +88,11 @@ const Pricing: React.FC = () => {
               </div>
               <button
                 className="mt-6 px-5 py-3 rounded-lg w-full font-semibold text-sm duration-150 bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-purple-500 hover:to-indigo-500 text-white shadow-md"
-                onClick={handleSubscribe}
-                disabled={loading || isSubscribing}
+                onClick={buyProduct}
+                disabled={loading}
               >
-                {loading || isSubscribing ? "Processing..." : "Buy"}
+                {loading ? "Processing..." : "Buy"}
               </button>
-              {subscriptionError && (
-                <p className="text-red-500 mt-2">{subscriptionError}</p>
-              )}
             </div>
             <div className="p-6 md:p-8">
               <div className="pb-2 font-medium">

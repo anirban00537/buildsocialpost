@@ -2,8 +2,6 @@ import { Poppins } from "next/font/google";
 import "./globals.css";
 import DefaultLayout from "@/components/layout/default.layout";
 import AuthCheckLayout from "@/components/layout/authCheckLayout";
-import { Providers } from "./providers";
-
 const poppins = Poppins({
   weight: ["400", "700"],
   subsets: ["latin"],
@@ -27,10 +25,8 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={`${poppins.className} `}>
-      <body>
-        <Providers>
-          <DefaultLayout>{children}</DefaultLayout>
-        </Providers>
+      <body className="">
+        <DefaultLayout>{children}</DefaultLayout>
       </body>
     </html>
   );

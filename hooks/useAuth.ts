@@ -1,80 +1,170 @@
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { useRouter } from "next/navigation";
-import { useSession, signIn, signOut } from "next-auth/react";
 import {
-  setUser,
-  setLoading,
   logout,
-  setSubscribed,
   setEndDate,
+  setLoading,
+  setSubscribed,
+  setUser,
 } from "@/state/slice/user.slice";
+import { useQuery, useMutation } from "react-query";
+import { User } from "firebase/auth";
+import { setBranding } from "@/state/slice/branding.slice";
+import {
+  signOut,
+  signInWithGoogle,
+  onAuthStateChange,
+  getCurrentUser,
+} from "@/services/auth";
+import {
+  fetchSubscriptionStatus,
+  fetchBrandingSettings,
+} from "@/services/firestore";
 
-export const useAuthUser = () => {
+// Hook for logging out the user
+const useLogout = () => {
+  const [error, setError] = useState<string>("");
+  const [success, setSuccess] = useState<string>("");
   const dispatch = useDispatch();
-  const { data: session, status } = useSession();
+  const router = useRouter();
+
+  const { mutate: logoutUser, isLoading: loading } = useMutation<void, Error>(
+    async () => await signOut(),
+    {
+      onSuccess: () => {
+        dispatch(logout());
+        setSuccess("Logged out successfully");
+        router.push("/login");
+      },
+      onError: (error: Error) => {
+        setError(error.message || "Logout failed. Please try again.");
+      },
+    }
+  );
+
+  return { logout: logoutUser, loading, error, success };
+};
+
+// Hook for fetching authenticated user and their subscription status
+const useAuthUser = () => {
+  const [error, setError] = useState<string>("");
+  const dispatch = useDispatch();
+
+  const {
+    data: userData,
+    isLoading: userLoading,
+    error: userError,
+    refetch: refetchUser,
+  } = useQuery<User | null, Error>("user", getCurrentUser, {
+    onSuccess: (data) => {
+      if (data) {
+        const { uid, email, displayName, photoURL } = data;
+        dispatch(setUser({ uid, email, displayName, photoURL }));
+      } else {
+        dispatch(logout());
+      }
+    },
+    onError: (error: Error) => {
+      setError(error.message || "Failed to fetch the current user.");
+      dispatch(logout());
+    },
+  });
+
+  const userId = userData?.uid;
+
+  const {
+    data: subscriptionData,
+    isLoading: subscriptionLoading,
+    error: subscriptionError,
+  } = useQuery(
+    ["subscriptionStatus", userId],
+    () =>
+      userId
+        ? fetchSubscriptionStatus(userId)
+        : Promise.reject(new Error("User ID is undefined")),
+    {
+      enabled: !!userId,
+      onSuccess: (data) => {
+        dispatch(setSubscribed(data.isSubscribed));
+        dispatch(setEndDate(data.endDate));
+      },
+      onError: (error: Error) => {
+        setError(error.message || "Failed to fetch subscription status.");
+        dispatch(setSubscribed(false));
+        dispatch(setEndDate(null));
+      },
+    }
+  );
+
+  const {
+    data: brandingData,
+    isLoading: brandingLoading,
+    error: brandingError,
+  } = useQuery(
+    ["brandingSettings", userId],
+    () =>
+      userId
+        ? fetchBrandingSettings(userId)
+        : Promise.reject(new Error("User ID is undefined")),
+    {
+      enabled: !!userId,
+      onSuccess: (data) => {
+        dispatch(setBranding(data));
+      },
+      onError: (error: Error) => {
+        setError(error.message || "Failed to fetch branding settings.");
+      },
+    }
+  );
 
   useEffect(() => {
-
-    if (session?.user) {
-      dispatch(
-        setUser({
-          uid: session.user.id,
-          email: session.user.email || "",
-          displayName: session.user.name || "",
-          photoURL: session.user.image || "",
-        })
-      );
-      fetchSubscriptionStatus(session.user.id, dispatch);
-    } else if (status === "unauthenticated") {
-      dispatch(logout());
-    }
-  }, [session, status, dispatch]);
+    dispatch(setLoading(userLoading || subscriptionLoading || brandingLoading));
+  }, [userLoading, subscriptionLoading, brandingLoading, dispatch]);
 
   return {
-    user: session?.user,
-    loading: status === "loading",
+    error:
+      error ||
+      userError?.message ||
+      subscriptionError?.message ||
+      brandingError?.message,
+    user: userData,
+    loading: userLoading || subscriptionLoading || brandingLoading,
+    fetchUser: refetchUser,
   };
 };
 
-const fetchSubscriptionStatus = async (userId: string, dispatch: any) => {
-  try {
-    const response = await fetch(`/api/subscriptions?userId=${userId}`);
-    if (!response.ok) {
-      throw new Error("Failed to fetch subscription status");
-    }
-    const data = await response.json();
-    dispatch(setSubscribed(data.isSubscribed));
-    dispatch(setEndDate(data.endDate));
-  } catch (error) {
-    console.error("Error fetching subscription status:", error);
-    dispatch(setSubscribed(false));
-    dispatch(setEndDate(null));
-  }
-};
-export const useGoogleLogin = () => {
+// Hook for Google login
+const useGoogleLogin = () => {
+  const [error, setError] = useState<string>("");
+  const [success, setSuccess] = useState<string>("");
+  const dispatch = useDispatch();
   const router = useRouter();
 
-  const loginWithGoogle = async () => {
-    try {
-      const result = await signIn("google", { callbackUrl: "/editor" });
-      if (result?.error) {
-        throw new Error(result.error);
-      }
-    } catch (error) {
-      console.error("Login failed:", error);
+  const { mutate: loginWithGoogle, isLoading: loading } = useMutation<
+    void,
+    Error
+  >(
+    async () => {
+      const result = await signInWithGoogle();
+      const user = result.user;
+      const { uid, email, displayName, photoURL } = user;
+      dispatch(setUser({ uid, email, displayName, photoURL }));
+    },
+    {
+      onSuccess: () => {
+        setSuccess("Logged in successfully!");
+        router.push("/editor");
+      },
+      onError: (error: Error) => {
+        setError(
+          error.message || "Failed to log in with Google. Please try again."
+        );
+      },
     }
-  };
+  );
 
-  return { loginWithGoogle };
+  return { loginWithGoogle, loading, error, success };
 };
 
-export const useLogout = () => {
-  const router = useRouter();
-
-  const logoutUser = async () => {
-    await signOut({ callbackUrl: "/" });
-  };
-
-  return { logout: logoutUser };
-};
+export { useLogout, useAuthUser, useGoogleLogin };

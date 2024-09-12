@@ -31,7 +31,7 @@ const AiSettingsComponent = () => {
     mood,
     loading,
   } = useGenerateContent();
-  const { isSubscribed } = useSelector((state: RootState) => state.user);
+  const { subscribed } = useSelector((state: RootState) => state.user);
 
   return (
     <div className="w-full h-full p-2">
@@ -113,7 +113,7 @@ const AiSettingsComponent = () => {
           type="submit"
           variant="default"
           size="lg"
-          disabled={loading || !isSubscribed}
+          disabled={loading || !subscribed}
           className="mt-4 w-full"
         >
           {loading ? (
@@ -140,7 +140,7 @@ const AiSettingsComponent = () => {
               </svg>
               Generating...
             </>
-          ) : !isSubscribed ? (
+          ) : !subscribed ? (
             <span className="flex items-center gap-3">
               <Image
                 src={"/premium.svg"}
