@@ -96,15 +96,15 @@ const BackgroundColorsSection = () => {
   ];
 
   return (
-    <div className="p-6 bg-gray-50 rounded-lg overflow-y-auto h-full pb-20">
+    <div className="p-6 bg-background rounded-lg overflow-y-auto h-full pb-20">
       <form className="grid gap-6  rounded-lg">
-        <legend className="text-lg font-semibold text-gray-700">
+        <legend className="text-lg font-semibold text-textColor">
           Background Colors
         </legend>
-        <div className="border p-4 rounded-lg">
+        <div className="border border-borderColor p-4 rounded-lg">
           <label
             htmlFor="color1"
-            className="block text-sm font-medium text-gray-700 mb-3"
+            className="block text-sm font-medium text-textColor mb-3"
           >
             Custom Background Color
           </label>
@@ -113,12 +113,12 @@ const BackgroundColorsSection = () => {
               (colorKey) => (
                 <div
                   key={colorKey}
-                  className="flex flex-col items-center relative"
+                  className="flex flex-col items-center justify-center relative"
                 >
                   <Popover>
                     <PopoverTrigger asChild>
                       <div
-                        className="w-full h-10 border cursor-pointer rounded-md transition-transform transform hover:scale-110"
+                        className="w-full h-10 border border-borderColor cursor-pointer rounded-md transition-transform transform hover:scale-110 flex items-center justify-center"
                         style={{
                           backgroundColor: background[colorKey],
                         }}
@@ -126,7 +126,7 @@ const BackgroundColorsSection = () => {
                       />
                     </PopoverTrigger>
                     <PopoverContent
-                      className="z-50 w-auto h-auto flex items-start justify-start bg-white rounded-lg p-2"
+                      className="z-50 w-auto h-auto flex items-center justify-center bg-cardBackground rounded-lg p-2"
                       onMouseLeave={() => handleColorPickerClose(colorKey)}
                     >
                       <HexColorPicker
@@ -143,7 +143,7 @@ const BackgroundColorsSection = () => {
           <div className="mt-6">
             <label
               htmlFor="preset"
-              className="block text-sm font-medium text-gray-700 mb-2"
+              className="block text-sm font-medium text-textColor mb-2"
             >
               Light Presets
             </label>
@@ -152,7 +152,7 @@ const BackgroundColorsSection = () => {
                 (preset: BackgroundColors, index: number) => (
                   <div
                     key={index}
-                    className="w-full h-8 border cursor-pointer rounded-md grid grid-cols-4 transition-transform transform hover:scale-105 hover"
+                    className="w-full h-8 border border-borderColor cursor-pointer rounded-md grid grid-cols-4 transition-transform transform hover:scale-105 hover"
                     onClick={() => handlePresetSelect(preset)}
                   >
                     <div
@@ -194,7 +194,7 @@ const BackgroundColorsSection = () => {
             {lightColorPresets.length > 12 && (
               <button
                 type="button"
-                className="mt-2 p-2 border border-primary/20 w-full cursor-pointer text-primary rounded-md hover:bg-primary/10 transition-colors"
+                className="mt-2 p-2 border border-borderColor w-full cursor-pointer text-textColor rounded-md hover:bg-primary/10 transition-colors"
                 onClick={() => setShowAllLightPresets(!showAllLightPresets)}
               >
                 {showAllLightPresets ? "Show Less" : "Show More"}
@@ -205,16 +205,16 @@ const BackgroundColorsSection = () => {
           <div className="mt-6">
             <label
               htmlFor="preset"
-              className="block text-sm font-medium text-gray-700 mb-2"
+              className="block text-sm font-medium text-textColor mb-2"
             >
               Dark Presets
             </label>
-            <div className="grid grid-cols-4 gap-2 mb-2">
+            <div className="grid grid-cols-4 gap-2 mb-2 border border-borderColor rounded-lg">
               {visibleDarkPresets.map(
                 (preset: BackgroundColors, index: number) => (
                   <div
                     key={index}
-                    className="w-full h-8 border cursor-pointer rounded-md grid grid-cols-4 transition-transform transform hover:scale-105 hover"
+                    className="w-full h-8 border border-borderColor cursor-pointer rounded-md grid grid-cols-4 transition-transform transform hover:scale-105 hover"
                     onClick={() => handlePresetSelect(preset)}
                   >
                     <div
@@ -256,7 +256,7 @@ const BackgroundColorsSection = () => {
             {darkColorPresets.length > 12 && (
               <button
                 type="button"
-                className="mt-2 p-2 border border-primary/20 w-full cursor-pointer text-primary rounded-md hover:bg-primary/10 transition-colors"
+                className="mt-2 p-2 border border-borderColor w-full cursor-pointer text-textColor rounded-md hover:bg-primary/10 transition-colors"
                 onClick={() => setShowAllDarkPresets(!showAllDarkPresets)}
               >
                 {showAllDarkPresets ? "Show Less" : "Show More"}
@@ -266,31 +266,33 @@ const BackgroundColorsSection = () => {
         </div>
       </form>
 
-      <form className="grid gap-6 p-4 mt-6 bg-white rounded-lg">
-        <legend className="text-lg font-semibold text-gray-700">Pattern</legend>
-        <div className="border p-2 rounded-lg grid grid-cols-4 gap-4">
+      <form className="grid gap-6 p-4 mt-6 bg-background rounded-lg">
+        <legend className="text-lg font-semibold text-textColor">
+          Pattern
+        </legend>
+        <div className="border border-borderColor p-2 rounded-lg grid grid-cols-4 gap-4">
           <div
             className={`flex justify-center items-center p-2 rounded-lg ${
-              pattern === "" ? "bg-primary/20" : "bg-transparent"
+              pattern === "" ? "bg-primary" : "bg-green-400"
             }`}
             onClick={() => {
               handlePatternChange("");
             }}
           >
-            <CircleOff size={20} />
+            <CircleOff size={20} className="text-white" />
           </div>
           {patterns.map((patternItem, index) => (
             <div
               key={index}
-              className={`flex justify-center items-center p-2 rounded-lg ${
-                pattern === patternItem ? "bg-primary/20" : "bg-transparent"
+              className={`flex justify-center  items-center p-2 rounded-lg ${
+                pattern === patternItem ? "bg-primary" : "bg-green-400"
               }`}
               onClick={() => {
                 handlePatternChange(patternItem);
               }}
             >
               <div
-                className="w-full h-10 border rounded-md"
+                className="w-full h-10 border border-borderColor rounded-md"
                 style={{
                   background: `url(${patternItem})`,
                   backgroundSize: "cover",
@@ -313,16 +315,14 @@ const BackgroundColorsSection = () => {
         </div>
       </form>
 
-      <form className="grid gap-6 p-4 mt-6 bg-white rounded-lg">
-        <legend className="text-lg font-semibold text-gray-700">
+      <form className="grid gap-6 p-4 mt-6 bg-background rounded-lg">
+        <legend className="text-lg font-semibold text-textColor">
           Shared Elements
         </legend>
-        <div className="border p-2 rounded-lg grid grid-cols-4 gap-4">
+        <div className="border border-borderColor bg-cardBackground p-2 rounded-lg grid grid-cols-4 gap-4">
           <div
             className={`flex justify-center items-center p-2 rounded-lg ${
-              sharedSelectedElement?.id === 0
-                ? "bg-primary/20"
-                : "bg-transparent"
+              sharedSelectedElement?.id === 0 ? "bg-primary/20" : "bg-green-400"
             }`}
             onClick={() => {
               dispatch(setSharedSelectedElementId(0));
@@ -336,8 +336,8 @@ const BackgroundColorsSection = () => {
               key={element?.id}
               className={`flex justify-center items-center p-2 rounded-lg ${
                 sharedSelectedElement?.id === element?.id
-                  ? "bg-primary/20"
-                  : "bg-transparent"
+                  ? "bg-primary"
+                  : "bg-green-400"
               }`}
               onClick={() => {
                 dispatch(setSharedSelectedElementId(element.id));

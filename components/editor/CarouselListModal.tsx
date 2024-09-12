@@ -48,18 +48,20 @@ const CarouselListModal: FC<CarouselListModalProps> = ({
 
   return (
     <Dialog open={isViewAllModalOpen} onOpenChange={setIsViewAllModalOpen}>
-      <DialogContent>
-        <div className="flex flex-col gap-4">
-          <h2 className="text-lg font-medium">All Carousels</h2>
+      <DialogContent className="bg-cardBackground border border-borderColor">
+        <div className="flex flex-col gap-4 bg-cardBackground ">
+          <h2 className="text-lg font-medium bg-cardBackground text-textColor">
+            All Carousels
+          </h2>
           {carousels.length === 0 && (
-            <div className="flex justify-center items-center h-16">
+            <div className="flex justify-center items-center h-16 bg-cardBackground text-textColor">
               <p>No carousels found</p>
             </div>
           )}
           {paginatedCarousels?.map((carousel) => (
             <div
               key={carousel?.id}
-              className="flex justify-between items-center p-2 hover:bg-gray-100 rounded"
+              className="flex justify-between items-center p-2 bg-cardBackground text-textColor hover:bg-cardBackground rounded"
             >
               <>
                 <span>{carousel?.data?.name || "Unnamed Carousel"}</span>
@@ -67,6 +69,7 @@ const CarouselListModal: FC<CarouselListModalProps> = ({
                   <Button
                     variant="outline"
                     size="sm"
+                    className="bg-cardBackground text-textColor hover:bg-cardBackground border border-borderColor"
                     onClick={() => handleOpenCarousel(carousel)}
                   >
                     <FileText className="w-3 h-3 mr-1" />
@@ -75,6 +78,7 @@ const CarouselListModal: FC<CarouselListModalProps> = ({
                   <Button
                     variant="outline"
                     size="sm"
+                    className="bg-cardBackground text-textColor hover:bg-cardBackground border border-borderColor"
                     onClick={() => handleDeleteCarousel(carousel?.id)}
                   >
                     <Trash className="w-3 h-3 mr-1" />
@@ -90,19 +94,21 @@ const CarouselListModal: FC<CarouselListModalProps> = ({
             <Button
               variant="outline"
               size="sm"
+              className="bg-cardBackground text-textColor hover:bg-cardBackground border border-borderColor"
               onClick={() => handlePageChange(currentPage - 1)}
               disabled={currentPage === 1}
             >
-              <ChevronLeft className="w-3 h-3 mr-" />
+              <ChevronLeft className="w-3 h-3 mr-1 text-textColor" />
               Previous
             </Button>
-            <span>
+            <span className="text-textColor">
               Page {currentPage} of{" "}
               {Math?.ceil(carousels?.length / itemsPerPage)}
             </span>
             <Button
               variant="outline"
               size="sm"
+              className="bg-cardBackground text-textColor hover:bg-cardBackground border border-borderColor"
               onClick={() => handlePageChange(currentPage + 1)}
               disabled={
                 currentPage === Math?.ceil(carousels?.length / itemsPerPage)

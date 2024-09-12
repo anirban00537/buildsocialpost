@@ -16,6 +16,7 @@ import {
 } from "@/state/slice/carousel.slice";
 import { Slider } from "@/components/ui/slider";
 import { carouselsSize } from "@/lib/coreConstants";
+import { Button } from "@/components/ui/button";
 
 const TextSettingsSection = () => {
   const dispatch = useDispatch();
@@ -184,29 +185,31 @@ const TextSettingsSection = () => {
   };
 
   return (
-    <form className="grid w-full items-start gap-6 p-6 rounded-lg bg-white">
-      <legend className="text-lg font-semibold text-gray-700">
+    <form className="grid w-full items-start gap-6 p-6 rounded-lg  bg-background">
+      <legend className="text-lg font-semibold text-textColor">
         Text Settings
       </legend>
-      <div className="grid gap-6 border p-4 bg-gray-50 rounded-lg ">
+      <div className="grid gap-6 border p-4 bg-background  border-borderColor rounded-lg ">
         <div className="flex gap-4">
           {["title", "description", "tagline"].map((section) => (
-            <button
+            <Button
               key={section}
               type="button"
-              className={`px-3 py-1 text-sm rounded-md ${
+              className={`px-3 py-1 text-sm border border-borderColor hover:border-borderColor hover:bg-primary rounded-md ${
                 selectedSection === section
-                  ? "bg-blue-100 text-blue-500"
-                  : "bg-gray-100 hover:bg-gray-200"
+                  ? "bg-primary text-white"
+                  : "bg-cardBackground  text-textColor"
               }`}
               onClick={() => handleSectionChange(section as any)}
             >
               {section.charAt(0).toUpperCase() + section.slice(1)}
-            </button>
+            </Button>
           ))}
         </div>
         <div className="space-y-2 mt-5">
-          <div className="text-[14px] font-medium">Font Size</div>
+          <div className="text-[14px] font-medium text-textColor">
+            Font Size
+          </div>
           <div className="flex items-center gap-2">
             <Slider
               max={88}
@@ -216,67 +219,79 @@ const TextSettingsSection = () => {
               onValueChange={(value) => handleFontSizeChange(value[0])}
               className="flex-grow"
             />
-            <span className="text-sm font-medium">{fontSize}px</span>
+            <span className="text-sm font-medium text-textColor">
+              {fontSize}px
+            </span>
           </div>
         </div>
         <div className="space-y-2 mt-5">
-          <div className="text-[14px] font-medium">Font Style</div>
+          <div className="text-[14px] font-medium text-textColor">
+            Font Style
+          </div>
           <div className="grid grid-cols-2 gap-3">
-            <button
+            <Button
+              size="xs"
               type="button"
-              className={`border p-2 flex items-center justify-center rounded-md transition-all duration-150 ${
+              className={`border border-borderColor text-textColor p-2 flex items-center justify-center rounded-md transition-all duration-150 ${
                 fontStyle === "normal"
-                  ? "bg-blue-100 text-blue-500"
-                  : "hover:bg-gray-100"
+                  ? "bg-primary text-white"
+                  : "hover:bg-primary text-textColor bg-cardBackground"
               }`}
               onClick={() => handleFontStyleChange("normal")}
             >
               <BoldIcon size={20} />
-            </button>
-            <button
+            </Button>
+            <Button
+              size="xs"
               type="button"
-              className={`border p-2 flex items-center justify-center rounded-md transition-all duration-150 ${
+              className={`border border-borderColor text-textColor p-2 flex items-center justify-center rounded-md transition-all duration-150 ${
                 fontStyle === "italic"
-                  ? "bg-blue-100 text-blue-500"
-                  : "hover:bg-gray-100"
+                  ? "bg-primary text-white"
+                  : "hover:bg-primary text-textColor bg-cardBackground"
               }`}
               onClick={() => handleFontStyleChange("italic")}
             >
               <ItalicIcon size={20} />
-            </button>
+            </Button>
           </div>
         </div>
         <div className="space-y-2 mt-5">
-          <div className="text-[14px] font-medium">Font Weight</div>
+          <div className="text-[14px] font-medium text-textColor">
+            Font Weight
+          </div>
           <div className="grid grid-cols-2 items-center gap-2">
-            <button
+            <Button
+              size="xs"
               type="button"
-              className={`border p-2 flex items-center justify-center rounded-md transition-all duration-150 ${
+              className={`border border-borderColor text-textColor p-2 flex items-center justify-center rounded-md transition-all duration-150 ${
                 selectedWeight === "normal"
-                  ? "bg-blue-100 text-blue-500"
-                  : "hover:bg-gray-100"
+                  ? "bg-primary text-white"
+                  : "hover:bg-primary text-textColor bg-cardBackground"
               }`}
               onClick={() => handleWeightTabChange("normal")}
             >
               Normal
-            </button>
-            <button
+            </Button>
+            <Button
+              size="xs"
               type="button"
-              className={`border p-2 flex items-center justify-center rounded-md transition-all duration-150 ${
+              className={`border border-borderColor text-textColor p-2 flex items-center justify-center rounded-md transition-all duration-150 ${
                 selectedWeight === "bold"
-                  ? "bg-blue-100 text-blue-500"
-                  : "hover:bg-gray-100"
+                  ? "bg-primary text-white"
+                  : "hover:bg-primary text-textColor bg-cardBackground"
               }`}
               onClick={() => handleWeightTabChange("bold")}
             >
               Bold
-            </button>
+            </Button>
           </div>
         </div>
       </div>
 
-      <div className="space-y-2 mt-5 border p-4 bg-gray-50 rounded-lg ">
-        <div className="text-[14px] font-medium">Text Alignment</div>
+      <div className="space-y-2 mt-5 border border-borderColor p-4 bg-background rounded-lg ">
+        <div className="text-[14px] font-medium text-textColor">
+          Text Alignment
+        </div>
         <div className="grid grid-cols-3 gap-3">
           {[
             { alignment: "left" as "left", icon: <AlignLeftIcon size={20} /> },
@@ -296,18 +311,19 @@ const TextSettingsSection = () => {
               alignment: "left" | "center" | "right";
               icon: JSX.Element;
             }) => (
-              <button
+              <Button
+                size="xs"
                 type="button"
                 key={alignment}
-                className={`border p-2 flex items-center justify-center rounded-md transition-all duration-150 ${
+                className={`border border-borderColor hover:border-borderColor hover:bg-primary text-textColor p-2 flex items-center justify-center rounded-md transition-all duration-150 ${
                   textSettings.alignment === alignment
-                    ? "bg-blue-100 text-blue-500"
-                    : "hover:bg-gray-100"
+                    ? "bg-primary text-white border-borderColor"
+                    : " text-textColor bg-cardBackground"
                 }`}
                 onClick={() => handleAlignmentChange(alignment)}
               >
                 {icon}
-              </button>
+              </Button>
             )
           )}
         </div>

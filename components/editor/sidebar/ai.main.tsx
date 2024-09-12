@@ -36,19 +36,21 @@ const AiSettingsComponent = () => {
   return (
     <div className="w-full h-full p-2">
       <form
-        className="grid w-full items-start gap-6 p-3 rounded-lg bg-white  "
+        className="grid w-full items-start gap-6 p-3 rounded-lg bg-background "
         onSubmit={generateContent}
       >
-        <legend className="text-lg font-semibold text-gray-700">
+        <legend className="text-lg font-semibold text-textColor">
           AI Settings
         </legend>
-        <fieldset className="grid gap-6 rounded-lg border p-4 bg-gray-50">
+        <fieldset className="grid gap-6 rounded-lg border border-borderColor p-4 bg-background">
           <div className="grid gap-3">
-            <Label htmlFor="content">Topic</Label>
+            <Label htmlFor="content" className="text-textColor">
+              Topic
+            </Label>
             <Textarea
               id="content"
               placeholder="Enter your topic..."
-              className="min-h-[3.5rem] rounded-lg border-gray-300"
+              className="min-h-[3.5rem] rounded-lg border border-borderColor text-textColor bg-cardBackground"
               value={topic}
               maxLength={300}
               onChange={(e) => setTopic(e.target.value)}
@@ -56,7 +58,9 @@ const AiSettingsComponent = () => {
           </div>
 
           <div className="grid gap-3">
-            <Label htmlFor="slides">Number of Slides</Label>
+            <Label htmlFor="slides" className="text-textColor">
+              Number of Slides
+            </Label>
             <div className="flex items-center gap-2">
               <Slider
                 max={10}
@@ -70,15 +74,17 @@ const AiSettingsComponent = () => {
           </div>
 
           <div className="grid gap-3">
-            <Label htmlFor="mood">Mood</Label>
+            <Label htmlFor="mood" className="text-textColor">
+              Mood
+            </Label>
             <Select value={mood} onValueChange={setMood}>
               <SelectTrigger
                 id="mood"
-                className="w-full rounded-lg border-gray-300"
+                className="w-full rounded-lg border border-borderColor text-textColor bg-cardBackground"
               >
                 <SelectValue placeholder="Select a mood" />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="bg-cardBackground text-textColor border border-borderColor">
                 <SelectItem value="Narrative">Narrative</SelectItem>
                 <SelectItem value="Creative">Creative</SelectItem>
                 <SelectItem value="Happy">Happy</SelectItem>
@@ -90,15 +96,17 @@ const AiSettingsComponent = () => {
           </div>
 
           <div className="grid gap-3">
-            <Label htmlFor="language">Language</Label>
+            <Label htmlFor="language" className="text-textColor">
+              Language
+            </Label>
             <Select value={language} onValueChange={setLanguage}>
               <SelectTrigger
                 id="language"
-                className="w-full rounded-lg border-gray-300"
+                className="w-full rounded-lg border border-borderColor text-textColor bg-cardBackground"
               >
                 <SelectValue placeholder="Select a language" />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="bg-cardBackground text-textColor border border-borderColor">
                 <SelectItem value="en">English</SelectItem>
                 <SelectItem value="es">Spanish</SelectItem>
                 <SelectItem value="fr">French</SelectItem>

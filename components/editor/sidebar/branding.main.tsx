@@ -22,37 +22,43 @@ const BrandingSection: React.FC = () => {
   return (
     <div className="w-full h-full p-2">
       <form
-        className="grid w-full items-start gap-6 p-3 rounded-lg bg-white"
+        className="grid w-full items-start gap-6 p-3 rounded-lg bg-background"
         onSubmit={handleSubmit}
       >
-        <legend className="text-lg font-semibold text-gray-700">
+        <legend className="text-lg font-semibold text-textColor">
           Branding
         </legend>
-        <fieldset className="grid gap-6 rounded-lg border p-4 bg-gray-50">
+        <fieldset className="grid gap-6 rounded-lg border border-borderColor p-4 bg-background">
           <div className="grid gap-3">
-            <Label htmlFor="name">Name</Label>
+            <Label htmlFor="name" className="text-textColor">
+              Name
+            </Label>
             <Input
               id="name"
               placeholder="Enter your name..."
-              className="min-h-[3.5rem] rounded-lg border-gray-300"
+              className="min-h-[3.5rem] rounded-lg border text-textColor border-borderColor bg-cardBackground"
               value={name}
               onChange={handleNameChange}
             />
           </div>
 
           <div className="grid gap-3">
-            <Label htmlFor="handle">Handle</Label>
+            <Label htmlFor="handle" className="text-textColor">
+              Handle
+            </Label>
             <Input
               id="handle"
               placeholder="Enter your handle..."
-              className="min-h-[3.5rem] rounded-lg border-gray-300"
+              className="min-h-[3.5rem] rounded-lg border text-textColor border-borderColor bg-cardBackground"
               value={handle}
               onChange={handleHandleChange}
             />
           </div>
 
           <div className="grid gap-3">
-            <Label htmlFor="headshot">Headshot</Label>
+            <Label htmlFor="headshot" className="text-textColor">
+              Headshot
+            </Label>
             <div className="flex items-center gap-3">
               <input
                 id="headshot"
@@ -63,7 +69,7 @@ const BrandingSection: React.FC = () => {
               />
               <label
                 htmlFor="headshot"
-                className="cursor-pointer flex items-center gap-2 border rounded-lg p-2 text-sm font-medium text-gray-600 hover:bg-gray-100"
+                className="cursor-pointer flex items-center gap-2 border rounded-lg p-2 text-sm font-medium text-textColor border-borderColor bg-cardBackground hover:bg-gray-100"
               >
                 <UploadIcon size={20} />
                 Upload Headshot

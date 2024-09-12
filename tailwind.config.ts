@@ -25,7 +25,6 @@ const config: Config = {
         border: "#dcdcdc", // Example hex value, replace with actual values
         input: "#f5f5f5", // Example hex value, replace with actual values
         ring: "#c0c0c0", // Example hex value, replace with actual values
-        background: "#ffffff", // Example hex value, replace with actual values
         foreground: "#000000", // Example hex value, replace with actual values
         primary: {
           DEFAULT: "#3490dc", // Example hex value, replace with actual values
@@ -53,6 +52,22 @@ const config: Config = {
         },
         card: {
           DEFAULT: "#f8f9fa", // Example hex value, replace with actual values
+          foreground: "#212529", // Example hex value, replace with actual values
+        },
+        background: {
+          DEFAULT: "#16151A", // Example hex value, replace with actual values
+          foreground: "#ffffff", // Example hex value, replace with actual values
+        },
+        cardBackground: {
+          DEFAULT: "#191C1F", // Example hex value, replace with actual values
+          foreground: "#212529", // Example hex value, replace with actual values
+        },
+        textColor: {
+          DEFAULT: "#ffffff", // Example hex value, replace with actual values
+          foreground: "#212529", // Example hex value, replace with actual values
+        },
+        borderColor: {
+          DEFAULT: "#21222A", // Example hex value, replace with actual values
           foreground: "#212529", // Example hex value, replace with actual values
         },
       },

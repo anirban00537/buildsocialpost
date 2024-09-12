@@ -31,11 +31,9 @@ import {
 } from "@/state/slice/carousel.slice";
 import BillingModal from "@/components/subscription/billingModal";
 
-// Utility function to get user initials
 const getInitials = (email: string): string =>
   email ? email.charAt(0).toUpperCase() : "U";
 
-// UserDropdown Component
 const UserDropdown: React.FC<{ user: any; onLogout: () => void }> = React.memo(
   ({ user, onLogout }) => {
     const [imageError, setImageError] = useState(false);
@@ -64,7 +62,7 @@ const UserDropdown: React.FC<{ user: any; onLogout: () => void }> = React.memo(
                 onError={handleImageError}
               />
             ) : (
-              <div className="h-full w-full flex items-center justify-center bg-primary text-white text-sm font-medium">
+              <div className="h-full w-full flex items-center justify-center bg-primary text-textColor text-sm font-medium">
                 {getInitials(user.displayName || user.email)}
               </div>
             )}
@@ -105,7 +103,11 @@ const DownloadDropdown: React.FC<{
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline" size="xs">
+        <Button
+          variant="outline"
+          size="xs"
+          className="bg-cardBackground text-textColor hover:bg-primary/50 border border-borderColor"
+        >
           <Download className="w-4 h-4 mr-2" />
           {isDownloading ? "Downloading..." : "Download"}
         </Button>
@@ -195,7 +197,7 @@ const CarouselSizeDropdown: React.FC = () => {
         <Button
           variant="outline"
           size="sm"
-          className="w-48 h-9 px-2 justify-start overflow-hidden"
+          className="w-48 h-9 px-2 justify-start overflow-hidden bg-cardBackground text-textColor hover:bg-primary/50 border border-borderColor"
         >
           <div className="flex items-center w-full">
             <div className="flex items-center mr-2 min-w-[48px]">
@@ -209,15 +211,15 @@ const CarouselSizeDropdown: React.FC = () => {
           </div>
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-64 p-2">
-        <DropdownMenuLabel className="text-xs font-semibold text-gray-500 mb-2">
+      <DropdownMenuContent className="w-64 p-2 bg-cardBackground border border-borderColor">
+        <DropdownMenuLabel className="text-xs font-semibold bg-cardBackground text-textColor mb-2">
           Choose size
         </DropdownMenuLabel>
         {sizes.map((size) => (
           <DropdownMenuItem
             key={size.ratio}
             onClick={() => handleSizeChange(size.width, size.height)}
-            className="flex items-center py-2 px-1 hover:bg-gray-100 rounded-md cursor-pointer"
+            className="flex items-center py-2 px-1 bg-cardBackground text-textColor hover:bg-cardBackground rounded-md cursor-pointer"
           >
             <div className="flex-1 flex items-center">
               <div className="w-24 flex items-center">
@@ -225,12 +227,12 @@ const CarouselSizeDropdown: React.FC = () => {
               </div>
               <div className="flex flex-col">
                 <span className="font-medium text-sm">{size.name}</span>
-                <span className="text-xs text-gray-500">
+                <span className="text-xs text-textColor">
                   {size.width} x {size.height}px
                 </span>
               </div>
             </div>
-            <span className="text-sm font-semibold text-blue-500 ml-auto">
+            <span className="text-sm font-semibold text-textColor ml-auto">
               {size.ratio}
             </span>
           </DropdownMenuItem>
@@ -283,26 +285,26 @@ const EditorNavbar: React.FC = () => {
   const memoizedCarousels = useMemo(() => carousels, [carousels]);
 
   return (
-    <header className="bg-white sticky top-0 h-[65px] flex items-center justify-between border-b border-gray-200 z-40 px-4 shadow-sm">
+    <header className="bg-background sticky top-0 h-[65px] flex items-center justify-between border-b border-borderColor z-40 px-4 shadow-sm">
       <div className="flex items-center">
         <Link href="/">
           <img src="/logo.svg" alt="Logo" className="h-9 object-cover mr-5" />
         </Link>
         <Button
           onClick={() => setIsViewAllModalOpen(true)}
-          className="border border-gray-200 flex items-center h-8 gap-2 text-sm hover:bg-primary/50"
+          className="border border-borderColor bg-cardBackground text-textColor flex items-center h-8 gap-2 text-sm hover:bg-primary/50"
           variant="ghost"
         >
           Saved Carousels
         </Button>
         <span className="px-2 rounded-md">
-          <ArrowRight className="w-4 h-4" />
+          <ArrowRight className="w-4 h-4 text-textColor" />
         </span>
 
         <input
           type="text"
           placeholder="Search"
-          className="border border-gray-200 px-2 h-8 rounded-md text-sm"
+          className="border border-borderColor bg-cardBackground text-textColor px-2 h-8 rounded-md text-sm"
           value={name}
           onChange={handleNameChange}
           aria-label="Search carousels"
