@@ -1,20 +1,8 @@
-import { db } from "./firebase";
-import {
-  collection,
-  query,
-  where,
-  orderBy,
-  limit,
-  getDocs,
-  doc,
-  getDoc,
-} from "firebase/firestore";
-
 export const fetchSubscriptionStatus = async (userId: string) => {
   try {
     const response = await fetch(`/api/subscriptions?userId=${userId}`);
     if (!response.ok) {
-      throw new Error('Failed to fetch subscription status');
+      throw new Error("Failed to fetch subscription status");
     }
     return await response.json();
   } catch (error: any) {
@@ -27,7 +15,7 @@ export const fetchBrandingSettings = async (userId: string) => {
   try {
     const response = await fetch(`/api/branding?userId=${userId}`);
     if (!response.ok) {
-      throw new Error('Failed to fetch branding settings');
+      throw new Error("Failed to fetch branding settings");
     }
     const data = await response.json();
     return {
@@ -41,18 +29,21 @@ export const fetchBrandingSettings = async (userId: string) => {
   }
 };
 
-export const updateBrandingSettings = async (userId: string, brandingData: any) => {
+export const updateBrandingSettings = async (
+  userId: string,
+  brandingData: any
+) => {
   try {
-    const response = await fetch('/api/branding', {
-      method: 'PUT',
+    const response = await fetch("/api/branding", {
+      method: "PUT",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({ userId, ...brandingData }),
     });
 
     if (!response.ok) {
-      throw new Error('Failed to update branding settings');
+      throw new Error("Failed to update branding settings");
     }
 
     return await response.json();

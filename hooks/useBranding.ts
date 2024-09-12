@@ -5,7 +5,7 @@ import { RootState } from "@/state/store";
 import { setHandle, setHeadshot, setName } from "@/state/slice/branding.slice";
 import { useMutation } from "react-query";
 import { uploadImage, deleteImage } from "@/services/storage";
-import { updateBrandingSettings } from "@/services/firestore";
+import { updateBrandingSettings } from "@/services/apis";
 
 const useBranding = () => {
   const dispatch = useDispatch();

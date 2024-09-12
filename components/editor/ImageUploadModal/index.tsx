@@ -3,27 +3,11 @@ import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useDropzone } from "react-dropzone";
-import {
-  getStorage,
-  ref,
-  uploadBytes,
-  getDownloadURL,
-  deleteObject,
-} from "firebase/storage";
-import {
-  collection,
-  addDoc,
-  getDocs,
-  deleteDoc,
-  doc,
-  query,
-  where,
-  orderBy,
-} from "firebase/firestore";
-import { useMutation, useQueryClient } from "react-query";
+import { ref, uploadBytes, getDownloadURL, deleteObject } from "firebase/storage";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 import toast from "react-hot-toast";
 import Image from "next/image";
-import { storage, db } from "@/services/firebase";
+import { storage } from "@/services/firebase";
 import { X, ChevronLeft, ChevronRight } from "lucide-react";
 import { useSelector } from "react-redux";
 import { RootState } from "@/state/store";
@@ -52,54 +36,37 @@ const ImageUploadModal: React.FC<ImageUploadModalProps> = ({
 }) => {
   const { userInfo } = useSelector((state: RootState) => state.user);
   const uid = userInfo?.uid;
-  const [uploadedImages, setUploadedImages] = useState<ImageInfo[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [jumpToPage, setJumpToPage] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
   const [totalUsage, setTotalUsage] = useState(0);
   const imagesPerPage = 9;
 
   const queryClient = useQueryClient();
 
-  // Fetch images from Firestore based on uid
-  useEffect(() => {
-    const fetchImages = async () => {
-      if (!uid) return;
-      setIsLoading(true);
-      try {
-        const imagesQuery = query(
-          collection(db, "images"),
-          where("uid", "==", uid),
-          orderBy("createdAt", "desc")
-        );
-        const querySnapshot = await getDocs(imagesQuery);
-        const images: ImageInfo[] = [];
-        querySnapshot.forEach((doc) => {
-          images.push({ ...(doc.data() as ImageInfo), id: doc.id });
-        });
-        setUploadedImages(images);
-        calculateTotalUsage(images);
-      } catch (error) {
-        console.error("Error fetching images: ", error);
-        toast.error("Failed to fetch images.");
-      } finally {
-        setIsLoading(false);
+  // Fetch images from MongoDB API
+  const { data: uploadedImages = [], isLoading } = useQuery<ImageInfo[]>(
+    ["images", uid],
+    async () => {
+      if (!uid) return [];
+      const response = await fetch(`/api/images?uid=${uid}`);
+      if (!response.ok) {
+        throw new Error("Failed to fetch images");
       }
-    };
-
-    if (isOpen && uid) {
-      fetchImages();
+      return response.json();
+    },
+    {
+      enabled: !!uid && isOpen,
+      onSuccess: (data) => calculateTotalUsage(data),
     }
-  }, [isOpen, uid]);
+  );
 
   const calculateTotalUsage = (images: ImageInfo[]) => {
     const totalBytes = images.reduce((acc, image) => acc + image.size, 0);
     const totalMB = totalBytes / MB_TO_BYTES;
     setTotalUsage(totalMB);
-    return totalMB; // Return the calculated value
   };
 
-  // Handle image upload and save to Firestore with uid
+  // Handle image upload
   const { mutate: handleUpload, isLoading: uploadLoading } = useMutation(
     async (files: File[]) => {
       const uploadedImages: ImageInfo[] = [];
@@ -115,41 +82,35 @@ const ImageUploadModal: React.FC<ImageUploadModalProps> = ({
           );
         }
 
-        const storageRef = ref(
-          storage,
-          `images/${uid}/${Date.now()}_${file.name}`
-        );
-        const snapshot = await uploadBytes(storageRef, file);
-        const downloadURL = await getDownloadURL(snapshot.ref);
-
-        const imageInfo: ImageInfo = {
-          url: downloadURL,
+        const base64 = await fileToBase64(file);
+        const imageInfo = {
           name: file.name,
           size: file.size,
-          createdAt: Date.now(),
-          id: "", // This will be set after Firestore add
+          type: file.type,
+          file: base64,
         };
 
-        // Save the image info to Firestore with the user's uid
-        const docRef = await addDoc(collection(db, "images"), {
-          ...imageInfo,
-          uid,
+        const response = await fetch("/api/images", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(imageInfo),
         });
 
-        imageInfo.id = docRef.id;
-        uploadedImages.push(imageInfo);
+        if (!response.ok) {
+          throw new Error("Failed to upload image");
+        }
+
+        const data = await response.json();
+        uploadedImages.push(data);
       }
       return uploadedImages;
     },
     {
-      onSuccess: (uploadedImages: ImageInfo[]) => {
-        setUploadedImages((prev) => {
-          const newImages = [...uploadedImages, ...prev];
-          calculateTotalUsage(newImages); // Calculate total usage with all images
-          return newImages;
-        });
+      onSuccess: () => {
         toast.success("Images uploaded successfully!");
-        queryClient.invalidateQueries("images");
+        queryClient.invalidateQueries(["images", uid]);
       },
       onError: (error: Error) => {
         console.error("Error uploading images: ", error);
@@ -157,6 +118,15 @@ const ImageUploadModal: React.FC<ImageUploadModalProps> = ({
       },
     }
   );
+
+  const fileToBase64 = (file: File): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result as string);
+      reader.onerror = (error) => reject(error);
+    });
+  };
 
   const onDrop = (acceptedFiles: File[]) => {
     if (uid) {
@@ -172,18 +142,13 @@ const ImageUploadModal: React.FC<ImageUploadModalProps> = ({
       const imageRef = ref(storage, imageUrl);
       await deleteObject(imageRef);
 
-      // Delete from Firestore
-      await deleteDoc(doc(db, "images", imageId));
-
-      // Remove from state and recalculate usage
-      setUploadedImages((prev) => {
-        const updatedImages = prev.filter((image) => image.id !== imageId);
-        calculateTotalUsage(updatedImages);
-        return updatedImages;
+      // Delete from MongoDB via API
+      await fetch(`/api/images/${imageId}`, {
+        method: "DELETE",
       });
 
       toast.success("Image deleted successfully!");
-      queryClient.invalidateQueries("images");
+      queryClient.invalidateQueries(["images", uid]);
     } catch (error) {
       console.error("Error deleting image: ", error);
       toast.error("Failed to delete image.");
