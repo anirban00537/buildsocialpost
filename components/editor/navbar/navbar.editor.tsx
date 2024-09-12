@@ -18,15 +18,10 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import CarouselListModal from "@/components/editor/CarouselListModal";
+import { Download, User, LogOut, Save } from "lucide-react";
 import {
-  Download,
-  User,
-  LogOut,
-  Save,
-} from "lucide-react";
-import {
-  FaFacebookF,
   FaInstagram,
+  FaFacebookF,
   FaLinkedinIn,
   FaTiktok,
 } from "react-icons/fa";
@@ -190,14 +185,7 @@ const CarouselSizeDropdown: React.FC = () => {
   const renderIcons = (icons: any[]) => (
     <div className="flex items-center">
       {icons.map((Icon, index) => (
-        <div
-          key={index}
-          className={`w-5 h-5 flex items-center justify-center bg-gray-100 rounded-full ${
-            index > 0 ? "ml-1" : ""
-          }`}
-        >
-          <Icon className="w-3 h-3" />
-        </div>
+        <Icon key={index} className="w-4 h-4 mr-1 text-gray-600" />
       ))}
     </div>
   );
@@ -205,13 +193,21 @@ const CarouselSizeDropdown: React.FC = () => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline" size="sm" className="w-40">
-          {currentSize ? (
-            renderIcons(currentSize.icons)
-          ) : (
-            <FaInstagram className="w-4 h-4 mr-2" />
-          )}
-          <span className="ml-2">{currentSize?.name || "Custom"}</span>
+        <Button
+          variant="outline"
+          size="sm"
+          className="w-48 h-9 px-2 justify-start overflow-hidden"
+        >
+          <div className="flex items-center w-full">
+            <div className="flex items-center mr-2 min-w-[48px]">
+              {currentSize ? (
+                renderIcons(currentSize.icons)
+              ) : (
+                <FaInstagram className="w-4 h-4" />
+              )}
+            </div>
+            <span className="truncate">{currentSize?.name || "Custom"}</span>
+          </div>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-64 p-2">
@@ -222,20 +218,20 @@ const CarouselSizeDropdown: React.FC = () => {
           <DropdownMenuItem
             key={size.ratio}
             onClick={() => handleSizeChange(size.width, size.height)}
-            className="flex items-center justify-between p-2 hover:bg-gray-100 rounded-md cursor-pointer"
+            className="flex items-center py-2 px-1 hover:bg-gray-100 rounded-md cursor-pointer"
           >
-            <div className="flex items-center flex-1">
-              <div className="flex items-center min-w-[60px]">
+            <div className="flex-1 flex items-center">
+              <div className="w-24 flex items-center">
                 {renderIcons(size.icons)}
               </div>
-              <div className="flex flex-col ml-2">
+              <div className="flex flex-col">
                 <span className="font-medium text-sm">{size.name}</span>
                 <span className="text-xs text-gray-500">
                   {size.width} x {size.height}px
                 </span>
               </div>
             </div>
-            <span className="text-xs font-semibold text-blue-500 ml-2">
+            <span className="text-sm font-semibold text-blue-500 ml-auto">
               {size.ratio}
             </span>
           </DropdownMenuItem>

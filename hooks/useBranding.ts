@@ -56,9 +56,20 @@ const useBranding = () => {
 
         finalHeadshot = await uploadImage(blob, path);
 
-        if (originalHeadshot) {
+        if (
+          originalHeadshot &&
+          originalHeadshot.startsWith("https://firebasestorage.googleapis.com")
+        ) {
           await deleteImage(originalHeadshot);
         }
+      } else if (
+        brandingData.headshot &&
+        !brandingData.headshot.startsWith(
+          "https://firebasestorage.googleapis.com"
+        )
+      ) {
+        // If it's a web URL (like LinkedIn) and not a Firebase Storage URL, just use it as is
+        finalHeadshot = brandingData.headshot;
       }
 
       await updateBrandingSettings(user.uid, {
