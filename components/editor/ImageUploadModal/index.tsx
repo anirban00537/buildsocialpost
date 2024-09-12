@@ -1,13 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useDropzone } from "react-dropzone";
-import { ref, uploadBytes, getDownloadURL, deleteObject } from "firebase/storage";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import toast from "react-hot-toast";
 import Image from "next/image";
-import { storage } from "@/services/firebase";
 import { X, ChevronLeft, ChevronRight } from "lucide-react";
 import { useSelector } from "react-redux";
 import { RootState } from "@/state/store";
@@ -19,8 +17,8 @@ interface ImageUploadModalProps {
 }
 
 interface ImageInfo {
+  _id: string;
   url: string;
-  id: string;
   name: string;
   size: number;
   createdAt: number;
@@ -38,125 +36,124 @@ const ImageUploadModal: React.FC<ImageUploadModalProps> = ({
   const uid = userInfo?.uid;
   const [currentPage, setCurrentPage] = useState(1);
   const [jumpToPage, setJumpToPage] = useState("");
-  const [totalUsage, setTotalUsage] = useState(0);
   const imagesPerPage = 9;
 
   const queryClient = useQueryClient();
 
-  // Fetch images from MongoDB API
   const { data: uploadedImages = [], isLoading } = useQuery<ImageInfo[]>(
     ["images", uid],
     async () => {
-      if (!uid) return [];
-      const response = await fetch(`/api/images?uid=${uid}`);
+      const response = await fetch(`/api/images`);
       if (!response.ok) {
         throw new Error("Failed to fetch images");
       }
       return response.json();
     },
     {
-      enabled: !!uid && isOpen,
-      onSuccess: (data) => calculateTotalUsage(data),
+      enabled: isOpen,
     }
   );
 
-  const calculateTotalUsage = (images: ImageInfo[]) => {
-    const totalBytes = images.reduce((acc, image) => acc + image.size, 0);
-    const totalMB = totalBytes / MB_TO_BYTES;
-    setTotalUsage(totalMB);
-  };
+  const { data: totalUsage = 0 } = useQuery<number>(
+    ["totalUsage", uid],
+    async () => {
+      if (!uid) return 0;
+      const totalBytes = uploadedImages.reduce(
+        (acc, image) => acc + image.size,
+        0
+      );
+      return totalBytes / MB_TO_BYTES;
+    },
+    {
+      enabled: !!uploadedImages.length,
+    }
+  );
 
-  // Handle image upload
-  const { mutate: handleUpload, isLoading: uploadLoading } = useMutation(
-    async (files: File[]) => {
-      const uploadedImages: ImageInfo[] = [];
-      for (const file of files) {
-        if (file.size > MAX_STORAGE_MB * MB_TO_BYTES) {
-          throw new Error(`Image ${file.name} exceeds the 100 MB limit.`);
-        }
+  const uploadMutation = useMutation(
+    async (file: File) => {
+      const base64 = await fileToBase64(file);
+      const imageInfo = {
+        name: file.name,
+        size: file.size,
+        type: file.type,
+        file: base64,
+      };
 
-        const newTotalUsage = totalUsage + file.size / MB_TO_BYTES;
-        if (newTotalUsage > MAX_STORAGE_MB) {
-          throw new Error(
-            "Uploading this image would exceed your 100 MB storage limit."
-          );
-        }
+      const response = await fetch("/api/images", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(imageInfo),
+      });
 
-        const base64 = await fileToBase64(file);
-        const imageInfo = {
-          name: file.name,
-          size: file.size,
-          type: file.type,
-          file: base64,
-        };
-
-        const response = await fetch("/api/images", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(imageInfo),
-        });
-
-        if (!response.ok) {
-          throw new Error("Failed to upload image");
-        }
-
-        const data = await response.json();
-        uploadedImages.push(data);
+      if (!response.ok) {
+        throw new Error("Failed to upload image");
       }
-      return uploadedImages;
+
+      return response.json();
     },
     {
       onSuccess: () => {
-        toast.success("Images uploaded successfully!");
         queryClient.invalidateQueries(["images", uid]);
+        queryClient.invalidateQueries(["totalUsage", uid]);
+        toast.success("Image uploaded successfully!");
       },
       onError: (error: Error) => {
-        console.error("Error uploading images: ", error);
-        toast.error(error.message || "Failed to upload images.");
+        toast.error(error.message || "Failed to upload image.");
       },
     }
   );
 
-  const fileToBase64 = (file: File): Promise<string> => {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = () => resolve(reader.result as string);
-      reader.onerror = (error) => reject(error);
-    });
-  };
-
-  const onDrop = (acceptedFiles: File[]) => {
-    if (uid) {
-      handleUpload(acceptedFiles);
-    } else {
-      toast.error("Please log in to upload images.");
-    }
-  };
-
-  const handleDeleteImage = async (imageId: string, imageUrl: string) => {
-    try {
-      // Delete from Firebase Storage
-      const imageRef = ref(storage, imageUrl);
-      await deleteObject(imageRef);
-
-      // Delete from MongoDB via API
-      await fetch(`/api/images/${imageId}`, {
+  const deleteMutation = useMutation(
+    async ({ id, url }: { id: string; url: string }) => {
+      const response = await fetch(`/api/images/${id}`, {
         method: "DELETE",
       });
 
-      toast.success("Image deleted successfully!");
-      queryClient.invalidateQueries(["images", uid]);
-    } catch (error) {
-      console.error("Error deleting image: ", error);
-      toast.error("Failed to delete image.");
+      if (!response.ok) {
+        throw new Error("Failed to delete image");
+      }
+
+      return response.json();
+    },
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries(["images", uid]);
+        queryClient.invalidateQueries(["totalUsage", uid]);
+        toast.success("Image deleted successfully!");
+      },
+      onError: (error: Error) => {
+        toast.error(error.message || "Failed to delete image.");
+      },
+    }
+  );
+
+  const handleUpload = async (files: File[]) => {
+    for (const file of files) {
+      if (file.size > MAX_STORAGE_MB * MB_TO_BYTES) {
+        toast.error(`Image ${file.name} exceeds the 100 MB limit.`);
+        continue;
+      }
+
+      const newTotalUsage = totalUsage + file.size / MB_TO_BYTES;
+      if (newTotalUsage > MAX_STORAGE_MB) {
+        toast.error(
+          "Uploading this image would exceed your 100 MB storage limit."
+        );
+        break;
+      }
+
+      await uploadMutation.mutateAsync(file);
     }
   };
 
+  const handleDeleteImage = async (id: string, url: string) => {
+    await deleteMutation.mutateAsync({ id, url });
+  };
+
   const { getRootProps, getInputProps } = useDropzone({
-    onDrop,
+    onDrop: handleUpload,
     accept: {
       "image/*": [
         ".jpeg",
@@ -170,10 +167,9 @@ const ImageUploadModal: React.FC<ImageUploadModalProps> = ({
       ],
     },
     maxSize: MAX_STORAGE_MB * MB_TO_BYTES,
-    disabled: uploadLoading,
+    disabled: uploadMutation.isLoading,
   });
 
-  // Pagination logic
   const indexOfLastImage = currentPage * imagesPerPage;
   const indexOfFirstImage = indexOfLastImage - imagesPerPage;
   const currentImages = uploadedImages.slice(
@@ -228,9 +224,18 @@ const ImageUploadModal: React.FC<ImageUploadModalProps> = ({
     return pageNumbers;
   };
 
+  const fileToBase64 = (file: File): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result as string);
+      reader.onerror = (error) => reject(error);
+    });
+  };
+
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="w-[800px] max-h-[85vh] overflow-y-auto">
+      <DialogContent className="sm:max-w-[425px]">
         <h2 className="text-lg font-semibold mb-4">Image Management</h2>
 
         {!uid ? (
@@ -255,12 +260,14 @@ const ImageUploadModal: React.FC<ImageUploadModalProps> = ({
             <div
               {...getRootProps()}
               className={`border-2 border-dashed p-4 rounded-lg cursor-pointer ${
-                uploadLoading ? "cursor-not-allowed" : "hover:border-gray-400"
+                uploadMutation.isLoading
+                  ? "cursor-not-allowed"
+                  : "hover:border-gray-400"
               }`}
             >
               <input {...getInputProps()} />
               <p className="text-center text-gray-500">
-                {uploadLoading
+                {uploadMutation.isLoading
                   ? "Uploading..."
                   : "Drag & drop images here, or click to select images (max 100 MB)"}
               </p>
@@ -277,8 +284,8 @@ const ImageUploadModal: React.FC<ImageUploadModalProps> = ({
             ) : (
               <>
                 <div className="mt-4 grid grid-cols-3 gap-4">
-                  {currentImages.map((image) => (
-                    <div key={image.id} className="relative group">
+                  {currentImages.map((image: ImageInfo) => (
+                    <div key={image._id} className="relative group">
                       <div
                         className="cursor-pointer overflow-hidden rounded-lg"
                         onClick={() => onImageSelect(image.url)}
@@ -292,9 +299,9 @@ const ImageUploadModal: React.FC<ImageUploadModalProps> = ({
                         />
                       </div>
                       <button
-                        onClick={() => handleDeleteImage(image.id, image.url)}
+                        onClick={() => handleDeleteImage(image._id, image.url)}
                         className="absolute top-2 right-2 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                        disabled={uploadLoading}
+                        disabled={uploadMutation.isLoading}
                       >
                         <X className="h-4 w-4" />
                       </button>
@@ -308,7 +315,6 @@ const ImageUploadModal: React.FC<ImageUploadModalProps> = ({
                   ))}
                 </div>
 
-                {/* Pagination Controls */}
                 {totalPages > 1 && (
                   <div className="flex flex-col items-center mt-4">
                     <div className="flex items-center mb-2">

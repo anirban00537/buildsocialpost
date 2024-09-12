@@ -33,9 +33,14 @@ export async function DELETE(
     }
 
     // Delete from Firebase Storage
-    const bucket = adminStorage.bucket();
-    const fileName = image.url.split('/').pop();
-    await bucket.file(`images/${session.user.id}/${fileName}`).delete();
+    try {
+      const bucket = adminStorage.bucket();
+      const fileName = image.url.split("/").pop();
+      await bucket.file(`images/${session.user.id}/${fileName}`).delete();
+    } catch (firebaseError) {
+      console.error("Firebase deletion error:", firebaseError);
+      // Continue with MongoDB deletion even if Firebase deletion fails
+    }
 
     // Delete from MongoDB
     const result = await db.collection("images").deleteOne({
@@ -44,9 +49,10 @@ export async function DELETE(
     });
 
     return NextResponse.json({ success: true });
-  } catch (error) {
+  } catch (error: any) {
+    console.error("Delete image error:", error);
     return NextResponse.json(
-      { error: "Failed to delete image" },
+      { error: "Failed to delete image", details: error.message },
       { status: 500 }
     );
   }
