@@ -2,7 +2,7 @@ import React from "react";
 
 const FullScreenLoading: React.FC = () => {
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-white">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-background">
       <div className="carousel-loader relative w-20 h-20">
         <div className="main-slide bg-primary" />
         <div className="side-slide left bg-primary" />
