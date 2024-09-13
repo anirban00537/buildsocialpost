@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback } from "react";
 import {
   collection,
   doc,
@@ -18,12 +18,16 @@ import { CarouselState, FirestoreCarouselState } from "@/types";
 import { addAllSlides, setProperty } from "@/state/slice/carousel.slice";
 
 export const useCarouselManager = () => {
-  const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [carousel, setCarousel] = useState<CarouselState | null>(null);
-  const [carousels, setCarousels] = useState<
-    { id: string; data: CarouselState }[]
-  >([]);
+  const [carousels, setCarousels] = useState<{ id: string; data: CarouselState }[]>([]);
+  
+  // Separate loading states
+  const [isCreatingOrUpdating, setIsCreatingOrUpdating] = useState(false);
+  const [isFetchingDetails, setIsFetchingDetails] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [isFetchingAll, setIsFetchingAll] = useState(false);
+
   const router = useRouter();
   const dispatch = useDispatch();
   const user = useSelector((state: RootState) => state.user.userinfo);
@@ -59,12 +63,12 @@ export const useCarouselManager = () => {
 
   const createOrUpdateCarousel = useCallback(
     async (newName?: string, id?: string) => {
-      setLoading(true);
+      setIsCreatingOrUpdating(true);
       setError(null);
 
       if (!user?.uid) {
         setError("User not authenticated");
-        setLoading(false);
+        setIsCreatingOrUpdating(false);
         return;
       }
 
@@ -105,7 +109,7 @@ export const useCarouselManager = () => {
       } catch (err) {
         setError("Failed to save carousel");
       } finally {
-        setLoading(false);
+        setIsCreatingOrUpdating(false);
       }
     },
     [
@@ -117,14 +121,13 @@ export const useCarouselManager = () => {
       layout,
       background,
       slides,
-      router,
       sharedSelectedElement,
     ]
   );
 
   const getCarouselDetailsById = useCallback(
     async (id: string) => {
-      setLoading(true);
+      setIsFetchingDetails(true);
       setError(null);
       try {
         const docRef = doc(db, "carousels", id);
@@ -136,45 +139,25 @@ export const useCarouselManager = () => {
           dispatch(setProperty({ key: "name", value: data.name }));
           dispatch(addAllSlides(data.slides));
           dispatch(setProperty({ key: "background", value: data.background }));
-          dispatch(
-            setProperty({
-              key: "titleTextSettings",
-              value: data.titleTextSettings,
-            })
-          );
-          dispatch(
-            setProperty({
-              key: "descriptionTextSettings",
-              value: data.descriptionTextSettings,
-            })
-          );
-          dispatch(
-            setProperty({
-              key: "taglineTextSettings",
-              value: data.taglineTextSettings,
-            })
-          );
-          dispatch(
-            setProperty({
-              key: "layout",
-              value: {
-                height: data.layout.height,
-                width: data.layout.width,
-                pattern: data.layout.pattern,
-                backgroundOpacity: data.layout.backgroundOpacity || 0.5,
-              },
-            })
-          );
-
-          dispatch(
-            setProperty({
-              key: "sharedSelectedElement",
-              value: {
-                id: data.sharedSelectedElement?.id || 0,
-                opacity: data.sharedSelectedElement?.opacity || 0.5,
-              },
-            })
-          );
+          dispatch(setProperty({ key: "titleTextSettings", value: data.titleTextSettings }));
+          dispatch(setProperty({ key: "descriptionTextSettings", value: data.descriptionTextSettings }));
+          dispatch(setProperty({ key: "taglineTextSettings", value: data.taglineTextSettings }));
+          dispatch(setProperty({
+            key: "layout",
+            value: {
+              height: data.layout.height,
+              width: data.layout.width,
+              pattern: data.layout.pattern,
+              backgroundOpacity: data.layout.backgroundOpacity || 0.5,
+            },
+          }));
+          dispatch(setProperty({
+            key: "sharedSelectedElement",
+            value: {
+              id: data.sharedSelectedElement?.id || 0,
+              opacity: data.sharedSelectedElement?.opacity || 0.5,
+            },
+          }));
         } else {
           setError("Carousel not found");
           router.push("/editor");
@@ -182,14 +165,14 @@ export const useCarouselManager = () => {
       } catch (err) {
         setError("Failed to fetch carousel details");
       } finally {
-        setLoading(false);
+        setIsFetchingDetails(false);
       }
     },
     [dispatch, router]
   );
 
   const deleteCarousel = useCallback(async (id: string) => {
-    setLoading(true);
+    setIsDeleting(true);
     setError(null);
     try {
       const docRef = doc(db, "carousels", id);
@@ -201,12 +184,12 @@ export const useCarouselManager = () => {
     } catch (err) {
       setError("Failed to delete carousel");
     } finally {
-      setLoading(false);
+      setIsDeleting(false);
     }
   }, []);
 
   const getAllCarousels = useCallback(async () => {
-    setLoading(true);
+    setIsFetchingAll(true);
     setError(null);
     try {
       if (user?.uid) {
@@ -226,15 +209,18 @@ export const useCarouselManager = () => {
     } catch (err) {
       setError("Failed to fetch carousels");
     } finally {
-      setLoading(false);
+      setIsFetchingAll(false);
     }
   }, [user?.uid]);
 
   return {
-    loading,
     error,
     carousel,
     carousels,
+    isCreatingOrUpdating,
+    isFetchingDetails,
+    isDeleting,
+    isFetchingAll,
     createOrUpdateCarousel,
     getCarouselDetailsById,
     deleteCarousel,

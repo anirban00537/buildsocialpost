@@ -30,6 +30,7 @@ import {
   setProperty,
 } from "@/state/slice/carousel.slice";
 import BillingModal from "@/components/subscription/billingModal";
+import FullScreenLoading from "@/components/loading/fullscreen.loading";
 
 const getInitials = (email: string): string =>
   email ? email.charAt(0).toUpperCase() : "U";
@@ -250,8 +251,11 @@ const EditorNavbar: React.FC = () => {
     getCarouselDetailsById,
     getAllCarousels,
     carousels,
-    loading: saveLoading,
     deleteCarousel,
+    isCreatingOrUpdating,
+    isFetchingDetails,
+    isDeleting,
+    isFetchingAll,
   } = useCarouselManager();
   const { logout } = useLogout();
   const user = useSelector((state: RootState) => state.user.userinfo);
@@ -283,7 +287,9 @@ const EditorNavbar: React.FC = () => {
   );
 
   const memoizedCarousels = useMemo(() => carousels, [carousels]);
-
+  if (isFetchingAll) {
+    return <FullScreenLoading />;
+  }
   return (
     <header className="bg-background sticky top-0 h-[65px] flex items-center justify-between border-b border-borderColor z-40 px-4 shadow-sm">
       <div className="flex items-center">
@@ -294,8 +300,9 @@ const EditorNavbar: React.FC = () => {
           onClick={() => setIsViewAllModalOpen(true)}
           className="border border-borderColor bg-cardBackground text-textColor flex items-center h-8 gap-2 text-sm hover:bg-primary/50"
           variant="ghost"
+          disabled={isFetchingAll}
         >
-          Saved Carousels
+          {isFetchingAll ? "Loading..." : "Saved Carousels"}
         </Button>
         <span className="px-2 rounded-md">
           <ArrowRight className="w-4 h-4 text-textColor" />
@@ -308,6 +315,7 @@ const EditorNavbar: React.FC = () => {
           value={name}
           onChange={handleNameChange}
           aria-label="Search carousels"
+          disabled={isFetchingDetails}
         />
       </div>
 
@@ -322,11 +330,11 @@ const EditorNavbar: React.FC = () => {
 
         <Button
           onClick={handleSaveCarousel}
-          disabled={saveLoading}
+          disabled={isCreatingOrUpdating}
           className="flex items-center gap-2"
           size="xs"
         >
-          {saveLoading ? (
+          {isCreatingOrUpdating ? (
             <div className="flex items-center gap-2">
               <svg
                 className="animate-spin h-4 w-4"
@@ -376,7 +384,9 @@ const EditorNavbar: React.FC = () => {
         setIsViewAllModalOpen={setIsViewAllModalOpen}
         createOrUpdateCarousel={createOrUpdateCarousel}
         deleteCarousel={deleteCarousel}
-        saveLoading={saveLoading}
+        isCreatingOrUpdating={isCreatingOrUpdating}
+        isDeleting={isDeleting}
+        isFetchingAll={isFetchingAll}
       />
     </header>
   );

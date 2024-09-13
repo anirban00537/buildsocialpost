@@ -10,7 +10,9 @@ interface CarouselListModalProps {
   setIsViewAllModalOpen: (isOpen: boolean) => void;
   createOrUpdateCarousel: (name: string, id?: string) => Promise<void>;
   deleteCarousel: (carouselId: string) => void;
-  saveLoading: boolean;
+  isCreatingOrUpdating: boolean;
+  isDeleting: boolean;
+  isFetchingAll: boolean;
 }
 
 const CarouselListModal: FC<CarouselListModalProps> = ({
@@ -19,7 +21,9 @@ const CarouselListModal: FC<CarouselListModalProps> = ({
   setIsViewAllModalOpen,
   createOrUpdateCarousel,
   deleteCarousel,
-  saveLoading,
+  isCreatingOrUpdating,
+  isDeleting,
+  isFetchingAll,
 }) => {
   const [selectedCarousel, setSelectedCarousel] = useState<any | null>(null);
   const [currentPage, setCurrentPage] = useState(1);

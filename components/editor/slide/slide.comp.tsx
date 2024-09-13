@@ -63,7 +63,7 @@ const SlideComponent: React.FC<SlideProps> = ({
 
   return (
     <div
-      className="cursor-pointer hover:opacity-90 transition-all relative"
+      className="cursor-pointer hover:opacity-90 relative"
       style={{
         height: "100%",
         width: "100%",

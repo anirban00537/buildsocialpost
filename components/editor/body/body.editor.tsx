@@ -72,7 +72,7 @@ const CarouselEditor: React.FC = () => {
   };
 
   return (
-    <main className="flex h-full overflow-hidden">
+    <main className="flex h-full overflow-hidden w-full px-2">
       <div className="w-full p-4 flex flex-col justify-center items-center">
         <div className="relative w-full">
           <Swiper
@@ -118,56 +118,60 @@ const CarouselEditor: React.FC = () => {
                     slideNumber={index}
                   />
                 </div>
-                <div className="flex items-center justify-start mt-3 space-x-2">
-                  <button
-                    className="flex items-center justify-center border-slate-800 text-slate-800 border rounded-md hover:bg-primary hover:border-primary hover:text-white h-6 w-6 z-10"
-                    onClick={() => handleInsertSlide(index)}
-                    title="Insert new slide"
-                  >
-                    <Plus size={22} />
-                  </button>
-                  <button
-                    className="flex items-center justify-center border-slate-800 text-slate-800 border rounded-md hover:bg-primary hover:border-primary hover:text-white h-6 w-6 z-10"
-                    onClick={() => handleCopySlide(index)}
-                    title="Copy slide"
-                  >
-                    <Copy size={12} />
-                  </button>
-                  <button
-                    className="flex items-center justify-center border-slate-800 text-slate-800 border rounded-md hover:bg-primary hover:border-primary hover:text-white h-6 w-6 z-10"
-                    onClick={() => handleDeleteSlide(index)}
-                    title="Delete slide"
-                  >
-                    <Trash2 size={15} />
-                  </button>
-                  <button
-                    className="flex items-center justify-center border-slate-800 text-slate-800 border rounded-md hover:bg-primary hover:border-primary hover:text-white h-6 w-6 z-10"
-                    onClick={() => handleMoveSlideLeft(index)}
-                    title="Move slide left"
-                  >
-                    <ArrowLeft size={15} />
-                  </button>
-                  <button
-                    className="flex items-center justify-center border-slate-800 text-slate-800 border rounded-md hover:bg-primary hover:border-primary hover:text-white h-6 w-6 z-10"
-                    onClick={() => handleMoveSlideRight(index)}
-                    title="Move slide right"
-                  >
-                    <ArrowRight size={15} />
-                  </button>
-                  <button
-                    className="flex items-center justify-center border-slate-800 text-slate-800 border rounded-md hover:bg-primary hover:border-primary hover:text-white h-6 w-6 z-10"
-                    onClick={() => handleImageIconClick(index, "background")}
-                    title="Change background image"
-                  >
-                    <ImageIcon size={15} />
-                  </button>
-                  <button
-                    className="flex items-center justify-center border-slate-800 text-slate-800 border rounded-md hover:bg-primary hover:border-primary hover:text-white h-6 w-6 z-10"
-                    onClick={() => handleImageIconClick(index, "slide")}
-                    title="Add image to slide"
-                  >
-                    <ImagePlus size={15} />
-                  </button>
+                <div className="flex items-center justify-between mt-3 w-full px-2">
+                  <div className="flex items-center space-x-2">
+                    <button
+                      className="flex items-center justify-center bg-cardBackground text-textColor border-none rounded-md hover:bg-primary hover:border-primary hover:text-white h-6 w-6 z-10"
+                      onClick={() => handleInsertSlide(index)}
+                      title="Insert new slide"
+                    >
+                      <Plus size={22} />
+                    </button>
+                    <button
+                      className="flex items-center justify-center bg-cardBackground text-textColor border-none rounded-md hover:bg-primary hover:border-primary hover:text-white h-6 w-6 z-10"
+                      onClick={() => handleCopySlide(index)}
+                      title="Copy slide"
+                    >
+                      <Copy size={12} />
+                    </button>
+                    <button
+                      className="flex items-center justify-center bg-cardBackground text-textColor border-none rounded-md hover:bg-primary hover:border-primary hover:text-white h-6 w-6 z-10"
+                      onClick={() => handleDeleteSlide(index)}
+                      title="Delete slide"
+                    >
+                      <Trash2 size={15} />
+                    </button>
+                    <button
+                      className="flex items-center justify-center bg-cardBackground text-textColor border-none rounded-md hover:bg-primary hover:border-primary hover:text-white h-6 w-6 z-10"
+                      onClick={() => handleMoveSlideLeft(index)}
+                      title="Move slide left"
+                    >
+                      <ArrowLeft size={15} />
+                    </button>
+                    <button
+                      className="flex items-center justify-center bg-cardBackground text-textColor border-none rounded-md hover:bg-primary hover:border-primary hover:text-white h-6 w-6 z-10"
+                      onClick={() => handleMoveSlideRight(index)}
+                      title="Move slide right"
+                    >
+                      <ArrowRight size={15} />
+                    </button>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <button
+                      className="flex items-center justify-center bg-cardBackground text-textColor border-none rounded-md hover:bg-primary hover:border-primary hover:text-white h-6 w-6 z-10"
+                      onClick={() => handleImageIconClick(index, "background")}
+                      title="Change background image"
+                    >
+                      <ImageIcon size={15} />
+                    </button>
+                    <button
+                      className="flex items-center justify-center bg-cardBackground text-textColor border-none rounded-md hover:bg-primary hover:border-primary hover:text-white h-6 w-6 z-10"
+                      onClick={() => handleImageIconClick(index, "slide")}
+                      title="Add image to slide"
+                    >
+                      <ImagePlus size={15} />
+                    </button>
+                  </div>
                 </div>
               </SwiperSlide>
             ))}
