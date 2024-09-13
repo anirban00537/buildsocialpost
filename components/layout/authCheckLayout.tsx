@@ -12,13 +12,8 @@ const AuthCheckLayout: React.FC<AuthCheckLayoutProps> = ({ children }) => {
   const { loading } = useAuthUser();
 
   useAnalytics();
-
-  return (
-    <div>
-      {loading && <FullScreenLoading />}
-      {children}
-    </div>
-  );
+  if (loading) return <FullScreenLoading />;
+  return <div>{children}</div>;
 };
 
 export default AuthCheckLayout;

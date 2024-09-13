@@ -15,6 +15,8 @@ function Dashboard() {
       setIsMobile(mobile);
       if (mobile) {
         setIsCollapsed(true);
+      } else {
+        setIsCollapsed(false);
       }
     };
     handleResize();
