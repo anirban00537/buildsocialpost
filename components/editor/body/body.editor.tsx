@@ -143,14 +143,20 @@ const CarouselEditor: React.FC = () => {
                     </button>
                     <button
                       className="flex items-center justify-center bg-cardBackground text-textColor border-none rounded-md hover:bg-primary hover:border-primary hover:text-white h-6 w-6 z-10"
-                      onClick={() => handleMoveSlideLeft(index)}
+                      onClick={(e) => {
+                        e.stopPropagation(); // Prevent slide click event
+                        handleMoveSlideLeft(index);
+                      }}
                       title="Move slide left"
                     >
                       <ArrowLeft size={15} />
                     </button>
                     <button
                       className="flex items-center justify-center bg-cardBackground text-textColor border-none rounded-md hover:bg-primary hover:border-primary hover:text-white h-6 w-6 z-10"
-                      onClick={() => handleMoveSlideRight(index)}
+                      onClick={(e) => {
+                        e.stopPropagation(); // Prevent slide click event
+                        handleMoveSlideRight(index);
+                      }}
                       title="Move slide right"
                     >
                       <ArrowRight size={15} />

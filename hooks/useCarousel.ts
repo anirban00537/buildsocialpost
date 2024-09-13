@@ -61,15 +61,23 @@ const useCarousel = () => {
   const handleMoveSlideLeft = useCallback(
     (index: number) => {
       dispatch(moveSlideLeft(index));
+      // Move to the new position of the slide (index - 1)
+      if (swiperRef.current && swiperRef.current.swiper) {
+        swiperRef.current.swiper.slideTo(Math.max(0, index - 1), 500);
+      }
     },
-    [dispatch]
+    [dispatch, swiperRef]
   );
 
   const handleMoveSlideRight = useCallback(
     (index: number) => {
       dispatch(moveSlideRight(index));
+      // Move to the new position of the slide (index + 1)
+      if (swiperRef.current && swiperRef.current.swiper) {
+        swiperRef.current.swiper.slideTo(Math.min(slides.length - 1, index + 1), 500);
+      }
     },
-    [dispatch]
+    [dispatch, swiperRef, slides.length]
   );
 
   const handleSlideClick = useCallback(
