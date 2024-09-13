@@ -304,7 +304,9 @@ const BackgroundColorsSection = () => {
           ))}
         </div>
         <div className="grid gap-3 mt-4">
-          <Label htmlFor="backgroundOpacity">Background Opacity</Label>
+          <Label htmlFor="backgroundOpacity" className="text-textColor">
+            Background Opacity
+          </Label>
           <Slider
             id="backgroundOpacity"
             max={2}
@@ -349,7 +351,9 @@ const BackgroundColorsSection = () => {
           ))}
         </div>
         <div className="grid gap-3">
-          <Label htmlFor="opacity">Opacity</Label>
+          <Label htmlFor="opacity" className="text-textColor">
+            Opacity
+          </Label>
           <Slider
             max={1}
             step={0.01}

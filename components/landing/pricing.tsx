@@ -35,10 +35,10 @@ const PricingSection = () => {
           transition={{ duration: 0.6 }}
           className="text-center mb-16"
         >
-          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+          <h2 className="text-4xl md:text-5xl font-bold text-textColor mb-4">
             Simple Pricing for Everyone
           </h2>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+          <p className="text-xl text-textColor/70 max-w-2xl mx-auto">
             One plan, all features. Start creating amazing carousels today.
           </p>
         </motion.div>
@@ -47,7 +47,7 @@ const PricingSection = () => {
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.5, delay: 0.2 }}
-          className="bg-white rounded-3xl shadow-2xl overflow-hidden"
+          className="bg-cardBackground rounded-3xl shadow-2xl overflow-hidden"
         >
           <div className="grid md:grid-cols-2">
             <div className="p-10 flex flex-col justify-between">
@@ -55,10 +55,10 @@ const PricingSection = () => {
                 <h3 className="text-2xl font-semibold text-gray-900 mb-2">
                   {plan.name}
                 </h3>
-                <p className="text-gray-600 mb-6">{plan.description}</p>
+                <p className="text-textColor/70 mb-6">{plan.description}</p>
                 <div className="text-5xl font-bold text-primary mb-6">
                   ${plan.price}{" "}
-                  <span className="text-xl font-normal text-gray-500">
+                  <span className="text-xl font-normal text-textColor/70">
                     /month
                   </span>
                 </div>
@@ -66,14 +66,14 @@ const PricingSection = () => {
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className="w-full py-4 px-6 rounded-full font-semibold text-white bg-primary hover:bg-primary-dark transition-colors duration-300 text-lg flex items-center justify-center group"
+                className="w-full py-4 px-6 rounded-full font-semibold text-textColor bg-primary hover:bg-primary-dark transition-colors duration-300 text-lg flex items-center justify-center group"
               >
                 Get Started
                 <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </motion.button>
             </div>
-            <div className="bg-gray-50 p-10">
-              <h4 className="text-lg font-semibold text-gray-900 mb-4">
+            <div className="bg-cardBackground p-10">
+              <h4 className="text-lg font-semibold text-textColor mb-4">
                 What's included:
               </h4>
               <ul className="space-y-3">
@@ -83,7 +83,7 @@ const PricingSection = () => {
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ duration: 0.3, delay: idx * 0.1 }}
-                    className="flex items-center text-gray-700"
+                    className="flex items-center text-textColor/70"
                   >
                     <Check className="w-5 h-5 text-primary mr-3 flex-shrink-0" />
                     <span>{feature}</span>
@@ -100,7 +100,7 @@ const PricingSection = () => {
           transition={{ duration: 0.5, delay: 0.4 }}
           className="mt-16 text-center"
         >
-          <p className="text-gray-600 mb-2">Still have questions?</p>
+          <p className="text-textColor/70 mb-2">Still have questions?</p>
           <a
             href="#contact"
             className="inline-flex items-center text-primary font-semibold hover:text-primary-dark transition-colors"

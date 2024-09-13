@@ -48,20 +48,20 @@ const Page = () => {
   ];
 
   return (
-    <div className="mx-auto inset-0 -z-10 h-full w-full bg-white bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px]">
+    <div className="mx-auto inset-0 -z-10 h-full w-full bg-background">
       <div className="">
         <nav className="relative items-center pt-5 px-4 mx-auto max-w-screen-xl sm:px-8 md:flex md:space-x-6">
           <div className="flex justify-between items-center">
             <a href="javascript:void(0)">
               <Image
                 src="/logo.svg"
-                width={60}
-                height={60}
+                width={128}
+                height={128}
                 alt="buildcarousel.com"
               />
             </a>
             <button
-              className="text-gray-500 outline-none md:hidden"
+              className="text-textColor outline-none md:hidden"
               onClick={() => setState(!state)}
             >
               {state ? (
@@ -100,13 +100,13 @@ const Page = () => {
           <ul
             className={`flex-1 justify-between mt-12 md:text-sm md:font-medium md:flex md:mt-0 ${
               state
-                ? "absolute inset-x-0 px-4 border-b bg-white md:border-none md:static"
+                ? "absolute inset-x-0 px-4 border-b bg-cardBackground md:border-none md:static"
                 : "hidden"
             }`}
           >
             <div className="items-center space-y-5 md:flex md:space-x-6 md:space-y-0 md:ml-12">
               {navigation.map((item, idx) => (
-                <li className="text-gray-500 hover:text-primary" key={idx}>
+                <li className="text-textColor hover:text-primary" key={idx}>
                   <a href={item.path}>{item.title}</a>
                 </li>
               ))}
@@ -130,7 +130,7 @@ const Page = () => {
       <PlanSection />
       <Testimonial />
 
-      <footer className="pt-10 bg-white">
+      <footer className="pt-10 bg-cardBackground">
         <div className="max-w-screen-xl mx-auto px-4 text-gray-600 md:px-8">
           <div className="space-y-6 sm:max-w-md sm:mx-auto sm:text-center">
             <Image
@@ -152,7 +152,7 @@ const Page = () => {
               </Link> */}
               <a
                 href="#"
-                className="flex items-center justify-center gap-x-2 py-2 px-4 text-gray-700 hover:text-gray-500 font-medium duration-150 active:bg-gray-100 border rounded-lg"
+                className="flex items-center justify-center gap-x-2 py-2 px-4 text-textColor hover:text-textColor font-medium duration-150 active:bg-gray-100 border rounded-lg"
               >
                 Get access
                 <ChevronDown className="w-5 h-5" />
@@ -165,7 +165,7 @@ const Page = () => {
               {footerNavs.map((item, idx) => (
                 <li
                   key={idx}
-                  className="text-gray-800 hover:text-gray-500 duration-150"
+                  className="text-textColor hover:text-textColor duration-150"
                 >
                   <a href={item.href}>{item.name}</a>
                 </li>

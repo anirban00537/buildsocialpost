@@ -22,59 +22,59 @@ const config: Config = {
     },
     extend: {
       colors: {
-        border: "#dcdcdc", // Example hex value, replace with actual values
-        input: "#f5f5f5", // Example hex value, replace with actual values
-        ring: "#c0c0c0", // Example hex value, replace with actual values
-        foreground: "#000000", // Example hex value, replace with actual values
+        border: "#dcdcdc",
+        input: "#f5f5f5",
+        ring: "#c0c0c0",
+        foreground: "#000000",
         primary: {
-          DEFAULT: "#3490dc", // Example hex value, replace with actual values
-          foreground: "#ffffff", // Example hex value, replace with actual values
+          DEFAULT: "#3490dc",
+          foreground: "#ffffff",
         },
         secondary: {
-          DEFAULT: "#F1F3F5", // Example hex value, replace with actual values
-          foreground: "#000000", // Example hex value, replace with actual values
+          DEFAULT: "#F1F3F5",
+          foreground: "#000000",
         },
         destructive: {
-          DEFAULT: "#e3342f", // Example hex value, replace with actual values
-          foreground: "#ffffff", // Example hex value, replace with actual values
+          DEFAULT: "#e3342f",
+          foreground: "#ffffff",
         },
         muted: {
-          DEFAULT: "#f5f5f5", // Example hex value, replace with actual values
-          foreground: "#737373", // Example hex value, replace with actual values
+          DEFAULT: "#f5f5f5",
+          foreground: "#737373",
         },
         accent: {
-          DEFAULT: "#3490dc", // Example hex value, replace with actual values
-          foreground: "#ffffff", // Example hex value, replace with actual values
+          DEFAULT: "#3490dc",
+          foreground: "#ffffff",
         },
         popover: {
-          DEFAULT: "#ffffff", // Example hex value, replace with actual values
-          foreground: "#000000", // Example hex value, replace with actual values
+          DEFAULT: "#ffffff",
+          foreground: "#000000",
         },
         card: {
-          DEFAULT: "#f8f9fa", // Example hex value, replace with actual values
-          foreground: "#212529", // Example hex value, replace with actual values
+          DEFAULT: "#f8f9fa",
+          foreground: "#212529",
         },
         background: {
-          DEFAULT: "#16151A", // Example hex value, replace with actual values
-          foreground: "#ffffff", // Example hex value, replace with actual values
+          DEFAULT: "#0a111f",
+          foreground: "#E0E0E0",
         },
         cardBackground: {
-          DEFAULT: "#191C1F", // Example hex value, replace with actual values
-          foreground: "#212529", // Example hex value, replace with actual values
+          DEFAULT: "#0f192e",
+          foreground: "#E0E0E0",
         },
         textColor: {
-          DEFAULT: "#ffffff", // Example hex value, replace with actual values
-          foreground: "#212529", // Example hex value, replace with actual values
+          DEFAULT: "#E0E0E0",
+          foreground: "#A0A0A0",
         },
         borderColor: {
-          DEFAULT: "#21222A", // Example hex value, replace with actual values
-          foreground: "#212529", // Example hex value, replace with actual values
+          DEFAULT: "#14213d",
+          foreground: "#404040",
         },
       },
       borderRadius: {
-        lg: "0.75rem", // Example value, replace with actual values
-        md: "0.5rem", // Example value, replace with actual values
-        sm: "0.25rem", // Example value, replace with actual values
+        lg: "0.75rem",
+        md: "0.5rem",
+        sm: "0.25rem",
       },
       keyframes: {
         "accordion-down": {

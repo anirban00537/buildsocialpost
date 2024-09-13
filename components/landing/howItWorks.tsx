@@ -34,13 +34,13 @@ const HowItWorksSection = () => {
   ];
 
   return (
-    <section className="py-16 bg-gradient-to-b from-gray-50 to-white">
+    <section className="py-16 bg-background">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
-          <h2 className="text-3xl font-bold text-gray-900 sm:text-4xl">
+          <h2 className="text-3xl font-bold text-textColor sm:text-4xl">
             How It Works
           </h2>
-          <p className="mt-4 text-xl text-gray-600 max-w-3xl mx-auto">
+          <p className="mt-4 text-xl text-textColor/70 max-w-3xl mx-auto">
             Our AI carousel maker simplifies the creation process into a few
             easy steps.
           </p>
@@ -59,10 +59,10 @@ const HowItWorksSection = () => {
                 <div className="text-sm font-semibold text-primary mb-2">
                   Step {step.number}
                 </div>
-                <h4 className="text-xl font-semibold text-gray-900 mb-2">
+                <h4 className="text-xl font-semibold text-textColor mb-2">
                   {step.title}
                 </h4>
-                <p className="text-gray-600">{step.description}</p>
+                <p className="text-textColor/70">{step.description}</p>
               </div>
             ))}
           </div>

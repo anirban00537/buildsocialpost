@@ -87,7 +87,7 @@ const Hero = () => {
   const demoRef = React.useRef(null);
   const { scrollYProgress } = useScroll({
     target: demoRef,
-    offset: ["start end", "end start"]
+    offset: ["start end", "end start"],
   });
 
   // Adjusted scale range to prevent overflow
@@ -121,7 +121,7 @@ const Hero = () => {
             Create Stunning Carousels with AI
           </motion.h1>
           <motion.h2
-            className="text-5xl text-gray-900 leading-tight font-extrabold md:text-6xl lg:text-7xl"
+            className="text-5xl text-textColor leading-tight font-extrabold md:text-6xl lg:text-7xl"
             style={{ lineHeight: "1.2" }}
             variants={textVariants}
           >
@@ -135,13 +135,10 @@ const Hero = () => {
             >
               {platforms[currentPlatform].name}
             </motion.span>{" "}
-            Carousels{" "}
-            <span className=" bg-clip-text ">
-              With AI
-            </span>
+            Carousels <span className=" bg-clip-text ">With AI</span>
           </motion.h2>
           <motion.p
-            className="text-xl text-gray-600 max-w-2xl mx-auto"
+            className="text-xl text-textColor/70 max-w-2xl mx-auto"
             variants={textVariants}
           >
             Our AI-powered tool streamlines your design process, helping you
@@ -169,7 +166,7 @@ const Hero = () => {
         </motion.div>
 
         <div className="mt-12 mb-8">
-          <p className="text-gray-600 mb-4">Trusted by creators worldwide</p>
+          <p className="text-textColor/70 mb-4">Trusted by creators worldwide</p>
           <div className="flex flex-wrap justify-center gap-4">
             <AnimatedTooltip items={people} />
           </div>

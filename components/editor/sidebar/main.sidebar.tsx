@@ -1,20 +1,33 @@
-import React, { useState } from "react";
-import { Airplay, PenTool, Type, Image } from "lucide-react";
+import React, { useEffect, useState } from "react";
+import { Cpu, Palette, Type, Image } from "lucide-react";
 import AiSettingsComponent from "./ai.main";
 import BrandingSection from "./branding.main";
 import TextSettingsSection from "./text-settings.main";
 import BackgroundColorsSection from "./background.main";
+import { useRouter, usePathname, useSearchParams } from "next/navigation";
 
 const MainSidebar: React.FC = () => {
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
   const [activeTab, setActiveTab] = useState("ai-settings");
+
+  useEffect(() => {
+    const tab = searchParams.get("tab") || "ai-settings";
+    setActiveTab(tab);
+  }, [searchParams]);
+
+  const handleTabClick = (tab: string) => {
+    router.push(`${pathname}?tab=${tab}`);
+  };
 
   return (
     <aside className="flex flex-col md:flex-row h-screen w-full md:w-[420px] border border-borderColor bg-background">
       <div className="md:sticky md:top-0 w-full md:w-[70px] order-first md:order-first border-r border-borderColor bg-background shadow-md">
         <div className="flex md:flex-col w-full h-full justify-start items-center md:border-r border-b md:border-b-0 border-borderColor">
           {[
-            { name: "ai-settings", icon: <Airplay size={24} /> },
-            { name: "branding", icon: <PenTool size={24} /> },
+            { name: "ai-settings", icon: <Cpu size={24} /> },
+            { name: "branding", icon: <Palette size={24} /> },
             { name: "text-settings", icon: <Type size={24} /> },
             { name: "background", icon: <Image size={24} /> },
           ].map((tab) => (
@@ -25,7 +38,7 @@ const MainSidebar: React.FC = () => {
                   ? "bg-primary text-white"
                   : "text-gray-500 hover:text-blue-500"
               }`}
-              onClick={() => setActiveTab(tab.name)}
+              onClick={() => handleTabClick(tab.name)}
             >
               {tab.icon}
               <span className="md:hidden ml-2 capitalize">{tab.name}</span>

@@ -59,7 +59,7 @@ const FeaturesSection = () => {
   return (
     <motion.section
       id="features"
-      className="py-24 bg-gradient-to-b from-white to-gray-50"
+      className="py-24 bg-background"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.8 }}
@@ -67,7 +67,7 @@ const FeaturesSection = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center">
           <motion.h2
-            className="text-4xl font-bold text-gray-900 mb-4"
+            className="text-4xl font-bold text-textColor mb-4"
             initial={{ y: -20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 0.2, duration: 0.5 }}
@@ -75,7 +75,7 @@ const FeaturesSection = () => {
             Powerful Features
           </motion.h2>
           <motion.p
-            className="text-xl text-gray-600 max-w-2xl mx-auto"
+            className="text-xl text-textColor max-w-2xl mx-auto"
             initial={{ y: -20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 0.4, duration: 0.5 }}
@@ -89,7 +89,7 @@ const FeaturesSection = () => {
           {features.map((feature, index) => (
             <motion.div
               key={feature.name}
-              className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 ease-in-out"
+              className="bg-cardBackground rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 ease-in-out"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1 * index, duration: 0.5 }}
@@ -100,10 +100,10 @@ const FeaturesSection = () => {
                     className: "w-6 h-6 text-primary",
                   })}
                 </div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                <h3 className="text-xl font-semibold text-textColor mb-2">
                   {feature.name}
                 </h3>
-                <p className="text-gray-600">{feature.description}</p>
+                <p className="text-textColor/70">{feature.description}</p>
               </div>
             </motion.div>
           ))}
