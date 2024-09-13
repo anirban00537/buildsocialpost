@@ -46,6 +46,7 @@ const initialState: CarouselState = {
     pattern: "/backgrounds/background1.svg",
     backgroundOpacity: 0.5,
   },
+  fontFamily: "poppins",
 };
 
 type UpdatePayload = {
@@ -140,6 +141,9 @@ const carouselSlice = createSlice({
     setBackgroundOpacity: (state, action: PayloadAction<number>) => {
       state.layout.backgroundOpacity = action.payload;
     },
+    setFontFamily: (state, action: PayloadAction<string>) => {
+      state.fontFamily = action.payload;
+    },
   },
 });
 
@@ -162,6 +166,7 @@ export const {
   setSharedSelectedElementId,
   setSharedSelectedElementOpacity,
   setBackgroundOpacity,
+  setFontFamily,
 } = carouselSlice.actions;
 
 export default carouselSlice.reducer;

@@ -10,6 +10,7 @@ import Background from "./slide-parts/background";
 import GeneralInfo from "./slide-parts/generalInfo";
 import { RootState } from "@/state/store";
 import { CSSProperties } from "react";
+import { fontOptions } from "@/lib/fonts";
 
 interface SlideProps {
   slide: Slide;
@@ -32,6 +33,8 @@ const SlideComponent: React.FC<SlideProps> = ({
     layout,
     sharedSelectedElement,
   } = useSelector((state: RootState) => state.slides);
+  const { fontFamily } = useSelector((state: RootState) => state.slides);
+  const selectedFont = fontOptions.find((font) => font.slug === fontFamily);
   const { handle, headshot, name } = useSelector(
     (state: RootState) => state.branding
   );
@@ -66,6 +69,7 @@ const SlideComponent: React.FC<SlideProps> = ({
       className="cursor-pointer hover:opacity-90 relative"
       style={
         {
+          fontFamily: selectedFont?.font.style.fontFamily,
           height: "100%",
           width: "100%",
           display: "flex",

@@ -62,6 +62,7 @@ export interface CarouselState {
     id: number;
     opacity: number;
   };
+  fontFamily: string;
 }
 
 export interface FirestoreCarouselState extends CarouselState {

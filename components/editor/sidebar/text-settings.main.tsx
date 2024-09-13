@@ -7,19 +7,36 @@ import {
 } from "lucide-react";
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import {
+  Inter,
+  Roboto,
+  Lora,
+  Poppins,
+  Playfair_Display,
+} from "next/font/google";
 import { RootState } from "@/state/store";
 import {
   setTitleTextSettings,
   setDescriptionTextSettings,
   setTaglineTextSettings,
   setLayoutHeightAndWidth,
+  setFontFamily,
 } from "@/state/slice/carousel.slice";
 import { Slider } from "@/components/ui/slider";
-import { carouselsSize } from "@/lib/coreConstants";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
+import { fontOptions } from "@/lib/fonts";
 
 const TextSettingsSection = () => {
   const dispatch = useDispatch();
+  const fontFamily = useSelector((state: RootState) => state.slides.fontFamily);
+
   const titleTextSettings = useSelector(
     (state: RootState) => state.slides.titleTextSettings
   );
@@ -140,7 +157,9 @@ const TextSettingsSection = () => {
           })
     );
   };
-
+  const handleFontFamilyChange = (fontFamily: string) => {
+    dispatch(setFontFamily(fontFamily));
+  };
   const handleWeightTabChange = (weight: "normal" | "bold") => {
     setSelectedWeight(weight);
     const newWeight = weight === "bold" ? 700 : 400;
@@ -327,6 +346,27 @@ const TextSettingsSection = () => {
             )
           )}
         </div>
+      </div>
+      <div className="space-y-2 mt-5 border border-borderColor p-4 bg-background rounded-lg ">
+        <div className="text-[14px] font-medium text-textColor">
+          Font Family
+        </div>
+        <Select onValueChange={handleFontFamilyChange} value={fontFamily}>
+          <SelectTrigger className="w-full rounded-lg border border-borderColor text-textColor bg-cardBackground">
+            <SelectValue placeholder="Select a font" />
+          </SelectTrigger>
+          <SelectContent className="bg-cardBackground text-textColor border border-borderColor">
+            {fontOptions.map((font) => (
+              <SelectItem
+                key={font.slug}
+                className={`${font.font.className} text-textColor`}
+                value={font.slug || "default"}
+              >
+                <span className="text-textColor">{font.name}</span>
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
       </div>
     </form>
   );
