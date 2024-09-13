@@ -211,7 +211,7 @@ export const darkColorPresets: BackgroundColors[] = [
     color4: "#90A955", // Olive Green
   },
   {
-    color1: "#1A202C", // Very Dark Blue
+    color1: "#081022", // Very Dark Blue
     color2: "#F7FAFC", // Almost White
     color3: "#2D3748", // Dark Grayish Blue
     color4: "#63B3ED", // Bright Blue

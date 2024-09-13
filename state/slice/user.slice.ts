@@ -30,6 +30,8 @@ const userSlice = createSlice({
     logout: (state) => {
       state.userinfo = null;
       state.loggedin = false;
+      state.subscribed = false;
+      state.endDate = null;
     },
     setLoading: (state, action: PayloadAction<boolean>) => {
       state.loading = action.payload;

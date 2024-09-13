@@ -8,7 +8,7 @@ import {
   setSubscribed,
   setUser,
 } from "@/state/slice/user.slice";
-import { useQuery, useMutation } from "react-query";
+import { useQuery, useMutation, useQueryClient } from "react-query";
 import { User } from "firebase/auth";
 import { setBranding } from "@/state/slice/branding.slice";
 import {
@@ -50,6 +50,7 @@ const useLogout = () => {
 const useAuthUser = () => {
   const [error, setError] = useState<string>("");
   const dispatch = useDispatch();
+  const queryClient = useQueryClient();
 
   const {
     data: userData,
@@ -79,10 +80,7 @@ const useAuthUser = () => {
     error: subscriptionError,
   } = useQuery(
     ["subscriptionStatus", userId],
-    () =>
-      userId
-        ? fetchSubscriptionStatus(userId)
-        : Promise.reject(new Error("User ID is undefined")),
+    () => fetchSubscriptionStatus(userId!),
     {
       enabled: !!userId,
       onSuccess: (data) => {
@@ -103,10 +101,7 @@ const useAuthUser = () => {
     error: brandingError,
   } = useQuery(
     ["brandingSettings", userId],
-    () =>
-      userId
-        ? fetchBrandingSettings(userId)
-        : Promise.reject(new Error("User ID is undefined")),
+    () => fetchBrandingSettings(userId!),
     {
       enabled: !!userId,
       onSuccess: (data) => {
@@ -122,6 +117,13 @@ const useAuthUser = () => {
     dispatch(setLoading(userLoading || subscriptionLoading || brandingLoading));
   }, [userLoading, subscriptionLoading, brandingLoading, dispatch]);
 
+  const refetchAllData = () => {
+    if (userId) {
+      queryClient.refetchQueries(["subscriptionStatus", userId]);
+      queryClient.refetchQueries(["brandingSettings", userId]);
+    }
+  };
+
   return {
     error:
       error ||
@@ -131,6 +133,7 @@ const useAuthUser = () => {
     user: userData,
     loading: userLoading || subscriptionLoading || brandingLoading,
     fetchUser: refetchUser,
+    refetchAllData,
   };
 };
 
@@ -140,6 +143,7 @@ const useGoogleLogin = () => {
   const [success, setSuccess] = useState<string>("");
   const dispatch = useDispatch();
   const router = useRouter();
+  const queryClient = useQueryClient();
 
   const { mutate: loginWithGoogle, isLoading: loading } = useMutation<
     void,
@@ -150,6 +154,20 @@ const useGoogleLogin = () => {
       const user = result.user;
       const { uid, email, displayName, photoURL } = user;
       dispatch(setUser({ uid, email, displayName, photoURL }));
+
+      // Fetch subscription and branding data immediately after login
+      const [subscriptionData, brandingData] = await Promise.all([
+        fetchSubscriptionStatus(uid),
+        fetchBrandingSettings(uid),
+      ]);
+
+      dispatch(setSubscribed(subscriptionData.isSubscribed));
+      dispatch(setEndDate(subscriptionData.endDate));
+      dispatch(setBranding(brandingData));
+
+      // Update React Query cache
+      queryClient.setQueryData(["subscriptionStatus", uid], subscriptionData);
+      queryClient.setQueryData(["brandingSettings", uid], brandingData);
     },
     {
       onSuccess: () => {

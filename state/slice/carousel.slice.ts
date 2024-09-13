@@ -13,10 +13,10 @@ const initialState: CarouselState = {
   name: "Default Carousel",
   slides: initialSlides,
   background: {
-    color1: "#FFFFFF", // Pure White
-    color2: "#2C3E50", // Dark Blue
-    color3: "#ECF0F1", // Light Gray
-    color4: "#3498DB", // Bright Blue
+    color1: "#081022", // Very Dark Blue
+    color2: "#F7FAFC", // Almost White
+    color3: "#2D3748", // Dark Grayish Blue
+    color4: "#63B3ED", // Bright Blue
   },
   sharedSelectedElement: {
     id: sharedElements[0].id,
