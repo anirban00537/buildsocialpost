@@ -50,7 +50,18 @@ const MainSidebar: React.FC<MainSidebarProps> = ({
   const handleTabClick = (tab: string) => {
     setActiveTab(tab);
     setIsCollapsed(false);
-    router.push(`${pathname}?tab=${tab}`);
+
+    // Create a new URLSearchParams object with the current query parameters
+    const newSearchParams = new URLSearchParams(searchParams.toString());
+    
+    // Update or add the 'tab' parameter
+    newSearchParams.set("tab", tab);
+
+    // Construct the new URL with updated query parameters
+    const newUrl = `${pathname}?${newSearchParams.toString()}`;
+    
+    // Use router.push to navigate to the new URL
+    router.push(newUrl);
   };
 
   return (

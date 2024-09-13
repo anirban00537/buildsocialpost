@@ -11,7 +11,7 @@ import {
   where,
 } from "firebase/firestore";
 import { db } from "@/services/firebase";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/state/store";
 import { CarouselState, FirestoreCarouselState } from "@/types";
@@ -20,15 +20,17 @@ import { addAllSlides, setProperty } from "@/state/slice/carousel.slice";
 export const useCarouselManager = () => {
   const [error, setError] = useState<string | null>(null);
   const [carousel, setCarousel] = useState<CarouselState | null>(null);
-  const [carousels, setCarousels] = useState<{ id: string; data: CarouselState }[]>([]);
-  
-  // Separate loading states
+  const [carousels, setCarousels] = useState<
+    { id: string; data: CarouselState }[]
+  >([]);
+
   const [isCreatingOrUpdating, setIsCreatingOrUpdating] = useState(false);
   const [isFetchingDetails, setIsFetchingDetails] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [isFetchingAll, setIsFetchingAll] = useState(false);
 
   const router = useRouter();
+  const searchParams = useSearchParams();
   const dispatch = useDispatch();
   const user = useSelector((state: RootState) => state.user.userinfo);
 
@@ -41,6 +43,7 @@ export const useCarouselManager = () => {
     slides,
     name,
     sharedSelectedElement,
+    fontFamily,
   } = useSelector((state: RootState) => state.slides);
 
   const convertToFirestoreData = (
@@ -59,6 +62,7 @@ export const useCarouselManager = () => {
       id: data.sharedSelectedElement?.id,
       opacity: data.sharedSelectedElement?.opacity,
     },
+    fontFamily: data.fontFamily,
   });
 
   const createOrUpdateCarousel = useCallback(
@@ -81,6 +85,7 @@ export const useCarouselManager = () => {
         background,
         slides,
         sharedSelectedElement,
+        fontFamily,
       };
 
       try {
@@ -93,7 +98,18 @@ export const useCarouselManager = () => {
         } else {
           docRef = doc(collection(db, "carousels"));
           await setDoc(docRef, { ...firestoreData });
-          window.history.replaceState(null, "", `?id=${docRef.id}`);
+          
+          // Create a new URLSearchParams object with the current query parameters
+          const newSearchParams = new URLSearchParams(searchParams.toString());
+          
+          // Add or update the 'id' parameter
+          newSearchParams.set('id', docRef.id);
+          
+          // Construct the new URL with updated query parameters
+          const newUrl = `${window.location.pathname}?${newSearchParams.toString()}`;
+          
+          // Use router.replace to update the URL without adding a new history entry
+          router.replace(newUrl);
         }
 
         const updatedCarousel = { id: docRef.id, data: carouselData };
@@ -122,6 +138,9 @@ export const useCarouselManager = () => {
       background,
       slides,
       sharedSelectedElement,
+      fontFamily,
+      router,
+      searchParams,
     ]
   );
 
@@ -139,25 +158,50 @@ export const useCarouselManager = () => {
           dispatch(setProperty({ key: "name", value: data.name }));
           dispatch(addAllSlides(data.slides));
           dispatch(setProperty({ key: "background", value: data.background }));
-          dispatch(setProperty({ key: "titleTextSettings", value: data.titleTextSettings }));
-          dispatch(setProperty({ key: "descriptionTextSettings", value: data.descriptionTextSettings }));
-          dispatch(setProperty({ key: "taglineTextSettings", value: data.taglineTextSettings }));
-          dispatch(setProperty({
-            key: "layout",
-            value: {
-              height: data.layout.height,
-              width: data.layout.width,
-              pattern: data.layout.pattern,
-              backgroundOpacity: data.layout.backgroundOpacity || 0.5,
-            },
-          }));
-          dispatch(setProperty({
-            key: "sharedSelectedElement",
-            value: {
-              id: data.sharedSelectedElement?.id || 0,
-              opacity: data.sharedSelectedElement?.opacity || 0.5,
-            },
-          }));
+          dispatch(
+            setProperty({
+              key: "titleTextSettings",
+              value: data.titleTextSettings,
+            })
+          );
+          dispatch(
+            setProperty({
+              key: "descriptionTextSettings",
+              value: data.descriptionTextSettings,
+            })
+          );
+          dispatch(
+            setProperty({
+              key: "taglineTextSettings",
+              value: data.taglineTextSettings,
+            })
+          );
+          dispatch(
+            setProperty({
+              key: "layout",
+              value: {
+                height: data.layout.height,
+                width: data.layout.width,
+                pattern: data.layout.pattern,
+                backgroundOpacity: data.layout.backgroundOpacity || 0.5,
+              },
+            })
+          );
+          dispatch(
+            setProperty({
+              key: "sharedSelectedElement",
+              value: {
+                id: data.sharedSelectedElement?.id || 0,
+                opacity: data.sharedSelectedElement?.opacity || 0.5,
+              },
+            })
+          );
+          dispatch(
+            setProperty({
+              key: "fontFamily",
+              value: data.fontFamily || "poppins",
+            })
+          );
         } else {
           setError("Carousel not found");
           router.push("/editor");

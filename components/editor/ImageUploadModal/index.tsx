@@ -66,8 +66,10 @@ const ImageUploadModal: React.FC<ImageUploadModalProps> = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="w-[800px] max-h-[85vh] overflow-y-auto">
-        <h2 className="text-lg font-semibold mb-4">Image Management</h2>
+      <DialogContent className="w-[800px] max-h-[85vh] overflow-y-auto border-borderColor text-textColor">
+        <h2 className="text-lg font-semibold mb-4 text-textColor ">
+          Image Management
+        </h2>
 
         {!uid ? (
           <p className="text-center text-red-500">
@@ -76,7 +78,7 @@ const ImageUploadModal: React.FC<ImageUploadModalProps> = ({
         ) : (
           <>
             <div className="mb-4">
-              <p>
+              <p className="text-textColor">
                 Total Usage: {totalUsage.toFixed(2)} MB / {MAX_STORAGE_MB} MB
               </p>
               <progress
