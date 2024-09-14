@@ -20,6 +20,10 @@ export interface Slide {
   imageUrl?: string | null;
   backgroundImage?: string | null;
   type: "intro" | "slide" | "outro";
+  showImage: boolean;
+  showTagline: boolean;
+  showTitle: boolean;
+  showDescription: boolean;
 }
 
 export interface IntroSlide {

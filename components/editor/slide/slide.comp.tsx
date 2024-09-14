@@ -211,7 +211,7 @@ const SlideComponent: React.FC<SlideProps> = ({
               {slideNumber}
             </p>
           )}
-          {slide.tagline && (
+          {slide.tagline && slide?.showTagline && (
             <Text
               content={slide.tagline}
               onBlur={(content: string) =>
@@ -224,7 +224,7 @@ const SlideComponent: React.FC<SlideProps> = ({
               placeholder="Your Tagline Here"
             />
           )}
-          {slide.title && (
+          {slide.title && slide?.showTitle && (
             <Text
               content={slide.title}
               onBlur={(content: string) =>
@@ -237,7 +237,7 @@ const SlideComponent: React.FC<SlideProps> = ({
               placeholder="Title"
             />
           )}
-          {slide.description && (
+          {slide.description && slide?.showDescription && (
             <Text
               content={slide.description}
               onBlur={(content: string) =>
@@ -253,7 +253,9 @@ const SlideComponent: React.FC<SlideProps> = ({
               placeholder="Your introductory paragraph here. Describe your content briefly."
             />
           )}
-          <Image imageUrl={slide.imageUrl || null} />
+          {slide.imageUrl && slide?.showImage && (
+            <Image imageUrl={slide.imageUrl || null} />
+          )}
         </div>
         {/* {slide?.type !== "slide" && ( */}
         <GeneralInfo

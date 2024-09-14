@@ -10,12 +10,16 @@ const Image: React.FC<ImageProps> = ({ imageUrl }) => {
   return (
     <div
       style={{
-        width: "100%",
         display: "flex",
         justifyContent: "center",
         alignItems: "flex-end",
         flexShrink: 1,
         overflow: "hidden",
+        borderRadius: "3px",
+        padding: "7px",
+        width: "auto",
+        height: "auto",
+        backgroundColor: "rgba(128, 128, 128, 0.7)", // Always visible transparent gray background
       }}
     >
       <img
@@ -25,9 +29,7 @@ const Image: React.FC<ImageProps> = ({ imageUrl }) => {
           maxWidth: "100%",
           maxHeight: "100%",
           objectFit: "contain",
-          backdropFilter: "blur(10px)",
-          borderRadius: "13px",
-          padding: "10px",
+          borderRadius: "3px",
         }}
       />
     </div>

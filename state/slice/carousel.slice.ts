@@ -64,6 +64,10 @@ const carouselSlice = createSlice({
         tagline: "New Tagline",
         description: "New Description",
         type: "slide",
+        showImage: false,
+        showTagline: true,
+        showTitle: true,
+        showDescription: true,
       };
       state.slides.splice(action.payload, 0, newSlide);
     },
@@ -76,13 +80,22 @@ const carouselSlice = createSlice({
     },
     updateSlide: (
       state,
-      action: PayloadAction<{ index: number; updatedSlide: Slide }>
+      action: PayloadAction<{ index: number; updatedSlide: Partial<Slide> }>
     ) => {
       const { index, updatedSlide } = action.payload;
-      state.slides[index] = updatedSlide;
+      state.slides[index] = { ...state.slides[index], ...updatedSlide };
     },
-    addAllSlides: (state, action: PayloadAction<Slide[]>) => {
-      state.slides = action.payload;
+    addAllSlides: (state, action: PayloadAction<Partial<Slide>[]>) => {
+      state.slides = action.payload.map((slide) => ({
+        title: "",
+        description: "",
+        type: "slide",
+        showImage: slide.imageUrl ? true : false,
+        showTagline: true,
+        showTitle: true,
+        showDescription: true,
+        ...slide,
+      }));
     },
     setTitleTextSettings: (state, action: PayloadAction<TextSettings>) => {
       state.titleTextSettings = action.payload;

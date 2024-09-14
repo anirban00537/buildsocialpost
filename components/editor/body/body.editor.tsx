@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React from "react";
 import SwiperCore from "swiper";
 import {
   Navigation,
@@ -14,20 +14,12 @@ import "swiper/css/navigation";
 import "swiper/css/pagination";
 import "swiper/css/scrollbar";
 import "swiper/css/a11y";
-import {
-  ChevronLeft,
-  ChevronRight,
-  Plus,
-  Trash2,
-  Copy,
-  ArrowLeft,
-  ArrowRight,
-  Image as ImageIcon,
-  ImagePlus,
-} from "lucide-react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import useCarousel from "@/hooks/useCarousel";
 import SlideComponent from "../slide/slide.comp";
 import ImageUploadModal from "../ImageUploadModal";
+
+import SlideControls from "./SlideControls.comp";
 
 SwiperCore.use([Navigation, Pagination, Scrollbar, A11y, Autoplay]);
 
@@ -36,6 +28,8 @@ const CarouselEditor: React.FC = () => {
     swiperRef,
     slides,
     layout,
+    isModalOpen,
+    setIsModalOpen,
     handleSlideClick,
     handleInsertSlide,
     handleCopySlide,
@@ -43,33 +37,10 @@ const CarouselEditor: React.FC = () => {
     handleUpdateSlide,
     handleMoveSlideLeft,
     handleMoveSlideRight,
+    handleImageIconClick,
+    handleImageSelect,
+    handleSettingChange,
   } = useCarousel();
-
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [activeSlideIndex, setActiveSlideIndex] = useState<number | null>(null);
-  const [imageType, setImageType] = useState<"background" | "slide">(
-    "background"
-  );
-
-  const handleImageIconClick = (
-    index: number,
-    type: "background" | "slide"
-  ) => {
-    setActiveSlideIndex(index);
-    setImageType(type);
-    setIsModalOpen(true);
-  };
-
-  const handleImageSelect = (url: string) => {
-    if (activeSlideIndex !== null) {
-      const updatedSlide = {
-        ...slides[activeSlideIndex],
-        [imageType === "background" ? "backgroundImage" : "imageUrl"]: url,
-      };
-      handleUpdateSlide(activeSlideIndex, updatedSlide);
-    }
-    setIsModalOpen(false);
-  };
 
   return (
     <main className="flex h-full overflow-hidden w-full px-2">
@@ -118,74 +89,24 @@ const CarouselEditor: React.FC = () => {
                     slideNumber={index}
                   />
                 </div>
-                <div className="flex items-center justify-between mt-3 w-full px-2">
-                  <div className="flex items-center space-x-2">
-                    <button
-                      className="flex items-center justify-center bg-cardBackground text-textColor border-none rounded-md hover:bg-primary hover:border-primary hover:text-white h-6 w-6 z-10"
-                      onClick={() => handleInsertSlide(index)}
-                      title="Insert new slide"
-                    >
-                      <Plus size={22} />
-                    </button>
-                    <button
-                      className="flex items-center justify-center bg-cardBackground text-textColor border-none rounded-md hover:bg-primary hover:border-primary hover:text-white h-6 w-6 z-10"
-                      onClick={() => handleCopySlide(index)}
-                      title="Copy slide"
-                    >
-                      <Copy size={12} />
-                    </button>
-                    <button
-                      className="flex items-center justify-center bg-cardBackground text-textColor border-none rounded-md hover:bg-primary hover:border-primary hover:text-white h-6 w-6 z-10"
-                      onClick={() => handleDeleteSlide(index)}
-                      title="Delete slide"
-                    >
-                      <Trash2 size={15} />
-                    </button>
-                    <button
-                      className="flex items-center justify-center bg-cardBackground text-textColor border-none rounded-md hover:bg-primary hover:border-primary hover:text-white h-6 w-6 z-10"
-                      onClick={(e) => {
-                        e.stopPropagation(); // Prevent slide click event
-                        handleMoveSlideLeft(index);
-                      }}
-                      title="Move slide left"
-                    >
-                      <ArrowLeft size={15} />
-                    </button>
-                    <button
-                      className="flex items-center justify-center bg-cardBackground text-textColor border-none rounded-md hover:bg-primary hover:border-primary hover:text-white h-6 w-6 z-10"
-                      onClick={(e) => {
-                        e.stopPropagation(); // Prevent slide click event
-                        handleMoveSlideRight(index);
-                      }}
-                      title="Move slide right"
-                    >
-                      <ArrowRight size={15} />
-                    </button>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <button
-                      className="flex items-center justify-center bg-cardBackground text-textColor border-none rounded-md hover:bg-primary hover:border-primary hover:text-white h-6 w-6 z-10"
-                      onClick={() => handleImageIconClick(index, "background")}
-                      title="Change background image"
-                    >
-                      <ImageIcon size={15} />
-                    </button>
-                    <button
-                      className="flex items-center justify-center bg-cardBackground text-textColor border-none rounded-md hover:bg-primary hover:border-primary hover:text-white h-6 w-6 z-10"
-                      onClick={() => handleImageIconClick(index, "slide")}
-                      title="Add image to slide"
-                    >
-                      <ImagePlus size={15} />
-                    </button>
-                  </div>
-                </div>
+                <SlideControls
+                  index={index}
+                  slide={slide}
+                  handleInsertSlide={handleInsertSlide}
+                  handleCopySlide={handleCopySlide}
+                  handleDeleteSlide={handleDeleteSlide}
+                  handleMoveSlideLeft={handleMoveSlideLeft}
+                  handleMoveSlideRight={handleMoveSlideRight}
+                  handleImageIconClick={handleImageIconClick}
+                  handleSettingChange={handleSettingChange}
+                />
               </SwiperSlide>
             ))}
           </Swiper>
-          <button className="custom-prev absolute top-1/2 left-0 transform -translate-y-1/2 p-2 bg-blue-500 text-white rounded-full hover:bg-primary hover:border-primary hover:text-white z-20">
+          <button className="custom-prev absolute top-1/2 left-0 transform -translate-y-1/2 p-2 bg-primary text-textColor rounded-full hover:bg-primary hover:border-primary hover:text-white z-20">
             <ChevronLeft size={24} />
           </button>
-          <button className="custom-next absolute top-1/2 right-0 transform -translate-y-1/2 p-2 bg-blue-500 text-white rounded-full hover:bg-primary hover:border-primary hover:text-white z-20">
+          <button className="custom-next absolute top-1/2 right-0 transform -translate-y-1/2 p-2 bg-primary text-textColor rounded-full hover:bg-primary hover:border-primary hover:text-white z-20">
             <ChevronRight size={24} />
           </button>
         </div>

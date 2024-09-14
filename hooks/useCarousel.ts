@@ -1,11 +1,7 @@
-import { useState, useCallback, useRef, useEffect } from "react";
+import { useState, useCallback, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/state/store";
-import JSZip from "jszip";
-import { saveAs } from "file-saver";
 import { Slide } from "@/types";
-import { jsPDF } from "jspdf";
-import { toPng } from "html-to-image";
 import {
   insertSlide,
   copySlide,
@@ -17,18 +13,21 @@ import {
 
 const useCarousel = () => {
   const dispatch = useDispatch();
-  const {
-    taglineTextSettings,
-    descriptionTextSettings,
-    titleTextSettings,
-    layout,
-    background,
-  } = useSelector((state: RootState) => state.slides);
+  const { slides, layout } = useSelector((state: RootState) => state.slides);
   const swiperRef = useRef<any>(null);
-  const { slides } = useSelector((state: RootState) => state.slides);
-  const [zipLoading, setZipLoading] = useState(false);
-  const [pdfLoading, setPdfLoading] = useState(false);
-  const { color4 } = background;
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [activeSlideIndex, setActiveSlideIndex] = useState<number | null>(null);
+  const [imageType, setImageType] = useState<"background" | "slide">("background");
+
+  const handleSlideClick = useCallback(
+    (index: number) => {
+      if (swiperRef.current && swiperRef.current.swiper) {
+        swiperRef.current.swiper.slideTo(index, 500);
+      }
+    },
+    [swiperRef]
+  );
 
   const handleInsertSlide = useCallback(
     (index: number) => {
@@ -52,7 +51,7 @@ const useCarousel = () => {
   );
 
   const handleUpdateSlide = useCallback(
-    (index: number, updatedSlide: Slide) => {
+    (index: number, updatedSlide: Partial<Slide>) => {
       dispatch(updateSlide({ index, updatedSlide }));
     },
     [dispatch]
@@ -61,127 +60,67 @@ const useCarousel = () => {
   const handleMoveSlideLeft = useCallback(
     (index: number) => {
       dispatch(moveSlideLeft(index));
-      // Move to the new position of the slide (index - 1)
-      if (swiperRef.current && swiperRef.current.swiper) {
-        swiperRef.current.swiper.slideTo(Math.max(0, index - 1), 500);
-      }
     },
-    [dispatch, swiperRef]
+    [dispatch]
   );
 
   const handleMoveSlideRight = useCallback(
     (index: number) => {
       dispatch(moveSlideRight(index));
-      // Move to the new position of the slide (index + 1)
-      if (swiperRef.current && swiperRef.current.swiper) {
-        swiperRef.current.swiper.slideTo(Math.min(slides.length - 1, index + 1), 500);
-      }
     },
-    [dispatch, swiperRef, slides.length]
+    [dispatch]
   );
 
-  const handleSlideClick = useCallback(
-    (index: number) => {
-      if (swiperRef.current && swiperRef.current.swiper) {
-        swiperRef.current.swiper.slideTo(index, 500);
-      }
+  const handleImageIconClick = useCallback(
+    (index: number, type: "background" | "slide") => {
+      setActiveSlideIndex(index);
+      setImageType(type);
+      setIsModalOpen(true);
     },
-    [swiperRef]
+    []
   );
 
-  const exportSlidesToZip = useCallback(async () => {
-    setZipLoading(true);
-    const zip = new JSZip();
-    const scaleFactor = 3; // Adjust the scale factor for higher quality
-
-    for (let i = 0; i < slides.length; i++) {
-      const slideElement = document.getElementById(`slide-${i}`);
-      if (slideElement) {
-        try {
-          const pngDataUrl = await toPng(slideElement, {
-            cacheBust: true,
-            pixelRatio: scaleFactor,
-          });
-
-          const response = await fetch(pngDataUrl);
-          const blob = await response.blob();
-          zip.file(`slide-${i}.png`, blob);
-        } catch (error) {
-          console.error("Failed to export slide as image", error);
-        }
-      } else {
-        console.warn(`Slide element with ID slide-${i} not found`);
+  const handleImageSelect = useCallback(
+    (url: string) => {
+      if (activeSlideIndex !== null) {
+        const updatedSlide = {
+          ...slides[activeSlideIndex],
+          [imageType === "background" ? "backgroundImage" : "imageUrl"]: url,
+        };
+        handleUpdateSlide(activeSlideIndex, updatedSlide);
       }
-    }
+      setIsModalOpen(false);
+    },
+    [activeSlideIndex, imageType, slides, handleUpdateSlide]
+  );
 
-    zip.generateAsync({ type: "blob" }).then((content) => {
-      saveAs(content, "slides.zip");
-      setZipLoading(false);
-    });
-  }, [slides, layout.width, layout.height]);
-
-  const exportSlidesToPDF = useCallback(async () => {
-    setPdfLoading(true);
-    const pdf = new jsPDF("p", "px", [layout.width, layout.height]);
-    const scaleFactor = 3; // Adjust the scale factor for higher quality
-
-    for (let i = 0; i < slides.length; i++) {
-      const slideElement = document.getElementById(`slide-${i}`);
-      if (slideElement) {
-        try {
-          const pngDataUrl = await toPng(slideElement, {
-            cacheBust: true,
-            pixelRatio: scaleFactor,
-          });
-
-          if (i !== 0) {
-            pdf.addPage();
-          }
-          pdf.addImage(
-            pngDataUrl,
-            "PNG",
-            0,
-            0,
-            layout.width,
-            layout.height,
-            undefined,
-            "FAST" // Use FAST compression to reduce file size
-          );
-        } catch (error) {
-          console.error("Failed to export slide as image", error);
-        }
-      } else {
-        console.warn(`Slide element with ID slide-${i} not found`);
-      }
-    }
-
-    pdf.save("carousel_slides.pdf");
-    setPdfLoading(false);
-  }, [slides, layout.width, layout.height]);
-
-  useEffect(() => {
-    document.documentElement.style.setProperty("--color4", color4);
-  }, [color4]);
+  const handleSettingChange = useCallback(
+    (index: number, setting: keyof Slide, value: boolean) => {
+      dispatch(updateSlide({
+        index,
+        updatedSlide: { [setting]: value }
+      }));
+    },
+    [dispatch]
+  );
 
   return {
     swiperRef,
     slides,
-    background,
+    layout,
+    isModalOpen,
+    setIsModalOpen,
+    activeSlideIndex,
+    handleSlideClick,
     handleInsertSlide,
     handleCopySlide,
     handleDeleteSlide,
     handleUpdateSlide,
-    handleSlideClick,
-    exportSlidesToZip,
-    exportSlidesToPDF,
-    zipLoading,
-    pdfLoading,
-    taglineTextSettings,
-    descriptionTextSettings,
-    titleTextSettings,
-    layout,
     handleMoveSlideLeft,
     handleMoveSlideRight,
+    handleImageIconClick,
+    handleImageSelect,
+    handleSettingChange,
   };
 };
 
