@@ -253,8 +253,12 @@ const SlideComponent: React.FC<SlideProps> = ({
               placeholder="Your introductory paragraph here. Describe your content briefly."
             />
           )}
-          {slide.imageUrl && slide?.showImage && (
-            <Image imageUrl={slide.imageUrl || null} />
+          {slide?.showImage && (
+            <Image
+              imageUrl={slide.imageUrl || null}
+              index={index}
+              updateSlide={updateSlide}
+            />
           )}
         </div>
         {/* {slide?.type !== "slide" && ( */}

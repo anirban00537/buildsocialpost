@@ -2,6 +2,9 @@ import { useState, useCallback, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/state/store";
 import { Slide } from "@/types";
+import JSZip from "jszip";
+import { saveAs } from "file-saver";
+
 import {
   insertSlide,
   copySlide,
@@ -10,15 +13,19 @@ import {
   moveSlideLeft,
   moveSlideRight,
 } from "@/state/slice/carousel.slice";
-
+import { jsPDF } from "jspdf";
+import { toPng } from "html-to-image";
 const useCarousel = () => {
   const dispatch = useDispatch();
   const { slides, layout } = useSelector((state: RootState) => state.slides);
   const swiperRef = useRef<any>(null);
-
+  const [zipLoading, setZipLoading] = useState(false);
+  const [pdfLoading, setPdfLoading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [activeSlideIndex, setActiveSlideIndex] = useState<number | null>(null);
-  const [imageType, setImageType] = useState<"background" | "slide">("background");
+  const [imageType, setImageType] = useState<"background" | "slide">(
+    "background"
+  );
 
   const handleSlideClick = useCallback(
     (index: number) => {
@@ -94,15 +101,97 @@ const useCarousel = () => {
     [activeSlideIndex, imageType, slides, handleUpdateSlide]
   );
 
-  const handleSettingChange = useCallback(
+  const handleImageUrlChange = useCallback(
     (index: number, setting: keyof Slide, value: boolean) => {
-      dispatch(updateSlide({
-        index,
-        updatedSlide: { [setting]: value }
-      }));
+      dispatch(
+        updateSlide({
+          index,
+          updatedSlide: { [setting]: value },
+        })
+      );
     },
     [dispatch]
   );
+  const handleSettingChange = useCallback(
+    (index: number, setting: keyof Slide, value: boolean) => {
+      dispatch(
+        updateSlide({
+          index,
+          updatedSlide: { [setting]: value },
+        })
+      );
+    },
+    [dispatch]
+  );
+  const exportSlidesToZip = useCallback(async () => {
+    setZipLoading(true);
+    const zip = new JSZip();
+    const scaleFactor = 3; // Adjust the scale factor for higher quality
+
+    for (let i = 0; i < slides.length; i++) {
+      const slideElement = document.getElementById(`slide-${i}`);
+      if (slideElement) {
+        try {
+          const pngDataUrl = await toPng(slideElement, {
+            cacheBust: true,
+            pixelRatio: scaleFactor,
+          });
+
+          const response = await fetch(pngDataUrl);
+          const blob = await response.blob();
+          zip.file(`slide-${i}.png`, blob);
+        } catch (error) {
+          console.error("Failed to export slide as image", error);
+        }
+      } else {
+        console.warn(`Slide element with ID slide-${i} not found`);
+      }
+    }
+
+    zip.generateAsync({ type: "blob" }).then((content) => {
+      saveAs(content, "slides.zip");
+      setZipLoading(false);
+    });
+  }, [slides, layout.width, layout.height]);
+
+  const exportSlidesToPDF = useCallback(async () => {
+    setPdfLoading(true);
+    const pdf = new jsPDF("p", "px", [layout.width, layout.height]);
+    const scaleFactor = 3; // Adjust the scale factor for higher quality
+
+    for (let i = 0; i < slides.length; i++) {
+      const slideElement = document.getElementById(`slide-${i}`);
+      if (slideElement) {
+        try {
+          const pngDataUrl = await toPng(slideElement, {
+            cacheBust: true,
+            pixelRatio: scaleFactor,
+          });
+
+          if (i !== 0) {
+            pdf.addPage();
+          }
+          pdf.addImage(
+            pngDataUrl,
+            "PNG",
+            0,
+            0,
+            layout.width,
+            layout.height,
+            undefined,
+            "FAST" // Use FAST compression to reduce file size
+          );
+        } catch (error) {
+          console.error("Failed to export slide as image", error);
+        }
+      } else {
+        console.warn(`Slide element with ID slide-${i} not found`);
+      }
+    }
+
+    pdf.save("carousel_slides.pdf");
+    setPdfLoading(false);
+  }, [slides, layout.width, layout.height]);
 
   return {
     swiperRef,
@@ -121,6 +210,11 @@ const useCarousel = () => {
     handleImageIconClick,
     handleImageSelect,
     handleSettingChange,
+    handleImageUrlChange,
+    exportSlidesToZip,
+    exportSlidesToPDF,
+    zipLoading,
+    pdfLoading,
   };
 };
 
