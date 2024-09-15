@@ -69,7 +69,9 @@ const AiSettingsComponent = () => {
                 onValueChange={(value) => setNumSlides(value[0])}
                 className="flex-grow"
               />
-              <span className="text-sm font-medium">{numSlides}</span>
+              <span className="text-sm text-textColor font-medium">
+                {numSlides}
+              </span>
             </div>
           </div>
 

@@ -27,6 +27,9 @@ import {
   ArrowDown,
   ChevronDown,
   List,
+  Plus,
+  Menu,
+  X,
 } from "lucide-react";
 import {
   FaInstagram,
@@ -62,7 +65,7 @@ const UserDropdown: React.FC<{ user: any; onLogout: () => void }> = React.memo(
         <DropdownMenuTrigger asChild>
           <Button
             variant="ghost"
-            className="h-8 w-8 p-0 border border-primary rounded-full overflow-hidden"
+            className="h-7 w-8 p-0 border border-primary rounded-full overflow-hidden"
           >
             {user.photoURL && !imageError ? (
               <img
@@ -107,33 +110,38 @@ const DownloadDropdown: React.FC<{
   onDownloadZip: () => void;
   pdfLoading: boolean;
   zipLoading: boolean;
-}> = React.memo(({ onDownloadPDF, onDownloadZip, pdfLoading, zipLoading }) => {
-  const isDownloading = pdfLoading || zipLoading;
+  className?: string;
+}> = React.memo(
+  ({ onDownloadPDF, onDownloadZip, pdfLoading, zipLoading, className }) => {
+    const isDownloading = pdfLoading || zipLoading;
 
-  return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button
-          variant="outline"
-          size="xs"
-          className="bg-cardBackground text-textColor hover:bg-primary/50 border border-borderColor"
-        >
-          <Download className="w-4 h-4 mr-2" />
-          {isDownloading ? "Downloading..." : "Download"}
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent>
-        <DropdownMenuItem onClick={onDownloadPDF} disabled={pdfLoading}>
-          {pdfLoading ? "Downloading PDF..." : "Download PDF"}
-        </DropdownMenuItem>
-        <DropdownMenuItem onClick={onDownloadZip} disabled={zipLoading}>
-          {zipLoading ? "Downloading Zip..." : "Download Zip"}
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
-  );
-});
-const CarouselSizeDropdown: React.FC = () => {
+    return (
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button
+            variant="outline"
+            size="xs"
+            className={`bg-cardBackground text-textColor hover:bg-primary/50 border border-borderColor ${className}`}
+          >
+            <Download className="w-4 h-4 mr-2" />
+            {isDownloading ? "Downloading..." : "Download"}
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent>
+          <DropdownMenuItem onClick={onDownloadPDF} disabled={pdfLoading}>
+            {pdfLoading ? "Downloading PDF..." : "Download PDF"}
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={onDownloadZip} disabled={zipLoading}>
+            {zipLoading ? "Downloading Zip..." : "Download Zip"}
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    );
+  }
+);
+const CarouselSizeDropdown: React.FC<{ className?: string }> = ({
+  className,
+}) => {
   const dispatch = useDispatch();
   const { height, width } = useSelector(
     (state: RootState) => state.slides.layout
@@ -207,7 +215,7 @@ const CarouselSizeDropdown: React.FC = () => {
         <Button
           variant="outline"
           size="sm"
-          className="w-48 h-7 px-2 justify-start overflow-hidden bg-cardBackground text-textColor hover:bg-primary/50 border border-borderColor"
+          className={`w-48 h-7 px-2 justify-start overflow-hidden bg-cardBackground text-textColor hover:bg-primary/50 border border-borderColor ${className}`}
         >
           <div className="flex items-center w-full">
             <div className="flex items-center mr-2 min-w-[48px]">
@@ -274,6 +282,7 @@ const EditorNavbar: React.FC = () => {
   const carouselId = searchParams.get("id");
   const dispatch = useDispatch();
   const [isViewAllModalOpen, setIsViewAllModalOpen] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   useEffect(() => {
     if (carouselId) {
@@ -296,102 +305,149 @@ const EditorNavbar: React.FC = () => {
     [dispatch]
   );
 
+  const handleAddNew = useCallback(() => {
+    createOrUpdateCarousel("New Carousel");
+  }, [createOrUpdateCarousel]);
+
+  const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
+
   const memoizedCarousels = useMemo(() => carousels, [carousels]);
   if (isFetchingAll) {
     return <FullScreenLoading />;
   }
   return (
-    <header className="bg-background sticky top-0 h-[65px] flex items-center justify-between border-b border-borderColor z-40 px-4 shadow-sm">
-      <div className="flex items-center">
-        <Link href="/">
-          <img src="/logo.svg" alt="Logo" className="h-9 object-cover mr-5" />
-        </Link>
-        <Button
-          onClick={() => setIsViewAllModalOpen(true)}
-          className="border border-borderColor bg-cardBackground text-textColor flex items-center h-8 gap-2 text-sm hover:bg-primary/50"
-          variant="ghost"
-          disabled={isFetchingAll}
-        >
-          <List className="w-4 h-4" />
-          {isFetchingAll ? "Loading..." : "All Carousels"}
-        </Button>
-        <span className="px-2 rounded-md">
-          <ArrowRight className="w-4 h-4 text-textColor" />
-        </span>
+    <header className="bg-background sticky top-0 z-40 border-b border-borderColor shadow-sm">
+      <div className=" mx-auto px-4">
+        <div className="flex items-center justify-between h-16">
+          <div className="flex items-center">
+            <Link href="/">
+              <img
+                src="/logo.svg"
+                alt="Logo"
+                className="h-9 object-cover mr-4"
+              />
+            </Link>
+            <input
+              type="text"
+              placeholder="Carousel Name"
+              className="border border-borderColor bg-cardBackground text-textColor px-2 h-7 rounded-md text-sm hidden md:block"
+              value={name}
+              onChange={handleNameChange}
+              aria-label="Carousel name"
+              disabled={isFetchingDetails}
+            />
+          </div>
 
-        <input
-          type="text"
-          placeholder="Search"
-          className="border border-borderColor bg-cardBackground text-textColor px-2 h-8 rounded-md text-sm"
-          value={name}
-          onChange={handleNameChange}
-          aria-label="Search carousels"
-          disabled={isFetchingDetails}
-        />
-      </div>
-
-      <div className="ml-auto flex items-center gap-4">
-        <CarouselSizeDropdown />
-        <DownloadDropdown
-          onDownloadPDF={exportSlidesToPDF}
-          onDownloadZip={exportSlidesToZip}
-          pdfLoading={pdfLoading}
-          zipLoading={zipLoading}
-        />
-
-        <Button
-          onClick={handleSaveCarousel}
-          disabled={isCreatingOrUpdating}
-          className="flex items-center gap-2"
-          size="xs"
-        >
-          {isCreatingOrUpdating ? (
-            <div className="flex items-center gap-2">
-              <svg
-                className="animate-spin h-4 w-4"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-              >
-                <circle
-                  className="opacity-25"
-                  cx="12"
-                  cy="12"
-                  r="10"
-                  stroke="currentColor"
-                  strokeWidth="4"
-                ></circle>
-                <path
-                  className="opacity-75"
-                  fill="currentColor"
-                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                ></path>
-              </svg>
-              <span>Saving...</span>
-            </div>
-          ) : (
-            <>
-              <Save className="h-4 w-4" />
-              <span>Save Carousel</span>
-            </>
-          )}
-        </Button>
-
-        <SubscriptionInfo />
-        {user && user.email ? (
-          <UserDropdown user={user} onLogout={logout} />
-        ) : (
-          <Link href="/login" className="text-sm">
+          <div className="hidden md:flex items-center space-x-4">
+            <CarouselSizeDropdown />
+            <DownloadDropdown
+              onDownloadPDF={exportSlidesToPDF}
+              onDownloadZip={exportSlidesToZip}
+              pdfLoading={pdfLoading}
+              zipLoading={zipLoading}
+            />
             <Button
-              variant="outline"
-              size="xs"
-              className="border border-borderColor bg-cardBackground text-textColor hover:bg-primary/50"
+              onClick={handleSaveCarousel}
+              disabled={isCreatingOrUpdating}
+              size="sm"
             >
-              Sign in
+              {isCreatingOrUpdating ? "Saving..." : "Save Progress"}
             </Button>
-          </Link>
-        )}
+            <SubscriptionInfo />
+            {user && user.email ? (
+              <UserDropdown user={user} onLogout={logout} />
+            ) : (
+              <Link href="/login">
+                <Button variant="outline" size="sm">
+                  Sign in
+                </Button>
+              </Link>
+            )}
+          </div>
+
+          <div className="md:hidden">
+            <Button
+              variant="ghost"
+              className="text-textColor"
+              size="sm"
+              onClick={toggleMenu}
+            >
+              {isMenuOpen ? <X /> : <Menu />}
+            </Button>
+          </div>
+        </div>
       </div>
+
+      {/* Collapsible menu for mobile */}
+      {isMenuOpen && (
+        <div className="md:hidden bg-background border-t border-borderColor">
+          <div className="container mx-auto px-4 py-2 space-y-2">
+            <input
+              type="text"
+              placeholder="Carousel Name"
+              className="w-full border border-borderColor bg-cardBackground text-textColor px-2 h-7 rounded-md text-sm"
+              value={name}
+              onChange={handleNameChange}
+              aria-label="Carousel name"
+              disabled={isFetchingDetails}
+            />
+            <Button
+              onClick={() => setIsViewAllModalOpen(true)}
+              className="w-full h-7 justify-start text-textColor"
+              variant="ghost"
+              disabled={isFetchingAll}
+            >
+              <List className="w-4 h-4 mr-2" />
+              {isFetchingAll ? "Loading..." : "All Carousels"}
+            </Button>
+            <Button
+              onClick={handleAddNew}
+              className="w-full h-7 justify-start text-textColor"
+              variant="ghost"
+              disabled={isCreatingOrUpdating}
+            >
+              <Plus className="w-4 h-4 mr-2" />
+              Add New Carousel
+            </Button>
+            <CarouselSizeDropdown className="w-full h-7" />
+            <DownloadDropdown
+              onDownloadPDF={exportSlidesToPDF}
+              onDownloadZip={exportSlidesToZip}
+              pdfLoading={pdfLoading}
+              zipLoading={zipLoading}
+              className="w-full h-7"
+            />
+            <Button
+              onClick={handleSaveCarousel}
+              disabled={isCreatingOrUpdating}
+              className="w-full h-7"
+            >
+              {isCreatingOrUpdating ? "Saving..." : "Save Carousel"}
+            </Button>
+            <SubscriptionInfo />
+
+            {user && user.email ? (
+              <Button
+                onClick={() => {
+                  logout();
+                  setIsMenuOpen(false);
+                }}
+                className="w-full justify-start text-textColor"
+                variant="ghost"
+              >
+                <LogOut className="w-4 h-4 mr-2" />
+                Logout
+              </Button>
+            ) : (
+              <Link href="/login" className="block">
+                <Button variant="outline" className="w-full">
+                  Sign in
+                </Button>
+              </Link>
+            )}
+          </div>
+        </div>
+      )}
 
       <CarouselListModal
         carousels={memoizedCarousels}
