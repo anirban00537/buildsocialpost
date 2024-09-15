@@ -64,7 +64,7 @@ const CarouselEditor: React.FC = () => {
             {slides.map((slide, index) => (
               <SwiperSlide
                 key={index}
-                className="flex flex-col justify-center items-center"
+                className="flex flex-col justify-center items-center slide-container"
                 onClick={() => handleSlideClick(index)}
                 style={{
                   width: layout.width + "px",
