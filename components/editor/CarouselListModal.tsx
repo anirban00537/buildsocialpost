@@ -52,7 +52,7 @@ const CarouselListModal: FC<CarouselListModalProps> = ({
 
   return (
     <Dialog open={isViewAllModalOpen} onOpenChange={setIsViewAllModalOpen}>
-      <DialogContent className="bg-cardBackground border border-borderColor">
+      <DialogContent className="bg-cardBackground text-textColor border border-borderColor">
         <div className="flex flex-col gap-4 bg-cardBackground ">
           <h2 className="text-lg font-medium bg-cardBackground text-textColor">
             All Carousels

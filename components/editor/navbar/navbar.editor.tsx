@@ -18,7 +18,16 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import CarouselListModal from "@/components/editor/CarouselListModal";
-import { Download, User, LogOut, Save, ArrowRight } from "lucide-react";
+import {
+  Download,
+  User,
+  LogOut,
+  Save,
+  ArrowRight,
+  ArrowDown,
+  ChevronDown,
+  List,
+} from "lucide-react";
 import {
   FaInstagram,
   FaFacebookF,
@@ -187,7 +196,7 @@ const CarouselSizeDropdown: React.FC = () => {
   const renderIcons = (icons: any[]) => (
     <div className="flex items-center">
       {icons.map((Icon, index) => (
-        <Icon key={index} className="w-4 h-4 mr-1 text-gray-600" />
+        <Icon key={index} className="w-3 h-3 mr-1 text-textColor" />
       ))}
     </div>
   );
@@ -198,7 +207,7 @@ const CarouselSizeDropdown: React.FC = () => {
         <Button
           variant="outline"
           size="sm"
-          className="w-48 h-9 px-2 justify-start overflow-hidden bg-cardBackground text-textColor hover:bg-primary/50 border border-borderColor"
+          className="w-48 h-7 px-2 justify-start overflow-hidden bg-cardBackground text-textColor hover:bg-primary/50 border border-borderColor"
         >
           <div className="flex items-center w-full">
             <div className="flex items-center mr-2 min-w-[48px]">
@@ -209,6 +218,7 @@ const CarouselSizeDropdown: React.FC = () => {
               )}
             </div>
             <span className="truncate">{currentSize?.name || "Custom"}</span>
+            <ChevronDown className="w-4 h-4 ml-auto" />
           </div>
         </Button>
       </DropdownMenuTrigger>
@@ -302,7 +312,8 @@ const EditorNavbar: React.FC = () => {
           variant="ghost"
           disabled={isFetchingAll}
         >
-          {isFetchingAll ? "Loading..." : "Saved Carousels"}
+          <List className="w-4 h-4" />
+          {isFetchingAll ? "Loading..." : "All Carousels"}
         </Button>
         <span className="px-2 rounded-md">
           <ArrowRight className="w-4 h-4 text-textColor" />

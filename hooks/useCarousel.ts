@@ -1,4 +1,4 @@
-import { useState, useCallback, useRef } from "react";
+import { useState, useCallback, useRef, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/state/store";
 import { Slide } from "@/types";
@@ -17,7 +17,10 @@ import { jsPDF } from "jspdf";
 import { toPng } from "html-to-image";
 const useCarousel = () => {
   const dispatch = useDispatch();
-  const { slides, layout } = useSelector((state: RootState) => state.slides);
+  const { slides, layout, background } = useSelector(
+    (state: RootState) => state.slides
+  );
+  const { color1, color2, color3, color4 } = background;
   const swiperRef = useRef<any>(null);
   const [zipLoading, setZipLoading] = useState(false);
   const [pdfLoading, setPdfLoading] = useState(false);
@@ -26,6 +29,9 @@ const useCarousel = () => {
   const [imageType, setImageType] = useState<"background" | "slide">(
     "background"
   );
+  useEffect(() => {
+    document.documentElement.style.setProperty("--color4", color4);
+  }, [color4]);
 
   const handleSlideClick = useCallback(
     (index: number) => {

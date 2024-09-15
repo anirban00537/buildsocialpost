@@ -25,7 +25,6 @@ const SlideComponent: React.FC<SlideProps> = ({
   updateSlide,
   slideNumber,
 }) => {
-  const dispatch = useDispatch();
   const {
     titleTextSettings,
     descriptionTextSettings,

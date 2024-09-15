@@ -157,6 +157,46 @@ const carouselSlice = createSlice({
     setFontFamily: (state, action: PayloadAction<string>) => {
       state.fontFamily = action.payload;
     },
+    setNewCarousel: (state, action: PayloadAction<CarouselState>) => {
+      state.name = "New Carousel";
+      state.slides = initialSlides;
+      state.background = {
+        color1: "#081022", // Very Dark Blue
+        color2: "#F7FAFC", // Almost White
+        color3: "#2D3748", // Dark Grayish Blue
+        color4: "#63B3ED", // Bright Blue
+      };
+      state.sharedSelectedElement = {
+        id: sharedElements[0].id,
+        opacity: 0.5,
+      };
+      state.titleTextSettings = {
+        alignment: "left",
+        fontSize: 48,
+        fontStyle: "normal",
+        fontWeight: "bold",
+      };
+      state.descriptionTextSettings = {
+        alignment: "left",
+        fontSize: 16,
+        fontStyle: "normal",
+        fontWeight: "normal",
+      };
+      state.taglineTextSettings = {
+        alignment: "left",
+        fontSize: 16,
+        fontStyle: "normal",
+        fontWeight: "normal",
+      };
+      state.layout = {
+        height: 600,
+        width: 600,
+        pattern: "/backgrounds/background1.svg",
+        backgroundOpacity: 0.5,
+      };
+      state.fontFamily = "poppins";
+      state.slides = initialSlides;
+    },
   },
 });
 
@@ -180,6 +220,7 @@ export const {
   setSharedSelectedElementOpacity,
   setBackgroundOpacity,
   setFontFamily,
+  setNewCarousel,
 } = carouselSlice.actions;
 
 export default carouselSlice.reducer;
