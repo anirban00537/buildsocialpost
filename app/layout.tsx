@@ -5,6 +5,8 @@ import AuthCheckLayout from "@/components/layout/authCheckLayout";
 const poppins = Poppins({
   weight: ["400", "700"],
   subsets: ["latin"],
+  variable: "--font-poppins",
+  display: "swap",
 });
 
 const defaultUrl = process.env.VERCEL_URL
@@ -24,8 +26,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${poppins.className} `}>
-      <body className="">
+    <html lang="en">
+      <body className={`${poppins.className}`}>
         <DefaultLayout>{children}</DefaultLayout>
       </body>
     </html>

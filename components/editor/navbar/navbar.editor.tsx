@@ -317,29 +317,54 @@ const EditorNavbar: React.FC = () => {
   }
   return (
     <header className="bg-background sticky top-0 z-40 border-b border-borderColor shadow-sm">
-      <div className=" mx-auto px-4">
+      <div className="mx-auto px-4">
         <div className="flex items-center justify-between h-16">
-          <div className="flex items-center">
-            <Link href="/">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-2 sm:space-y-0 sm:space-x-4 w-full">
+            <Link href="/" className="flex-shrink-0">
               <img
                 src="/logo.svg"
                 alt="Logo"
-                className="h-9 object-cover mr-4"
+                className="h-8 sm:h-9 object-cover"
               />
             </Link>
-            <input
-              type="text"
-              placeholder="Carousel Name"
-              className="border border-borderColor bg-cardBackground text-textColor px-2 h-7 rounded-md text-sm hidden md:block"
-              value={name}
-              onChange={handleNameChange}
-              aria-label="Carousel name"
-              disabled={isFetchingDetails}
-            />
+
+            <div className="hidden lg:flex flex-col sm:flex-row items-start sm:items-center space-y-2 sm:space-y-0 sm:space-x-2 w-full">
+              <div className="flex space-x-2 w-full sm:w-auto">
+                <Button
+                  onClick={() => setIsViewAllModalOpen(true)}
+                  className="flex-1 sm:flex-initial h-8 justify-start text-textColor bg-cardBackground hover:bg-primary/50 border border-borderColor"
+                  variant="outline"
+                  size="sm"
+                  disabled={isFetchingAll}
+                >
+                  <List className="w-4 h-4 mr-2" />
+                  <span>{isFetchingAll ? "Loading..." : "All Carousels"}</span>
+                </Button>
+                <Button
+                  onClick={handleAddNew}
+                  className="flex-1 sm:flex-initial h-8 justify-start text-textColor bg-cardBackground hover:bg-primary/50 border border-borderColor"
+                  variant="outline"
+                  size="sm"
+                  disabled={isCreatingOrUpdating}
+                >
+                  <Plus className="w-4 h-4 mr-2" />
+                  <span>New</span>
+                </Button>
+              </div>
+              <input
+                type="text"
+                placeholder="Carousel Name"
+                className="w-full sm:w-auto border border-borderColor bg-cardBackground text-textColor px-2 h-8 rounded-md text-sm"
+                value={name}
+                onChange={handleNameChange}
+                aria-label="Carousel name"
+                disabled={isFetchingDetails}
+              />
+            </div>
           </div>
 
-          <div className="hidden md:flex items-center space-x-4">
-            <CarouselSizeDropdown />
+          <div className="hidden lg:flex items-center space-x-2">
+            <CarouselSizeDropdown className="w-40" />
             <DownloadDropdown
               onDownloadPDF={exportSlidesToPDF}
               onDownloadZip={exportSlidesToZip}
@@ -349,7 +374,8 @@ const EditorNavbar: React.FC = () => {
             <Button
               onClick={handleSaveCarousel}
               disabled={isCreatingOrUpdating}
-              size="sm"
+              size="xs"
+              className="whitespace-nowrap"
             >
               {isCreatingOrUpdating ? "Saving..." : "Save Progress"}
             </Button>
@@ -365,7 +391,7 @@ const EditorNavbar: React.FC = () => {
             )}
           </div>
 
-          <div className="md:hidden">
+          <div className="lg:hidden">
             <Button
               variant="ghost"
               className="text-textColor"
@@ -378,54 +404,26 @@ const EditorNavbar: React.FC = () => {
         </div>
       </div>
 
-      {/* Collapsible menu for mobile */}
+      {/* Collapsible menu for mobile and tablet */}
       {isMenuOpen && (
-        <div className="md:hidden bg-background border-t border-borderColor">
+        <div className="lg:hidden bg-background border-t border-borderColor">
           <div className="container mx-auto px-4 py-2 space-y-2">
-            <input
-              type="text"
-              placeholder="Carousel Name"
-              className="w-full border border-borderColor bg-cardBackground text-textColor px-2 h-7 rounded-md text-sm"
-              value={name}
-              onChange={handleNameChange}
-              aria-label="Carousel name"
-              disabled={isFetchingDetails}
-            />
-            <Button
-              onClick={() => setIsViewAllModalOpen(true)}
-              className="w-full h-7 justify-start text-textColor"
-              variant="ghost"
-              disabled={isFetchingAll}
-            >
-              <List className="w-4 h-4 mr-2" />
-              {isFetchingAll ? "Loading..." : "All Carousels"}
-            </Button>
-            <Button
-              onClick={handleAddNew}
-              className="w-full h-7 justify-start text-textColor"
-              variant="ghost"
-              disabled={isCreatingOrUpdating}
-            >
-              <Plus className="w-4 h-4 mr-2" />
-              Add New Carousel
-            </Button>
-            <CarouselSizeDropdown className="w-full h-7" />
+            <CarouselSizeDropdown className="w-full h-8" />
             <DownloadDropdown
               onDownloadPDF={exportSlidesToPDF}
               onDownloadZip={exportSlidesToZip}
               pdfLoading={pdfLoading}
               zipLoading={zipLoading}
-              className="w-full h-7"
+              className="w-full h-8"
             />
             <Button
               onClick={handleSaveCarousel}
               disabled={isCreatingOrUpdating}
-              className="w-full h-7"
+              className="w-full h-8"
             >
               {isCreatingOrUpdating ? "Saving..." : "Save Carousel"}
             </Button>
             <SubscriptionInfo />
-
             {user && user.email ? (
               <Button
                 onClick={() => {
