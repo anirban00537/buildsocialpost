@@ -7,7 +7,8 @@ import { useRouter } from "next/navigation";
 const plan = {
   name: "Pro plan",
   desc: "Access premium carousel building features for just $9.99 per month.",
-  price: 9.99,
+  monthlyPrice: 9.99,
+  yearlyPrice: 70,
   isMostPop: true,
   features: [
     "User-Friendly Editor",
@@ -23,6 +24,7 @@ const plan = {
 
 const Pricing = () => {
   const [loading, setLoading] = useState(false);
+  const [selectedPlan, setSelectedPlan] = useState("yearly");
   const router = useRouter();
 
   const buyProduct = async () => {
@@ -31,11 +33,10 @@ const Pricing = () => {
     if (user) {
       try {
         const token = await user.getIdToken();
+        const productId = selectedPlan === "monthly" ? "525068" : "525061";
         const response = await axios.post(
           "/api/purchaseProduct",
-          {
-            productId: "399160",
-          },
+          { productId },
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -43,7 +44,8 @@ const Pricing = () => {
           }
         );
         console.log(response, "response");
-        window.open(response.data.checkoutUrl, "_blank");
+        // Open the checkout URL in a new tab
+        window.open(response.data.checkoutUrl, "_blank", "noopener,noreferrer");
       } catch (error) {
         console.error("Error purchasing product:", error);
         alert(
@@ -59,59 +61,68 @@ const Pricing = () => {
   };
 
   return (
-    <section className="relative flex items-center justify-center  text-white">
-      <div className="max-w-screen-xl mx-auto text-gray-600 md:px-8">
-        <div className="relative max-w-xl space-y-3 px-4 md:px-0 text-center">
-          <h3 className="text-white font-semibold">Pricing</h3>
-          <p className="text-xl font-semibold sm:text-xl">
-            Upgrade your carousel building experience
-          </p>
-          <div className="max-w-xl mx-auto">
-            <p className="text-xs">
-              Our carousel builder allows you to create engaging content for
-              LinkedIn, Instagram, and TikTok. Use our AI-powered features for a
-              small fee or manually create carousels for free.
-            </p>
-          </div>
-        </div>
-        <div className="mt-4 flex items-center justify-center">
-          <div className="flex flex-col border-y max-w-lg rounded-xl border  bg-white text-gray-800">
-            <div className="p-6 md:p-8 border-b">
-              <div className="justify-between flex">
-                <div className="max-w-xs">
-                  <span className="text-3xl font-semibold">{plan.name}</span>
-                  <p className="mt-3 text-sm">{plan.desc}</p>
-                </div>
-                <div className="flex-none text-3xl font-semibold">
-                  ${plan.price} <span className="text-xl font-normal">/mo</span>
-                </div>
+    <div className="flex flex-col h-full bg-gray-900 text-white overflow-y-auto">
+      <div className="flex-shrink-0 p-6 text-center">
+        <h2 className="text-2xl font-bold mb-2">Pricing</h2>
+        <p className="text-gray-300 mb-6">
+          Upgrade your carousel building experience
+        </p>
+      </div>
+      
+      <div className="flex-grow flex items-center justify-center px-4 pb-6">
+        <div className="w-full max-w-md">
+          <div className="bg-gray-800 rounded-lg overflow-hidden shadow-xl">
+            <div className="relative p-6">
+              <div className="absolute top-0 right-0 bg-indigo-600 text-xs font-bold px-3 py-1 rounded-bl-lg">
+                Most Popular
               </div>
+              <h3 className="text-xl font-bold mb-2">{plan.name}</h3>
+              <p className="text-sm text-gray-400 mb-4">{plan.desc}</p>
+              
+              <div className="flex justify-center mb-4">
+                <button
+                  className={`px-4 py-2 text-sm font-medium rounded-l-md ${
+                    selectedPlan === "monthly" ? "bg-indigo-600" : "bg-gray-700"
+                  }`}
+                  onClick={() => setSelectedPlan("monthly")}
+                >
+                  Monthly
+                </button>
+                <button
+                  className={`px-4 py-2 text-sm font-medium rounded-r-md ${
+                    selectedPlan === "yearly" ? "bg-indigo-600" : "bg-gray-700"
+                  }`}
+                  onClick={() => setSelectedPlan("yearly")}
+                >
+                  Yearly
+                </button>
+              </div>
+              
+              <div className="text-center mb-6">
+                <span className="text-4xl font-bold">
+                  ${selectedPlan === "monthly" ? plan.monthlyPrice : plan.yearlyPrice}
+                </span>
+                <span className="text-gray-400">
+                  /{selectedPlan === "monthly" ? "mo" : "yr"}
+                </span>
+              </div>
+              
               <button
-                className="mt-6 px-5 py-3 rounded-lg w-full font-semibold text-sm duration-150 bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-purple-500 hover:to-indigo-500 text-white shadow-md"
+                className="w-full py-2 px-4 bg-indigo-600 hover:bg-indigo-700 rounded-md font-medium transition-colors"
                 onClick={buyProduct}
                 disabled={loading}
               >
-                {loading ? "Processing..." : "Buy"}
+                {loading ? "Processing..." : "Get Started"}
               </button>
             </div>
-            <div className="p-6 md:p-8">
-              <div className="pb-2 font-medium">
-                <p className="text-lg">Features</p>
-              </div>
-              <ul className="space-y-4">
+            
+            <div className="bg-gray-900 p-6">
+              <h4 className="font-medium mb-3">Features included:</h4>
+              <ul className="space-y-2">
                 {plan.features.map((feature, idx) => (
-                  <li key={idx} className="flex items-center text-xs gap-1">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-6 w-6 text-indigo-500"
-                      viewBox="0 0 20 20"
-                      fill="currentColor"
-                    >
-                      <path
-                        fillRule="evenodd"
-                        d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                        clipRule="evenodd"
-                      ></path>
+                  <li key={idx} className="flex items-center text-sm">
+                    <svg className="w-4 h-4 mr-2 text-indigo-400" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd"/>
                     </svg>
                     {feature}
                   </li>
@@ -121,7 +132,7 @@ const Pricing = () => {
           </div>
         </div>
       </div>
-    </section>
+    </div>
   );
 };
 
