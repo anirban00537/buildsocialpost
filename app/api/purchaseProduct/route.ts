@@ -81,18 +81,18 @@ export async function POST(req: Request) {
     const checkoutUrl = response.data.data.attributes.url;
 
     // Store the subscription data in Firestore
-    const endDate = new Date();
-    endDate.setMonth(endDate.getMonth() + 1); // Example: setting the subscription duration to 1 month
+    // const endDate = new Date();
+    // endDate.setMonth(endDate.getMonth() + 1); // Example: setting the subscription duration to 1 month
 
-    const subscriptionData = {
-      userId,
-      productId: reqData.productId,
-      checkoutUrl,
-      status: "pending",
-      endDate: endDate.toISOString(),
-      createdAt: new Date().toISOString(),
-    };
-    await setDoc(doc(db, "subscriptions", userId), subscriptionData);
+    // const subscriptionData = {
+    //   userId,
+    //   productId: reqData.productId,
+    //   checkoutUrl,
+    //   status: "pending",
+    //   endDate: endDate.toISOString(),
+    //   createdAt: new Date().toISOString(),
+    // };
+    // await setDoc(doc(db, "subscriptions", userId), subscriptionData);
 
     return new Response(JSON.stringify({ checkoutUrl }), { status: 200 });
   } catch (error) {
