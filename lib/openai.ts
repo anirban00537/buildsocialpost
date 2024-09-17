@@ -29,6 +29,7 @@ export const generateCaruselContentFromTopic = async (
           - **Wrap the most important keywords, phrases, and concepts in both the title and description within <strong></strong> tags.** This is crucial for highlighting key points.
           - Use a consistent tone that matches the specified mood (${mood}).
           - Avoid any additional text or explanations beyond the specified format.
+          - Do not provide any markdown formatting.
           
           
           Format:

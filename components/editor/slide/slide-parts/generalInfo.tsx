@@ -1,5 +1,5 @@
 import { Slide } from "@/types";
-import { ChevronRight } from "lucide-react";
+import { Bookmark, ChevronRight, Heart, Save } from "lucide-react";
 import React from "react";
 
 interface GeneralInfoProps {
@@ -91,6 +91,12 @@ const GeneralInfo: React.FC<GeneralInfoProps> = ({
             color={"white"}
             className="hover:scale-110 transition-transform"
           />
+        </div>
+      )}
+      {slide?.type === "outro" && (
+        <div className="flex gap-2">
+          <Heart size={23} color={color2} />
+          <Bookmark size={23} color={color2} />
         </div>
       )}
     </div>

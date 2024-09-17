@@ -29,6 +29,7 @@ const Text: React.FC<TextProps> = ({
     },
     editorProps: {
       attributes: {
+        spellcheck: 'false',
         style: `
           font-size: ${fontSize}px;
           font-style: ${fontStyle};
