@@ -27,6 +27,7 @@ export async function POST(req: Request) {
       const isSuccessful = body.data.attributes.status === "paid";
       const orderCreatedAt = new Date(body.data.attributes.created_at);
       
+      
       const firstOrderItem = body.data.attributes.first_order_item;
       const variantName = firstOrderItem.variant_name.toLowerCase();
       
