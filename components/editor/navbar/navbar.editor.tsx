@@ -81,11 +81,14 @@ const UserDropdown: React.FC<{ user: any; onLogout: () => void }> = React.memo(
             )}
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent className="w-56" align="end">
+        <DropdownMenuContent
+          className="w-56 border border-borderColor bg-cardBackground text-textColor"
+          align="end"
+        >
           <DropdownMenuLabel>
             {user.displayName || user.email}
           </DropdownMenuLabel>
-          <DropdownMenuSeparator />
+          <DropdownMenuSeparator className="border border-borderColor" />
           <DropdownMenuItem className="flex items-center gap-2">
             <User className="w-4 h-4" />
             Profile
@@ -384,7 +387,11 @@ const EditorNavbar: React.FC = () => {
               <UserDropdown user={user} onLogout={logout} />
             ) : (
               <Link href="/login">
-                <Button variant="outline" size="sm">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="bg-cardBackground hover:bg-primary/50 border border-borderColor text-textColor"
+                >
                   Sign in
                 </Button>
               </Link>
@@ -438,7 +445,10 @@ const EditorNavbar: React.FC = () => {
               </Button>
             ) : (
               <Link href="/login" className="block">
-                <Button variant="outline" className="w-full">
+                <Button
+                  variant="outline"
+                  className="w-full bg-cardBackground hover:bg-primary/50 border border-borderColor text-textColor"
+                >
                   Sign in
                 </Button>
               </Link>

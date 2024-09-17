@@ -32,24 +32,24 @@ const BillingModal: React.FC = () => {
           Billing
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px] flex flex-col items-center">
+      <DialogContent className="sm:max-w-[425px] flex flex-col items-center border text-textColor border-borderColor">
         <DialogHeader className="text-center">
           <div className="mx-auto bg-primary/10 p-3 text-primary rounded-full w-fit">
-            <DiamondSVG  />
+            <DiamondSVG />
           </div>
-          <DialogTitle className="text-2xl font-bold mt-4">
+          <DialogTitle className="text-2xl font-bold mt-4 text-textColor">
             Billing Information
           </DialogTitle>
         </DialogHeader>
         <div className="mt-6 text-center">
           {subscribed && endDate ? (
             <div className="space-y-4">
-              <div className="p-4 bg-green-50 rounded-lg">
+              <div className="p-4 border border-borderColor rounded-lg">
                 <p className="text-green-700 font-medium">
                   Active Subscription
                 </p>
               </div>
-              <p className="text-gray-600">
+              <p className="text-textColor">
                 Your subscription is active until:
               </p>
               <p className="text-2xl font-bold text-primary">
