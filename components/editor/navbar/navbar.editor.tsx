@@ -39,6 +39,7 @@ import {
 } from "react-icons/fa";
 import {
   setLayoutHeightAndWidth,
+  setNewCarousel,
   setProperty,
 } from "@/state/slice/carousel.slice";
 import BillingModal from "@/components/subscription/billingModal";
@@ -286,7 +287,7 @@ const EditorNavbar: React.FC = () => {
   const dispatch = useDispatch();
   const [isViewAllModalOpen, setIsViewAllModalOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-
+  const router = useRouter();
   useEffect(() => {
     if (carouselId) {
       getCarouselDetailsById(carouselId);
@@ -309,8 +310,9 @@ const EditorNavbar: React.FC = () => {
   );
 
   const handleAddNew = useCallback(() => {
-    createOrUpdateCarousel("New Carousel");
-  }, [createOrUpdateCarousel]);
+    dispatch(setNewCarousel());
+    router.replace("/editor");
+  }, []);
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 

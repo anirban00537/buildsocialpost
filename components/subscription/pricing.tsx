@@ -33,7 +33,10 @@ const Pricing = () => {
     if (user) {
       try {
         const token = await user.getIdToken();
-        const productId = selectedPlan === "monthly" ? "525068" : "525061";
+        const productId =
+          selectedPlan === "monthly"
+            ? process.env.NEXT_PUBLIC_MONTHLY_PRODUCT_ID
+            : process.env.NEXT_PUBLIC_YEARLY_PRODUCT_ID;
         const response = await axios.post(
           "/api/purchaseProduct",
           { productId },
@@ -68,7 +71,7 @@ const Pricing = () => {
           Upgrade your carousel building experience
         </p>
       </div>
-      
+
       <div className="flex-grow flex items-center justify-center px-4 pb-6">
         <div className="w-full max-w-md">
           <div className="bg-gray-800 rounded-lg overflow-hidden shadow-xl">
@@ -78,7 +81,7 @@ const Pricing = () => {
               </div>
               <h3 className="text-xl font-bold mb-2">{plan.name}</h3>
               <p className="text-sm text-gray-400 mb-4">{plan.desc}</p>
-              
+
               <div className="flex justify-center mb-4">
                 <button
                   className={`px-4 py-2 text-sm font-medium rounded-l-md ${
@@ -97,16 +100,19 @@ const Pricing = () => {
                   Yearly
                 </button>
               </div>
-              
+
               <div className="text-center mb-6">
                 <span className="text-4xl font-bold">
-                  ${selectedPlan === "monthly" ? plan.monthlyPrice : plan.yearlyPrice}
+                  $
+                  {selectedPlan === "monthly"
+                    ? plan.monthlyPrice
+                    : plan.yearlyPrice}
                 </span>
                 <span className="text-gray-400">
                   /{selectedPlan === "monthly" ? "mo" : "yr"}
                 </span>
               </div>
-              
+
               <button
                 className="w-full py-2 px-4 bg-indigo-600 hover:bg-indigo-700 rounded-md font-medium transition-colors"
                 onClick={buyProduct}
@@ -115,14 +121,22 @@ const Pricing = () => {
                 {loading ? "Processing..." : "Get Started"}
               </button>
             </div>
-            
+
             <div className="bg-gray-900 p-6">
               <h4 className="font-medium mb-3">Features included:</h4>
               <ul className="space-y-2">
                 {plan.features.map((feature, idx) => (
                   <li key={idx} className="flex items-center text-sm">
-                    <svg className="w-4 h-4 mr-2 text-indigo-400" fill="currentColor" viewBox="0 0 20 20">
-                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd"/>
+                    <svg
+                      className="w-4 h-4 mr-2 text-indigo-400"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                        clipRule="evenodd"
+                      />
                     </svg>
                     {feature}
                   </li>

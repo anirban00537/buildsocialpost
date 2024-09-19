@@ -157,7 +157,7 @@ const carouselSlice = createSlice({
     setFontFamily: (state, action: PayloadAction<string>) => {
       state.fontFamily = action.payload;
     },
-    setNewCarousel: (state, action: PayloadAction<CarouselState>) => {
+    setNewCarousel: (state) => {
       state.name = "New Carousel";
       state.slides = initialSlides;
       state.background = {
