@@ -17,9 +17,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/state/store";
 import { CarouselState, FirestoreCarouselState } from "@/types";
 import { addAllSlides, setProperty } from "@/state/slice/carousel.slice";
+import toast from "react-hot-toast";
 
 export const useCarouselManager = () => {
-  const [error, setError] = useState<string | null>(null);
   const [carousel, setCarousel] = useState<CarouselState | null>(null);
   const [carousels, setCarousels] = useState<
     { id: string; data: CarouselState }[]
@@ -69,16 +69,42 @@ export const useCarouselManager = () => {
     createdAt: data.createdAt || new Date().toISOString(),
     updatedAt: new Date().toISOString(),
   });
+  const getCarouselsCreatedThisMonth = useCallback(async (userId: string) => {
+    const now = new Date();
+    const firstDayOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
 
+    const q = query(
+      collection(db, "carousels"),
+      where("userId", "==", userId),
+      where("createdAt", ">=", firstDayOfMonth.toISOString()),
+      orderBy("createdAt", "desc")
+    );
+
+    const querySnapshot = await getDocs(q);
+    return querySnapshot.size;
+  }, []);
   const createOrUpdateCarousel = useCallback(
     async (newName?: string, id?: string) => {
       setIsCreatingOrUpdating(true);
-      setError(null);
 
       if (!user?.uid) {
-        setError("User not authenticated");
+        toast.error("User not authenticated");
         setIsCreatingOrUpdating(false);
         return;
+      }
+
+      // Check subscription status and carousel limit
+      if (!subscribed && !id) {
+        const carouselsCreatedThisMonth = await getCarouselsCreatedThisMonth(
+          user.uid
+        );
+        if (carouselsCreatedThisMonth >= 2) {
+          toast.error(
+            "You have reached the limit of 2 carousels per month. Please upgrade to create more."
+          );
+          setIsCreatingOrUpdating(false);
+          return;
+        }
       }
 
       const carouselData: CarouselState = {
@@ -135,13 +161,14 @@ export const useCarouselManager = () => {
 
         setCarousel(carouselData);
       } catch (err) {
-        setError("Failed to save carousel");
+        toast.error("Failed to save carousel");
       } finally {
         setIsCreatingOrUpdating(false);
       }
     },
     [
       user?.uid,
+      subscribed,
       name,
       titleTextSettings,
       descriptionTextSettings,
@@ -153,13 +180,13 @@ export const useCarouselManager = () => {
       fontFamily,
       router,
       searchParams,
+      getCarouselsCreatedThisMonth,
     ]
   );
 
   const getCarouselDetailsById = useCallback(
     async (id: string) => {
       setIsFetchingDetails(true);
-      setError(null);
       try {
         const docRef = doc(db, "carousels", id);
         const docSnap = await getDoc(docRef);
@@ -215,11 +242,11 @@ export const useCarouselManager = () => {
             })
           );
         } else {
-          setError("Carousel not found");
+          toast.error("Carousel not found");
           router.push("/editor");
         }
       } catch (err) {
-        setError("Failed to fetch carousel details");
+        toast.error("Failed to fetch carousel details");
       } finally {
         setIsFetchingDetails(false);
       }
@@ -229,7 +256,6 @@ export const useCarouselManager = () => {
 
   const deleteCarousel = useCallback(async (id: string) => {
     setIsDeleting(true);
-    setError(null);
     try {
       const docRef = doc(db, "carousels", id);
       await deleteDoc(docRef);
@@ -238,7 +264,7 @@ export const useCarouselManager = () => {
         prevCarousels.filter((carousel) => carousel.id !== id)
       );
     } catch (err) {
-      setError("Failed to delete carousel");
+      toast.error("Failed to delete carousel");
     } finally {
       setIsDeleting(false);
     }
@@ -246,7 +272,6 @@ export const useCarouselManager = () => {
 
   const getAllCarousels = useCallback(async () => {
     setIsFetchingAll(true);
-    setError(null);
     try {
       if (user?.uid) {
         const q = query(
@@ -264,18 +289,17 @@ export const useCarouselManager = () => {
         });
         setCarousels(carouselsList);
       } else {
-        setError("User not authenticated");
+        toast.error("User not authenticated");
       }
     } catch (err) {
       console.error("Error fetching carousels:", err); // Log any errors
-      setError("Failed to fetch carousels");
+      toast.error("Failed to fetch carousels");
     } finally {
       setIsFetchingAll(false);
     }
   }, [user?.uid]);
 
   return {
-    error,
     carousel,
     carousels,
     isCreatingOrUpdating,
