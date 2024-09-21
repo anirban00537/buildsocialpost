@@ -3,10 +3,10 @@ import { Slide } from "@/types";
 export const initialSlides: Slide[] = [
   {
     type: "intro",
-    title: "Mastering LinkedIn Growth!",
-    tagline: "Unlock the power of LinkedIn",
+    title: "Your Intro Title Goes Here",
+    tagline: "A Catchy Tagline for Your Presentation",
     description:
-      "Learn the secrets to grow your LinkedIn presence effectively.",
+      "Welcome to this demo presentation. Here you can add a brief introduction to your topic.",
     imageUrl: null,
     showImage: false,
     showTagline: true,
@@ -15,81 +15,20 @@ export const initialSlides: Slide[] = [
   },
   {
     type: "slide",
-    title: "Optimize Your Profile",
+    title: "Main Content Slide",
     description:
-      "Make sure your profile is complete and showcases your skills. Use a professional photo and a compelling headline.",
-    imageUrl:
-      "https://images.unsplash.com/photo-1718879329566-82d40c4175d6?q=80&w=1888&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "This is where you can put your main content. Add key points, data, or any information relevant to your presentation.",
+    imageUrl: null,
     showImage: true,
-    showTagline: true,
-    showTitle: true,
-    showDescription: true,
-  },
-  {
-    type: "slide",
-    title: "Create Engaging Content",
-    description:
-      "Share valuable content regularly. Write articles, post updates, and share industry news to engage your audience.",
-    imageUrl:
-      "https://images.unsplash.com/photo-1497366216548-37526070297c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwzNjUyOXwwfDF8c2VhcmNofDJ8fGxpbmtlZGluJTIwY29udGVudHxlbnwwfHx8fDE2Mjk4OTM1NTU&ixlib=rb-1.2.1&q=80&w=400",
-    showImage: true,
-    showTagline: true,
-    showTitle: true,
-    showDescription: true,
-  },
-  {
-    type: "slide",
-    title: "Network Strategically",
-    description:
-      "Connect with professionals in your industry. Personalize your connection requests and build meaningful relationships.",
-    imageUrl:
-      "https://images.unsplash.com/photo-1719658414203-83fdaf1bdb33?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    showImage: true,
-    showTagline: true,
-    showTitle: true,
-    showDescription: true,
-  },
-  {
-    type: "slide",
-    title: "Engage with Your Network",
-    description:
-      "Like, comment, and share posts from your connections. Engagement increases your visibility and builds relationships.",
-    imageUrl:
-      "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwzNjUyOXwwfDF8c2VhcmNofDF8fGxpbmtlZGluJTIwbmV0d29ya3xlbnwwfHx8fDE2Mjk4OTM1NTU&ixlib=rb-1.2.1&q=80&w=400",
-    showImage: true,
-    showTagline: true,
-    showTitle: true,
-    showDescription: true,
-  },
-  {
-    type: "slide",
-    title: "Use LinkedIn Analytics",
-    description:
-      "Track your performance using LinkedIn Analytics. Understand what works and refine your strategy accordingly.",
-    imageUrl:
-      "https://images.unsplash.com/photo-1719352354062-0a35d9db5773?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    showImage: true,
-    showTagline: true,
-    showTitle: true,
-    showDescription: true,
-  },
-  {
-    type: "slide",
-    title: "Join and Participate in Groups",
-    description:
-      "Join LinkedIn groups relevant to your industry. Participate in discussions to establish your expertise and connect with like-minded professionals.",
-    imageUrl:
-      "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwzNjUyOXwwfDF8c2VhcmNofDF8fGdyb3VwfGVufDB8fHx8MTYyOTg5MzU1NQ&ixlib=rb-1.2.1&q=80&w=400",
-    showImage: true,
-    showTagline: true,
+    showTagline: false,
     showTitle: true,
     showDescription: true,
   },
   {
     type: "outro",
-    title: "Start Your LinkedIn Journey Today!",
-    tagline: "Elevate your professional presence",
-    description: "Implement these tips and watch your LinkedIn network grow.",
+    title: "Conclusion and Call to Action",
+    tagline: "What's Next?",
+    description: "Summarize your key points and provide a clear call to action for your audience.",
     imageUrl: null,
     showImage: false,
     showTagline: true,

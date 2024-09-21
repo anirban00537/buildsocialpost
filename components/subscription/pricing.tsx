@@ -8,7 +8,7 @@ const plan = {
   name: "Pro plan",
   desc: "Access premium carousel building features for just $9.99 per month.",
   monthlyPrice: 9.99,
-  yearlyPrice: 70,
+  yearlyPrice: 69.99,
   isMostPop: true,
   features: [
     "User-Friendly Editor",

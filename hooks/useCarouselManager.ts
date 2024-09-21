@@ -9,6 +9,7 @@ import {
   deleteDoc,
   query,
   where,
+  orderBy,
 } from "firebase/firestore";
 import { db } from "@/services/firebase";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -32,8 +33,10 @@ export const useCarouselManager = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const dispatch = useDispatch();
-  const user = useSelector((state: RootState) => state.user.userinfo);
-
+  const { userinfo, subscribed, endDate } = useSelector(
+    (state: RootState) => state.user
+  );
+  const user = userinfo;
   const {
     titleTextSettings,
     descriptionTextSettings,
@@ -63,6 +66,8 @@ export const useCarouselManager = () => {
       opacity: data.sharedSelectedElement?.opacity,
     },
     fontFamily: data.fontFamily,
+    createdAt: data.createdAt || new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
   });
 
   const createOrUpdateCarousel = useCallback(
@@ -86,9 +91,14 @@ export const useCarouselManager = () => {
         slides,
         sharedSelectedElement,
         fontFamily,
+        createdAt: id
+          ? carousel?.createdAt || new Date().toISOString()
+          : new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
       };
 
       try {
+        const now = new Date().toISOString();
         const firestoreData = convertToFirestoreData(carouselData, user.uid);
 
         let docRef;
@@ -98,16 +108,18 @@ export const useCarouselManager = () => {
         } else {
           docRef = doc(collection(db, "carousels"));
           await setDoc(docRef, { ...firestoreData });
-          
+
           // Create a new URLSearchParams object with the current query parameters
           const newSearchParams = new URLSearchParams(searchParams.toString());
-          
+
           // Add or update the 'id' parameter
-          newSearchParams.set('id', docRef.id);
-          
+          newSearchParams.set("id", docRef.id);
+
           // Construct the new URL with updated query parameters
-          const newUrl = `${window.location.pathname}?${newSearchParams.toString()}`;
-          
+          const newUrl = `${
+            window.location.pathname
+          }?${newSearchParams.toString()}`;
+
           // Use router.replace to update the URL without adding a new history entry
           router.replace(newUrl);
         }
@@ -239,18 +251,23 @@ export const useCarouselManager = () => {
       if (user?.uid) {
         const q = query(
           collection(db, "carousels"),
-          where("userId", "==", user.uid)
+          where("userId", "==", user.uid),
+          orderBy("createdAt", "desc")
         );
         const querySnapshot = await getDocs(q);
-        const carouselsList = querySnapshot.docs.map((doc) => ({
-          id: doc.id,
-          data: doc.data() as CarouselState,
-        }));
+        const carouselsList = querySnapshot.docs.map((doc) => {
+          const data = doc.data() as CarouselState;
+          return {
+            id: doc.id,
+            data: data,
+          };
+        });
         setCarousels(carouselsList);
       } else {
         setError("User not authenticated");
       }
     } catch (err) {
+      console.error("Error fetching carousels:", err); // Log any errors
       setError("Failed to fetch carousels");
     } finally {
       setIsFetchingAll(false);

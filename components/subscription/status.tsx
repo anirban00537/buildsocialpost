@@ -4,10 +4,13 @@ import { Button } from "../ui/button";
 import { DiamondPercent } from "lucide-react";
 import { RootState } from "@/state/store";
 import { useSelector } from "react-redux";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../ui/tooltip";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "../ui/tooltip";
 import { DiamondSVG } from "../icons/svg-icons";
-
-
 
 const SubscriptionInfo = () => {
   const { subscribed, endDate, loading } = useSelector(
@@ -29,10 +32,13 @@ const SubscriptionInfo = () => {
           <Button
             variant="outline"
             size="xs"
-            className="ml-auto flex items-center gap-2 px-4 text-sm text-white bg-gradient-to-r from-primary to-teal-500 hover:from-blue-600 hover:to-teal-600 transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+            className="ml-auto flex items-center gap-2 px-4 py-2 text-sm font-bold text-white bg-gradient-to-r from-amber-700 via-yellow-600 to-orange-700 hover:from-amber-800 hover:via-yellow-700 hover:to-orange-800 transition-all duration-300 border-2 border-yellow-600 rounded-full shadow-xl ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-600 relative overflow-hidden group"
           >
-            <DiamondPercent className="w-4 h-4" />
-            Remove watermark
+            <span className="absolute inset-0 bg-white opacity-10 transform rotate-45 translate-x-3 -translate-y-2 group-hover:translate-x-3 group-hover:translate-y-2 transition-all duration-500 ease-out"></span>
+            <img src="/premium.svg" className="w-5 h-5 filter drop-shadow-md" />
+            <span className="hidden sm:inline relative z-10">Upgrade to Premium</span>
+            <span className="sm:hidden relative z-10">Upgrade</span>
+            <span className="absolute top-0 right-0 w-2 h-2 rounded-full bg-yellow-400 animate-pulse"></span>
           </Button>
         }
       />
