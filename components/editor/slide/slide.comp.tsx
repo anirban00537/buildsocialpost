@@ -32,6 +32,7 @@ const SlideComponent: React.FC<SlideProps> = ({
     layout,
     sharedSelectedElement,
   } = useSelector((state: RootState) => state.slides);
+  const { subscribed } = useSelector((state: RootState) => state.user);
   const { fontFamily } = useSelector((state: RootState) => state.slides);
   const selectedFont = fontOptions.find((font) => font.slug === fontFamily);
   const { handle, headshot, name } = useSelector(
@@ -271,29 +272,37 @@ const SlideComponent: React.FC<SlideProps> = ({
         />
         {/* )} */}
       </div>
-
-      <div
-        style={{
-          position: "absolute",
-          bottom: 0,
-          left: 0,
-          width: "100%",
-          backgroundColor: color3,
-          textAlign: "center",
-          fontSize: "12px",
-          padding: "4px",
-          color: color2,
-          zIndex: 1,
-        }}
-      >
-        Created by{" "}
-        <a
-          href="https://buildcarousel.com"
-          style={{ color: color2, textDecoration: "none", fontWeight: "bold" }}
+      {!subscribed && (
+        <div
+          style={{
+            position: "absolute",
+            bottom: 0,
+            left: 0,
+            width: "100%",
+            backgroundColor: color3,
+            textAlign: "center",
+            fontSize: "12px",
+            padding: "4px",
+            color: color2,
+            zIndex: 1,
+          }}
         >
-          buildcarousel.com
-        </a>
-      </div>
+          Built with{" "}
+          <a
+            href="https://buildcarousel.com"
+            style={{
+              color: "inherit",
+              textDecoration: "none",
+              fontWeight: "bold",
+              transition: "opacity 0.2s ease-in-out",
+            }}
+            onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.7")}
+            onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}
+          >
+            BuildCarousel.com
+          </a>
+        </div>
+      )}
     </div>
   );
 };
