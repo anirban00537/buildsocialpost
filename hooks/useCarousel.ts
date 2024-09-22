@@ -141,10 +141,13 @@ const useCarousel = () => {
     const zip = new JSZip();
     const scaleFactor = 3; // Adjust the scale factor for higher quality
 
-    for (let i = 0; i < slides.length; i++) {
-      const slideElement = document.getElementById(`slide-${i}`);
+    const captureSlide = async (index: number) => {
+      const slideElement = document.getElementById(`slide-${index}`);
       if (slideElement) {
         try {
+          // Wait for a short time to ensure the slide is fully rendered
+          await new Promise(resolve => setTimeout(resolve, 100));
+          
           const pngDataUrl = await toPng(slideElement, {
             cacheBust: true,
             pixelRatio: scaleFactor,
@@ -152,13 +155,18 @@ const useCarousel = () => {
 
           const response = await fetch(pngDataUrl);
           const blob = await response.blob();
-          zip.file(`slide-${i}.png`, blob);
+          zip.file(`slide-${index + 1}.png`, blob);
         } catch (error) {
-          console.error("Failed to export slide as image", error);
+          console.error(`Failed to export slide ${index + 1} as image`, error);
         }
       } else {
-        console.warn(`Slide element with ID slide-${i} not found`);
+        console.warn(`Slide element with ID slide-${index} not found`);
       }
+    };
+
+    // Capture all slides sequentially
+    for (let i = 0; i < slides.length; i++) {
+      await captureSlide(i);
     }
 
     zip.generateAsync({ type: "blob" }).then((content) => {
@@ -172,16 +180,19 @@ const useCarousel = () => {
     const pdf = new jsPDF("p", "px", [layout.width, layout.height]);
     const scaleFactor = 3; // Adjust the scale factor for higher quality
 
-    for (let i = 0; i < slides.length; i++) {
-      const slideElement = document.getElementById(`slide-${i}`);
+    const captureSlide = async (index: number) => {
+      const slideElement = document.getElementById(`slide-${index}`);
       if (slideElement) {
         try {
+          // Wait for a short time to ensure the slide is fully rendered
+          await new Promise(resolve => setTimeout(resolve, 100));
+          
           const pngDataUrl = await toPng(slideElement, {
             cacheBust: true,
             pixelRatio: scaleFactor,
           });
 
-          if (i !== 0) {
+          if (index !== 0) {
             pdf.addPage();
           }
           pdf.addImage(
@@ -195,11 +206,16 @@ const useCarousel = () => {
             "FAST" // Use FAST compression to reduce file size
           );
         } catch (error) {
-          console.error("Failed to export slide as image", error);
+          console.error(`Failed to export slide ${index + 1} as image`, error);
         }
       } else {
-        console.warn(`Slide element with ID slide-${i} not found`);
+        console.warn(`Slide element with ID slide-${index} not found`);
       }
+    };
+
+    // Capture all slides sequentially
+    for (let i = 0; i < slides.length; i++) {
+      await captureSlide(i);
     }
 
     pdf.save("carousel_slides.pdf");

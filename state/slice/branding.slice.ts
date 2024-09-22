@@ -10,7 +10,7 @@ const initialState: BrandingState = {
   name: "Anirban Roy",
   handle: "@anirban00537",
   headshot:
-    "https://media.licdn.com/dms/image/C5603AQEGjGbIz_n7mA/profile-displayphoto-shrink_800_800/0/1643437924436?e=1726099200&v=beta&t=cJq3oK2YOYazN-UuiZXktITe5eTES1J_I_yS9na7tqw",
+    "https://firebasestorage.googleapis.com/v0/b/buildcarousel-4e9ec.appspot.com/o/user_headshots%2FswXBOCofYZZxOUezNpltTfzKUcS2_1726838098663.png?alt=media&token=84551bbd-68a3-463e-b4ed-7c0572a79a87",
 };
 
 const brandingSlice = createSlice({
