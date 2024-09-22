@@ -113,10 +113,10 @@ const Page = () => {
             </div>
             <li className="order-2 py-5 md:py-0">
               <a
-                href="javascript:void(0)"
+                href="https://www.linkedin.com/in/anirban00537/"
                 className="py-2 px-5 rounded-lg font-medium text-white text-center bg-primary hover:bg-primary/90  duration-150 block md:py-3 md:inline"
               >
-                Launcing Soon
+                Hire Us
               </a>
             </li>
           </ul>
@@ -160,7 +160,10 @@ const Page = () => {
             </div>
           </div>
           <div className="mt-10 py-10 border-t items-center justify-between sm:flex">
-            <p>© {new Date().getFullYear()} BuildCarousel.com. All rights reserved.</p>
+            <p>
+              © {new Date().getFullYear()} BuildCarousel.com. All rights
+              reserved.
+            </p>
             <ul className="flex flex-wrap items-center gap-4 mt-6 sm:text-sm sm:mt-0">
               {footerNavs.map((item, idx) => (
                 <li

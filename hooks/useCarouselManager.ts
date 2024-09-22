@@ -88,7 +88,6 @@ export const useCarouselManager = () => {
       setIsCreatingOrUpdating(true);
 
       if (!user?.uid) {
-        toast.error("User not authenticated");
         setIsCreatingOrUpdating(false);
         return;
       }
@@ -289,7 +288,6 @@ export const useCarouselManager = () => {
         });
         setCarousels(carouselsList);
       } else {
-        toast.error("User not authenticated");
       }
     } catch (err) {
       console.error("Error fetching carousels:", err); // Log any errors
