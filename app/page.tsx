@@ -116,7 +116,7 @@ const Page = () => {
                 href="https://www.linkedin.com/in/anirban00537/"
                 className="py-2 px-5 rounded-lg font-medium text-white text-center bg-primary hover:bg-primary/90  duration-150 block md:py-3 md:inline"
               >
-                Hire Us
+                Hire Me � For Your next project
               </a>
             </li>
           </ul>
