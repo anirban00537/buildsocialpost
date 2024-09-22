@@ -6,19 +6,16 @@ import { useRouter } from "next/navigation";
 
 const plan = {
   name: "Pro plan",
-  desc: "Access premium carousel building features for just $9.99 per month.",
+  desc: "Access premium carousel building features",
   monthlyPrice: 9.99,
   yearlyPrice: 69.99,
   isMostPop: true,
   features: [
     "User-Friendly Editor",
     "Multiple Templates",
-    "Cross-Platform Compatibility",
-    "Data Security",
     "Unlimited manual carousel creation",
-    "Access to free templates",
-    "Basic analytics",
-    "Community support",
+    "Unlimited AI carousel creation",
+    "Access to Color Palette",
   ],
 };
 
@@ -76,7 +73,7 @@ const Pricing = () => {
         <div className="w-full max-w-md">
           <div className="bg-gray-800 rounded-lg overflow-hidden shadow-xl">
             <div className="relative p-6">
-              <div className="absolute top-0 right-0 bg-indigo-600 text-xs font-bold px-3 py-1 rounded-bl-lg">
+              <div className="absolute top-0 right-0 bg-primary text-xs font-bold px-3 py-1 rounded-bl-lg">
                 Most Popular
               </div>
               <h3 className="text-xl font-bold mb-2">{plan.name}</h3>
@@ -85,7 +82,7 @@ const Pricing = () => {
               <div className="flex justify-center mb-4">
                 <button
                   className={`px-4 py-2 text-sm font-medium rounded-l-md ${
-                    selectedPlan === "monthly" ? "bg-indigo-600" : "bg-gray-700"
+                    selectedPlan === "monthly" ? "bg-primary" : "bg-gray-700"
                   }`}
                   onClick={() => setSelectedPlan("monthly")}
                 >
@@ -93,7 +90,7 @@ const Pricing = () => {
                 </button>
                 <button
                   className={`px-4 py-2 text-sm font-medium rounded-r-md ${
-                    selectedPlan === "yearly" ? "bg-indigo-600" : "bg-gray-700"
+                    selectedPlan === "yearly" ? "bg-primary" : "bg-gray-700"
                   }`}
                   onClick={() => setSelectedPlan("yearly")}
                 >
@@ -114,7 +111,7 @@ const Pricing = () => {
               </div>
 
               <button
-                className="w-full py-2 px-4 bg-indigo-600 hover:bg-indigo-700 rounded-md font-medium transition-colors"
+                className="w-full py-2 px-4 bg-primary hover:bg-indigo-700 rounded-md font-medium transition-colors"
                 onClick={buyProduct}
                 disabled={loading}
               >

@@ -94,7 +94,7 @@ const PricingSection = () => {
           </div>
         </motion.div>
 
-        <motion.div
+        {/* <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5, delay: 0.4 }}
@@ -108,7 +108,7 @@ const PricingSection = () => {
             Contact our support team
             <ArrowRight className="ml-1 w-4 h-4" />
           </a>
-        </motion.div>
+        </motion.div> */}
       </div>
     </section>
   );

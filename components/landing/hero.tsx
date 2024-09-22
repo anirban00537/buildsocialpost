@@ -34,51 +34,45 @@ const videoVariants = {
 const people = [
   {
     id: 1,
-    name: "John Doe",
+    name: "Sarah Johnson",
     designation: "Software Engineer",
-    image:
-      "https://images.unsplash.com/photo-1599566150163-29194dcaad36?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=3387&q=80",
+    image: "/persons/person-1.jpeg",
   },
   {
     id: 2,
-    name: "Robert Johnson",
+    name: "Emma Thompson",
     designation: "Product Manager",
-    image:
-      "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8YXZhdGFyfGVufDB8fDB8fHww&auto=format&fit=crop&w=800&q=60",
+    image: "/persons/person-2.jpeg",
   },
   {
     id: 3,
-    name: "Jane Smith",
+    name: "Michael Chen",
     designation: "Data Scientist",
-    image:
-      "https://images.unsplash.com/photo-1580489944761-15a19d654956?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8YXZhdGFyfGVufDB8fDB8fHww&auto=format&fit=crop&w=800&q=60",
+    image: "/persons/person-3.jpeg",
   },
   {
     id: 4,
-    name: "Emily Davis",
+    name: "David Rodriguez",
     designation: "UX Designer",
-    image:
-      "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTB8fGF2YXRhcnxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=800&q=60",
+    image: "/persons/person-4.jpeg",
   },
   {
     id: 5,
-    name: "Tyler Durden",
-    designation: "Soap Developer",
-    image:
-      "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=3540&q=80",
+    name: "Olivia Parker",
+    designation: "AI Researcher",
+    image: "/persons/person-5.jpeg",
   },
   {
     id: 6,
-    name: "Dora",
-    designation: "The Explorer",
-    image:
-      "https://images.unsplash.com/photo-1544725176-7c40e5a71c5e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=3534&q=80",
+    name: "Sophia Lee",
+    designation: "Full Stack Developer",
+    image: "/persons/person-6.jpeg",
   },
 ];
 
 const platforms = [
   { name: "LinkedIn", gradient: "from-blue-600 to-blue-400" },
-  { name: "TikTok", gradient: "from-[#010101] via-[#FF0050] to-[#00F2EA]" }, // Updated TikTok colors
+  { name: "TikTok", gradient: "from-[#69C9D0] via-[#EE1D52] to-[#FFFFFF]" },
   { name: "Instagram", gradient: "from-yellow-400 via-pink-500 to-purple-500" },
 ];
 
@@ -156,17 +150,19 @@ const Hero = () => {
               Get started
               <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
             </Link>
-            <a
+            {/* <a
               href="#demo"
               className="text-lg text-primary font-medium hover:text-primary/80 transition-colors duration-300"
             >
               Watch demo
-            </a>
+            </a> */}
           </motion.div>
         </motion.div>
 
         <div className="mt-12 mb-8">
-          <p className="text-textColor/70 mb-4">Trusted by creators worldwide</p>
+          <p className="text-textColor/70 mb-4">
+            Trusted by creators worldwide
+          </p>
           <div className="flex flex-wrap justify-center gap-4">
             <AnimatedTooltip items={people} />
           </div>
@@ -174,21 +170,17 @@ const Hero = () => {
 
         <motion.div
           ref={demoRef}
-          className="w-full max-w-4xl mx-auto mt-16"
+          className="w-full max-w-4xl mx-auto mt-16 flex items-center justify-center"
           style={{ scale, opacity }}
         >
-          <div className="rounded-2xl bg-gradient-to-r from-blue-600 to-teal-400 p-1 shadow-2xl">
-            <div className="relative w-full aspect-video rounded-xl overflow-hidden bg-white">
-              <Image
-                src="/demo.png"
-                alt="Carousel AI Demo"
-                layout="responsive"
-                width={1920}
-                height={1080}
-                priority
-              />
-            </div>
-          </div>
+          <Image
+            src="/demo.png"
+            className=" bg-gradient-to-r from-blue-600 to-teal-400 rounded-xl shadow-2xl p-1"
+            alt="Carousel AI Demo"
+            priority
+            height={926}
+            width={1480}
+          />
         </motion.div>
       </div>
     </motion.section>

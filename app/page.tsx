@@ -105,11 +105,11 @@ const Page = () => {
             }`}
           >
             <div className="items-center space-y-5 md:flex md:space-x-6 md:space-y-0 md:ml-12">
-              {navigation.map((item, idx) => (
+              {/* {navigation.map((item, idx) => (
                 <li className="text-textColor hover:text-primary" key={idx}>
                   <a href={item.path}>{item.title}</a>
                 </li>
-              ))}
+              ))} */}
             </div>
             <li className="order-2 py-5 md:py-0">
               <a
@@ -131,7 +131,7 @@ const Page = () => {
       <Testimonial />
 
       <footer className="pt-10 bg-cardBackground">
-        <div className="max-w-screen-xl mx-auto px-4 text-gray-600 md:px-8">
+        <div className="max-w-screen-xl mx-auto px-4 text-textColor md:px-8">
           <div className="space-y-6 sm:max-w-md sm:mx-auto sm:text-center">
             <Image
               src="/logo.svg"
@@ -160,7 +160,7 @@ const Page = () => {
             </div>
           </div>
           <div className="mt-10 py-10 border-t items-center justify-between sm:flex">
-            <p>© 2023 AI Carousel Maker. All rights reserved.</p>
+            <p>© {new Date().getFullYear()} BuildCarousel.com. All rights reserved.</p>
             <ul className="flex flex-wrap items-center gap-4 mt-6 sm:text-sm sm:mt-0">
               {footerNavs.map((item, idx) => (
                 <li
