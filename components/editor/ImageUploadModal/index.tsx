@@ -97,7 +97,7 @@ const ImageUploadModal: React.FC<ImageUploadModalProps> = ({
               }`}
             >
               <input {...getInputProps()} />
-              <p className="text-center text-gray-500">
+              <p className="text-center text-textColor">
                 {uploadLoading
                   ? "Uploading..."
                   : "Drag & drop images here, or click to select images (max 100 MB)"}
@@ -105,11 +105,11 @@ const ImageUploadModal: React.FC<ImageUploadModalProps> = ({
             </div>
 
             {isLoading ? (
-              <p className="mt-4 text-center text-gray-500">
+              <p className="mt-4 text-center text-textColor">
                 Loading images...
               </p>
             ) : uploadedImages.length === 0 ? (
-              <p className="mt-4 text-center text-gray-500">
+              <p className="mt-4 text-center text-textColor">
                 No images uploaded yet.
               </p>
             ) : (

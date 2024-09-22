@@ -30,6 +30,7 @@ import {
   Plus,
   Menu,
   X,
+  Edit,
 } from "lucide-react";
 import {
   FaInstagram,
@@ -345,6 +346,7 @@ const EditorNavbar: React.FC = () => {
                   <List className="w-4 h-4 mr-2" />
                   <span>{isFetchingAll ? "Loading..." : "All Carousels"}</span>
                 </Button>
+
                 <Button
                   onClick={handleAddNew}
                   className="flex-1 sm:flex-initial h-8 justify-start text-textColor bg-cardBackground hover:bg-primary/50 border border-borderColor"
@@ -356,15 +358,18 @@ const EditorNavbar: React.FC = () => {
                   <span>New</span>
                 </Button>
               </div>
-              <input
-                type="text"
-                placeholder="Carousel Name"
-                className="w-full sm:w-auto border border-borderColor bg-cardBackground text-textColor px-2 h-8 rounded-md text-sm"
-                value={name}
-                onChange={handleNameChange}
-                aria-label="Carousel name"
-                disabled={isFetchingDetails}
-              />
+              <div className="flex items-center bg-cardBackground border border-borderColor rounded-md h-8 w-full sm:w-auto">
+                <Edit className="w-4 h-4 mr-2 text-textColor ml-2" />
+                <input
+                  type="text"
+                  placeholder="Carousel Name"
+                  className="w-full sm:w-auto  border-none bg-transparent text-textColor px-2 focus:outline-none rounded-md text-sm"
+                  value={name}
+                  onChange={handleNameChange}
+                  aria-label="Carousel name"
+                  disabled={isFetchingDetails}
+                />
+              </div>
             </div>
           </div>
 
@@ -460,14 +465,8 @@ const EditorNavbar: React.FC = () => {
       )}
 
       <CarouselListModal
-        carousels={memoizedCarousels}
-        isViewAllModalOpen={isViewAllModalOpen}
-        setIsViewAllModalOpen={setIsViewAllModalOpen}
-        createOrUpdateCarousel={createOrUpdateCarousel}
-        deleteCarousel={deleteCarousel}
-        isCreatingOrUpdating={isCreatingOrUpdating}
-        isDeleting={isDeleting}
-        isFetchingAll={isFetchingAll}
+        isOpen={isViewAllModalOpen}
+        onClose={() => setIsViewAllModalOpen(false)}
       />
     </header>
   );

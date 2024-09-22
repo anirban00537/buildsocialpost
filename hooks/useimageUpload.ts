@@ -30,11 +30,13 @@ interface ImageInfo {
   createdAt: number;
 }
 
-const MAX_STORAGE_MB = 100;
+const MAX_STORAGE_MB = 500;
 const MB_TO_BYTES = 1024 * 1024;
 
 export const useImageUpload = (isOpen: boolean) => {
-  const { userinfo } = useSelector((state: RootState) => state.user);
+  const { userinfo, subscribed } = useSelector(
+    (state: RootState) => state.user
+  );
   const uid = userinfo?.uid;
   const [uploadedImages, setUploadedImages] = useState<ImageInfo[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -140,11 +142,17 @@ export const useImageUpload = (isOpen: boolean) => {
   );
 
   const onDrop = (acceptedFiles: File[]) => {
-    if (uid) {
-      handleUpload(acceptedFiles);
-    } else {
+    if (!uid) {
       toast.error("Please log in to upload images.");
+      return;
     }
+
+    if (!subscribed) {
+      toast.error("Please subscribe to upload images.");
+      return;
+    }
+
+    handleUpload(acceptedFiles);
   };
 
   const handleDeleteImage = async (imageId: string, imageUrl: string) => {
@@ -170,16 +178,7 @@ export const useImageUpload = (isOpen: boolean) => {
   const { getRootProps, getInputProps } = useDropzone({
     onDrop,
     accept: {
-      "image/*": [
-        ".jpeg",
-        ".jpg",
-        ".png",
-        ".gif",
-        ".bmp",
-        ".tiff",
-        ".webp",
-        ".svg",
-      ],
+      "image/*": [".jpeg", ".jpg", ".png"],
     },
     maxSize: MAX_STORAGE_MB * MB_TO_BYTES,
     disabled: uploadLoading,
@@ -229,5 +228,7 @@ export const useImageUpload = (isOpen: boolean) => {
     handleJumpToPage,
     setJumpToPage,
     MAX_STORAGE_MB,
+    onDrop,
+    subscribed,
   };
 };
