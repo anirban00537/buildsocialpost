@@ -16,12 +16,14 @@ import {
 } from "@/state/slice/carousel.slice";
 import { jsPDF } from "jspdf";
 import { toPng } from "html-to-image";
+import { setCarouselDownloading } from "@/state/slice/user.slice";
 const useCarousel = () => {
   const dispatch = useDispatch();
   const { slides, layout, background } = useSelector(
     (state: RootState) => state.slides
   );
   const { color1, color2, color3, color4 } = background;
+ const { carouselDownloading } = useSelector((state: RootState) => state.user);
   const swiperRef = useRef<any>(null);
   const [zipLoading, setZipLoading] = useState(false);
   const [pdfLoading, setPdfLoading] = useState(false);
@@ -137,6 +139,7 @@ const useCarousel = () => {
     [dispatch]
   );
   const exportSlidesToZip = useCallback(async () => {
+    dispatch(setCarouselDownloading(true));
     setZipLoading(true);
     const zip = new JSZip();
     const scaleFactor = 3; // Adjust the scale factor for higher quality
@@ -146,8 +149,8 @@ const useCarousel = () => {
       if (slideElement) {
         try {
           // Wait for a short time to ensure the slide is fully rendered
-          await new Promise(resolve => setTimeout(resolve, 100));
-          
+          await new Promise((resolve) => setTimeout(resolve, 100));
+
           const pngDataUrl = await toPng(slideElement, {
             cacheBust: true,
             pixelRatio: scaleFactor,
@@ -169,13 +172,15 @@ const useCarousel = () => {
       await captureSlide(i);
     }
 
-    zip.generateAsync({ type: "blob" }).then((content) => {
+    await zip.generateAsync({ type: "blob" }).then((content) => {
       saveAs(content, "slides.zip");
       setZipLoading(false);
     });
+    dispatch(setCarouselDownloading(false));
   }, [slides, layout.width, layout.height]);
 
   const exportSlidesToPDF = useCallback(async () => {
+    dispatch(setCarouselDownloading(true));
     setPdfLoading(true);
     const pdf = new jsPDF("p", "px", [layout.width, layout.height]);
     const scaleFactor = 3; // Adjust the scale factor for higher quality
@@ -185,8 +190,8 @@ const useCarousel = () => {
       if (slideElement) {
         try {
           // Wait for a short time to ensure the slide is fully rendered
-          await new Promise(resolve => setTimeout(resolve, 100));
-          
+          await new Promise((resolve) => setTimeout(resolve, 100));
+
           const pngDataUrl = await toPng(slideElement, {
             cacheBust: true,
             pixelRatio: scaleFactor,
@@ -218,8 +223,9 @@ const useCarousel = () => {
       await captureSlide(i);
     }
 
-    pdf.save("carousel_slides.pdf");
+    await pdf.save("carousel_slides.pdf");
     setPdfLoading(false);
+    dispatch(setCarouselDownloading(false));
   }, [slides, layout.width, layout.height]);
 
   return {
@@ -245,6 +251,7 @@ const useCarousel = () => {
     zipLoading,
     pdfLoading,
     handleRemoveImage,
+    carouselDownloading,
   };
 };
 

@@ -20,6 +20,7 @@ import SlideComponent from "../slide/slide.comp";
 import ImageUploadModal from "../ImageUploadModal";
 
 import SlideControls from "./SlideControls.comp";
+import DownloadLoading from "@/components/loading/Download.loading";
 
 SwiperCore.use([Navigation, Pagination, Scrollbar, A11y, Autoplay]);
 
@@ -41,10 +42,11 @@ const CarouselEditor: React.FC = () => {
     handleImageSelect,
     handleSettingChange,
     handleRemoveImage,
+    carouselDownloading,
   } = useCarousel();
 
   return (
-    <main className="flex h-full overflow-hidden w-full px-2">
+    <main className="flex h-full overflow-hidden w-full px-2 relative">
       <div className="w-full p-4 flex flex-col justify-center items-center">
         <div className="relative w-full">
           <Swiper
@@ -118,6 +120,11 @@ const CarouselEditor: React.FC = () => {
         onClose={() => setIsModalOpen(false)}
         onImageSelect={handleImageSelect}
       />
+      {carouselDownloading && (
+        <div className="absolute inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
+          <DownloadLoading />
+        </div>
+      )}
     </main>
   );
 };

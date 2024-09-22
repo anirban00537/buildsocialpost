@@ -5,6 +5,7 @@ interface UserState {
   userinfo: any | null;
   loggedin: boolean;
   loading: boolean;
+  carouselDownloading: boolean;
   subscribed: boolean;
   endDate: string | null;
 }
@@ -14,6 +15,7 @@ const initialState: UserState = {
   userinfo: null,
   loggedin: false,
   loading: true,
+  carouselDownloading: false,
   subscribed: false,
   endDate: null,
 };
@@ -36,6 +38,9 @@ const userSlice = createSlice({
     setLoading: (state, action: PayloadAction<boolean>) => {
       state.loading = action.payload;
     },
+    setCarouselDownloading: (state, action: PayloadAction<boolean>) => {
+      state.carouselDownloading = action.payload;
+    },
     setSubscribed: (state, action: PayloadAction<boolean>) => {
       state.subscribed = action.payload;
     },
@@ -46,6 +51,12 @@ const userSlice = createSlice({
 });
 
 // Export actions and reducer
-export const { setUser, logout, setLoading, setSubscribed, setEndDate } =
-  userSlice.actions;
+export const {
+  setUser,
+  logout,
+  setLoading,
+  setSubscribed,
+  setEndDate,
+  setCarouselDownloading,
+} = userSlice.actions;
 export default userSlice.reducer;
