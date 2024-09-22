@@ -40,6 +40,7 @@ const CarouselEditor: React.FC = () => {
     handleImageIconClick,
     handleImageSelect,
     handleSettingChange,
+    handleRemoveImage,
   } = useCarousel();
 
   return (
@@ -99,6 +100,7 @@ const CarouselEditor: React.FC = () => {
                   handleMoveSlideRight={handleMoveSlideRight}
                   handleImageIconClick={handleImageIconClick}
                   handleSettingChange={handleSettingChange}
+                  handleRemoveImage={handleRemoveImage}
                 />
               </SwiperSlide>
             ))}

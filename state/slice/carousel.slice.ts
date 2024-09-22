@@ -85,6 +85,9 @@ const carouselSlice = createSlice({
       const { index, updatedSlide } = action.payload;
       state.slides[index] = { ...state.slides[index], ...updatedSlide };
     },
+    removeBackgroundImage: (state, action: PayloadAction<number>) => {
+      state.slides[action.payload].backgroundImage = null;
+    },
     addAllSlides: (state, action: PayloadAction<Partial<Slide>[]>) => {
       state.slides = action.payload.map((slide) => ({
         title: "",
@@ -221,6 +224,7 @@ export const {
   setBackgroundOpacity,
   setFontFamily,
   setNewCarousel,
+  removeBackgroundImage,
 } = carouselSlice.actions;
 
 export default carouselSlice.reducer;

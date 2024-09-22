@@ -12,6 +12,7 @@ import {
   updateSlide,
   moveSlideLeft,
   moveSlideRight,
+  removeBackgroundImage,
 } from "@/state/slice/carousel.slice";
 import { jsPDF } from "jspdf";
 import { toPng } from "html-to-image";
@@ -93,6 +94,12 @@ const useCarousel = () => {
     []
   );
 
+  const handleRemoveImage = useCallback(
+    (index: number) => {
+      dispatch(removeBackgroundImage(index));
+    },
+    [dispatch]
+  );
   const handleImageSelect = useCallback(
     (url: string) => {
       if (activeSlideIndex !== null) {
@@ -221,6 +228,7 @@ const useCarousel = () => {
     exportSlidesToPDF,
     zipLoading,
     pdfLoading,
+    handleRemoveImage,
   };
 };
 
