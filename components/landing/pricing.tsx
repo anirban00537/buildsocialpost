@@ -1,6 +1,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { Check, ArrowRight } from "lucide-react";
+import Link from "next/link";
 
 const PricingSection = () => {
   const plan = {
@@ -63,14 +64,16 @@ const PricingSection = () => {
                   </span>
                 </div>
               </div>
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="w-full py-4 px-6 rounded-full font-semibold text-textColor bg-primary hover:bg-primary-dark transition-colors duration-300 text-lg flex items-center justify-center group"
-              >
-                Get Started
-                <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
-              </motion.button>
+              <Link href="/editor">
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="w-full py-4 px-6 rounded-full font-semibold text-textColor bg-primary hover:bg-primary-dark transition-colors duration-300 text-lg flex items-center justify-center group"
+                >
+                  Get Started
+                  <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                </motion.button>
+              </Link>
             </div>
             <div className="bg-cardBackground p-10">
               <h4 className="text-lg font-semibold text-textColor mb-4">

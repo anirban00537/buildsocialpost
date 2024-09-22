@@ -99,13 +99,13 @@ const SlideControls: React.FC<SlideControlsProps> = ({
         >
           <ImageIcon size={15} />
         </button>
-        <button
+        {/* <button
           className="flex items-center justify-center bg-cardBackground text-textColor border-none rounded-md hover:bg-primary hover:border-primary hover:text-white h-6 w-6 z-10"
           onClick={() => handleImageIconClick(index, "slide")}
           title="Add image to slide"
         >
           <ImagePlus size={15} />
-        </button>
+        </button> */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <button
@@ -119,24 +119,22 @@ const SlideControls: React.FC<SlideControlsProps> = ({
             <DropdownMenuLabel>Slide Settings</DropdownMenuLabel>
             {(
               [
-                "showImage",
-                "showTagline",
-                "showTitle",
-                "showDescription",
+                { value: "showImage", label: "Show Image" },
+                { value: "showTagline", label: "Show Tagline" },
+                { value: "showTitle", label: "Show Title" },
+                { value: "showDescription", label: "Show Description" },
               ] as const
             ).map((setting) => (
               <DropdownMenuItem
-                key={setting}
+                key={setting.value}
                 className="flex items-center justify-between"
               >
-                <span>
-                  {setting.charAt(0).toUpperCase() + setting.slice(1)}
-                </span>
+                <span>{setting.label}</span>
                 <Switch
-                  checked={slide[setting]}
+                  checked={slide[setting.value]}
                   className="data-[state=checked]:bg-primary bg-cardBackground data-[state=unchecked]:bg-primary/50"
                   onCheckedChange={(checked) =>
-                    handleSettingChange(index, setting, checked)
+                    handleSettingChange(index, setting.value, checked)
                   }
                 />
               </DropdownMenuItem>
