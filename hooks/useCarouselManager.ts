@@ -58,7 +58,15 @@ export const useCarouselManager = () => {
     titleTextSettings: data.titleTextSettings,
     descriptionTextSettings: data.descriptionTextSettings,
     taglineTextSettings: data.taglineTextSettings,
-    layout: data.layout,
+    layout: {
+      height: data.layout.height,
+      width: data.layout.width,
+      pattern: data.layout.pattern,
+      backgroundOpacity: data.layout.backgroundOpacity,
+      glassMorphism: data.layout.glassMorphism,
+      glassMorphismOpacity: data.layout.glassMorphismOpacity,
+      glassMorphismBlur: data.layout.glassMorphismBlur,
+    },
     background: data.background,
     slides: data.slides,
     sharedSelectedElement: {
@@ -111,7 +119,15 @@ export const useCarouselManager = () => {
         titleTextSettings,
         descriptionTextSettings,
         taglineTextSettings,
-        layout,
+        layout: {
+          height: layout.height,
+          width: layout.width,
+          pattern: layout.pattern,
+          backgroundOpacity: layout.backgroundOpacity,
+          glassMorphism: layout.glassMorphism,
+          glassMorphismOpacity: layout.glassMorphismOpacity,
+          glassMorphismBlur: layout.glassMorphismBlur,
+        },
         background,
         slides,
         sharedSelectedElement,
@@ -222,6 +238,9 @@ export const useCarouselManager = () => {
                 width: data.layout.width,
                 pattern: data.layout.pattern,
                 backgroundOpacity: data.layout.backgroundOpacity || 0.5,
+                glassMorphism: data.layout.glassMorphism || false,
+                glassMorphismOpacity: data.layout.glassMorphismOpacity || 0.1,
+                glassMorphismBlur: data.layout.glassMorphismBlur || 10,
               },
             })
           );

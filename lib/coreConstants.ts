@@ -9,6 +9,7 @@ import {
   Icon8,
   Icon9,
   Icon10,
+  Icon11,
 } from "@/components/icons/shared-icons";
 
 export const carouselsSize = [
@@ -85,5 +86,10 @@ export const sharedElements = [
     id: 10,
     name: "icon ten",
     component: Icon10,
+  },
+  {
+    id: 11,
+    name: "icon eleven",
+    component: Icon11,
   },
 ];

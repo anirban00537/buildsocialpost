@@ -45,6 +45,9 @@ const initialState: CarouselState = {
     width: 600,
     pattern: "/backgrounds/background1.svg",
     backgroundOpacity: 0.5,
+    glassMorphism: false,
+    glassMorphismOpacity: 0.1,
+    glassMorphismBlur: 10,
   },
   fontFamily: "poppins",
 };
@@ -196,9 +199,21 @@ const carouselSlice = createSlice({
         width: 600,
         pattern: "/backgrounds/background1.svg",
         backgroundOpacity: 0.5,
+        glassMorphism: false,
+        glassMorphismOpacity: 0.1,
+        glassMorphismBlur: 10,
       };
       state.fontFamily = "poppins";
       state.slides = initialSlides;
+    },
+    setGlassMorphism: (state, action: PayloadAction<boolean>) => {
+      state.layout.glassMorphism = action.payload;
+    },
+    setGlassMorphismOpacity: (state, action: PayloadAction<number>) => {
+      state.layout.glassMorphismOpacity = action.payload;
+    },
+    setGlassMorphismBlur: (state, action: PayloadAction<number>) => {
+      state.layout.glassMorphismBlur = action.payload;
     },
   },
 });
@@ -225,6 +240,9 @@ export const {
   setFontFamily,
   setNewCarousel,
   removeBackgroundImage,
+  setGlassMorphism,
+  setGlassMorphismOpacity,
+  setGlassMorphismBlur,
 } = carouselSlice.actions;
 
 export default carouselSlice.reducer;

@@ -52,6 +52,9 @@ export interface LayoutSettings {
   width: number;
   pattern: string;
   backgroundOpacity: number;
+  glassMorphism: boolean; // Move this line
+  glassMorphismOpacity: number;
+  glassMorphismBlur: number;
 }
 
 export interface CarouselState {

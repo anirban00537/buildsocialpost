@@ -319,7 +319,12 @@ export const Icon5: React.FC<IconProps> = ({
     />
   </svg>
 );
-export const Icon6: React.FC<IconProps> = ({ color, size, className, ...props }) => (
+export const Icon6: React.FC<IconProps> = ({
+  color,
+  size,
+  className,
+  ...props
+}) => (
   <svg
     className={className}
     color={color}
@@ -396,7 +401,12 @@ export const Icon6: React.FC<IconProps> = ({ color, size, className, ...props })
     />
   </svg>
 );
-export const Icon7: React.FC<IconProps> = ({ color, size, className, ...props }) => (
+export const Icon7: React.FC<IconProps> = ({
+  color,
+  size,
+  className,
+  ...props
+}) => (
   <svg
     className={className}
     color={color}
@@ -435,7 +445,12 @@ export const Icon7: React.FC<IconProps> = ({ color, size, className, ...props })
     />
   </svg>
 );
-export const Icon8: React.FC<IconProps> = ({ color, size, className, ...props }) => (
+export const Icon8: React.FC<IconProps> = ({
+  color,
+  size,
+  className,
+  ...props
+}) => (
   <svg
     className={className}
     color={color}
@@ -462,7 +477,12 @@ export const Icon8: React.FC<IconProps> = ({ color, size, className, ...props })
     />
   </svg>
 );
-export const Icon9: React.FC<IconProps> = ({ color, size, className, ...props }) => (
+export const Icon9: React.FC<IconProps> = ({
+  color,
+  size,
+  className,
+  ...props
+}) => (
   <svg
     className={className}
     color={color}
@@ -492,7 +512,12 @@ export const Icon9: React.FC<IconProps> = ({ color, size, className, ...props })
     />
   </svg>
 );
-export const Icon10: React.FC<IconProps> = ({ color, size, className, ...props }) => (
+export const Icon10: React.FC<IconProps> = ({
+  color,
+  size,
+  className,
+  ...props
+}) => (
   <svg
     className={className}
     color={color}
@@ -1044,6 +1069,42 @@ export const Icon10: React.FC<IconProps> = ({ color, size, className, ...props }
     />
   </svg>
 );
+
+export const Icon11: React.FC<IconProps> = ({
+  color = "currentColor",
+  size = 54,
+  className,
+  ...props
+}) => {
+  const gradientId = React.useId(); // Generate a unique ID for each instance
+
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 144 144"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      className={className}
+      {...props}
+    >
+      <defs>
+        <radialGradient
+          id={gradientId}
+          cx="50%"
+          cy="50%"
+          r="50%"
+          fx="50%"
+          fy="50%"
+        >
+          <stop offset="0%" stopColor={color} stopOpacity="1" />
+          <stop offset="100%" stopColor={color} stopOpacity="0" />
+        </radialGradient>
+      </defs>
+      <circle cx="72" cy="72" r="72" fill={`url(#${gradientId})`} />
+    </svg>
+  );
+};
 Icon1.defaultProps = defaultProps;
 Icon2.defaultProps = defaultProps;
 Icon3.defaultProps = defaultProps;
@@ -1054,3 +1115,4 @@ Icon7.defaultProps = defaultProps;
 Icon8.defaultProps = defaultProps;
 Icon9.defaultProps = defaultProps;
 Icon10.defaultProps = defaultProps;
+Icon11.defaultProps = defaultProps;

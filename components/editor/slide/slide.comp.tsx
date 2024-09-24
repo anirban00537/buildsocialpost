@@ -4,7 +4,7 @@ import { Slide } from "@/types";
 import { useSelector, useDispatch } from "react-redux";
 import { setBackgroundOpacity } from "@/state/slice/carousel.slice";
 import SharedElementsComponent from "./slide-parts/sharedElements";
-import Text from "./slide-parts/text"; // Updated import
+import Text from "./slide-parts/text";
 import Image from "./slide-parts/image";
 import Background from "./slide-parts/background";
 import GeneralInfo from "./slide-parts/generalInfo";
@@ -38,50 +38,69 @@ const SlideComponent: React.FC<SlideProps> = ({
   const { handle, headshot, name } = useSelector(
     (state: RootState) => state.branding
   );
-  const { pattern, backgroundOpacity } = layout;
-  const backgroundImageStyle: CSSProperties = slide.backgroundImage
-    ? {
-        backgroundImage: `url("${slide.backgroundImage}")`,
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-        backgroundRepeat: "no-repeat",
-        position: "absolute",
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-        opacity: 0.3,
-        zIndex: 0,
-      }
-    : {
-        backgroundImage: `url(${pattern})`,
-        backgroundPosition: "center",
-        opacity: 0.07 * backgroundOpacity,
-        backgroundRepeat: "repeat",
-      };
-
+  const {
+    pattern,
+    backgroundOpacity,
+    glassMorphismOpacity,
+    glassMorphismBlur,
+    glassMorphism,
+  } = layout;
+  const backgroundImageStyle: CSSProperties = {
+    ...(slide.backgroundImage
+      ? {
+          backgroundImage: `url("${slide.backgroundImage}")`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
+        }
+      : {
+          backgroundImage: `url(${pattern})`,
+          backgroundPosition: "center",
+          backgroundRepeat: "repeat",
+        }),
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    opacity: slide.backgroundImage ? 0.3 : 0.07 * backgroundOpacity,
+    zIndex: 0,
+  };
   const { color1, color2, color3, color4 } = useSelector(
     (state: RootState) => state.slides.background
   );
 
+  const glassMorphismStyle: CSSProperties = glassMorphism
+    ? {
+        backgroundColor: `rgba(128, 128, 128, ${glassMorphismOpacity})`, // Changed to gray color
+        backdropFilter: `blur(${glassMorphismBlur}px)`, // Use the blur value from state
+        // borderRadius: "10px",
+        padding: "20px",
+        boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+      }
+    : {};
+
   return (
     <div
       className="cursor-pointer hover:opacity-90 relative"
-      style={
-        {
-          fontFamily: selectedFont?.font.style.fontFamily,
-          height: "100%",
-          width: "100%",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          color: color2,
-          backgroundColor: color1,
-          zIndex: 1,
-        } as CSSProperties
-      }
+      style={{
+        fontFamily: selectedFont?.font.style.fontFamily,
+        height: "100%",
+        width: "100%",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        color: color2,
+        backgroundColor: color1,
+        zIndex: 1,
+        position: "relative",
+        overflow: "hidden",
+        padding: glassMorphism ? "27px" : "0px",
+        marginBottom: glassMorphism ? "34px" : "0px",
+      }}
     >
-      {slide.backgroundImage && <div style={backgroundImageStyle} />}
+      <div style={{ ...backgroundImageStyle, ...glassMorphismStyle }} />
       {index % 2 === 1 ? (
         <>
           <SharedElementsComponent
@@ -164,10 +183,9 @@ const SlideComponent: React.FC<SlideProps> = ({
           textAlign: titleTextSettings.alignment,
           width: "100%",
           height: "100%",
-          padding: "32px",
-          paddingTop: "50px",
-          paddingBottom: "50px",
+          padding: glassMorphism ? "0" : "32px", // Remove padding when glass morphism is enabled
           boxSizing: "border-box",
+          ...(glassMorphism ? glassMorphismStyle : {}),
         }}
       >
         <div
@@ -198,7 +216,6 @@ const SlideComponent: React.FC<SlideProps> = ({
                 fontSize: `${14}px`,
                 marginBottom: "8px",
                 fontWeight: "bold",
-                // color: color2,
                 color: "white",
                 alignSelf:
                   titleTextSettings.alignment === "center"
@@ -261,7 +278,6 @@ const SlideComponent: React.FC<SlideProps> = ({
             />
           )}
         </div>
-        {/* {slide?.type !== "slide" && ( */}
         <GeneralInfo
           headshot={headshot}
           name={name}
@@ -270,22 +286,33 @@ const SlideComponent: React.FC<SlideProps> = ({
           color4={color4}
           slide={slide}
         />
-        {/* )} */}
       </div>
       {!subscribed && (
         <div
-          style={{
-            position: "absolute",
-            bottom: 0,
-            left: 0,
-            width: "100%",
-            backgroundColor: color3,
-            textAlign: "center",
-            fontSize: "12px",
-            padding: "4px",
-            color: color2,
-            zIndex: 1,
-          }}
+          style={
+            glassMorphism
+              ? {
+                  width: "100%",
+                  backgroundColor: color3,
+                  textAlign: "center",
+                  fontSize: "12px",
+                  padding: "4px",
+                  color: color2,
+                  zIndex: 1,
+                }
+              : {
+                  position: "absolute",
+                  bottom: 0,
+                  left: 0,
+                  width: "100%",
+                  backgroundColor: color3,
+                  textAlign: "center",
+                  fontSize: "12px",
+                  padding: "4px",
+                  color: color2,
+                  zIndex: 1,
+                }
+          }
         >
           Built with{" "}
           <a

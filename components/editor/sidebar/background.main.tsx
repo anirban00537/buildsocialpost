@@ -7,6 +7,9 @@ import {
   setSharedSelectedElementId,
   setSharedSelectedElementOpacity,
   setBackgroundOpacity,
+  setGlassMorphism,
+  setGlassMorphismOpacity,
+  setGlassMorphismBlur,
 } from "@/state/slice/carousel.slice";
 import { HexColorPicker } from "react-colorful";
 import {
@@ -24,11 +27,13 @@ import { Slider } from "@/components/ui/slider";
 import { Label } from "@/components/ui/label";
 import { CircleOff } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Switch } from "@/components/ui/switch";
 
 const BackgroundColorsSection = () => {
   const dispatch = useDispatch();
   const background = useSelector((state: RootState) => state.slides.background);
-  const { pattern } = useSelector((state: RootState) => state.slides.layout);
+  const { pattern, glassMorphism, glassMorphismOpacity, glassMorphismBlur } =
+    useSelector((state: RootState) => state.slides.layout);
   const sharedSelectedElement = useSelector(
     (state: RootState) => state.slides.sharedSelectedElement
   );
@@ -93,6 +98,7 @@ const BackgroundColorsSection = () => {
     "/backgrounds/background4.svg",
     "/backgrounds/background5.svg",
     "/backgrounds/background6.svg",
+    "/backgrounds/background7.svg",
   ];
 
   return (
@@ -266,6 +272,49 @@ const BackgroundColorsSection = () => {
         </div>
       </form>
 
+      <form className="grid gap-6 p-4 mt-6 bg-background rounded-lg">
+        <legend className="text-lg font-semibold text-textColor">
+          Glass Morphism
+        </legend>
+        <div className="flex items-center justify-between">
+          <Label htmlFor="glassMorphism" className="text-textColor">
+            Enable Glass Morphism
+          </Label>
+          <Switch
+            id="glassMorphism"
+            checked={glassMorphism}
+            onCheckedChange={(checked) => dispatch(setGlassMorphism(checked))}
+          />
+        </div>
+        {glassMorphism && (
+          <div className="grid gap-3">
+            <Label htmlFor="glassMorphismOpacity" className="text-textColor">
+              Glass Opacity
+            </Label>
+            <Slider
+              id="glassMorphismOpacity"
+              max={1}
+              step={0.01}
+              value={[glassMorphismOpacity || 0.1]}
+              onValueChange={(value) =>
+                dispatch(setGlassMorphismOpacity(value[0]))
+              }
+            />
+            <Label htmlFor="glassMorphismBlur" className="text-textColor">
+              Glass Blur
+            </Label>
+            <Slider
+              id="glassMorphismBlur"
+              max={20}
+              step={1}
+              value={[glassMorphismBlur || 10]}
+              onValueChange={(value) =>
+                dispatch(setGlassMorphismBlur(value[0]))
+              }
+            />
+          </div>
+        )}
+      </form>
       <form className="grid gap-6 p-4 mt-6 bg-background rounded-lg">
         <legend className="text-lg font-semibold text-textColor">
           Pattern

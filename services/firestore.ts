@@ -88,5 +88,3 @@ export const updateBrandingSettings = async (
   const docRef = doc(db, "user_branding", userId);
   await setDoc(docRef, { branding: brandingData }, { merge: true });
 };
-
-// Add any other Firestore-related functions here
