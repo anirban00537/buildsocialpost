@@ -38,13 +38,7 @@ const SlideComponent: React.FC<SlideProps> = ({
   const { handle, headshot, name } = useSelector(
     (state: RootState) => state.branding
   );
-  const {
-    pattern,
-    backgroundOpacity,
-    glassMorphismOpacity,
-    glassMorphismBlur,
-    glassMorphism,
-  } = layout;
+  const { pattern, backgroundOpacity } = layout;
   const backgroundImageStyle: CSSProperties = {
     ...(slide.backgroundImage
       ? {
@@ -70,16 +64,6 @@ const SlideComponent: React.FC<SlideProps> = ({
     (state: RootState) => state.slides.background
   );
 
-  const glassMorphismStyle: CSSProperties = glassMorphism
-    ? {
-        backgroundColor: `rgba(128, 128, 128, ${glassMorphismOpacity})`, // Changed to gray color
-        backdropFilter: `blur(${glassMorphismBlur}px)`, // Use the blur value from state
-        // borderRadius: "10px",
-        padding: "20px",
-        boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-      }
-    : {};
-
   return (
     <div
       className="cursor-pointer hover:opacity-90 relative"
@@ -96,11 +80,9 @@ const SlideComponent: React.FC<SlideProps> = ({
         zIndex: 1,
         position: "relative",
         overflow: "hidden",
-        padding: glassMorphism ? "27px" : "0px",
-        marginBottom: glassMorphism ? "34px" : "0px",
       }}
     >
-      <div style={{ ...backgroundImageStyle, ...glassMorphismStyle }} />
+      <div style={backgroundImageStyle} />
       {index % 2 === 1 ? (
         <>
           <SharedElementsComponent
@@ -183,9 +165,8 @@ const SlideComponent: React.FC<SlideProps> = ({
           textAlign: titleTextSettings.alignment,
           width: "100%",
           height: "100%",
-          padding: glassMorphism ? "0" : "32px", // Remove padding when glass morphism is enabled
+          padding: "32px",
           boxSizing: "border-box",
-          ...(glassMorphism ? glassMorphismStyle : {}),
         }}
       >
         <div
@@ -289,30 +270,18 @@ const SlideComponent: React.FC<SlideProps> = ({
       </div>
       {!subscribed && (
         <div
-          style={
-            glassMorphism
-              ? {
-                  width: "100%",
-                  backgroundColor: color3,
-                  textAlign: "center",
-                  fontSize: "12px",
-                  padding: "4px",
-                  color: color2,
-                  zIndex: 1,
-                }
-              : {
-                  position: "absolute",
-                  bottom: 0,
-                  left: 0,
-                  width: "100%",
-                  backgroundColor: color3,
-                  textAlign: "center",
-                  fontSize: "12px",
-                  padding: "4px",
-                  color: color2,
-                  zIndex: 1,
-                }
-          }
+          style={{
+            position: "absolute",
+            bottom: 0,
+            left: 0,
+            width: "100%",
+            backgroundColor: color3,
+            textAlign: "center",
+            fontSize: "12px",
+            padding: "4px",
+            color: color2,
+            zIndex: 1,
+          }}
         >
           Built with{" "}
           <a

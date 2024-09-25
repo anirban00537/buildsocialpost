@@ -7,9 +7,6 @@ import {
   setSharedSelectedElementId,
   setSharedSelectedElementOpacity,
   setBackgroundOpacity,
-  setGlassMorphism,
-  setGlassMorphismOpacity,
-  setGlassMorphismBlur,
 } from "@/state/slice/carousel.slice";
 import { HexColorPicker } from "react-colorful";
 import {
@@ -32,8 +29,7 @@ import { Switch } from "@/components/ui/switch";
 const BackgroundColorsSection = () => {
   const dispatch = useDispatch();
   const background = useSelector((state: RootState) => state.slides.background);
-  const { pattern, glassMorphism, glassMorphismOpacity, glassMorphismBlur } =
-    useSelector((state: RootState) => state.slides.layout);
+  const { pattern } = useSelector((state: RootState) => state.slides.layout);
   const sharedSelectedElement = useSelector(
     (state: RootState) => state.slides.sharedSelectedElement
   );
@@ -200,47 +196,6 @@ const BackgroundColorsSection = () => {
             >
               {showAllDarkPresets ? "Show Less" : "Show More"}
             </Button>
-          )}
-        </div>
-
-        {/* Glass Morphism */}
-        <div className="space-y-2">
-          <div className="flex items-center justify-between">
-            <label className="text-sm text-textColor/80">
-              Enable Glass Morphism
-            </label>
-            <Switch
-              checked={glassMorphism}
-              onCheckedChange={(checked) => dispatch(setGlassMorphism(checked))}
-            />
-          </div>
-          {glassMorphism && (
-            <>
-              <div className="space-y-2">
-                <label className="text-xs text-textColor/70">
-                  Glass Opacity
-                </label>
-                <Slider
-                  max={1}
-                  step={0.01}
-                  value={[glassMorphismOpacity || 0.1]}
-                  onValueChange={(value) =>
-                    dispatch(setGlassMorphismOpacity(value[0]))
-                  }
-                />
-              </div>
-              <div className="space-y-2">
-                <label className="text-xs text-textColor/70">Glass Blur</label>
-                <Slider
-                  max={20}
-                  step={1}
-                  value={[glassMorphismBlur || 10]}
-                  onValueChange={(value) =>
-                    dispatch(setGlassMorphismBlur(value[0]))
-                  }
-                />
-              </div>
-            </>
           )}
         </div>
 
