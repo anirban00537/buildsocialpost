@@ -87,7 +87,7 @@ const BackgroundColorsSection = () => {
       <legend className="text-base font-semibold text-textColor mb-3">
         Background Settings
       </legend>
-      <div className="flex-grow overflow-y-auto pr-2 mb-4 space-y-6">
+      <div className="flex-grow overflow-y-auto mb-4 space-y-6">
         {/* Custom Background Colors */}
         <div className="space-y-2">
           <label className="text-sm text-textColor/80">
