@@ -1,9 +1,13 @@
-export const maxDuration = 20; 
+export const maxDuration = 20;
 
 import {
+  generateCarouselColorPaletteFromPromptTopic,
   generateCaruselContentFromTopic,
   parseCarouselContentToJSON,
+  parseColorPaletteToJSON,
 } from "@/lib/openai";
+
+import { NextResponse } from 'next/server';
 
 export async function POST(req: Request) {
   try {
@@ -27,16 +31,19 @@ export async function POST(req: Request) {
       mood
     );
     // Generate carousel content
-    console.log(content, "content");
+    const colorPaletteResponse =
+      await generateCarouselColorPaletteFromPromptTopic(topic);
 
-    const response = parseCarouselContentToJSON(content);
+    const response = parseCarouselContentToJSON(content ?? "");
+    const colorPalette = parseColorPaletteToJSON(colorPaletteResponse ?? "");
+    console.log(colorPaletteResponse, "colorPaletteResponse");
+    console.log(colorPalette, "colorPalette");
 
-    return new Response(
-      JSON.stringify({ message: "Carousel content generated", response }),
-      {
-        status: 200,
-      }
-    );
+    return NextResponse.json({
+      message: "Carousel content generated",
+      carousels: response,
+      colorPalette,
+    });
   } catch (err) {
     console.error(err);
     return new Response(JSON.stringify({ message: "Server error" }), {

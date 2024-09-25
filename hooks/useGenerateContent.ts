@@ -1,4 +1,4 @@
-import { addAllSlides } from "@/state/slice/carousel.slice";
+import { addAllSlides, setBackground } from "@/state/slice/carousel.slice";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 
@@ -35,8 +35,18 @@ export const useGenerateContent = () => {
         throw new Error(`Error: ${response.statusText}`);
       }
 
-      const data = await response.json();
-      dispatch(addAllSlides(data.response));
+      const data = await response;
+      const dataJson = await data.json();
+      const { carousels, colorPalette } = dataJson;
+      dispatch(addAllSlides(carousels));
+      dispatch(
+        setBackground({
+          color1: colorPalette.color1,
+          color2: colorPalette.color2,
+          color3: colorPalette.color3,
+          color4: colorPalette.color4,
+        })
+      );
     } catch (error) {
       console.error("Error generating content:", error);
     } finally {
