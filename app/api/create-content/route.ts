@@ -11,7 +11,20 @@ import { NextResponse } from 'next/server';
 
 export async function POST(req: Request) {
   try {
-    const { topic, numSlides, temperature, language, mood, theme } = await req.json();
+    const { 
+      topic, 
+      numSlides, 
+      temperature, 
+      language, 
+      mood, 
+      theme,
+      contentStyle,
+      industry,
+      targetAudience,
+      contentStructure,
+      keyPoints,
+      contentPurpose
+    } = await req.json();
 
     if (!topic || !numSlides) {
       return new Response(
@@ -27,11 +40,17 @@ export async function POST(req: Request) {
       numSlides,
       temperature,
       language,
-      mood
+      mood,
+      contentStyle,
+      industry,
+      targetAudience,
+      contentStructure,
+      keyPoints,
+      contentPurpose
     );
-    // Generate carousel content
+    
     const colorPaletteResponse =
-      await generateCarouselColorPaletteFromPromptTopic(topic, theme);
+      await generateCarouselColorPaletteFromPromptTopic(topic, theme, industry);
 
     const response = parseCarouselContentToJSON(content ?? "");
     const colorPalette = parseColorPaletteToJSON(colorPaletteResponse ?? "");

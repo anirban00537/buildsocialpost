@@ -5,11 +5,16 @@ import { useDispatch } from "react-redux";
 export const useGenerateContent = () => {
   const [topic, setTopic] = useState("");
   const [numSlides, setNumSlides] = useState(5);
-  const [temperature, setTemperature] = useState(0.2);
   const [language, setLanguage] = useState("en");
   const [mood, setMood] = useState("Neutral");
   const [loading, setLoading] = useState(false);
   const [theme, setTheme] = useState("light");
+  const [contentStyle, setContentStyle] = useState("Professional");
+  const [industry, setIndustry] = useState("");
+  const [targetAudience, setTargetAudience] = useState("General");
+  const [contentStructure, setContentStructure] = useState("Problem-Solution");
+  const [keyPoints, setKeyPoints] = useState("");
+  const [contentPurpose, setContentPurpose] = useState("Educate");
   const dispatch = useDispatch();
 
   const generateContent = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -24,10 +29,15 @@ export const useGenerateContent = () => {
         body: JSON.stringify({
           topic,
           numSlides,
-          temperature,
           language,
           mood,
           theme,
+          contentStyle,
+          industry,
+          targetAudience,
+          contentStructure,
+          keyPoints,
+          contentPurpose,
         }),
       });
 
@@ -56,20 +66,28 @@ export const useGenerateContent = () => {
 
   return {
     generateContent,
-    setTopic,
     topic,
-    setNumSlides,
+    setTopic,
     numSlides,
-    setTemperature,
-    temperature,
-    setLanguage,
+    setNumSlides,
     language,
-    // setModel,
-    // model,
-    setMood,
+    setLanguage,
     mood,
+    setMood,
     loading,
     theme,
     setTheme,
+    contentStyle,
+    setContentStyle,
+    industry,
+    setIndustry,
+    targetAudience,
+    setTargetAudience,
+    contentStructure,
+    setContentStructure,
+    keyPoints,
+    setKeyPoints,
+    contentPurpose,
+    setContentPurpose,
   };
 };

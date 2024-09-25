@@ -55,20 +55,20 @@ const config: Config = {
           foreground: "#212529",
         },
         background: {
-          DEFAULT: "#0a111f",
-          foreground: "#E0E0E0",
+          DEFAULT: "#0B0E17", // Main background color
+          foreground: "#E2E8F0",
         },
         cardBackground: {
-          DEFAULT: "#0f192e",
-          foreground: "#E0E0E0",
+          DEFAULT: "#111827", // Card background color
+          foreground: "#E2E8F0",
         },
         textColor: {
-          DEFAULT: "#E0E0E0",
-          foreground: "#A0A0A0",
+          DEFAULT: "#FFFFFF",
+          foreground: "#94A3B8",
         },
         borderColor: {
-          DEFAULT: "#14213d",
-          foreground: "#404040",
+          DEFAULT: "#131824",
+          foreground: "#2D3A59",
         },
       },
       borderRadius: {
