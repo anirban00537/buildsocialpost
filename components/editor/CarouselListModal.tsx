@@ -53,31 +53,29 @@ const CarouselListModal: FC<CarouselListModalProps> = ({ isOpen, onClose }) => {
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="bg-cardBackground text-textColor border border-borderColor">
-        <div className="flex flex-col gap-4 bg-cardBackground ">
-          <h2 className="text-lg font-medium bg-cardBackground text-textColor">
-            All Carousels
-          </h2>
+      <DialogContent className="bg-opacity-80 bg-background backdrop-filter backdrop-blur-md border border-borderColor rounded-lg text-white">
+        <div className="flex flex-col gap-4">
+          <h2 className="text-lg font-medium text-white">All Carousels</h2>
           {isFetchingAll ? (
-            <div className="flex justify-center items-center h-16 bg-cardBackground text-textColor">
+            <div className="flex justify-center items-center h-16 text-white">
               <p>Loading carousels...</p>
             </div>
           ) : carousels.length === 0 ? (
-            <div className="flex justify-center items-center h-16 bg-cardBackground text-textColor">
+            <div className="flex justify-center items-center h-16 text-white">
               <p>No carousels found</p>
             </div>
           ) : (
             paginatedCarousels?.map((carousel) => (
               <div
                 key={carousel?.id}
-                className="flex justify-between items-center p-2 bg-cardBackground text-textColor hover:bg-cardBackground rounded"
+                  className="flex justify-between items-center p-2 bg-opacity-60 bg-cardBackground hover:bg-opacity-70 rounded-lg transition-all duration-200"
               >
-                <span>{carousel?.data?.name || "Unnamed Carousel"}</span>
+                <span className="text-white ml-5">{carousel?.data?.name || "Unnamed Carousel"}</span>
                 <div className="flex gap-2">
                   <Button
                     variant="outline"
                     size="sm"
-                    className="bg-cardBackground text-textColor hover:bg-cardBackground border border-borderColor"
+                    className="bg-opacity-70 bg-gray-700 text-white hover:bg-opacity-90 border border-gray-600 transition-all duration-200"
                     onClick={() => handleOpenCarousel(carousel)}
                   >
                     <FileText className="w-3 h-3 mr-1" />
@@ -86,7 +84,7 @@ const CarouselListModal: FC<CarouselListModalProps> = ({ isOpen, onClose }) => {
                   <Button
                     variant="outline"
                     size="sm"
-                    className="bg-cardBackground text-textColor hover:bg-cardBackground border border-borderColor"
+                    className="bg-opacity-70 bg-red-900 text-white hover:bg-opacity-90 border border-red-700 transition-all duration-200"
                     onClick={() => handleDeleteCarousel(carousel?.id)}
                     disabled={isDeleting}
                   >
@@ -104,20 +102,20 @@ const CarouselListModal: FC<CarouselListModalProps> = ({ isOpen, onClose }) => {
               <Button
                 variant="outline"
                 size="sm"
-                className="bg-cardBackground text-textColor hover:bg-cardBackground border border-borderColor"
+                className="bg-opacity-70 bg-gray-700 text-white hover:bg-opacity-90 border border-gray-600 transition-all duration-200"
                 onClick={() => handlePageChange(currentPage - 1)}
                 disabled={currentPage === 1}
               >
-                <ChevronLeft className="w-3 h-3 mr-1 text-textColor" />
+                <ChevronLeft className="w-3 h-3 mr-1" />
                 Previous
               </Button>
-              <span className="text-textColor">
+              <span className="text-white">
                 Page {currentPage} of {Math.ceil(carousels?.length / itemsPerPage)}
               </span>
               <Button
                 variant="outline"
                 size="sm"
-                className="bg-cardBackground text-textColor hover:bg-cardBackground border border-borderColor"
+                className="bg-opacity-70 bg-gray-700 text-white hover:bg-opacity-90 border border-gray-600 transition-all duration-200"
                 onClick={() => handlePageChange(currentPage + 1)}
                 disabled={currentPage === Math.ceil(carousels?.length / itemsPerPage)}
               >

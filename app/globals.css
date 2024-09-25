@@ -74,33 +74,36 @@
     @apply bg-background text-foreground;
   }
 }
+/* Webkit (Chrome, Safari, newer versions of Opera) */
 ::-webkit-scrollbar {
   width: 12px; /* Width of the scrollbar */
 }
 
 ::-webkit-scrollbar-track {
-  background: #0f192e; /* Background color of the scrollbar track */
+  background: #0B0E17; /* Main background color */
   border-radius: 10px; /* Rounded corners of the scrollbar track */
 }
 
 ::-webkit-scrollbar-thumb {
-  background-color: #14213d; /* Color of the scrollbar thumb */
+  background-color: #131824; /* Border color as thumb color */
   border-radius: 40px; /* Rounded corners of the scrollbar thumb */
-  border: 3px solid #0f192e; /* Padding around the scrollbar thumb */
+  border: 3px solid #0B0E17; /* Border using the main background color */
 }
+
 ::-webkit-scrollbar-thumb:hover {
-  background-color: #0a111f; /* Color of the scrollbar thumb on hover */
+  background-color: #2D3A59; /* Border foreground color on hover */
 }
 
 ::-webkit-scrollbar-corner {
-  background: #0a111f; /* Background color of the corner where horizontal and vertical scrollbars meet */
+  background: #0B0E17; /* Main background color */
 }
 
-/* Firefox Scrollbar Styles */
+/* Firefox */
 * {
-  scrollbar-width: thin; /* Thin scrollbar */
-  scrollbar-color: #0a111f #0f192e; /* Thumb color and track color */
+  scrollbar-width: thin;
+  scrollbar-color: #131824 #0B0E17; /* Thumb color and track color */
 }
+
 .swiper-container {
   display: flex;
   justify-content: center;

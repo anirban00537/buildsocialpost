@@ -54,7 +54,7 @@ const ImageUploadModal: React.FC<ImageUploadModalProps> = ({
           key={i}
           variant={i === currentPage ? "default" : "outline"}
           onClick={() => handlePageChange(i)}
-          className="mx-1"
+          className="mx-1 bg-opacity-70 bg-gray-700 text-white hover:bg-opacity-90 border border-gray-600 transition-all duration-200"
         >
           {i}
         </Button>
@@ -66,8 +66,8 @@ const ImageUploadModal: React.FC<ImageUploadModalProps> = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="w-[800px] max-h-[85vh] overflow-y-auto border-borderColor text-textColor">
-        <h2 className="text-lg font-semibold mb-4 text-textColor ">
+      <DialogContent className="w-[800px] max-h-[85vh] overflow-y-auto bg-opacity-80 bg-background backdrop-filter backdrop-blur-md border border-borderColor rounded-lg text-white">
+        <h2 className="text-lg font-semibold mb-4 text-white">
           Image Management
         </h2>
 
@@ -78,7 +78,7 @@ const ImageUploadModal: React.FC<ImageUploadModalProps> = ({
         ) : (
           <>
             <div className="mb-4">
-              <p className="text-textColor">
+              <p className="text-white">
                 Total Usage: {totalUsage.toFixed(2)} MB / {MAX_STORAGE_MB} MB
               </p>
               <progress
@@ -92,12 +92,12 @@ const ImageUploadModal: React.FC<ImageUploadModalProps> = ({
 
             <div
               {...getRootProps()}
-              className={`border-2 border-dashed p-4 rounded-lg cursor-pointer ${
+              className={`border-2 border-dashed p-4 rounded-lg cursor-pointer bg-opacity-60 bg-cardBackground hover:bg-opacity-70 transition-all duration-200 ${
                 uploadLoading ? "cursor-not-allowed" : "hover:border-gray-400"
               }`}
             >
               <input {...getInputProps()} />
-              <p className="text-center text-textColor">
+              <p className="text-center text-white">
                 {uploadLoading
                   ? "Uploading..."
                   : "Drag & drop images here, or click to select images (max 100 MB)"}
@@ -105,11 +105,11 @@ const ImageUploadModal: React.FC<ImageUploadModalProps> = ({
             </div>
 
             {isLoading ? (
-              <p className="mt-4 text-center text-textColor">
+              <p className="mt-4 text-center text-white">
                 Loading images...
               </p>
             ) : uploadedImages.length === 0 ? (
-              <p className="mt-4 text-center text-textColor">
+              <p className="mt-4 text-center text-white">
                 No images uploaded yet.
               </p>
             ) : (
@@ -154,7 +154,7 @@ const ImageUploadModal: React.FC<ImageUploadModalProps> = ({
                         variant="outline"
                         onClick={() => handlePageChange(currentPage - 1)}
                         disabled={currentPage === 1}
-                        className="mr-2"
+                        className="mr-2 bg-opacity-70 bg-gray-700 text-white hover:bg-opacity-90 border border-gray-600 transition-all duration-200"
                       >
                         <ChevronLeft className="w-4 h-4" />
                         Previous
@@ -164,7 +164,7 @@ const ImageUploadModal: React.FC<ImageUploadModalProps> = ({
                         variant="outline"
                         onClick={() => handlePageChange(currentPage + 1)}
                         disabled={currentPage === totalPages}
-                        className="ml-2"
+                        className="ml-2 bg-opacity-70 bg-gray-700 text-white hover:bg-opacity-90 border border-gray-600 transition-all duration-200"
                       >
                         Next
                         <ChevronRight className="w-4 h-4" />
@@ -181,9 +181,13 @@ const ImageUploadModal: React.FC<ImageUploadModalProps> = ({
                         value={jumpToPage}
                         onChange={(e) => setJumpToPage(e.target.value)}
                         placeholder="Jump to page"
-                        className="w-24 mr-2"
+                        className="w-24 mr-2 bg-opacity-70 bg-gray-700 text-white border border-gray-600"
                       />
-                      <Button type="submit" variant="outline">
+                      <Button
+                        type="submit"
+                        variant="outline"
+                        className="bg-opacity-70 bg-gray-700 text-white hover:bg-opacity-90 border border-gray-600 transition-all duration-200"
+                      >
                         Go
                       </Button>
                     </form>
@@ -194,7 +198,11 @@ const ImageUploadModal: React.FC<ImageUploadModalProps> = ({
           </>
         )}
 
-        <Button variant="default" onClick={onClose} className="mt-4 w-full">
+        <Button
+          variant="default"
+          onClick={onClose}
+          className="mt-4 w-full bg-opacity-70 bg-gray-700 text-white hover:bg-opacity-90 border border-gray-600 transition-all duration-200"
+        >
           Close
         </Button>
       </DialogContent>

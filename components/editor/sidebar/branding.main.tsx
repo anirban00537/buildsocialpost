@@ -20,9 +20,9 @@ const BrandingSection: React.FC = () => {
   } = useBranding();
 
   return (
-    <div className="w-full h-full p-2">
+    <div className="w-full h-full p-6">
       <form
-        className="grid w-full items-start gap-6 p-3 rounded-lg bg-background"
+        className="grid w-full items-start gap-6 rounded-lg bg-background"
         onSubmit={handleSubmit}
       >
         <legend className="text-lg font-semibold text-textColor">

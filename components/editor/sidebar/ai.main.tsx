@@ -47,11 +47,11 @@ const AiSettingsComponent = () => {
   const { subscribed } = useSelector((state: RootState) => state.user);
 
   return (
-    <div className="w-full h-full p-2 flex flex-col">
-      <legend className="text-lg font-semibold text-textColor mb-4">
-        AI Settings
-      </legend>
+    <div className="w-full h-full p-6 flex flex-col">
       <form className="flex flex-col h-full" onSubmit={generateContent}>
+        <legend className="text-lg font-semibold text-textColor mb-4">
+          AI Settings
+        </legend>
         <div className="flex-grow overflow-y-auto pr-2 mb-4">
           <fieldset className="grid gap-4 rounded-lg border border-borderColor p-4 bg-background">
             <div className="grid gap-2">
