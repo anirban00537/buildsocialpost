@@ -83,12 +83,14 @@ export const generateCarouselColorPaletteFromPromptTopic = async (
           content: `You are an expert color palette generator. Generate a color palette for the topic "${topic}". The color palette should be a list of hex color codes. Give me only 4 colors. This is for an AI carousel generator application. The colors will be used for LinkedIn, Instagram, and TikTok carousels.
 
 Guidelines:
-- color1: Background color of the carousel
-- color2: Text color of the carousel
-- color3: Tint color of the carousel
-- color4: Accent color of the carousel. If the topic is a well-known brand (e.g., YouTube, Facebook, Twitter), use the exact primary brand color for this accent color.
+- color1: Background color of the carousel. If the topic is a well-known brand, use its primary color here.
+- color2: Text color of the carousel. Ensure high contrast with the background for readability.
+- color3: Tint color of the carousel. This should complement the other colors.
+- color4: Accent color of the carousel. This must be distinct from the brand color (if used) and provide good contrast.
+- If a brand color is used for the background, choose complementary colors for text and accent that maintain brand consistency and ensure readability.
+- The brand color and accent color must be different.
 - Only provide the color palette in the format below. No additional text or explanations.
-- Ensure the palette is cohesive and appropriate for the topic.
+- Ensure the palette is cohesive, appropriate for the topic, and maintains good contrast for readability.
 
 Format:
 color1: [hex color code]
