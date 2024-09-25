@@ -1,5 +1,5 @@
-import React from "react";
-import { Zap, Brain } from "lucide-react";
+import React, { useState } from "react";
+import { Zap, Brain, Sun, Moon } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import {
   Select,
@@ -15,6 +15,7 @@ import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { useSelector } from "react-redux";
 import { RootState } from "@/state/store";
+import { cn } from "@/lib/utils";
 
 const AiSettingsComponent = () => {
   const {
@@ -30,6 +31,8 @@ const AiSettingsComponent = () => {
     setMood,
     mood,
     loading,
+    theme,
+    setTheme,
   } = useGenerateContent();
   const { subscribed } = useSelector((state: RootState) => state.user);
 
@@ -116,6 +119,40 @@ const AiSettingsComponent = () => {
                 <SelectItem value="zh">Chinese</SelectItem>
               </SelectContent>
             </Select>
+          </div>
+
+          <div className="grid gap-3">
+            <Label htmlFor="theme" className="text-textColor">
+              Color Theme
+            </Label>
+            <div className="grid grid-cols-2 gap-3">
+              <Button
+                size="xs"
+                type="button"
+                className={`border border-borderColor text-textColor p-2 flex items-center justify-center rounded-md transition-all duration-150 ${
+                  theme === "light"
+                    ? "bg-primary text-white"
+                    : "hover:bg-primary text-textColor bg-cardBackground"
+                }`}
+                onClick={() => setTheme("light")}
+              >
+                <Sun size={20} className="mr-2" />
+                Light
+              </Button>
+              <Button
+                size="xs"
+                type="button"
+                className={`border border-borderColor text-textColor p-2 flex items-center justify-center rounded-md transition-all duration-150 ${
+                  theme === "dark"
+                    ? "bg-primary text-white"
+                    : "hover:bg-primary text-textColor bg-cardBackground"
+                }`}
+                onClick={() => setTheme("dark")}
+              >
+                <Moon size={20} className="mr-2" />
+                Dark
+              </Button>
+            </div>
           </div>
         </fieldset>
 

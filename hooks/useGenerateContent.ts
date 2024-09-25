@@ -7,9 +7,9 @@ export const useGenerateContent = () => {
   const [numSlides, setNumSlides] = useState(5);
   const [temperature, setTemperature] = useState(0.2);
   const [language, setLanguage] = useState("en");
-  // const [model, setModel] = useState("gpt-3.5-turbo");
   const [mood, setMood] = useState("Neutral");
   const [loading, setLoading] = useState(false);
+  const [theme, setTheme] = useState("light");
   const dispatch = useDispatch();
 
   const generateContent = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -26,8 +26,8 @@ export const useGenerateContent = () => {
           numSlides,
           temperature,
           language,
-          // model,
           mood,
+          theme,
         }),
       });
 
@@ -69,5 +69,7 @@ export const useGenerateContent = () => {
     setMood,
     mood,
     loading,
+    theme,
+    setTheme,
   };
 };
