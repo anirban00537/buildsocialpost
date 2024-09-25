@@ -20,43 +20,43 @@ const BrandingSection: React.FC = () => {
   } = useBranding();
 
   return (
-    <div className="w-full h-full p-6">
+    <div className="w-full h-full p-4 flex flex-col bg-background/50 backdrop-blur-sm">
       <form
-        className="grid w-full items-start gap-6 rounded-lg bg-background"
+        className="flex flex-col h-full"
         onSubmit={handleSubmit}
       >
-        <legend className="text-lg font-semibold text-textColor">
+        <legend className="text-base font-semibold text-textColor mb-3">
           Branding
         </legend>
-        <fieldset className="grid gap-6 rounded-lg border border-borderColor p-4 bg-background">
-          <div className="grid gap-3">
-            <Label htmlFor="name" className="text-textColor">
+        <div className="flex-grow overflow-y-auto pr-2 mb-4 space-y-4">
+          <div className="space-y-2">
+            <Label htmlFor="name" className="text-sm text-textColor/80">
               Name
             </Label>
             <Input
               id="name"
               placeholder="Enter your name..."
-              className="min-h-[3.5rem] rounded-lg border text-textColor border-borderColor bg-cardBackground"
+              className="h-8 text-xs rounded-md border border-borderColor/50 text-textColor bg-cardBackground/50"
               value={name}
               onChange={handleNameChange}
             />
           </div>
 
-          <div className="grid gap-3">
-            <Label htmlFor="handle" className="text-textColor">
+          <div className="space-y-2">
+            <Label htmlFor="handle" className="text-sm text-textColor/80">
               Handle
             </Label>
             <Input
               id="handle"
               placeholder="Enter your handle..."
-              className="min-h-[3.5rem] rounded-lg border text-textColor border-borderColor bg-cardBackground"
+              className="h-8 text-xs rounded-md border border-borderColor/50 text-textColor bg-cardBackground/50"
               value={handle}
               onChange={handleHandleChange}
             />
           </div>
 
-          <div className="grid gap-3">
-            <Label htmlFor="headshot" className="text-textColor">
+          <div className="space-y-2">
+            <Label htmlFor="headshot" className="text-sm text-textColor/80">
               Headshot
             </Label>
             <div className="flex items-center gap-3">
@@ -69,35 +69,35 @@ const BrandingSection: React.FC = () => {
               />
               <label
                 htmlFor="headshot"
-                className="cursor-pointer flex items-center gap-2 border rounded-lg p-2 text-sm font-medium text-textColor border-borderColor bg-cardBackground hover:bg-gray-100"
+                className="cursor-pointer flex items-center gap-2 border rounded-md p-1.5 text-xs font-medium text-textColor border-borderColor/50 bg-cardBackground/50 hover:bg-cardBackground/70 transition-colors duration-200"
               >
-                <UploadIcon size={20} />
+                <UploadIcon size={14} />
                 Upload Headshot
               </label>
               {headshot && (
                 <Image
                   src={headshot}
                   alt="Headshot"
-                  width={50}
-                  height={50}
+                  width={32}
+                  height={32}
                   className="rounded-full"
                 />
               )}
             </div>
           </div>
-        </fieldset>
+        </div>
 
         <Button
           type="submit"
           variant="default"
-          size="lg"
-          className="mt-4 w-full"
+          size="sm"
+          className="w-full text-sm"
           disabled={loading || !user}
         >
           {loading ? (
             <>
               <svg
-                className="animate-spin h-5 w-5 mr-2"
+                className="animate-spin h-4 w-4 mr-2"
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
                 viewBox="0 0 24 24"

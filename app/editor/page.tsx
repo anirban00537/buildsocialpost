@@ -45,7 +45,7 @@ function Dashboard() {
           />
         </div>
         <main
-          className={`flex-1 max-h-full p-5 bg-background overflow-hidden overflow-y-scroll main-bg relative transition-all duration-300 ease-in-out ${
+          className={`flex-1 max-h-full p-5 bg-gradient-to-t from-background via-cardBackground to-background overflow-hidden overflow-y-scroll main-bgs relative transition-all duration-300 ease-in-out ${
             isCollapsed ? "ml-0" : "md:ml-[390px]"
           }`}
         >

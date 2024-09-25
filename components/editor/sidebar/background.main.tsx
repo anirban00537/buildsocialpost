@@ -38,7 +38,8 @@ const BackgroundColorsSection = () => {
     (state: RootState) => state.slides.sharedSelectedElement
   );
   const layout = useSelector((state: RootState) => state.slides.layout);
-  const [displayColorPicker, setDisplayColorPicker] = React.useState<{
+
+  const [displayColorPicker, setDisplayColorPicker] = useState<{
     [key: string]: boolean;
   }>({
     color1: false,
@@ -46,7 +47,6 @@ const BackgroundColorsSection = () => {
     color3: false,
     color4: false,
   });
-
   const [showAllLightPresets, setShowAllLightPresets] = useState(false);
   const [showAllDarkPresets, setShowAllDarkPresets] = useState(false);
 
@@ -57,39 +57,24 @@ const BackgroundColorsSection = () => {
     ? darkColorPresets
     : darkColorPresets.slice(0, 12);
 
-  const handlePatternChange = (value: string) => {
-    dispatch(setPattern(value));
-  };
-
+  const handlePatternChange = (value: string) => dispatch(setPattern(value));
   const handleColorChange = (
     colorKey: keyof BackgroundColors,
     colorValue: string
   ) => {
-    dispatch(
-      setBackground({
-        ...background,
-        [colorKey]: colorValue,
-      })
-    );
+    dispatch(setBackground({ ...background, [colorKey]: colorValue }));
   };
-
   const handleColorPickerClick = (colorKey: keyof BackgroundColors) => {
     setDisplayColorPicker({
       ...displayColorPicker,
       [colorKey]: !displayColorPicker[colorKey],
     });
   };
-
   const handleColorPickerClose = (colorKey: keyof BackgroundColors) => {
-    setDisplayColorPicker({
-      ...displayColorPicker,
-      [colorKey]: false,
-    });
+    setDisplayColorPicker({ ...displayColorPicker, [colorKey]: false });
   };
-
-  const handlePresetSelect = (preset: BackgroundColors) => {
+  const handlePresetSelect = (preset: BackgroundColors) =>
     dispatch(setBackground(preset));
-  };
 
   const patterns = [
     "/backgrounds/background1.svg",
@@ -102,317 +87,261 @@ const BackgroundColorsSection = () => {
   ];
 
   return (
-    <div className="p-6 bg-background rounded-lg overflow-y-auto h-full pb-20">
-      <form className="grid gap-6  rounded-lg">
-        <legend className="text-lg font-semibold text-textColor">
-          Background Colors
-        </legend>
-        <div className="border border-borderColor p-4 rounded-lg">
-          <label
-            htmlFor="color1"
-            className="block text-sm font-medium text-textColor mb-3"
-          >
+    <div className="w-full h-full p-4 flex flex-col bg-background/50 backdrop-blur-sm">
+      <legend className="text-base font-semibold text-textColor mb-3">
+        Background Settings
+      </legend>
+      <div className="flex-grow overflow-y-auto pr-2 mb-4 space-y-6">
+        {/* Custom Background Colors */}
+        <div className="space-y-2">
+          <label className="text-sm text-textColor/80">
             Custom Background Color
           </label>
-          <div className="grid grid-cols-4 gap-4 mb-4">
+          <div className="grid grid-cols-4 gap-2">
             {(Object.keys(background) as Array<keyof BackgroundColors>).map(
               (colorKey) => (
+                <Popover key={colorKey}>
+                  <PopoverTrigger asChild>
+                    <div
+                      className="w-full h-8 border border-borderColor/50 cursor-pointer rounded-md transition-all hover:scale-105"
+                      style={{ backgroundColor: background[colorKey] }}
+                      onClick={() => handleColorPickerClick(colorKey)}
+                    />
+                  </PopoverTrigger>
+                  <PopoverContent
+                    className="w-auto p-0 border-none"
+                    onMouseLeave={() => handleColorPickerClose(colorKey)}
+                  >
+                    <HexColorPicker
+                      color={background[colorKey]}
+                      onChange={(color) => handleColorChange(colorKey, color)}
+                    />
+                  </PopoverContent>
+                </Popover>
+              )
+            )}
+          </div>
+        </div>
+
+        {/* Light Presets */}
+        <div className="space-y-2">
+          <label className="text-sm text-textColor/80">Light Presets</label>
+          <div className="grid grid-cols-4 gap-2">
+            {visibleLightPresets.map(
+              (preset: BackgroundColors, index: number) => (
                 <div
-                  key={colorKey}
-                  className="flex flex-col items-center justify-center relative"
+                  key={index}
+                  className="w-full h-8 border border-borderColor/50 cursor-pointer rounded-md grid grid-cols-4 transition-all hover:scale-105"
+                  onClick={() => handlePresetSelect(preset)}
                 >
-                  <Popover>
-                    <PopoverTrigger asChild>
-                      <div
-                        className="w-full h-10 border border-borderColor cursor-pointer rounded-md transition-transform transform hover:scale-110 flex items-center justify-center"
-                        style={{
-                          backgroundColor: background[colorKey],
-                        }}
-                        onClick={() => handleColorPickerClick(colorKey)}
-                      />
-                    </PopoverTrigger>
-                    <PopoverContent
-                      className="z-50 w-auto h-auto flex items-center justify-center bg-cardBackground rounded-lg p-2"
-                      onMouseLeave={() => handleColorPickerClose(colorKey)}
-                    >
-                      <HexColorPicker
-                        color={background[colorKey]}
-                        onChange={(color) => handleColorChange(colorKey, color)}
-                      />
-                    </PopoverContent>
-                  </Popover>
+                  {Object.values(preset).map((color, colorIndex) => (
+                    <div
+                      key={colorIndex}
+                      className={`transition-colors duration-200 ease-in-out ${
+                        colorIndex === 0
+                          ? "rounded-l-md"
+                          : colorIndex === 3
+                          ? "rounded-r-md"
+                          : ""
+                      }`}
+                      style={{ backgroundColor: color }}
+                    />
+                  ))}
                 </div>
               )
             )}
           </div>
-
-          <div className="mt-6">
-            <label
-              htmlFor="preset"
-              className="block text-sm font-medium text-textColor mb-2"
+          {lightColorPresets.length > 12 && (
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={() => setShowAllLightPresets(!showAllLightPresets)}
+              className="w-full text-xs border border-borderColor  bg-cardBackground/60 text-textColor"
             >
-              Light Presets
-            </label>
-            <div className="grid grid-cols-4 gap-2 mb-2">
-              {visibleLightPresets.map(
-                (preset: BackgroundColors, index: number) => (
-                  <div
-                    key={index}
-                    className="w-full h-8 border border-borderColor cursor-pointer rounded-md grid grid-cols-4 transition-transform transform hover:scale-105 hover"
-                    onClick={() => handlePresetSelect(preset)}
-                  >
+              {showAllLightPresets ? "Show Less" : "Show More"}
+            </Button>
+          )}
+        </div>
+
+        {/* Dark Presets */}
+        <div className="space-y-2">
+          <label className="text-sm text-textColor/80">Dark Presets</label>
+          <div className="grid grid-cols-4 gap-2">
+            {visibleDarkPresets.map(
+              (preset: BackgroundColors, index: number) => (
+                <div
+                  key={index}
+                  className="w-full h-8 border border-borderColor  cursor-pointer rounded-md grid grid-cols-4 transition-all hover:scale-105"
+                  onClick={() => handlePresetSelect(preset)}
+                >
+                  {Object.values(preset).map((color, colorIndex) => (
                     <div
-                      className="transition-colors duration-200 ease-in-out rounded-l-md"
-                      style={{
-                        backgroundColor: preset.color1,
-                        width: "100%",
-                        height: "100%",
-                      }}
-                    ></div>
-                    <div
-                      className="transition-colors duration-200 ease-in-out"
-                      style={{
-                        backgroundColor: preset.color2,
-                        width: "100%",
-                        height: "100%",
-                      }}
-                    ></div>
-                    <div
-                      className="transition-colors duration-200 ease-in-out"
-                      style={{
-                        backgroundColor: preset.color3,
-                        width: "100%",
-                        height: "100%",
-                      }}
-                    ></div>
-                    <div
-                      className="transition-colors duration-200 ease-in-out rounded-r-md"
-                      style={{
-                        backgroundColor: preset.color4,
-                        width: "100%",
-                        height: "100%",
-                      }}
-                    ></div>
-                  </div>
-                )
-              )}
-            </div>
-            {lightColorPresets.length > 12 && (
-              <button
-                type="button"
-                className="mt-2 p-2 border border-borderColor w-full cursor-pointer text-textColor rounded-md hover:bg-primary/10 transition-colors"
-                onClick={() => setShowAllLightPresets(!showAllLightPresets)}
-              >
-                {showAllLightPresets ? "Show Less" : "Show More"}
-              </button>
+                      key={colorIndex}
+                      className={`transition-colors duration-200 ease-in-out ${
+                        colorIndex === 0
+                          ? "rounded-l-md"
+                          : colorIndex === 3
+                          ? "rounded-r-md"
+                          : ""
+                      }`}
+                      style={{ backgroundColor: color }}
+                    />
+                  ))}
+                </div>
+              )
             )}
           </div>
-
-          <div className="mt-6">
-            <label
-              htmlFor="preset"
-              className="block text-sm font-medium text-textColor mb-2"
+          {darkColorPresets.length > 12 && (
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={() => setShowAllDarkPresets(!showAllDarkPresets)}
+              className="w-full text-xs border border-borderColor/50 text-textColor bg-cardBackground/60"
             >
-              Dark Presets
-            </label>
-            <div className="grid grid-cols-4 gap-2 mb-2 border border-borderColor rounded-lg">
-              {visibleDarkPresets.map(
-                (preset: BackgroundColors, index: number) => (
-                  <div
-                    key={index}
-                    className="w-full h-8 border border-borderColor cursor-pointer rounded-md grid grid-cols-4 transition-transform transform hover:scale-105 hover"
-                    onClick={() => handlePresetSelect(preset)}
-                  >
-                    <div
-                      className="transition-colors duration-200 ease-in-out rounded-l-md"
-                      style={{
-                        backgroundColor: preset.color1,
-                        width: "100%",
-                        height: "100%",
-                      }}
-                    ></div>
-                    <div
-                      className="transition-colors duration-200 ease-in-out"
-                      style={{
-                        backgroundColor: preset.color2,
-                        width: "100%",
-                        height: "100%",
-                      }}
-                    ></div>
-                    <div
-                      className="transition-colors duration-200 ease-in-out"
-                      style={{
-                        backgroundColor: preset.color3,
-                        width: "100%",
-                        height: "100%",
-                      }}
-                    ></div>
-                    <div
-                      className="transition-colors duration-200 ease-in-out rounded-r-md"
-                      style={{
-                        backgroundColor: preset.color4,
-                        width: "100%",
-                        height: "100%",
-                      }}
-                    ></div>
-                  </div>
-                )
-              )}
-            </div>
-            {darkColorPresets.length > 12 && (
-              <button
-                type="button"
-                className="mt-2 p-2 border border-borderColor w-full cursor-pointer text-textColor rounded-md hover:bg-primary/10 transition-colors"
-                onClick={() => setShowAllDarkPresets(!showAllDarkPresets)}
-              >
-                {showAllDarkPresets ? "Show Less" : "Show More"}
-              </button>
-            )}
-          </div>
+              {showAllDarkPresets ? "Show Less" : "Show More"}
+            </Button>
+          )}
         </div>
-      </form>
 
-      <form className="grid gap-6 p-4 mt-6 bg-background rounded-lg">
-        <legend className="text-lg font-semibold text-textColor">
-          Glass Morphism
-        </legend>
-        <div className="flex items-center justify-between">
-          <Label htmlFor="glassMorphism" className="text-textColor">
-            Enable Glass Morphism
-          </Label>
-          <Switch
-            id="glassMorphism"
-            checked={glassMorphism}
-            onCheckedChange={(checked) => dispatch(setGlassMorphism(checked))}
-          />
+        {/* Glass Morphism */}
+        <div className="space-y-2">
+          <div className="flex items-center justify-between">
+            <label className="text-sm text-textColor/80">
+              Enable Glass Morphism
+            </label>
+            <Switch
+              checked={glassMorphism}
+              onCheckedChange={(checked) => dispatch(setGlassMorphism(checked))}
+            />
+          </div>
+          {glassMorphism && (
+            <>
+              <div className="space-y-2">
+                <label className="text-xs text-textColor/70">
+                  Glass Opacity
+                </label>
+                <Slider
+                  max={1}
+                  step={0.01}
+                  value={[glassMorphismOpacity || 0.1]}
+                  onValueChange={(value) =>
+                    dispatch(setGlassMorphismOpacity(value[0]))
+                  }
+                />
+              </div>
+              <div className="space-y-2">
+                <label className="text-xs text-textColor/70">Glass Blur</label>
+                <Slider
+                  max={20}
+                  step={1}
+                  value={[glassMorphismBlur || 10]}
+                  onValueChange={(value) =>
+                    dispatch(setGlassMorphismBlur(value[0]))
+                  }
+                />
+              </div>
+            </>
+          )}
         </div>
-        {glassMorphism && (
-          <div className="grid gap-3">
-            <Label htmlFor="glassMorphismOpacity" className="text-textColor">
-              Glass Opacity
-            </Label>
-            <Slider
-              id="glassMorphismOpacity"
-              max={1}
-              step={0.01}
-              value={[glassMorphismOpacity || 0.1]}
-              onValueChange={(value) =>
-                dispatch(setGlassMorphismOpacity(value[0]))
-              }
-            />
-            <Label htmlFor="glassMorphismBlur" className="text-textColor">
-              Glass Blur
-            </Label>
-            <Slider
-              id="glassMorphismBlur"
-              max={20}
-              step={1}
-              value={[glassMorphismBlur || 10]}
-              onValueChange={(value) =>
-                dispatch(setGlassMorphismBlur(value[0]))
-              }
-            />
-          </div>
-        )}
-      </form>
-      <form className="grid gap-6 p-4 mt-6 bg-background rounded-lg">
-        <legend className="text-lg font-semibold text-textColor">
-          Pattern
-        </legend>
-        <div className="border border-borderColor p-2 rounded-lg grid grid-cols-4 gap-4">
-          <div
-            className={`flex justify-center items-center p-2 rounded-lg ${
-              pattern === "" ? "bg-primary" : "bg-green-400"
-            }`}
-            onClick={() => {
-              handlePatternChange("");
-            }}
-          >
-            <CircleOff size={20} className="text-white" />
-          </div>
-          {patterns.map((patternItem, index) => (
+
+        {/* Pattern */}
+        <div className="space-y-2">
+          <label className="text-sm text-textColor/80">Pattern</label>
+          <div className="grid grid-cols-4 gap-2">
             <div
-              key={index}
-              className={`flex justify-center  items-center p-2 rounded-lg ${
-                pattern === patternItem ? "bg-primary" : "bg-green-400"
+              className={`flex justify-center items-center p-2 rounded-md ${
+                pattern === ""
+                  ? "bg-blue-200 border border-blue-500"
+                  : "bg-gray-300"
               }`}
-              onClick={() => {
-                handlePatternChange(patternItem);
-              }}
+              onClick={() => handlePatternChange("")}
             >
+              <CircleOff size={16} className="text-gray-500" />
+            </div>
+            {patterns.map((patternItem, index) => (
               <div
-                className="w-full h-10 border border-borderColor rounded-md"
-                style={{
-                  background: `url(${patternItem})`,
-                  backgroundSize: "cover",
-                  backgroundPosition: "center",
-                }}
-              />
-              {}
-            </div>
-          ))}
-        </div>
-        <div className="grid gap-3 mt-4">
-          <Label htmlFor="backgroundOpacity" className="text-textColor">
-            Background Opacity
-          </Label>
-          <Slider
-            id="backgroundOpacity"
-            max={2}
-            step={0.01}
-            value={[layout.backgroundOpacity]}
-            onValueChange={(value) => dispatch(setBackgroundOpacity(value[0]))}
-          />
-        </div>
-      </form>
-
-      <form className="grid gap-6 p-4 mt-6 bg-background rounded-lg">
-        <legend className="text-lg font-semibold text-textColor">
-          Shared Elements
-        </legend>
-        <div className="border border-borderColor bg-cardBackground p-2 rounded-lg grid grid-cols-4 gap-4">
-          <div
-            className={`flex justify-center items-center p-2 rounded-lg ${
-              sharedSelectedElement?.id === 0 ? "bg-primary/20" : "bg-green-400"
-            }`}
-            onClick={() => {
-              dispatch(setSharedSelectedElementId(0));
-              dispatch(setSharedSelectedElementOpacity(0.4));
-            }}
-          >
-            <CircleOff size={20} />
+                key={index}
+                className={`flex justify-center items-center p-2 rounded-md ${
+                  pattern === patternItem
+                    ? "bg-blue-200 border border-blue-500"
+                    : "bg-gray-300"
+                }`}
+                onClick={() => handlePatternChange(patternItem)}
+              >
+                <div
+                  className="w-full h-6 rounded-md"
+                  style={{
+                    background: `url(${patternItem})`,
+                    backgroundSize: "cover",
+                    backgroundPosition: "center",
+                  }}
+                />
+              </div>
+            ))}
           </div>
-          {sharedElements.map((element) => (
+          <div className="space-y-2">
+            <label className="text-xs text-textColor/70">
+              Background Opacity
+            </label>
+            <Slider
+              max={2}
+              step={0.01}
+              value={[layout.backgroundOpacity]}
+              onValueChange={(value) =>
+                dispatch(setBackgroundOpacity(value[0]))
+              }
+            />
+          </div>
+        </div>
+
+        {/* Shared Elements */}
+        <div className="space-y-2">
+          <label className="text-sm text-textColor/80">Shared Elements</label>
+          <div className="grid grid-cols-4 gap-2">
             <div
-              key={element?.id}
-              className={`flex justify-center items-center p-2 rounded-lg ${
-                sharedSelectedElement?.id === element?.id
-                  ? "bg-primary"
-                  : "bg-green-400"
+              className={`flex justify-center items-center p-2 rounded-md ${
+                sharedSelectedElement?.id === 0
+                  ? "bg-blue-200 border border-blue-500"
+                  : "bg-gray-300"
               }`}
               onClick={() => {
-                dispatch(setSharedSelectedElementId(element.id));
+                dispatch(setSharedSelectedElementId(0));
                 dispatch(setSharedSelectedElementOpacity(0.4));
               }}
             >
-              <element.component />
+              <CircleOff size={16} className="text-textColor" />
             </div>
-          ))}
+            {sharedElements.map((element) => (
+              <div
+                key={element?.id}
+                className={`flex justify-center items-center p-2 rounded-md ${
+                  sharedSelectedElement?.id === element?.id
+                    ? "bg-blue-200 border border-blue-500"
+                    : "bg-gray-300"
+                }`}
+                onClick={() => {
+                  dispatch(setSharedSelectedElementId(element.id));
+                  dispatch(setSharedSelectedElementOpacity(0.4));
+                }}
+              >
+                {/* blue color */}
+                <element.component />
+              </div>
+            ))}
+          </div>
+          <div className="space-y-2">
+            <label className="text-xs text-textColor/70">Opacity</label>
+            <Slider
+              max={1}
+              step={0.01}
+              value={[sharedSelectedElement?.opacity || 0]}
+              onValueChange={(value) =>
+                dispatch(setSharedSelectedElementOpacity(value[0]))
+              }
+            />
+          </div>
         </div>
-        <div className="grid gap-3">
-          <Label htmlFor="opacity" className="text-textColor">
-            Opacity
-          </Label>
-          <Slider
-            max={1}
-            step={0.01}
-            value={[sharedSelectedElement?.opacity || 0]}
-            onValueChange={(value) =>
-              dispatch(setSharedSelectedElementOpacity(value[0]))
-            }
-          />
-        </div>
-      </form>
+      </div>
     </div>
   );
 };

@@ -115,21 +115,23 @@ const Hero = () => {
             Create Stunning Carousels with AI
           </motion.h1>
           <motion.h2
-            className="text-5xl text-textColor leading-tight font-extrabold md:text-6xl lg:text-7xl"
+            className="text-5xl leading-tight font-extrabold md:text-6xl lg:text-7xl"
             style={{ lineHeight: "1.2" }}
             variants={textVariants}
           >
-            Design{" "}
-            <motion.span
-              key={currentPlatform}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-              className={`inline-block text-transparent bg-clip-text bg-gradient-to-r ${platforms[currentPlatform].gradient}`}
-            >
-              {platforms[currentPlatform].name}
-            </motion.span>{" "}
-            Carousels <span className=" bg-clip-text ">With AI</span>
+            <span className="inline-block text-transparent bg-clip-text bg-gradient-to-b from-gray-100 via-gray-300 to-gray-600">
+              Create{" "}
+              <motion.span
+                key={currentPlatform}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
+                className={`inline-block text-transparent bg-clip-text bg-primary`}
+              >
+                {platforms[currentPlatform].name}
+              </motion.span>{" "}
+              Carousels using AI
+            </span>
           </motion.h2>
           <motion.p
             className="text-xl text-textColor/70 max-w-2xl mx-auto"
@@ -145,17 +147,16 @@ const Hero = () => {
           >
             <Link
               href="/editor"
-              className="group flex items-center justify-center py-3 px-6 text-lg text-white font-medium bg-primary rounded-full hover:bg-primary/80 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
+              className="group relative inline-flex items-center justify-center py-3 px-6 text-sm text-white font-medium bg-[#1e2530] rounded-full hover:bg-[#2a3441] transition-all duration-300 shadow-lg hover:shadow-xl overflow-hidden"
             >
-              Get started
-              <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
+              <span className="relative z-10">
+                It's free. Sign up now
+                <ArrowRight className="inline-block ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              </span>
+              <span className="absolute inset-0 overflow-hidden rounded-full">
+                <span className="absolute inset-0 rounded-full bg-gradient-to-r from-primary via-primary/50 to-primary bg-[length:200%_100%] animate-gradient-x" />
+              </span>
             </Link>
-            {/* <a
-              href="#demo"
-              className="text-lg text-primary font-medium hover:text-primary/80 transition-colors duration-300"
-            >
-              Watch demo
-            </a> */}
           </motion.div>
         </motion.div>
 
@@ -167,21 +168,6 @@ const Hero = () => {
             <AnimatedTooltip items={people} />
           </div>
         </div>
-
-        <motion.div
-          ref={demoRef}
-          className="w-full max-w-4xl mx-auto mt-16 flex items-center justify-center"
-          style={{ scale, opacity }}
-        >
-          <Image
-            src="/demo.png"
-            className=" bg-gradient-to-r from-blue-600 to-teal-400 rounded-xl shadow-2xl p-1"
-            alt="Carousel AI Demo"
-            priority
-            height={926}
-            width={1480}
-          />
-        </motion.div>
       </div>
     </motion.section>
   );

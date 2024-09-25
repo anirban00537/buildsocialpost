@@ -28,8 +28,19 @@ const PricingSection = () => {
   };
 
   return (
-    <section className="py-24 ">
-      <div className="container mx-auto px-4 max-w-5xl">
+    <section className="py-24 relative overflow-hidden">
+      {/* Gradient background */}
+      <div className="absolute inset-0 z-0">
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full h-full">
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-gradient-to-br from-primary/70 to-transparent rounded-full filter blur-3xl"></div>
+          <div className="absolute top-1/4 left-1/4 -translate-x-1/2 -translate-y-1/2 w-72 h-72 bg-gradient-to-br from-primary/70 to-transparent rounded-full filter blur-3xl"></div>
+        </div>
+        <div className="absolute top-1/4 left-0 w-1/3 h-1/3 bg-gradient-to-br from-primary/30 to-transparent rounded-full filter blur-3xl"></div>
+        <div className="absolute top-1/3 right-0 w-1/3 h-1/3 bg-gradient-to-br from-primary/30 to-transparent rounded-full filter blur-3xl"></div>
+        <div className="absolute bottom-1/4 right-0 w-1/3 h-1/6 bg-gradient-to-br from-primary/30 to-transparent rounded-full filter blur-3xl"></div>
+      </div>
+
+      <div className="container mx-auto px-4 max-w-5xl relative z-10">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -48,12 +59,12 @@ const PricingSection = () => {
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.5, delay: 0.2 }}
-          className="bg-cardBackground rounded-3xl shadow-2xl overflow-hidden"
+          className="bg-cardBackground/80 backdrop-blur-md rounded-3xl shadow-2xl overflow-hidden"
         >
           <div className="grid md:grid-cols-2">
             <div className="p-10 flex flex-col justify-between">
               <div>
-                <h3 className="text-2xl font-semibold text-gray-900 mb-2">
+                <h3 className="text-2xl font-semibold text-textColor mb-2">
                   {plan.name}
                 </h3>
                 <p className="text-textColor/70 mb-6">{plan.description}</p>
@@ -75,7 +86,7 @@ const PricingSection = () => {
                 </motion.button>
               </Link>
             </div>
-            <div className="bg-cardBackground p-10">
+            <div className="bg-cardBackground/50 backdrop-blur-sm p-10">
               <h4 className="text-lg font-semibold text-textColor mb-4">
                 What's included:
               </h4>
@@ -96,22 +107,6 @@ const PricingSection = () => {
             </div>
           </div>
         </motion.div>
-
-        {/* <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.5, delay: 0.4 }}
-          className="mt-16 text-center"
-        >
-          <p className="text-textColor/70 mb-2">Still have questions?</p>
-          <a
-            href="#contact"
-            className="inline-flex items-center text-primary font-semibold hover:text-primary-dark transition-colors"
-          >
-            Contact our support team
-            <ArrowRight className="ml-1 w-4 h-4" />
-          </a>
-        </motion.div> */}
       </div>
     </section>
   );

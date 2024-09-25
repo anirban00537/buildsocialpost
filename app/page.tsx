@@ -49,6 +49,11 @@ const Page = () => {
 
   return (
     <div className="mx-auto inset-0 -z-10 h-full w-full bg-background">
+      <div className="absolute inset-0 z-0">
+        <div className="absolute top-0 left-0 w-1/3 h-1/3 bg-gradient-to-br from-primary/30 to-transparent rounded-full filter blur-3xl"></div>
+        <div className="absolute top-1/4 right-0 w-1/4 h-1/4 bg-gradient-to-bl from-primary/30 to-transparent rounded-full filter blur-3xl"></div>
+        <div className="absolute bottom-0 left-1/4 w-1/3 h-1/3 bg-gradient-to-tr from-primary/30 to-transparent rounded-full filter blur-3xl"></div>
+      </div>
       <div className="">
         <nav className="relative items-center pt-5 px-4 mx-auto max-w-screen-xl sm:px-8 md:flex md:space-x-6">
           <div className="flex justify-between items-center">
@@ -114,7 +119,7 @@ const Page = () => {
             <li className="order-2 py-5 md:py-0">
               <a
                 href="https://www.linkedin.com/in/anirban00537/"
-                className="py-2 px-5 rounded-lg font-medium text-white text-center bg-primary hover:bg-primary/90  duration-150 block md:py-3 md:inline"
+                className="group relative inline-flex items-center justify-center py-3 px-6 text-sm text-white font-medium bg-[#1e2530] rounded-full hover:bg-[#2a3441] transition-all duration-300 shadow-lg hover:shadow-xl overflow-hidden"
               >
                 Hire Me � For Your next project
               </a>
@@ -130,8 +135,15 @@ const Page = () => {
       <PlanSection />
       <Testimonial />
 
-      <footer className="pt-10 bg-cardBackground">
-        <div className="max-w-screen-xl mx-auto px-4 text-textColor md:px-8">
+      <footer className="pt-10 relative overflow-hidden">
+        {/* Gradient background */}
+        <div className="absolute inset-0 z-0">
+          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full h-full"></div>
+          <div className="absolute top-64 right-0 w-1/3 h-[50px] bg-gradient-to-bl from-primary/30 to-transparent rounded-full filter blur-3xl"></div>
+          <div className="absolute bottom-1/4 left-0 w-1/3 h-[50px] bg-gradient-to-tr from-primary/30 to-transparent rounded-full filter blur-3xl"></div>
+        </div>
+
+        <div className="max-w-screen-xl mx-auto px-4 text-textColor md:px-8 relative z-10">
           <div className="space-y-6 sm:max-w-md sm:mx-auto sm:text-center">
             <Image
               src="/logo.svg"
@@ -140,27 +152,21 @@ const Page = () => {
               width={128}
               height={128}
             />
-            <p>
+            <p className="text-textColor/80">
               Create professional carousels easily with our AI-powered tool.
             </p>
             <div className="items-center gap-x-3 space-y-3 sm:flex sm:justify-center sm:space-y-0">
-              {/* <Link
-                href="/editor"
-                className="block py-2 px-4 text-center text-white font-medium bg-primary duration-150 hover:bg-primary/90  rounded-lg hover:shadow-none"
-              >
-                Let's get started
-              </Link> */}
               <a
                 href="#"
-                className="flex items-center justify-center gap-x-2 py-2 px-4 text-textColor hover:text-textColor font-medium duration-150 active:bg-gray-100 border rounded-lg"
+                className="flex items-center justify-center gap-x-2 py-2 px-4 text-textColor hover:text-textColor font-medium duration-150 bg-cardBackground/30 backdrop-blur-md border border-borderColor/50 rounded-lg hover:shadow-lg transition-shadow"
               >
                 Get access
                 <ChevronDown className="w-5 h-5" />
               </a>
             </div>
           </div>
-          <div className="mt-10 py-10 border-t items-center justify-between sm:flex">
-            <p>
+          <div className="mt-10 py-10 border-t border-borderColor/30 items-center justify-between sm:flex">
+            <p className="text-textColor/70">
               © {new Date().getFullYear()} BuildCarousel.com. All rights
               reserved.
             </p>
@@ -168,7 +174,7 @@ const Page = () => {
               {footerNavs.map((item, idx) => (
                 <li
                   key={idx}
-                  className="text-textColor hover:text-textColor duration-150"
+                  className="text-textColor/70 hover:text-textColor duration-150"
                 >
                   <a href={item.href}>{item.name}</a>
                 </li>

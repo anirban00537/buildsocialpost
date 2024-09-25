@@ -77,14 +77,14 @@ const UserDropdown: React.FC<{ user: any; onLogout: () => void }> = React.memo(
                 onError={handleImageError}
               />
             ) : (
-              <div className="h-full w-full flex items-center justify-center bg-primary text-textColor text-sm font-medium">
+              <div className="h-full w-full flex items-center justify-center bg-primary text-textColor/85 text-sm font-medium">
                 {getInitials(user.displayName || user.email)}
               </div>
             )}
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent
-          className="w-56 border border-borderColor bg-cardBackground text-textColor"
+          className="w-56 border border-borderColor bg-cardBackground text-textColor/85"
           align="end"
         >
           <DropdownMenuLabel>
@@ -126,13 +126,13 @@ const DownloadDropdown: React.FC<{
           <Button
             variant="outline"
             size="xs"
-            className={`bg-cardBackground text-textColor hover:bg-primary/50 border border-borderColor ${className}`}
+            className={`bg-gradient-to-t from-cardBackground to-background text-textColor/85 hover:bg-primary/50 border border-borderColor ${className}`}
           >
             <Download className="w-4 h-4 mr-2" />
             {isDownloading ? "Downloading..." : "Download"}
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent>
+        <DropdownMenuContent className="bg-gradient-to-t from-cardBackground to-background text-textColor/85 hover:bg-primary/50 border border-borderColor">
           <DropdownMenuItem onClick={onDownloadPDF} disabled={pdfLoading}>
             {pdfLoading ? "Downloading PDF..." : "Download PDF"}
           </DropdownMenuItem>
@@ -209,7 +209,7 @@ const CarouselSizeDropdown: React.FC<{ className?: string }> = ({
   const renderIcons = (icons: any[]) => (
     <div className="flex items-center">
       {icons.map((Icon, index) => (
-        <Icon key={index} className="w-3 h-3 mr-1 text-textColor" />
+        <Icon key={index} className="w-3 h-3 mr-1 text-textColor/85" />
       ))}
     </div>
   );
@@ -220,7 +220,7 @@ const CarouselSizeDropdown: React.FC<{ className?: string }> = ({
         <Button
           variant="outline"
           size="sm"
-          className={`w-48 h-7 px-2 justify-start overflow-hidden bg-cardBackground text-textColor hover:bg-primary/50 border border-borderColor ${className}`}
+          className={`w-48 h-7 px-2 justify-start overflow-hidden bg-cardBackground text-textColor/85 hover:bg-primary/50 border border-borderColor ${className}`}
         >
           <div className="flex items-center w-full">
             <div className="flex items-center mr-2 min-w-[48px]">
@@ -236,14 +236,14 @@ const CarouselSizeDropdown: React.FC<{ className?: string }> = ({
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-64 p-2 bg-cardBackground border border-borderColor">
-        <DropdownMenuLabel className="text-xs font-semibold bg-cardBackground text-textColor mb-2">
+        <DropdownMenuLabel className="text-xs font-semibold bg-cardBackground text-textColor/85 mb-2">
           Choose size
         </DropdownMenuLabel>
         {sizes.map((size) => (
           <DropdownMenuItem
             key={size.ratio}
             onClick={() => handleSizeChange(size.width, size.height)}
-            className="flex items-center py-2 px-1 bg-cardBackground text-textColor hover:bg-cardBackground rounded-md cursor-pointer"
+            className="flex items-center py-2 px-1 bg-cardBackground text-textColor/85 hover:bg-cardBackground rounded-md cursor-pointer"
           >
             <div className="flex-1 flex items-center">
               <div className="w-24 flex items-center">
@@ -251,12 +251,12 @@ const CarouselSizeDropdown: React.FC<{ className?: string }> = ({
               </div>
               <div className="flex flex-col">
                 <span className="font-medium text-sm">{size.name}</span>
-                <span className="text-xs text-textColor">
+                <span className="text-xs text-textColor/85">
                   {size.width} x {size.height}px
                 </span>
               </div>
             </div>
-            <span className="text-sm font-semibold text-textColor ml-auto">
+            <span className="text-sm font-semibold text-textColor/85 ml-auto">
               {size.ratio}
             </span>
           </DropdownMenuItem>
@@ -338,18 +338,18 @@ const EditorNavbar: React.FC = () => {
               <div className="flex space-x-2 w-full sm:w-auto">
                 <Button
                   onClick={() => setIsViewAllModalOpen(true)}
-                  className="flex-1 sm:flex-initial h-8 justify-start text-textColor bg-cardBackground hover:bg-primary/50 border border-borderColor"
+                  className="flex-1 sm:flex-initial h-8 justify-start text-textColor/85 bg-gradient-to-t from-cardBackground to-background hover:bg-primary/50 border border-borderColor"
                   variant="outline"
                   size="sm"
                   disabled={isFetchingAll}
                 >
-                  <List className="w-4 h-4 mr-2" />
+                  <List className="w-4 h-4 mr-2 text-textColor/85" />
                   <span>{isFetchingAll ? "Loading..." : "All Carousels"}</span>
                 </Button>
 
                 <Button
                   onClick={handleAddNew}
-                  className="flex-1 sm:flex-initial h-8 justify-start text-textColor bg-cardBackground hover:bg-primary/50 border border-borderColor"
+                  className="flex-1 sm:flex-initial h-8 justify-start text-textColor/85 bg-gradient-to-t from-cardBackground to-background hover:bg-primary/50 border border-borderColor"
                   variant="outline"
                   size="sm"
                   disabled={isCreatingOrUpdating}
@@ -358,12 +358,12 @@ const EditorNavbar: React.FC = () => {
                   <span>New</span>
                 </Button>
               </div>
-              <div className="flex items-center bg-cardBackground border border-borderColor rounded-md h-8 w-full sm:w-auto">
-                <Edit className="w-4 h-4 mr-2 text-textColor ml-2" />
+              <div className="flex items-center bg-gradient-to-t from-cardBackground to-background border border-borderColor rounded-md h-8 w-full sm:w-auto">
+                <Edit className="w-4 h-4 mr-2 text-textColor/85 ml-2" />
                 <input
                   type="text"
                   placeholder="Carousel Name"
-                  className="w-full sm:w-auto  border-none bg-transparent text-textColor px-2 focus:outline-none rounded-md text-sm"
+                  className="w-full sm:w-auto  border-none bg-transparent text-textColor/85 px-2 focus:outline-none rounded-md text-sm"
                   value={name}
                   onChange={handleNameChange}
                   aria-label="Carousel name"
@@ -397,7 +397,7 @@ const EditorNavbar: React.FC = () => {
                 <Button
                   variant="outline"
                   size="sm"
-                  className="bg-cardBackground hover:bg-primary/50 border border-borderColor text-textColor"
+                  className="bg-cardBackground hover:bg-primary/50 border border-borderColor text-textColor/85"
                 >
                   Sign in
                 </Button>
@@ -408,7 +408,7 @@ const EditorNavbar: React.FC = () => {
           <div className="lg:hidden">
             <Button
               variant="ghost"
-              className="text-textColor"
+              className="text-textColor/85"
               size="sm"
               onClick={toggleMenu}
             >
@@ -444,7 +444,7 @@ const EditorNavbar: React.FC = () => {
                   logout();
                   setIsMenuOpen(false);
                 }}
-                className="w-full justify-start text-textColor"
+                className="w-full justify-start text-textColor/85"
                 variant="ghost"
               >
                 <LogOut className="w-4 h-4 mr-2" />
@@ -454,7 +454,7 @@ const EditorNavbar: React.FC = () => {
               <Link href="/login" className="block">
                 <Button
                   variant="outline"
-                  className="w-full bg-cardBackground hover:bg-primary/50 border border-borderColor text-textColor"
+                  className="w-full bg-cardBackground hover:bg-primary/50 border border-borderColor text-textColor/85"
                 >
                   Sign in
                 </Button>
