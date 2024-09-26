@@ -17,6 +17,7 @@ module.exports = {
       "images.unsplash.com",
       "media.licdn.com",
       "firebasestorage.googleapis.com",
+      "aceternity.com",
     ],
   },
 };
