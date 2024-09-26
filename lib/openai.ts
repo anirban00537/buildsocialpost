@@ -81,24 +81,23 @@ export const generateCarouselColorPaletteFromPromptTopic = async (
       messages: [
         {
           role: "user",
-          content: `You are an expert color palette generator. Generate a ${theme} theme color palette for the topic "${topic}". The color palette should be a list of hex color codes. Give me only 4 colors. This is for an AI carousel generator application. The colors will be used for LinkedIn, Instagram, and TikTok carousels.
+          content: `Generate a ${theme} theme color palette for "${topic}" with 4 hex color codes for an AI carousel generator.
 
 Guidelines:
-- Identify if the topic or industry has associated brand colors. This could be for companies, products, sports teams, universities, or any other entity with established color schemes.
-- color3 should be a tint that complements the other colors and fits the ${theme} theme.
-- color4 should be a complementary color to color3.
-- Ensure high contrast between background and text colors for readability.
-- The brand color and accent color must be different if brand colors are used.
-- Only provide the color palette in the format below. No additional text or explanations.
-- Ensure the palette is cohesive, appropriate for the topic and industry, maintains good contrast for readability, and fits the ${theme} theme.
-- if theme is "dark", color1 should be a dark color, color2 should be a light color, and color3 and color4 should be complements of each other.
-- if theme is "light", color1 should be a light color, color2 should be a dark color, and color3 and color4 should be complements of each other.
+- Identify brand colors associated with the topic or industry.
+- **color4: Main brand color or most representative color for the topic.**
+- **color3: A lighter version of the brand color.**
+- For "dark" theme: color1 should be dark, color2 should be light.
+- For "light" theme: color1 should be light, color2 should be dark.
+- Ensure high contrast between colors for readability.
+- Palette should be cohesive and appropriate for the topic.
+- Provide only the color palette in the specified format.
 
 Format:
-color1: [hex color code]
-color2: [hex color code]
-color3: [hex color code]
-color4: [hex color code]
+color1: [hex code]
+color2: [hex code]
+color3: [hex code] (lighter version of brand color)*
+color4: [hex code] (main brand/representative color)
 `,
         },
       ],
