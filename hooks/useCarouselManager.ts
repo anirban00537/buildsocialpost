@@ -63,6 +63,7 @@ export const useCarouselManager = () => {
       width: data.layout.width,
       pattern: data.layout.pattern,
       backgroundOpacity: data.layout.backgroundOpacity,
+      gradient: data.layout.gradient,
     },
     background: data.background,
     slides: data.slides,
@@ -121,6 +122,7 @@ export const useCarouselManager = () => {
           width: layout.width,
           pattern: layout.pattern,
           backgroundOpacity: layout.backgroundOpacity,
+          gradient: layout.gradient,
         },
         background,
         slides,
@@ -232,6 +234,7 @@ export const useCarouselManager = () => {
                 width: data.layout.width,
                 pattern: data.layout.pattern,
                 backgroundOpacity: data.layout.backgroundOpacity || 0.5,
+                gradient: data.layout.gradient || false,
               },
             })
           );

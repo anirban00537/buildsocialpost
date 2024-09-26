@@ -10,11 +10,7 @@ export const useGenerateContent = () => {
   const [loading, setLoading] = useState(false);
   const [theme, setTheme] = useState("light");
   const [contentStyle, setContentStyle] = useState("Professional");
-  const [industry, setIndustry] = useState("");
   const [targetAudience, setTargetAudience] = useState("General");
-  const [contentStructure, setContentStructure] = useState("Problem-Solution");
-  const [keyPoints, setKeyPoints] = useState("");
-  const [contentPurpose, setContentPurpose] = useState("Educate");
   const dispatch = useDispatch();
 
   const generateContent = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -33,11 +29,7 @@ export const useGenerateContent = () => {
           mood,
           theme,
           contentStyle,
-          industry,
           targetAudience,
-          contentStructure,
-          keyPoints,
-          contentPurpose,
         }),
       });
 
@@ -79,15 +71,7 @@ export const useGenerateContent = () => {
     setTheme,
     contentStyle,
     setContentStyle,
-    industry,
-    setIndustry,
     targetAudience,
     setTargetAudience,
-    contentStructure,
-    setContentStructure,
-    keyPoints,
-    setKeyPoints,
-    contentPurpose,
-    setContentPurpose,
   };
 };

@@ -7,23 +7,18 @@ import {
   parseColorPaletteToJSON,
 } from "@/lib/openai";
 
-import { NextResponse } from 'next/server';
+import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
   try {
-    const { 
-      topic, 
-      numSlides, 
-      temperature, 
-      language, 
-      mood, 
+    const {
+      topic,
+      numSlides,
+      language,
+      mood,
       theme,
       contentStyle,
-      industry,
       targetAudience,
-      contentStructure,
-      keyPoints,
-      contentPurpose
     } = await req.json();
 
     if (!topic || !numSlides) {
@@ -38,19 +33,15 @@ export async function POST(req: Request) {
     const content: any = await generateCaruselContentFromTopic(
       topic,
       numSlides,
-      temperature,
       language,
       mood,
       contentStyle,
-      industry,
       targetAudience,
-      contentStructure,
-      keyPoints,
-      contentPurpose
+  
     );
-    
+
     const colorPaletteResponse =
-      await generateCarouselColorPaletteFromPromptTopic(topic, theme, industry);
+      await generateCarouselColorPaletteFromPromptTopic(topic, theme);
 
     const response = parseCarouselContentToJSON(content ?? "");
     const colorPalette = parseColorPaletteToJSON(colorPaletteResponse ?? "");

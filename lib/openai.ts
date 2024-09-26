@@ -7,16 +7,11 @@ const openai = new OpenAI({
 
 export const generateCaruselContentFromTopic = async (
   topic: string,
-  numSlides: number,
-  temperature = 0.4,
-  language = "en",
-  mood = "neutral",
-  contentStyle = "Professional",
-  industry = "",
-  targetAudience = "General",
-  contentStructure = "Problem-Solution",
-  keyPoints = "",
-  contentPurpose = "Educate"
+  numSlides: number = 5,
+  language: string = "en",
+  mood: string = "neutral",
+  contentStyle: string = "Professional",
+  targetAudience: string = "General"
 ) => {
   try {
     const maxTokensPerSlide = 100;
@@ -35,11 +30,7 @@ export const generateCaruselContentFromTopic = async (
           - Reorganize and rephrase content to fit the slide format naturally.
           - **Wrap the most important keywords, phrases, and concepts in both the title and description within <strong></strong> tags.** This is crucial for highlighting key points.
           - Use a consistent tone that matches the specified mood (${mood}) and content style (${contentStyle}).
-          - Tailor the content for the ${industry} industry and ${targetAudience} audience.
-          - Structure the content following the ${contentStructure} format.
-          - Incorporate these key points if provided: ${keyPoints}
-          - The main purpose of this content is to ${contentPurpose}.
-          - Avoid any additional text or explanations beyond the specified format.
+          - Tailor the content for the ${contentStyle} style and ${targetAudience} audience.
           - Do not provide any markdown formatting.
           
           Format:
@@ -66,7 +57,7 @@ export const generateCaruselContentFromTopic = async (
         },
       ],
       max_tokens: maxTokens,
-      temperature: Number(temperature),
+      temperature: 0.6,
     });
 
     if (response && response.choices && response.choices.length > 0) {
@@ -82,8 +73,7 @@ export const generateCaruselContentFromTopic = async (
 
 export const generateCarouselColorPaletteFromPromptTopic = async (
   topic: string,
-  theme: string,
-  industry: string
+  theme: string
 ) => {
   try {
     const response = await openai.chat.completions.create({
@@ -91,23 +81,18 @@ export const generateCarouselColorPaletteFromPromptTopic = async (
       messages: [
         {
           role: "user",
-          content: `You are an expert color palette generator. Generate a ${theme} theme color palette for the topic "${topic}" in the ${industry} industry. The color palette should be a list of hex color codes. Give me only 4 colors. This is for an AI carousel generator application. The colors will be used for LinkedIn, Instagram, and TikTok carousels.
+          content: `You are an expert color palette generator. Generate a ${theme} theme color palette for the topic "${topic}". The color palette should be a list of hex color codes. Give me only 4 colors. This is for an AI carousel generator application. The colors will be used for LinkedIn, Instagram, and TikTok carousels.
 
 Guidelines:
 - Identify if the topic or industry has associated brand colors. This could be for companies, products, sports teams, universities, or any other entity with established color schemes.
-- For light theme:
-  - Use brand colors (if any) for accent (color4) or text (color2). Randomize this choice.
-  - Background (color1) should be a light, flat color that complements the brand colors or theme.
-- For dark theme:
-  - Use brand colors (if any) for background (color1), text (color2), or accent (color4). Randomize this choice.
-  - If brand color is used for background, ensure it's a darker shade.
 - color3 should be a tint that complements the other colors and fits the ${theme} theme.
-- If the brand has multiple colors, distribute them across different color slots.
-- Always use flat colors for background (color1) and accent (color4).
+- color4 should be a complementary color to color3.
 - Ensure high contrast between background and text colors for readability.
 - The brand color and accent color must be different if brand colors are used.
 - Only provide the color palette in the format below. No additional text or explanations.
 - Ensure the palette is cohesive, appropriate for the topic and industry, maintains good contrast for readability, and fits the ${theme} theme.
+- if theme is "dark", color1 should be a dark color, color2 should be a light color, and color3 and color4 should be complements of each other.
+- if theme is "light", color1 should be a light color, color2 should be a dark color, and color3 and color4 should be complements of each other.
 
 Format:
 color1: [hex color code]
