@@ -19,85 +19,74 @@ export const HeroParallax = ({
     thumbnail: string;
   }[];
 }) => {
-  const firstRow = products.slice(0, 5);
-  const secondRow = products.slice(5, 10);
-  const thirdRow = products.slice(10, 15);
   const ref = React.useRef(null);
   const { scrollYProgress } = useScroll({
     target: ref,
     offset: ["start start", "end start"],
   });
 
-  const springConfig = { stiffness: 300, damping: 30, bounce: 100 };
+  const springConfig = { stiffness: 100, damping: 30, bounce: 0 };
 
-  const translateX = useSpring(
-    useTransform(scrollYProgress, [0, 1], [0, 1000]),
+  const x1 = useSpring(
+    useTransform(scrollYProgress, [0, 1], ["0%", "-600%"]),
     springConfig
   );
-  const translateXReverse = useSpring(
-    useTransform(scrollYProgress, [0, 1], [0, -1000]),
+  const x2 = useSpring(
+    useTransform(scrollYProgress, [0, 1], ["0%", "600%"]),
     springConfig
   );
-  const rotateX = useSpring(
-    useTransform(scrollYProgress, [0, 0.2], [15, 0]),
+  const x3 = useSpring(
+    useTransform(scrollYProgress, [0, 1], ["0%", "-600%"]),
     springConfig
   );
-  const opacity = useSpring(
-    useTransform(scrollYProgress, [0, 0.2], [0.2, 1]),
-    springConfig
-  );
-  const rotateZ = useSpring(
-    useTransform(scrollYProgress, [0, 0.2], [20, 0]),
-    springConfig
-  );
-  const translateY = useSpring(
-    useTransform(scrollYProgress, [0, 0.2], [-700, 500]),
-    springConfig
-  );
+
+  const rowsData = [
+    { items: products.slice(0, 5), x: x1 },
+    { items: products.slice(5, 10), x: x2 },
+    { items: products.slice(10, 15), x: x3 },
+  ];
 
   return (
     <div
       ref={ref}
-      className="h-[400vh] py-40 overflow-hidden antialiased relative flex flex-col self-auto [perspective:1000px] [transform-style:preserve-3d]"
+      className="h-[110vh] overflow-hidden antialiased relative flex flex-col self-auto"
     >
-      {/* <Header /> */}
-      <motion.div
-        style={{
-          rotateX,
-          rotateZ,
-          translateY,
-          opacity,
-        }}
-      >
-        <motion.div className="flex mb-2 gap-2  w-full overflow-hidden">
-          <motion.div className="flex gap-2" style={{ x: translateX }}>
-            {firstRow.map((product) => (
-              <ProductCard product={product} key={product.title} />
-            ))}
-          </motion.div>
-        </motion.div>
-        <motion.div className="flex mb-2 gap-2  w-full overflow-hidden">
-          <motion.div className="flex gap-2" style={{ x: translateXReverse }}>
-            {secondRow.map((product) => (
-              <ProductCard product={product} key={product.title} />
-            ))}
-          </motion.div>
-        </motion.div>
-        <motion.div className="flex gap-2  w-full overflow-hidden">
-          <motion.div className="flex gap-2" style={{ x: translateX }}>
-            {thirdRow.map((product) => (
-              <ProductCard product={product} key={product.title} />
-            ))}
-          </motion.div>
-        </motion.div>
-      </motion.div>
+      <div className="sticky top-0 h-screen flex items-center overflow-hidden">
+        {/* <Header /> */}
+        <div className="flex flex-col gap-4 absolute inset-0">
+          {rowsData.map((row, index) => (
+            <CarouselRow key={index} items={row.items} x={row.x} />
+          ))}
+        </div>
+      </div>
     </div>
+  );
+};
+
+const CarouselRow = ({
+  items,
+  x,
+}: {
+  items: any[];
+  x: MotionValue<string>;
+}) => {
+  return (
+    <motion.div
+      className="flex gap-4 w-[400vw]"
+      style={{
+        x,
+      }}
+    >
+      {[...items, ...items, ...items, ...items].map((product, index) => (
+        <ProductCard key={`${product.title}-${index}`} product={product} />
+      ))}
+    </motion.div>
   );
 };
 
 export const Header = () => {
   return (
-    <div className="max-w-7xl relative mx-auto py-20 md:py-40 px-4 w-full  left-0 top-0">
+    <div className="max-w-7xl mx-auto py-20 md:py-40 px-4 w-full left-0 top-0 z-10">
       <h1 className="text-2xl md:text-7xl text-textColor font-bold dark:text-white">
         Carousels <br />
         Preview <br />
@@ -122,14 +111,13 @@ export const ProductCard = ({
   };
 }) => {
   return (
-    <div className="h-[600px] w-[600px] relative flex-shrink-0 overflow-hidden">
+    <div className="h-[300px] w-[300px] relative flex-shrink-0 overflow-hidden rounded-lg">
       <Link href={product.link} className="block h-full w-full">
         <div className="relative w-full h-full">
           <Image
             src={product.thumbnail}
             alt={product.title}
-            width={600}
-            height={600}
+            fill
             className="object-cover"
           />
         </div>
