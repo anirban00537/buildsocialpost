@@ -43,8 +43,8 @@ const initialState: CarouselState = {
   layout: {
     height: 600,
     width: 600,
-    pattern: "/backgrounds/background1.svg",
-    backgroundOpacity: 0.5,
+    pattern: 1,
+    backgroundOpacity: 0.02,
   },
   fontFamily: "poppins",
 };
@@ -122,7 +122,7 @@ const carouselSlice = createSlice({
     setBackground: (state, action: PayloadAction<BackgroundColors>) => {
       state.background = action.payload;
     },
-    setPattern: (state, action: PayloadAction<string>) => {
+    setPattern: (state, action: PayloadAction<number>) => {
       state.layout.pattern = action.payload;
     },
     setName: (state, action: PayloadAction<string>) => {
@@ -194,13 +194,12 @@ const carouselSlice = createSlice({
       state.layout = {
         height: 600,
         width: 600,
-        pattern: "/backgrounds/background1.svg",
-        backgroundOpacity: 0.5,
+        pattern: 1,
+        backgroundOpacity: 0.02,
       };
       state.fontFamily = "poppins";
       state.slides = initialSlides;
     },
- 
   },
 });
 
@@ -226,7 +225,6 @@ export const {
   setFontFamily,
   setNewCarousel,
   removeBackgroundImage,
-
 } = carouselSlice.actions;
 
 export default carouselSlice.reducer;

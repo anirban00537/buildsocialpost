@@ -10,7 +10,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "../ui/tooltip";
-import { DiamondSVG } from "../icons/svg-icons";
+import { DiamondSVG } from "../shared-components/svg-icons";
 
 const SubscriptionInfo = () => {
   const { subscribed, endDate, loading } = useSelector(
@@ -36,7 +36,9 @@ const SubscriptionInfo = () => {
           >
             <span className="absolute inset-0 bg-white opacity-10 transform rotate-45 translate-x-3 -translate-y-2 group-hover:translate-x-3 group-hover:translate-y-2 transition-all duration-500 ease-out"></span>
             <img src="/premium.svg" className="w-5 h-5 filter drop-shadow-md" />
-            <span className="hidden sm:inline relative z-10">Upgrade to Premium</span>
+            <span className="hidden sm:inline relative z-10">
+              Upgrade to Premium
+            </span>
             <span className="sm:hidden relative z-10">Upgrade</span>
             <span className="absolute top-0 right-0 w-2 h-2 rounded-full bg-yellow-400 animate-pulse"></span>
           </Button>

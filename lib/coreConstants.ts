@@ -1,4 +1,16 @@
 import {
+  pattern1,
+  pattern10,
+  pattern2,
+  pattern3,
+  pattern4,
+  pattern5,
+  pattern6,
+  pattern7,
+  pattern8,
+  pattern9,
+} from "@/components/shared-components/backgrounds";
+import {
   Icon1,
   Icon2,
   Icon3,
@@ -10,7 +22,7 @@ import {
   Icon9,
   Icon10,
   Icon11,
-} from "@/components/icons/shared-icons";
+} from "@/components/shared-components/shared-icons";
 
 export const carouselsSize = [
   {
@@ -91,5 +103,58 @@ export const sharedElements = [
     id: 11,
     name: "icon eleven",
     component: Icon11,
+  },
+];
+
+export const backgroundPatterns = [
+  {
+    id: 1,
+    name: "pattern one",
+    svg: pattern1("black"),
+  },
+  {
+    id: 2,
+    name: "pattern two",
+    svg: pattern2("black"),
+  },
+  {
+    id: 3,
+    name: "pattern three",
+    svg: pattern3("black"),
+  },
+  {
+    id: 4,
+    name: "pattern four",
+    svg: pattern4("black"),
+  },
+  {
+    id: 5,
+    name: "pattern five",
+    svg: pattern5("black"),
+  },
+  {
+    id: 6,
+    name: "pattern six",
+    svg: pattern6("black"),
+  },
+  {
+    id: 7,
+    name: "pattern seven",  
+    svg: pattern7("black"),
+  },
+  {
+    id: 8,
+    name: "pattern eight",
+    svg: pattern8("black"),
+  },
+  {
+    id: 9,
+    name: "pattern nine",
+    svg: pattern9("black"),
+  },
+  {
+    id: 10,
+    name: "pattern ten",
+    svg: pattern10("black"),
   },
 ];

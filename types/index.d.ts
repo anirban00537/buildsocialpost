@@ -50,7 +50,7 @@ export interface BackgroundColors {
 export interface LayoutSettings {
   height: number;
   width: number;
-  pattern: string;
+  pattern: number;
   backgroundOpacity: number;
 }
 

@@ -2,8 +2,11 @@ import Link from "next/link";
 import React from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { AnimatedTooltip } from "../ui/animated-tooltip";
-import { ArrowRight, Sparkles } from "lucide-react";
+import { ArrowRight, ArrowRightIcon, Sparkles } from "lucide-react";
 import Image from "next/image";
+import AnimatedShinyText from "../magicui/animated-shiny-text";
+import { cn } from "@/lib/utils";
+import ShimmerButton from "../magicui/shimmer-button";
 
 const textContainerVariants = {
   hidden: { opacity: 0 },
@@ -107,13 +110,25 @@ const Hero = () => {
           className="space-y-8 sm:max-w-2xl lg:max-w-3xl"
           variants={textContainerVariants}
         >
-          <motion.h1
+          {/* <motion.h1
             className="text-lg text-primary font-semibold flex items-center justify-center"
             variants={textVariants}
           >
             <Sparkles className="mr-2 w-6 h-6" />
             Create Stunning Carousels with AI
-          </motion.h1>
+          </motion.h1> */}
+          <div className="z-10 flex  items-center justify-center">
+            <div
+              className={cn(
+                "group rounded-full border border-borderColor bg-cardBackground text-base !text-textColor transition-all ease-in hover:cursor-pointer hover:bg-neutral-200 dark:border-white/5 dark:bg-neutral-900 dark:hover:bg-neutral-800"
+              )}
+            >
+              <AnimatedShinyText className="inline-flex   items-center justify-center px-4 py-1 transition ease-out hover:text-neutral-600 hover:duration-300 hover:dark:text-neutral-400">
+                <span>✨ Create Stunning Carousels with AI</span>
+                <ArrowRightIcon className="ml-1 size-3 transition-transform duration-300 ease-in-out group-hover:translate-x-0.5" />
+              </AnimatedShinyText>
+            </div>
+          </div>
           <motion.h2
             className="text-5xl leading-tight font-extrabold md:text-6xl lg:text-7xl"
             style={{ lineHeight: "1.2" }}
@@ -141,7 +156,7 @@ const Hero = () => {
             generate content, customize designs, and create stunning carousels
             in minutes.
           </motion.p>
-          <motion.div
+          {/* <motion.div
             className="flex flex-col sm:flex-row items-center justify-center gap-4"
             variants={textVariants}
           >
@@ -157,7 +172,16 @@ const Hero = () => {
                 <span className="absolute inset-0 rounded-full bg-gradient-to-r from-primary via-primary/50 to-primary bg-[length:200%_100%] animate-gradient-x" />
               </span>
             </Link>
-          </motion.div>
+          </motion.div> */}
+          <div className="z-10 flex items-center justify-center">
+            <Link href="/editor">
+              <ShimmerButton className="shadow-2xl ">
+                <span className="whitespace-pre-wrap text-center text-sm font-medium leading-none tracking-tight text-white dark:from-white dark:to-slate-900/10 lg:text-lg">
+                  It's free. Sign up now
+                </span>
+              </ShimmerButton>
+            </Link>
+          </div>
         </motion.div>
 
         <div className="mt-12 mb-8">

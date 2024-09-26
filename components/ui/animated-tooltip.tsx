@@ -22,8 +22,14 @@ export const AnimatedTooltip = ({
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const springConfig = { stiffness: 100, damping: 5 };
   const x = useMotionValue(0);
-  const rotate = useSpring(useTransform(x, [-100, 100], [-45, 45]), springConfig);
-  const translateX = useSpring(useTransform(x, [-100, 100], [-50, 50]), springConfig);
+  const rotate = useSpring(
+    useTransform(x, [-100, 100], [-45, 45]),
+    springConfig
+  );
+  const translateX = useSpring(
+    useTransform(x, [-100, 100], [-50, 50]),
+    springConfig
+  );
 
   const handleMouseMove = (event: React.MouseEvent<HTMLDivElement>) => {
     const halfWidth = event.currentTarget.offsetWidth / 2;
@@ -55,16 +61,20 @@ export const AnimatedTooltip = ({
                 style={{ translateX, rotate, whiteSpace: "nowrap" }}
                 className="absolute -top-20 -left-1/2 translate-x-1/2 flex flex-col items-center justify-center z-50"
               >
-                <div className="px-4 py-3 bg-white/10 backdrop-blur-md rounded-2xl shadow-lg border border-white/20">
-                  <div className="font-bold text-white text-sm mb-1">{item.name}</div>
-                  <div className="text-gray-200 text-xs">{item.designation}</div>
+                <div className="px-4 py-3 bg-white/10 backdrop-blur-md rounded-2xl shadow-lg border border-primary">
+                  <div className="font-bold text-white text-sm mb-1">
+                    {item.name}
+                  </div>
+                  <div className="text-gray-200 text-xs">
+                    {item.designation}
+                  </div>
                 </div>
                 <div className="w-4 h-4 bg-white/10 backdrop-blur-md rotate-45 -mt-2 z-[-1]" />
               </motion.div>
             )}
           </AnimatePresence>
           <motion.div
-            className="w-16 h-16 rounded-full overflow-hidden border-2 border-white/50 shadow-lg"
+            className="w-16 h-16 rounded-full overflow-hidden border-2 border-primary shadow-lg"
             whileHover={{ scale: 1.1 }}
             onMouseMove={handleMouseMove}
           >

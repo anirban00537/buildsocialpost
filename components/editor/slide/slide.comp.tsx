@@ -11,6 +11,8 @@ import GeneralInfo from "./slide-parts/generalInfo";
 import { RootState } from "@/state/store";
 import { CSSProperties } from "react";
 import { fontOptions } from "@/lib/fonts";
+import { backgroundPatterns } from "@/lib/coreConstants";
+import { getBackgroundPattern } from "@/components/shared-components/backgrounds";
 
 interface SlideProps {
   slide: Slide;
@@ -39,6 +41,11 @@ const SlideComponent: React.FC<SlideProps> = ({
     (state: RootState) => state.branding
   );
   const { pattern, backgroundOpacity } = layout;
+
+  const { color1, color2, color3, color4 } = useSelector(
+    (state: RootState) => state.slides.background
+  );
+
   const backgroundImageStyle: CSSProperties = {
     ...(slide.backgroundImage
       ? {
@@ -48,7 +55,8 @@ const SlideComponent: React.FC<SlideProps> = ({
           backgroundRepeat: "no-repeat",
         }
       : {
-          backgroundImage: `url(${pattern})`,
+          backgroundImage: `url("${getBackgroundPattern(pattern, color4)}")`,
+          backgroundSize: "auto",
           backgroundPosition: "center",
           backgroundRepeat: "repeat",
         }),
@@ -57,13 +65,9 @@ const SlideComponent: React.FC<SlideProps> = ({
     left: 0,
     right: 0,
     bottom: 0,
-    opacity: slide.backgroundImage ? 0.3 : 0.07 * backgroundOpacity,
+    opacity: slide.backgroundImage ? 0.3 : backgroundOpacity,
     zIndex: 0,
   };
-  const { color1, color2, color3, color4 } = useSelector(
-    (state: RootState) => state.slides.background
-  );
-
   return (
     <div
       className="cursor-pointer hover:opacity-90 relative"
@@ -146,7 +150,6 @@ const SlideComponent: React.FC<SlideProps> = ({
       <Background
         backgroundImageStyle={backgroundImageStyle}
         color1={color1}
-        pattern={pattern}
         backgroundImage={slide.backgroundImage}
       />
       <div

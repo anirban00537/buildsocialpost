@@ -3,14 +3,12 @@ import React from "react";
 interface BackgroundProps {
   backgroundImageStyle: React.CSSProperties;
   color1: string;
-  pattern: string;
   backgroundImage?: string | null;
 }
 
 const Background: React.FC<BackgroundProps> = ({
   backgroundImageStyle,
   color1,
-  pattern,
   backgroundImage,
 }) => {
   return (

@@ -11,7 +11,7 @@ import PricingModal from "./pricingModal.subscription";
 import { useSelector } from "react-redux";
 import { RootState } from "@/state/store";
 import { CreditCard, Diamond } from "lucide-react";
-import { DiamondSVG } from "../icons/svg-icons";
+import { DiamondSVG } from "../shared-components/svg-icons";
 
 const BillingModal: React.FC = () => {
   const { subscribed, endDate } = useSelector((state: RootState) => state.user);

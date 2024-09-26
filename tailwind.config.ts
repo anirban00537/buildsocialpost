@@ -3,6 +3,7 @@ import type { Config } from "tailwindcss";
 const {
   default: flattenColorPalette,
 } = require("tailwindcss/lib/util/flattenColorPalette");
+
 const config: Config = {
   darkMode: ["class"],
   content: [
@@ -55,11 +56,11 @@ const config: Config = {
           foreground: "#212529",
         },
         background: {
-          DEFAULT: "#0B0E17", // Main background color
+          DEFAULT: "#0B0E17",
           foreground: "#E2E8F0",
         },
         cardBackground: {
-          DEFAULT: "#111827", // Card background color
+          DEFAULT: "#111827",
           foreground: "#E2E8F0",
         },
         textColor: {
@@ -90,17 +91,48 @@ const config: Config = {
             transform: "translate(calc(-50% - 0.5rem))",
           },
         },
+        shimmer: {
+          "0%, 90%, 100%": {
+            "background-position": "calc(-100% - var(--shimmer-width)) 0",
+          },
+          "30%, 60%": {
+            "background-position": "calc(100% + var(--shimmer-width)) 0",
+          },
+        },
+        "spin-around": {
+          "0%": {
+            transform: "translateZ(0) rotate(0)",
+          },
+          "15%, 35%": {
+            transform: "translateZ(0) rotate(90deg)",
+          },
+          "65%, 85%": {
+            transform: "translateZ(0) rotate(270deg)",
+          },
+          "100%": {
+            transform: "translateZ(0) rotate(360deg)",
+          },
+        },
+        slide: {
+          to: {
+            transform: "translate(calc(100cqw - 100%), 0)",
+          },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
         scroll:
           "scroll var(--animation-duration, 40s) var(--animation-direction, forwards) linear infinite",
+        shimmer: "shimmer 8s infinite",
+        "spin-around": "spin-around calc(var(--speed) * 2) infinite linear",
+        slide: "slide var(--speed) ease-in-out infinite alternate",
       },
     },
   },
   plugins: [require("tailwindcss-animate"), addVariablesForColors],
 };
+
 function addVariablesForColors({ addBase, theme }: any) {
   let allColors = flattenColorPalette(theme("colors"));
   let newVars = Object.fromEntries(
@@ -111,4 +143,5 @@ function addVariablesForColors({ addBase, theme }: any) {
     ":root": newVars,
   });
 }
+
 export default config;

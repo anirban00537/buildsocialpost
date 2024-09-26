@@ -19,12 +19,13 @@ import {
   lightColorPresets,
   darkColorPresets,
 } from "@/lib/color-presets";
-import { sharedElements } from "@/lib/coreConstants";
+import { backgroundPatterns, sharedElements } from "@/lib/coreConstants";
 import { Slider } from "@/components/ui/slider";
 import { Label } from "@/components/ui/label";
 import { CircleOff } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
+import { getBackgroundPattern } from "@/components/shared-components/backgrounds";
 
 const BackgroundColorsSection = () => {
   const dispatch = useDispatch();
@@ -53,7 +54,7 @@ const BackgroundColorsSection = () => {
     ? darkColorPresets
     : darkColorPresets.slice(0, 12);
 
-  const handlePatternChange = (value: string) => dispatch(setPattern(value));
+  const handlePatternChange = (value: number) => dispatch(setPattern(value));
   const handleColorChange = (
     colorKey: keyof BackgroundColors,
     colorValue: string
@@ -72,22 +73,12 @@ const BackgroundColorsSection = () => {
   const handlePresetSelect = (preset: BackgroundColors) =>
     dispatch(setBackground(preset));
 
-  const patterns = [
-    "/backgrounds/background1.svg",
-    "/backgrounds/background2.svg",
-    "/backgrounds/background3.svg",
-    "/backgrounds/background4.svg",
-    "/backgrounds/background5.svg",
-    "/backgrounds/background6.svg",
-    "/backgrounds/background7.svg",
-  ];
-
   return (
-    <div className="w-full h-full p-4 flex flex-col bg-background/50 backdrop-blur-sm">
+    <div className="w-full h-full p-4 flex flex-col bg-background/50 backdrop-blur-sm ">
       <legend className="text-base font-semibold text-textColor mb-3">
         Background Settings
       </legend>
-      <div className="flex-grow overflow-y-auto mb-4 space-y-6">
+      <div className="flex-grow pb-40 overflow-y-auto space-y-6 ">
         {/* Custom Background Colors */}
         <div className="space-y-2">
           <label className="text-sm text-textColor/80">
@@ -205,30 +196,34 @@ const BackgroundColorsSection = () => {
           <div className="grid grid-cols-4 gap-2">
             <div
               className={`flex justify-center items-center p-2 rounded-md ${
-                pattern === ""
+                pattern === 0
                   ? "bg-blue-200 border border-blue-500"
                   : "bg-gray-300"
               }`}
-              onClick={() => handlePatternChange("")}
+              onClick={() => handlePatternChange(0)}
             >
               <CircleOff size={16} className="text-gray-500" />
             </div>
-            {patterns.map((patternItem, index) => (
+            {backgroundPatterns.map((patternItem) => (
               <div
-                key={index}
+                key={patternItem.id}
                 className={`flex justify-center items-center p-2 rounded-md ${
-                  pattern === patternItem
+                  pattern === patternItem.id
                     ? "bg-blue-200 border border-blue-500"
                     : "bg-gray-300"
                 }`}
-                onClick={() => handlePatternChange(patternItem)}
+                onClick={() => handlePatternChange(patternItem.id)}
               >
                 <div
                   className="w-full h-6 rounded-md"
                   style={{
-                    background: `url(${patternItem})`,
+                    backgroundImage: `url("${getBackgroundPattern(
+                      patternItem.id,
+                      background.color4
+                    )}")`,
                     backgroundSize: "cover",
                     backgroundPosition: "center",
+                    backgroundRepeat: "repeat",
                   }}
                 />
               </div>
@@ -239,7 +234,7 @@ const BackgroundColorsSection = () => {
               Background Opacity
             </label>
             <Slider
-              max={2}
+              max={0.05}
               step={0.01}
               value={[layout.backgroundOpacity]}
               onValueChange={(value) =>
