@@ -34,6 +34,7 @@ const SlideComponent: React.FC<SlideProps> = ({
     layout,
     sharedSelectedElement,
   } = useSelector((state: RootState) => state.slides);
+  const { gradient } = useSelector((state: RootState) => state.slides.layout);
   const { subscribed } = useSelector((state: RootState) => state.user);
   const { fontFamily } = useSelector((state: RootState) => state.slides);
   const selectedFont = fontOptions.find((font) => font.slug === fontFamily);
@@ -86,6 +87,18 @@ const SlideComponent: React.FC<SlideProps> = ({
         overflow: "hidden",
       }}
     >
+      <div className="absolute inset-0 z-0">
+        {gradient && (
+          <div
+            className="absolute inset-0"
+            style={{
+              background: `radial-gradient(circle at top left, ${color3}, transparent 40%),
+                        radial-gradient(circle at bottom right, ${color4}, transparent 30%)`,
+            }}
+          ></div>
+        )}
+        <div className="absolute inset-0 backdrop-blur-[50px]"></div>
+      </div>
       <div style={backgroundImageStyle} />
       {index % 2 === 1 ? (
         <>

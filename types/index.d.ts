@@ -52,6 +52,7 @@ export interface LayoutSettings {
   width: number;
   pattern: number;
   backgroundOpacity: number;
+  gradient: boolean;
 }
 
 export interface CarouselState {

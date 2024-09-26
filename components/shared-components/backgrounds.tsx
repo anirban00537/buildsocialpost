@@ -101,7 +101,7 @@ export const getBackgroundPattern = (
 
   if (patternId < 1 || patternId > patterns.length) {
     console.error(`Invalid pattern ID: ${patternId}`);
-    return '';
+    return "";
   }
 
   return createSvgDataUrl(patterns[patternId - 1], color);

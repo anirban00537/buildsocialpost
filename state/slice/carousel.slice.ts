@@ -45,6 +45,7 @@ const initialState: CarouselState = {
     width: 600,
     pattern: 1,
     backgroundOpacity: 0.02,
+    gradient: true,
   },
   fontFamily: "poppins",
 };
@@ -160,6 +161,9 @@ const carouselSlice = createSlice({
     setFontFamily: (state, action: PayloadAction<string>) => {
       state.fontFamily = action.payload;
     },
+    setGradient: (state, action: PayloadAction<boolean>) => {
+      state.layout.gradient = action.payload;
+    },
     setNewCarousel: (state) => {
       state.name = "New Carousel";
       state.slides = initialSlides;
@@ -196,6 +200,7 @@ const carouselSlice = createSlice({
         width: 600,
         pattern: 1,
         backgroundOpacity: 0.02,
+        gradient: true,
       };
       state.fontFamily = "poppins";
       state.slides = initialSlides;
@@ -225,6 +230,7 @@ export const {
   setFontFamily,
   setNewCarousel,
   removeBackgroundImage,
+  setGradient,
 } = carouselSlice.actions;
 
 export default carouselSlice.reducer;

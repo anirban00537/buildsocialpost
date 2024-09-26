@@ -7,6 +7,7 @@ import {
   setSharedSelectedElementId,
   setSharedSelectedElementOpacity,
   setBackgroundOpacity,
+  setGradient,
 } from "@/state/slice/carousel.slice";
 import { HexColorPicker } from "react-colorful";
 import {
@@ -240,6 +241,15 @@ const BackgroundColorsSection = () => {
               onValueChange={(value) =>
                 dispatch(setBackgroundOpacity(value[0]))
               }
+            />
+          </div>
+        </div>
+        <div className="space-y-2">
+          <div className="flex items-center justify-between">
+            <label className="text-sm text-textColor/80">Gradient</label>
+            <Switch
+              checked={layout.gradient}
+              onCheckedChange={(checked) => dispatch(setGradient(checked))}
             />
           </div>
         </div>

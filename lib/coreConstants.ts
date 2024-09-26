@@ -139,7 +139,7 @@ export const backgroundPatterns = [
   },
   {
     id: 7,
-    name: "pattern seven",  
+    name: "pattern seven",
     svg: pattern7("black"),
   },
   {
