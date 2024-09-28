@@ -110,13 +110,6 @@ const Hero = () => {
           className="space-y-8 sm:max-w-2xl lg:max-w-3xl"
           variants={textContainerVariants}
         >
-          {/* <motion.h1
-            className="text-lg text-primary font-semibold flex items-center justify-center"
-            variants={textVariants}
-          >
-            <Sparkles className="mr-2 w-6 h-6" />
-            Create Stunning Carousels with AI
-          </motion.h1> */}
           <div className="z-10 flex  items-center justify-center">
             <div
               className={cn(
@@ -124,7 +117,7 @@ const Hero = () => {
               )}
             >
               <AnimatedShinyText className="inline-flex   items-center justify-center px-4 py-1 transition ease-out hover:text-neutral-600 hover:duration-300 hover:dark:text-neutral-400">
-                <span>✨ Create Stunning Carousels with AI</span>
+                <span>✨ Create Stunning Viral Carousels with AI</span>
                 <ArrowRightIcon className="ml-1 size-3 transition-transform duration-300 ease-in-out group-hover:translate-x-0.5" />
               </AnimatedShinyText>
             </div>
@@ -135,18 +128,22 @@ const Hero = () => {
             variants={textVariants}
           >
             <span className="inline-block text-transparent bg-clip-text bg-gradient-to-b from-gray-100 via-gray-300 to-gray-600">
-              Create{" "}
+              Create Viral{" "}
+            </span>
+            <div className="text-transparent bg-clip-text bg-gradient-to-b from-gray-100 via-gray-300 to-gray-600">
               <motion.span
+                className=" text-transparent bg-clip-text bg-primary"
                 key={currentPlatform}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5 }}
-                className={`inline-block text-transparent bg-clip-text bg-primary`}
               >
                 {platforms[currentPlatform].name}
               </motion.span>{" "}
-              Carousels using AI
-            </span>
+            </div>
+            <div className="inline-block text-transparent bg-clip-text bg-gradient-to-b from-gray-100 via-gray-300 to-gray-600">
+              Carousels With AI
+            </div>
           </motion.h2>
           <motion.p
             className="text-xl text-textColor/70 max-w-2xl mx-auto"
