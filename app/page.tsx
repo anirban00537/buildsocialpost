@@ -167,10 +167,10 @@ const Page = () => {
           </div>
 
           <div className="mt-10 py-10 flex flex-col border-t text-center border-borderColor/30 items-center justify-center sm:flex">
-            <p className="text-textColor/70 text-lg font-semibold">
-              Our Partner
+            <p className="text-textColor/70 text-xl font-semibold">
+              Our Partners
             </p>
-              <div className="mt-6 sm:mt-0">
+            <div className="mt-6 sm:mt-0 flex gap-4">
               <a
                 href="https://fluxai.pro/"
                 title="Flux AI Pro"
@@ -178,6 +178,13 @@ const Page = () => {
                 className="text-textColor/70  hover:text-textColor duration-150 hover:underline text-3xl font-bold"
               >
                 Flux AI Pro
+              </a>
+              <a
+                href="https://alteropen.com/"
+                title="Alternative Open Directory"
+                className="text-textColor/70  hover:text-textColor duration-150 hover:underline text-3xl font-bold"
+              >
+                AlterOpen
               </a>
             </div>
           </div>
