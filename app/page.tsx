@@ -165,21 +165,27 @@ const Page = () => {
               </a>
             </div>
           </div>
-          <div className="mt-10 py-10 border-t border-borderColor/30 items-center justify-between sm:flex">
+
+          <div className="mt-10 py-10 flex flex-col border-t text-center border-borderColor/30 items-center justify-center sm:flex">
+            <p className="text-textColor/70 text-lg font-semibold">
+              Our Partner
+            </p>
+              <div className="mt-6 sm:mt-0">
+              <a
+                href="https://fluxai.pro/"
+                title="Flux AI Pro"
+                target="_blank"
+                className="text-textColor/70  hover:text-textColor duration-150 hover:underline text-3xl font-bold"
+              >
+                Flux AI Pro
+              </a>
+            </div>
+          </div>
+          <div className="mt-10 py-10 border-t text-center border-borderColor/30">
             <p className="text-textColor/70">
               © {new Date().getFullYear()} BuildCarousel.com. All rights
               reserved.
             </p>
-            <ul className="flex flex-wrap items-center gap-4 mt-6 sm:text-sm sm:mt-0">
-              {footerNavs.map((item, idx) => (
-                <li
-                  key={idx}
-                  className="text-textColor/70 hover:text-textColor duration-150"
-                >
-                  <a href={item.href}>{item.name}</a>
-                </li>
-              ))}
-            </ul>
           </div>
         </div>
       </footer>
