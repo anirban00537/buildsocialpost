@@ -18,6 +18,9 @@ export const metadata = {
   title: "BuildCarousel - Generate Linkedin, TikTok, Instagram Carousel",
   description:
     "Create and share your own LinkedIn, TikTok, Instagram and Facebook carousel with ease",
+  openGraph: {
+    images: ['/preview.png'],
+  },
 };
 
 export default function RootLayout({
