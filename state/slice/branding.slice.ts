@@ -9,8 +9,7 @@ interface BrandingState {
 const initialState: BrandingState = {
   name: "Anirban Roy",
   handle: "@anirban00537",
-  headshot:
-    "https://firebasestorage.googleapis.com/v0/b/buildcarousel-4e9ec.appspot.com/o/user_headshots%2Fprofile-pic.png?alt=media&token=0e68a1fb-6359-4934-8930-b42351346d6b",
+  headshot: "/creator.jpg",
 };
 
 const brandingSlice = createSlice({
