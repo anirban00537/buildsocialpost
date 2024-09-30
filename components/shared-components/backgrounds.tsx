@@ -1,5 +1,5 @@
 const createSvgDataUrl = (svgContent: string, color: string): string => {
-  const encodedSvg = encodeURIComponent(svgContent.replace(/#808080/g, color));
+  const encodedSvg = encodeURIComponent(svgContent?.replace(/#808080/g, color));
   return `data:image/svg+xml,${encodedSvg}`;
 };
 
