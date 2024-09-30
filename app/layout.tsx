@@ -47,6 +47,8 @@ export const metadata = {
       {
         url: "https://www.buildcarousel.com/creators.jpg",
         width: 800,
+
+        
         height: 600,
         alt: "BuildCarousel - AI Carousel Maker for Social Media",
       },
