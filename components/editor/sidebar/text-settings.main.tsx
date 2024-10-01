@@ -103,145 +103,152 @@ const TextSettingsSection = () => {
   };
 
   return (
-    <div className="w-full h-full p-4 flex flex-col bg-background/50 backdrop-blur-sm">
-      <legend className="text-base font-semibold text-textColor mb-3">Text Settings</legend>
-      <div className="flex-grow overflow-y-auto pr-2 mb-4 space-y-4">
-        <div className="flex gap-2">
-          {["title", "description", "tagline"].map((section) => (
-            <Button
-              key={section}
-              type="button"
-              size="sm"
-              className={`text-xs px-2 py-1 border border-borderColor/50 rounded-md ${
-                selectedSection === section
-                  ? "bg-primary/80 text-white"
-                  : "bg-cardBackground/50 text-textColor hover:bg-primary/20"
-              }`}
-              onClick={() => handleSectionChange(section as any)}
-            >
-              {section.charAt(0).toUpperCase() + section.slice(1)}
-            </Button>
-          ))}
-        </div>
-
-        <div className="space-y-2">
-          <label className="text-sm text-textColor/80">Font Size</label>
-          <div className="flex items-center gap-2">
-            <Slider
-              max={88}
-              min={10}
-              step={1}
-              value={[fontSize]}
-              onValueChange={(value) => handleFontSizeChange(value[0])}
-              className="flex-grow"
-            />
-            <span className="text-xs font-medium text-textColor/80 w-8 text-right">{fontSize}px</span>
-          </div>
-        </div>
-
-        <div className="space-y-2">
-          <label className="text-sm text-textColor/80">Font Style</label>
-          <div className="grid grid-cols-2 gap-2">
-            <Button
-              size="sm"
-              type="button"
-              className={`text-xs border border-borderColor/50 p-1 flex items-center justify-center rounded-md transition-all duration-150 ${
-                fontStyle === "normal"
-                  ? "bg-primary/80 text-white"
-                  : "hover:bg-primary/20 text-textColor bg-cardBackground/50"
-              }`}
-              onClick={() => handleFontStyleChange("normal")}
-            >
-              <BoldIcon size={14} />
-            </Button>
-            <Button
-              size="sm"
-              type="button"
-              className={`text-xs border border-borderColor/50 p-1 flex items-center justify-center rounded-md transition-all duration-150 ${
-                fontStyle === "italic"
-                  ? "bg-primary/80 text-white"
-                  : "hover:bg-primary/20 text-textColor bg-cardBackground/50"
-              }`}
-              onClick={() => handleFontStyleChange("italic")}
-            >
-              <ItalicIcon size={14} />
-            </Button>
-          </div>
-        </div>
-
-        <div className="space-y-2">
-          <label className="text-sm text-textColor/80">Font Weight</label>
-          <div className="grid grid-cols-2 gap-2">
-            <Button
-              size="sm"
-              type="button"
-              className={`text-xs border border-borderColor/50 p-1 flex items-center justify-center rounded-md transition-all duration-150 ${
-                selectedWeight === "normal"
-                  ? "bg-primary/80 text-white"
-                  : "hover:bg-primary/20 text-textColor bg-cardBackground/50"
-              }`}
-              onClick={() => handleWeightTabChange("normal")}
-            >
-              Normal
-            </Button>
-            <Button
-              size="sm"
-              type="button"
-              className={`text-xs border border-borderColor/50 p-1 flex items-center justify-center rounded-md transition-all duration-150 ${
-                selectedWeight === "bold"
-                  ? "bg-primary/80 text-white"
-                  : "hover:bg-primary/20 text-textColor bg-cardBackground/50"
-              }`}
-              onClick={() => handleWeightTabChange("bold")}
-            >
-              Bold
-            </Button>
-          </div>
-        </div>
-
-        <div className="space-y-2">
-          <label className="text-sm text-textColor/80">Text Alignment</label>
-          <div className="grid grid-cols-3 gap-2">
-            {[
-              { alignment: "left" as "left", icon: <AlignLeftIcon size={14} /> },
-              { alignment: "center" as "center", icon: <AlignCenterIcon size={14} /> },
-              { alignment: "right" as "right", icon: <AlignRightIcon size={14} /> },
-            ].map(({ alignment, icon }) => (
+    <div className="w-full h-full flex flex-col bg-background/50 backdrop-blur-sm">
+      <legend className="text-base font-semibold text-textColor p-4 pb-2">Text Settings</legend>
+      <div className="flex-grow overflow-y-auto">
+        <div className="p-4 pt-2 space-y-4">
+          <div className="flex gap-2">
+            {["title", "description", "tagline"].map((section) => (
               <Button
-                size="sm"
+                key={section}
                 type="button"
-                key={alignment}
-                className={`text-xs border border-borderColor/50 p-1 flex items-center justify-center rounded-md transition-all duration-150 ${
-                  textSettings.alignment === alignment
+                size="sm"
+                className={`text-xs px-2 py-1 border border-borderColor/50 rounded-md ${
+                  selectedSection === section
                     ? "bg-primary/80 text-white"
-                    : "hover:bg-primary/20 text-textColor bg-cardBackground/50"
+                    : "bg-cardBackground/50 text-textColor hover:bg-primary/20"
                 }`}
-                onClick={() => handleAlignmentChange(alignment)}
+                onClick={() => handleSectionChange(section as any)}
               >
-                {icon}
+                {section.charAt(0).toUpperCase() + section.slice(1)}
               </Button>
             ))}
           </div>
-        </div>
 
-        <div className="space-y-2">
-          <label className="text-sm text-textColor/80">Font Family</label>
-          <Select onValueChange={handleFontFamilyChange} value={fontFamily}>
-            <SelectTrigger className="w-full h-8 text-xs rounded-md border border-borderColor/50 text-textColor bg-cardBackground/50">
-              <SelectValue placeholder="Select a font" />
-            </SelectTrigger>
-            <SelectContent className="bg-cardBackground/90 text-textColor border border-borderColor/50">
-              {fontOptions.map((font) => (
-                <SelectItem
-                  key={font.slug}
-                  className={`${font.font.className} text-textColor text-xs`}
-                  value={font.slug || "default"}
+          {/* Font Size */}
+          <div className="space-y-2">
+            <label className="text-sm text-textColor/80">Font Size</label>
+            <div className="flex items-center gap-2">
+              <Slider
+                max={88}
+                min={10}
+                step={1}
+                value={[fontSize]}
+                onValueChange={(value) => handleFontSizeChange(value[0])}
+                className="flex-grow"
+              />
+              <span className="text-xs font-medium text-textColor/80 w-8 text-right">{fontSize}px</span>
+            </div>
+          </div>
+
+          {/* Font Style */}
+          <div className="space-y-2">
+            <label className="text-sm text-textColor/80">Font Style</label>
+            <div className="grid grid-cols-2 gap-2">
+              <Button
+                size="sm"
+                type="button"
+                className={`text-xs border border-borderColor/50 p-1 flex items-center justify-center rounded-md transition-all duration-150 ${
+                  fontStyle === "normal"
+                    ? "bg-primary/80 text-white"
+                    : "hover:bg-primary/20 text-textColor bg-cardBackground/50"
+                }`}
+                onClick={() => handleFontStyleChange("normal")}
+              >
+                <BoldIcon size={14} />
+              </Button>
+              <Button
+                size="sm"
+                type="button"
+                className={`text-xs border border-borderColor/50 p-1 flex items-center justify-center rounded-md transition-all duration-150 ${
+                  fontStyle === "italic"
+                    ? "bg-primary/80 text-white"
+                    : "hover:bg-primary/20 text-textColor bg-cardBackground/50"
+                }`}
+                onClick={() => handleFontStyleChange("italic")}
+              >
+                <ItalicIcon size={14} />
+              </Button>
+            </div>
+          </div>
+
+          {/* Font Weight */}
+          <div className="space-y-2">
+            <label className="text-sm text-textColor/80">Font Weight</label>
+            <div className="grid grid-cols-2 gap-2">
+              <Button
+                size="sm"
+                type="button"
+                className={`text-xs border border-borderColor/50 p-1 flex items-center justify-center rounded-md transition-all duration-150 ${
+                  selectedWeight === "normal"
+                    ? "bg-primary/80 text-white"
+                    : "hover:bg-primary/20 text-textColor bg-cardBackground/50"
+                }`}
+                onClick={() => handleWeightTabChange("normal")}
+              >
+                Normal
+              </Button>
+              <Button
+                size="sm"
+                type="button"
+                className={`text-xs border border-borderColor/50 p-1 flex items-center justify-center rounded-md transition-all duration-150 ${
+                  selectedWeight === "bold"
+                    ? "bg-primary/80 text-white"
+                    : "hover:bg-primary/20 text-textColor bg-cardBackground/50"
+                }`}
+                onClick={() => handleWeightTabChange("bold")}
+              >
+                Bold
+              </Button>
+            </div>
+          </div>
+
+          {/* Text Alignment */}
+          <div className="space-y-2">
+            <label className="text-sm text-textColor/80">Text Alignment</label>
+            <div className="grid grid-cols-3 gap-2">
+              {[
+                { alignment: "left" as "left", icon: <AlignLeftIcon size={14} /> },
+                { alignment: "center" as "center", icon: <AlignCenterIcon size={14} /> },
+                { alignment: "right" as "right", icon: <AlignRightIcon size={14} /> },
+              ].map(({ alignment, icon }) => (
+                <Button
+                  size="sm"
+                  type="button"
+                  key={alignment}
+                  className={`text-xs border border-borderColor/50 p-1 flex items-center justify-center rounded-md transition-all duration-150 ${
+                    textSettings.alignment === alignment
+                      ? "bg-primary/80 text-white"
+                      : "hover:bg-primary/20 text-textColor bg-cardBackground/50"
+                  }`}
+                  onClick={() => handleAlignmentChange(alignment)}
                 >
-                  <span className="text-textColor">{font.name}</span>
-                </SelectItem>
+                  {icon}
+                </Button>
               ))}
-            </SelectContent>
-          </Select>
+            </div>
+          </div>
+
+          {/* Font Family */}
+          <div className="space-y-2">
+            <label className="text-sm text-textColor/80">Font Family</label>
+            <Select onValueChange={handleFontFamilyChange} value={fontFamily}>
+              <SelectTrigger className="w-full h-8 text-xs rounded-md border border-borderColor/50 text-textColor bg-cardBackground/50">
+                <SelectValue placeholder="Select a font" />
+              </SelectTrigger>
+              <SelectContent className="bg-cardBackground/90 text-textColor border border-borderColor/50">
+                {fontOptions.map((font) => (
+                  <SelectItem
+                    key={font.slug}
+                    className={`${font.font.className} text-textColor text-xs`}
+                    value={font.slug || "default"}
+                  >
+                    <span className="text-textColor">{font.name}</span>
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
         </div>
       </div>
     </div>

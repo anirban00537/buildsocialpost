@@ -197,7 +197,7 @@ const AiSettingsComponent = () => {
               </div>
             </div>
           </div>
-          <div className="py-4 bg-background/80 backdrop-blur-sm border-t border-borderColor/50">
+          <div className="py-4 bg-background/80 backdrop-blur-sm border-t pb-36 border-borderColor/50">
             <Button
               type="submit"
               variant="default"

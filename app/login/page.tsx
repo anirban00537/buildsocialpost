@@ -26,6 +26,12 @@ const features = [
   },
   {
     icon: <FaPalette />,
+    title: "AI-Generated Themes",
+    description:
+      "Base on the topic you want to cover, we will generate a theme for you",
+  },
+  {
+    icon: <FaPalette />,
     title: "Dynamic Color Palettes",
     description:
       "Customize your projects with a wide range of dynamic color schemes.",
