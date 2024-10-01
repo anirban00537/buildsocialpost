@@ -23,7 +23,6 @@ const PricingSection = () => {
       "Text Customization",
       "PDF Download",
       "Image Download",
-      "Pre-made Templates",
     ],
   };
 

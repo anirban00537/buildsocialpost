@@ -48,12 +48,6 @@ const FeaturesSection = () => {
         "Save your carousel images directly to your device in high resolution.",
       icon: <DownloadCloud className="w-8 h-8" />,
     },
-    {
-      name: "Pre-made Templates",
-      description:
-        "Start quickly with professional templates designed for various needs.",
-      icon: <BookTemplate className="w-8 h-8" />,
-    },
   ];
 
   return (
