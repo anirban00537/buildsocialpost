@@ -6,9 +6,25 @@ import {
   parseCarouselContentToJSON,
   parseColorPaletteToJSON,
 } from "@/lib/openai";
-
+import { initializeApp, cert, getApps } from "firebase-admin/app";
 import { NextResponse } from "next/server";
-
+if (!process.env.NEXT_PUBLIC_FIREBASE_PRIVATE_KEY) {
+  throw new Error(
+    "The NEXT_PUBLIC_FIREBASE_PRIVATE_KEY environment variable is not defined"
+  );
+}
+if (!getApps().length) {
+  initializeApp({
+    credential: cert({
+      projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
+      clientEmail: process.env.NEXT_PUBLIC_FIREBASE_CLIENT_EMAIL,
+      privateKey: process.env.NEXT_PUBLIC_FIREBASE_PRIVATE_KEY.replace(
+        /\\n/g,
+        "\n"
+      ),
+    }),
+  });
+}
 export async function POST(req: Request) {
   try {
     const {
@@ -19,6 +35,7 @@ export async function POST(req: Request) {
       theme,
       contentStyle,
       targetAudience,
+      themeActive,
     } = await req.json();
 
     if (!topic || !numSlides) {
@@ -36,22 +53,28 @@ export async function POST(req: Request) {
       language,
       mood,
       contentStyle,
-      targetAudience,
-  
+      targetAudience
     );
 
-    const colorPaletteResponse =
-      await generateCarouselColorPaletteFromPromptTopic(topic, theme);
+    let colorPaletteResponse = null;
+
+    if (themeActive) {
+      colorPaletteResponse = await generateCarouselColorPaletteFromPromptTopic(
+        topic,
+        theme
+      );
+    }
 
     const response = parseCarouselContentToJSON(content ?? "");
-    const colorPalette = parseColorPaletteToJSON(colorPaletteResponse ?? "");
-    console.log(colorPaletteResponse, "colorPaletteResponse");
-    console.log(colorPalette, "colorPalette");
+    const colorPalette =
+      colorPaletteResponse !== null
+        ? parseColorPaletteToJSON(colorPaletteResponse ?? "")
+        : null;
 
     return NextResponse.json({
       message: "Carousel content generated",
       carousels: response,
-      colorPalette,
+      colorPalette: colorPalette ?? null,
     });
   } catch (err) {
     console.error(err);

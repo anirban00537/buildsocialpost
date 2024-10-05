@@ -11,6 +11,7 @@ export const useGenerateContent = () => {
   const [theme, setTheme] = useState("light");
   const [contentStyle, setContentStyle] = useState("Professional");
   const [targetAudience, setTargetAudience] = useState("General");
+  const [themeActive, setThemeActive] = useState(false);
   const dispatch = useDispatch();
 
   const generateContent = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -30,6 +31,7 @@ export const useGenerateContent = () => {
           theme,
           contentStyle,
           targetAudience,
+          themeActive,
         }),
       });
 
@@ -41,14 +43,16 @@ export const useGenerateContent = () => {
       const dataJson = await data.json();
       const { carousels, colorPalette } = dataJson;
       dispatch(addAllSlides(carousels));
-      dispatch(
-        setBackground({
-          color1: colorPalette.color1,
-          color2: colorPalette.color2,
-          color3: colorPalette.color3,
-          color4: colorPalette.color4,
-        })
-      );
+      if (themeActive) {
+        dispatch(
+          setBackground({
+            color1: colorPalette.color1,
+            color2: colorPalette.color2,
+            color3: colorPalette.color3,
+            color4: colorPalette.color4,
+          })
+        );
+      }
     } catch (error) {
       console.error("Error generating content:", error);
     } finally {
@@ -73,5 +77,7 @@ export const useGenerateContent = () => {
     setContentStyle,
     targetAudience,
     setTargetAudience,
+    themeActive,
+    setThemeActive,
   };
 };

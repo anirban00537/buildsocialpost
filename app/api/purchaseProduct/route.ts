@@ -1,9 +1,7 @@
 export const dynamic = "force-dynamic";
 import { lemonSqueezyApiInstance } from "@/utils/axios";
-import { doc, setDoc } from "firebase/firestore";
 import { getAuth } from "firebase-admin/auth";
 import { initializeApp, cert, getApps } from "firebase-admin/app";
-import { db } from "@/services/firebase";
 
 if (!process.env.NEXT_PUBLIC_FIREBASE_PRIVATE_KEY) {
   throw new Error(

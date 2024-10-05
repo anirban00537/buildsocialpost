@@ -78,7 +78,15 @@ const Text: React.FC<TextProps> = ({
 
   return (
     <div style={{ position: "relative", width: "100%" }}>
-      <EditorContent editor={editor} />
+      <EditorContent
+        editor={editor}
+        spellCheck={false}
+        autoComplete="off"
+        autoCapitalize="off"
+        autoCorrect="off"
+        className="notranslate"
+        translate="no"
+      />
       {editor && (
         <BubbleMenu editor={editor} tippyOptions={{ duration: 100 }}>
           <button onClick={() => applyStyle("bold")} style={buttonStyle}>

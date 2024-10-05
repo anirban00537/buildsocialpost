@@ -20,7 +20,7 @@ const initialState: CarouselState = {
   },
   sharedSelectedElement: {
     id: sharedElements[0].id,
-    opacity: 0.5,
+    opacity: 0.099,
   },
   titleTextSettings: {
     alignment: "left",
@@ -43,7 +43,7 @@ const initialState: CarouselState = {
   layout: {
     height: 600,
     width: 600,
-    pattern: 1,
+    pattern: 7,
     backgroundOpacity: 0.02,
     gradient: true,
   },
@@ -175,7 +175,7 @@ const carouselSlice = createSlice({
       };
       state.sharedSelectedElement = {
         id: sharedElements[0].id,
-        opacity: 0.5,
+        opacity: 0.099,
       };
       state.titleTextSettings = {
         alignment: "left",

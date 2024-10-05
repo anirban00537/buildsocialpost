@@ -15,6 +15,7 @@ import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { useSelector } from "react-redux";
 import { RootState } from "@/state/store";
+import { Switch } from "@/components/ui/switch";
 
 const AiSettingsComponent = () => {
   const {
@@ -34,6 +35,8 @@ const AiSettingsComponent = () => {
     setContentStyle,
     targetAudience,
     setTargetAudience,
+    themeActive,
+    setThemeActive,
   } = useGenerateContent();
   const { subscribed } = useSelector((state: RootState) => state.user);
 
@@ -65,11 +68,26 @@ const AiSettingsComponent = () => {
             </div>
             {/* Theme Selection */}
             <div className="space-y-2">
-              <Label htmlFor="theme" className="text-xs text-textColor/70">
-                Theme
-              </Label>
-              <div className="flex gap-2">
-                <Button
+              <div className="flex items-center justify-between gap-2">
+                <Label htmlFor="theme" className="text-xs text-textColor/70">
+                  Theme
+                </Label>
+                <Switch
+                  id="theme"
+                  checked={themeActive}
+                  onCheckedChange={() => setThemeActive(!themeActive)}
+                  size="md"
+                />
+              </div>
+
+              {themeActive && (
+              <div
+                className={`flex gap-2 ${
+                  themeActive ? "opacity-100" : "opacity-50"
+                  }`}
+                  
+              >
+                  <Button
                   size="sm"
                   type="button"
                   className={`flex-1 text-xs border border-borderColor/50 text-textColor p-1 flex items-center justify-center rounded-md transition-all duration-150 ${
@@ -95,7 +113,8 @@ const AiSettingsComponent = () => {
                   <Moon size={12} className="mr-1" />
                   Dark
                 </Button>
-              </div>
+                </div>
+              )}
             </div>
 
             {/* Number of Slides */}
