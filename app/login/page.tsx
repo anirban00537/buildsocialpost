@@ -50,13 +50,13 @@ const features = [
   },
   {
     icon: <FaFilePdf />,
-    title: "PDF Download",
+    title: "Unlimited PDF Download",
     description:
       "Download your designs in PDF format for easy sharing and printing.",
   },
   {
     icon: <FaDownload />,
-    title: "Image Download",
+    title: "Unlimited Image Download",
     description:
       "Save your carousel images directly to your device in high resolution.",
   },

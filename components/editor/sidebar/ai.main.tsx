@@ -1,5 +1,5 @@
 import React from "react";
-import { Sun, Moon, Sparkles } from "lucide-react";
+import { Sun, Moon, Sparkles, HelpCircle } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import {
   Select,
@@ -16,6 +16,8 @@ import Image from "next/image";
 import { useSelector } from "react-redux";
 import { RootState } from "@/state/store";
 import { Switch } from "@/components/ui/switch";
+import { Tooltip } from 'react-tooltip';
+import 'react-tooltip/dist/react-tooltip.css';
 
 const AiSettingsComponent = () => {
   const {
@@ -51,12 +53,19 @@ const AiSettingsComponent = () => {
             </h2>
             {/* Topic Input */}
             <div className="space-y-2">
-              <Label
-                htmlFor="content"
-                className="text-sm font-medium text-textColor/80"
-              >
-                Topic
-              </Label>
+              <div className="flex items-center">
+                <Label
+                  htmlFor="content"
+                  className="text-sm font-medium text-textColor/80"
+                >
+                  Topic
+                </Label>
+                <HelpCircle
+                  data-tooltip-id="topic-tooltip"
+                  data-tooltip-content="Enter the main topic or subject for the AI-generated content."
+                  className="ml-2 h-4 w-4 text-textColor/60 hover:text-textColor cursor-help"
+                />
+              </div>
               <Textarea
                 id="content"
                 placeholder="Enter your topic..."
@@ -69,9 +78,16 @@ const AiSettingsComponent = () => {
             {/* Theme Selection */}
             <div className="space-y-2">
               <div className="flex items-center justify-between gap-2">
-                <Label htmlFor="theme" className="text-xs text-textColor/70">
-                  Theme
-                </Label>
+                <div className="flex items-center">
+                  <Label htmlFor="theme" className="text-xs text-textColor/70">
+                    Theme
+                  </Label>
+                  <HelpCircle
+                    data-tooltip-id="theme-tooltip"
+                    data-tooltip-content="Choose a color theme for the generated slides."
+                    className="ml-2 h-4 w-4 text-textColor/60 hover:text-textColor cursor-help"
+                  />
+                </div>
                 <Switch
                   id="theme"
                   checked={themeActive}
@@ -81,47 +97,53 @@ const AiSettingsComponent = () => {
               </div>
 
               {themeActive && (
-              <div
-                className={`flex gap-2 ${
-                  themeActive ? "opacity-100" : "opacity-50"
+                <div
+                  className={`flex gap-2 ${
+                    themeActive ? "opacity-100" : "opacity-50"
                   }`}
-                  
-              >
+                >
                   <Button
-                  size="sm"
-                  type="button"
-                  className={`flex-1 text-xs border border-borderColor/50 text-textColor p-1 flex items-center justify-center rounded-md transition-all duration-150 ${
-                    theme === "light"
-                      ? "bg-primary/80 text-white"
-                      : "hover:bg-primary/20 text-textColor bg-cardBackground/50"
-                  }`}
-                  onClick={() => setTheme("light")}
-                >
-                  <Sun size={12} className="mr-1" />
-                  Light
-                </Button>
-                <Button
-                  size="sm"
-                  type="button"
-                  className={`flex-1 text-xs border border-borderColor/50 text-textColor p-1 flex items-center justify-center rounded-md transition-all duration-150 ${
-                    theme === "dark"
-                      ? "bg-primary/80 text-white"
-                      : "hover:bg-primary/20 text-textColor bg-cardBackground/50"
-                  }`}
-                  onClick={() => setTheme("dark")}
-                >
-                  <Moon size={12} className="mr-1" />
-                  Dark
-                </Button>
+                    size="sm"
+                    type="button"
+                    className={`flex-1 text-xs border border-borderColor/50 text-textColor p-1 flex items-center justify-center rounded-md transition-all duration-150 ${
+                      theme === "light"
+                        ? "bg-primary/80 text-white"
+                        : "hover:bg-primary/20 text-textColor bg-cardBackground/50"
+                    }`}
+                    onClick={() => setTheme("light")}
+                  >
+                    <Sun size={12} className="mr-1" />
+                    Light
+                  </Button>
+                  <Button
+                    size="sm"
+                    type="button"
+                    className={`flex-1 text-xs border border-borderColor/50 text-textColor p-1 flex items-center justify-center rounded-md transition-all duration-150 ${
+                      theme === "dark"
+                        ? "bg-primary/80 text-white"
+                        : "hover:bg-primary/20 text-textColor bg-cardBackground/50"
+                    }`}
+                    onClick={() => setTheme("dark")}
+                  >
+                    <Moon size={12} className="mr-1" />
+                    Dark
+                  </Button>
                 </div>
               )}
             </div>
 
             {/* Number of Slides */}
             <div className="space-y-2">
-              <Label htmlFor="slides" className="text-xs text-textColor/70">
-                Number of Slides
-              </Label>
+              <div className="flex items-center">
+                <Label htmlFor="slides" className="text-xs text-textColor/70">
+                  Number of Slides
+                </Label>
+                <HelpCircle
+                  data-tooltip-id="slides-tooltip"
+                  data-tooltip-content="Select the desired number of slides for the generated content."
+                  className="ml-2 h-4 w-4 text-textColor/60 hover:text-textColor cursor-help"
+                />
+              </div>
               <div className="flex items-center gap-2">
                 <Slider
                   max={10}
@@ -139,12 +161,19 @@ const AiSettingsComponent = () => {
             {/* Other Settings in Separate Columns */}
             <div className="grid grid-cols-1 gap-4">
               <div className="space-y-2">
-                <Label
-                  htmlFor="contentStyle"
-                  className="text-xs text-textColor/70"
-                >
-                  Style
-                </Label>
+                <div className="flex items-center">
+                  <Label
+                    htmlFor="contentStyle"
+                    className="text-xs text-textColor/70"
+                  >
+                    Style
+                  </Label>
+                  <HelpCircle
+                    data-tooltip-id="style-tooltip"
+                    data-tooltip-content="Select the writing style for the generated content."
+                    className="ml-2 h-4 w-4 text-textColor/60 hover:text-textColor cursor-help"
+                  />
+                </div>
                 <Select value={contentStyle} onValueChange={setContentStyle}>
                   <SelectTrigger className="w-full h-8 text-xs rounded-md border border-borderColor/50 text-textColor bg-cardBackground/50">
                     <SelectValue placeholder="Style" />
@@ -158,12 +187,19 @@ const AiSettingsComponent = () => {
                 </Select>
               </div>
               <div className="space-y-2">
-                <Label
-                  htmlFor="targetAudience"
-                  className="text-xs text-textColor/70"
-                >
-                  Audience
-                </Label>
+                <div className="flex items-center">
+                  <Label
+                    htmlFor="targetAudience"
+                    className="text-xs text-textColor/70"
+                  >
+                    Audience
+                  </Label>
+                  <HelpCircle
+                    data-tooltip-id="audience-tooltip"
+                    data-tooltip-content="Choose the target audience for the generated content."
+                    className="ml-2 h-4 w-4 text-textColor/60 hover:text-textColor cursor-help"
+                  />
+                </div>
                 <Select
                   value={targetAudience}
                   onValueChange={setTargetAudience}
@@ -180,9 +216,16 @@ const AiSettingsComponent = () => {
                 </Select>
               </div>
               <div className="space-y-2">
-                <Label htmlFor="mood" className="text-xs text-textColor/70">
-                  Mood
-                </Label>
+                <div className="flex items-center">
+                  <Label htmlFor="mood" className="text-xs text-textColor/70">
+                    Mood
+                  </Label>
+                  <HelpCircle
+                    data-tooltip-id="mood-tooltip"
+                    data-tooltip-content="Select the desired mood or tone for the generated content."
+                    className="ml-2 h-4 w-4 text-textColor/60 hover:text-textColor cursor-help"
+                  />
+                </div>
                 <Select value={mood} onValueChange={setMood}>
                   <SelectTrigger className="w-full h-8 text-xs rounded-md border border-borderColor/50 text-textColor bg-cardBackground/50">
                     <SelectValue placeholder="Mood" />
@@ -198,9 +241,16 @@ const AiSettingsComponent = () => {
                 </Select>
               </div>
               <div className="space-y-2">
-                <Label htmlFor="language" className="text-xs text-textColor/70">
-                  Language
-                </Label>
+                <div className="flex items-center">
+                  <Label htmlFor="language" className="text-xs text-textColor/70">
+                    Language
+                  </Label>
+                  <HelpCircle
+                    data-tooltip-id="language-tooltip"
+                    data-tooltip-content="Choose the language for the generated content."
+                    className="ml-2 h-4 w-4 text-textColor/60 hover:text-textColor cursor-help"
+                  />
+                </div>
                 <Select value={language} onValueChange={setLanguage}>
                   <SelectTrigger className="w-full h-8 text-xs rounded-md border border-borderColor/50 text-textColor bg-cardBackground/50">
                     <SelectValue placeholder="Language" />
@@ -265,6 +315,15 @@ const AiSettingsComponent = () => {
           </div>
         </div>
       </form>
+
+      {/* React-Tooltip components */}
+      <Tooltip id="topic-tooltip" place="left" className="w-40" />
+      <Tooltip id="theme-tooltip" place="left" className="w-40" />
+      <Tooltip id="slides-tooltip" place="left" className="w-40" />
+      <Tooltip id="style-tooltip" place="left" className="w-40" />
+      <Tooltip id="audience-tooltip" place="left" className="w-40" />
+      <Tooltip id="mood-tooltip" place="left" className="w-40" />
+      <Tooltip id="language-tooltip" place="left" className="w-40" />
     </div>
   );
 };
