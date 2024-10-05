@@ -20,6 +20,7 @@ import { Switch } from "@/components/ui/switch";
 const BackgroundColorsSection = () => {
   const dispatch = useDispatch();
   const background = useSelector((state: RootState) => state.slides.background);
+  const layout = useSelector((state: RootState) => state.slides.layout);
 
   const [displayColorPicker, setDisplayColorPicker] = useState<{
     [key: string]: boolean;
@@ -29,16 +30,6 @@ const BackgroundColorsSection = () => {
     color3: false,
     color4: false,
   });
-  const [showAllLightPresets, setShowAllLightPresets] = useState(false);
-  const [showAllDarkPresets, setShowAllDarkPresets] = useState(false);
-  const layout = useSelector((state: RootState) => state.slides.layout);
- 
-  const visibleLightPresets = showAllLightPresets
-    ? lightColorPresets
-    : lightColorPresets.slice(0, 12);
-  const visibleDarkPresets = showAllDarkPresets
-    ? darkColorPresets
-    : darkColorPresets.slice(0, 12);
 
   const handleColorChange = (
     colorKey: keyof BackgroundColors,
@@ -113,7 +104,7 @@ const BackgroundColorsSection = () => {
             Light Presets
           </h3>
           <div className="grid grid-cols-4 gap-2">
-            {visibleLightPresets.map(
+            {lightColorPresets.map(
               (preset: BackgroundColors, index: number) => (
                 <div
                   key={index}
@@ -137,16 +128,6 @@ const BackgroundColorsSection = () => {
               )
             )}
           </div>
-          {lightColorPresets.length > 12 && (
-            <Button
-              size="sm"
-              variant="outline"
-              onClick={() => setShowAllLightPresets(!showAllLightPresets)}
-              className="w-full text-xs border border-borderColor bg-cardBackground/60 text-textColor"
-            >
-              {showAllLightPresets ? "Show Less" : "Show More"}
-            </Button>
-          )}
         </section>
 
         {/* Dark Presets */}
@@ -155,7 +136,7 @@ const BackgroundColorsSection = () => {
             Dark Presets
           </h3>
           <div className="grid grid-cols-4 gap-2">
-            {visibleDarkPresets.map(
+            {darkColorPresets.map(
               (preset: BackgroundColors, index: number) => (
                 <div
                   key={index}
@@ -179,16 +160,6 @@ const BackgroundColorsSection = () => {
               )
             )}
           </div>
-          {darkColorPresets.length > 12 && (
-            <Button
-              size="sm"
-              variant="outline"
-              onClick={() => setShowAllDarkPresets(!showAllDarkPresets)}
-              className="w-full text-xs border border-borderColor/50 text-textColor bg-cardBackground/60"
-            >
-              {showAllDarkPresets ? "Show Less" : "Show More"}
-            </Button>
-          )}
         </section>
       </div>
     </div>

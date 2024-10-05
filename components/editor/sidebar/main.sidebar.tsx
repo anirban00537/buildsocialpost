@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import {
-  Cpu,
-  Palette,
+  Wand2,
+  User,
   Type,
   Image,
   ChevronLeft,
   ChevronRight,
-  Layers,
+  Shapes,
 } from "lucide-react";
 import AiSettingsComponent from "./ai.main";
 import BrandingSection from "./branding.main";
@@ -76,11 +76,11 @@ const MainSidebar: React.FC<MainSidebarProps> = ({
         <div className="sticky top-0 w-full md:w-[70px] order-first md:order-first border-r border-borderColor bg-background shadow-md">
           <div className="flex flex-wrap md:flex-col w-full h-full justify-start items-center md:border-r border-b md:border-b-0 border-borderColor">
             {[
-              { name: "ai-settings", icon: <Cpu size={20} /> },
-              { name: "branding", icon: <Palette size={20} /> },
+              { name: "ai-settings", icon: <Wand2 size={20} /> },
+              { name: "branding", icon: <User size={20} /> },
               { name: "text-settings", icon: <Type size={20} /> },
               { name: "background", icon: <Image size={20} /> },
-              { name: "patterns-elements", icon: <Layers size={20} /> },
+              { name: "patterns-elements", icon: <Shapes size={20} /> },
             ].map((tab) => (
               <button
                 key={tab.name}
