@@ -28,7 +28,7 @@ const SharedElementsComponent: React.FC<SharedElementsProps> = ({
         color: color4,
       }}
     >
-      {element && <element.component color={color4} size={200} />}
+      {element && <element.component color={color4} size={150} />}
     </div>
   );
 };

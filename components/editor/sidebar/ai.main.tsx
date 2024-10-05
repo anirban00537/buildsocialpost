@@ -16,8 +16,8 @@ import Image from "next/image";
 import { useSelector } from "react-redux";
 import { RootState } from "@/state/store";
 import { Switch } from "@/components/ui/switch";
-import { Tooltip } from 'react-tooltip';
-import 'react-tooltip/dist/react-tooltip.css';
+import { Tooltip } from "react-tooltip";
+import "react-tooltip/dist/react-tooltip.css";
 
 const AiSettingsComponent = () => {
   const {
@@ -62,7 +62,7 @@ const AiSettingsComponent = () => {
                 </Label>
                 <HelpCircle
                   data-tooltip-id="topic-tooltip"
-                  data-tooltip-content="Enter the main topic or subject for the AI-generated content."
+                  data-tooltip-content="Main subject for AI content"
                   className="ml-2 h-4 w-4 text-textColor/60 hover:text-textColor cursor-help"
                 />
               </div>
@@ -84,7 +84,7 @@ const AiSettingsComponent = () => {
                   </Label>
                   <HelpCircle
                     data-tooltip-id="theme-tooltip"
-                    data-tooltip-content="Choose a color theme for the generated slides."
+                    data-tooltip-content="Color theme for slides"
                     className="ml-2 h-4 w-4 text-textColor/60 hover:text-textColor cursor-help"
                   />
                 </div>
@@ -140,7 +140,7 @@ const AiSettingsComponent = () => {
                 </Label>
                 <HelpCircle
                   data-tooltip-id="slides-tooltip"
-                  data-tooltip-content="Select the desired number of slides for the generated content."
+                  data-tooltip-content="Select slide count"
                   className="ml-2 h-4 w-4 text-textColor/60 hover:text-textColor cursor-help"
                 />
               </div>
@@ -170,7 +170,7 @@ const AiSettingsComponent = () => {
                   </Label>
                   <HelpCircle
                     data-tooltip-id="style-tooltip"
-                    data-tooltip-content="Select the writing style for the generated content."
+                    data-tooltip-content="Choose writing style"
                     className="ml-2 h-4 w-4 text-textColor/60 hover:text-textColor cursor-help"
                   />
                 </div>
@@ -196,8 +196,8 @@ const AiSettingsComponent = () => {
                   </Label>
                   <HelpCircle
                     data-tooltip-id="audience-tooltip"
-                    data-tooltip-content="Choose the target audience for the generated content."
-                    className="ml-2 h-4 w-4 text-textColor/60 hover:text-textColor cursor-help"
+                    data-tooltip-content="Select target audience"
+                    className="ml-2 h-4 w-4 text-sm text-textColor/60 hover:text-textColor cursor-help"
                   />
                 </div>
                 <Select
@@ -222,7 +222,7 @@ const AiSettingsComponent = () => {
                   </Label>
                   <HelpCircle
                     data-tooltip-id="mood-tooltip"
-                    data-tooltip-content="Select the desired mood or tone for the generated content."
+                    data-tooltip-content="Set content tone"
                     className="ml-2 h-4 w-4 text-textColor/60 hover:text-textColor cursor-help"
                   />
                 </div>
@@ -242,12 +242,15 @@ const AiSettingsComponent = () => {
               </div>
               <div className="space-y-2">
                 <div className="flex items-center">
-                  <Label htmlFor="language" className="text-xs text-textColor/70">
+                  <Label
+                    htmlFor="language"
+                    className="text-xs text-textColor/70"
+                  >
                     Language
                   </Label>
                   <HelpCircle
                     data-tooltip-id="language-tooltip"
-                    data-tooltip-content="Choose the language for the generated content."
+                    data-tooltip-content="Choose content language"
                     className="ml-2 h-4 w-4 text-textColor/60 hover:text-textColor cursor-help"
                   />
                 </div>
@@ -317,13 +320,13 @@ const AiSettingsComponent = () => {
       </form>
 
       {/* React-Tooltip components */}
-      <Tooltip id="topic-tooltip" place="left" className="w-40" />
-      <Tooltip id="theme-tooltip" place="left" className="w-40" />
-      <Tooltip id="slides-tooltip" place="left" className="w-40" />
-      <Tooltip id="style-tooltip" place="left" className="w-40" />
-      <Tooltip id="audience-tooltip" place="left" className="w-40" />
-      <Tooltip id="mood-tooltip" place="left" className="w-40" />
-      <Tooltip id="language-tooltip" place="left" className="w-40" />
+      <Tooltip id="topic-tooltip" place="left" className="w-40 text-[8px]" />
+      <Tooltip id="theme-tooltip" place="left" className="w-40 text-[8px]" />
+      <Tooltip id="slides-tooltip" place="left" className="w-40 text-[8px]" />
+      <Tooltip id="style-tooltip" place="left" className="w-40 text-[8px]" />
+      <Tooltip id="audience-tooltip" place="left" className="w-40 text-[8px]" />
+      <Tooltip id="mood-tooltip" place="left" className="w-40 text-[8px]" />
+      <Tooltip id="language-tooltip" place="left" className="w-40 text-[8px]" />
     </div>
   );
 };

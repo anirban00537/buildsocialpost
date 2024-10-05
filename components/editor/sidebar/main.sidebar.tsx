@@ -6,11 +6,13 @@ import {
   Image,
   ChevronLeft,
   ChevronRight,
+  Layers,
 } from "lucide-react";
 import AiSettingsComponent from "./ai.main";
 import BrandingSection from "./branding.main";
 import TextSettingsSection from "./text-settings.main";
 import BackgroundColorsSection from "./background.main";
+import BackgroundPatternsAndElements from "./background-patterns-elements";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 
 interface MainSidebarProps {
@@ -78,10 +80,11 @@ const MainSidebar: React.FC<MainSidebarProps> = ({
               { name: "branding", icon: <Palette size={20} /> },
               { name: "text-settings", icon: <Type size={20} /> },
               { name: "background", icon: <Image size={20} /> },
+              { name: "patterns-elements", icon: <Layers size={20} /> },
             ].map((tab) => (
               <button
                 key={tab.name}
-                className={`flex flex-col items-center justify-center p-6 w-1/4 md:w-full transition-colors my-1 md:my-2 rounded-lg duration-200 ${
+                className={`flex flex-col items-center justify-center p-6 w-1/5 md:w-full transition-colors my-1 md:my-2 rounded-lg duration-200 ${
                   activeTab === tab.name
                     ? "bg-primary text-white"
                     : "text-gray-500 hover:text-blue-500"
@@ -102,6 +105,7 @@ const MainSidebar: React.FC<MainSidebarProps> = ({
           {activeTab === "branding" && <BrandingSection />}
           {activeTab === "text-settings" && <TextSettingsSection />}
           {activeTab === "background" && <BackgroundColorsSection />}
+          {activeTab === "patterns-elements" && <BackgroundPatternsAndElements />}
         </div>
       </aside>
     </>

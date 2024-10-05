@@ -1,14 +1,7 @@
 import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "@/state/store";
-import {
-  setBackground,
-  setPattern,
-  setSharedSelectedElementId,
-  setSharedSelectedElementOpacity,
-  setBackgroundOpacity,
-  setGradient,
-} from "@/state/slice/carousel.slice";
+import { setBackground, setGradient } from "@/state/slice/carousel.slice";
 import { HexColorPicker } from "react-colorful";
 import {
   Popover,
@@ -20,22 +13,13 @@ import {
   lightColorPresets,
   darkColorPresets,
 } from "@/lib/color-presets";
-import { backgroundPatterns, sharedElements } from "@/lib/coreConstants";
-import { Slider } from "@/components/ui/slider";
-import { Label } from "@/components/ui/label";
-import { CircleOff } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import BackgroundPatternsAndElements from "./background-patterns-elements";
 import { Switch } from "@/components/ui/switch";
-import { getBackgroundPattern } from "@/components/shared-components/backgrounds";
 
 const BackgroundColorsSection = () => {
   const dispatch = useDispatch();
   const background = useSelector((state: RootState) => state.slides.background);
-  const { pattern } = useSelector((state: RootState) => state.slides.layout);
-  const sharedSelectedElement = useSelector(
-    (state: RootState) => state.slides.sharedSelectedElement
-  );
-  const layout = useSelector((state: RootState) => state.slides.layout);
 
   const [displayColorPicker, setDisplayColorPicker] = useState<{
     [key: string]: boolean;
@@ -47,7 +31,8 @@ const BackgroundColorsSection = () => {
   });
   const [showAllLightPresets, setShowAllLightPresets] = useState(false);
   const [showAllDarkPresets, setShowAllDarkPresets] = useState(false);
-
+  const layout = useSelector((state: RootState) => state.slides.layout);
+ 
   const visibleLightPresets = showAllLightPresets
     ? lightColorPresets
     : lightColorPresets.slice(0, 12);
@@ -55,7 +40,6 @@ const BackgroundColorsSection = () => {
     ? darkColorPresets
     : darkColorPresets.slice(0, 12);
 
-  const handlePatternChange = (value: number) => dispatch(setPattern(value));
   const handleColorChange = (
     colorKey: keyof BackgroundColors,
     colorValue: string
@@ -75,16 +59,28 @@ const BackgroundColorsSection = () => {
     dispatch(setBackground(preset));
 
   return (
-    <div className="w-full h-full p-4 flex flex-col bg-background/50 backdrop-blur-sm ">
-      <legend className="text-base font-semibold text-textColor mb-3">
+    <div className="w-full h-full p-6 flex flex-col bg-background/50 backdrop-blur-sm">
+      <h2 className="text-base font-semibold text-textColor mb-4">
         Background Settings
-      </legend>
-      <div className="flex-grow pb-40 overflow-y-auto space-y-6 ">
+      </h2>
+      <div className="flex-grow pb-40 overflow-y-auto space-y-6">
+        {/* Gradient Section */}
+        <section className="space-y-2">
+          <div className="flex items-center justify-between">
+            <h3 className="text-sm font-semibold text-textColor/80">
+              Gradient
+            </h3>
+            <Switch
+              checked={layout.gradient}
+              onCheckedChange={(checked) => dispatch(setGradient(checked))}
+            />
+          </div>
+        </section>
         {/* Custom Background Colors */}
-        <div className="space-y-2">
-          <label className="text-sm text-textColor/80">
+        <section className="space-y-4">
+          <h3 className="text-sm font-semibold text-textColor/80">
             Custom Background Color
-          </label>
+          </h3>
           <div className="grid grid-cols-4 gap-2">
             {(Object.keys(background) as Array<keyof BackgroundColors>).map(
               (colorKey) => (
@@ -109,11 +105,13 @@ const BackgroundColorsSection = () => {
               )
             )}
           </div>
-        </div>
+        </section>
 
         {/* Light Presets */}
-        <div className="space-y-2">
-          <label className="text-sm text-textColor/80">Light Presets</label>
+        <section className="space-y-4">
+          <h3 className="text-sm font-semibold text-textColor/80">
+            Light Presets
+          </h3>
           <div className="grid grid-cols-4 gap-2">
             {visibleLightPresets.map(
               (preset: BackgroundColors, index: number) => (
@@ -144,16 +142,18 @@ const BackgroundColorsSection = () => {
               size="sm"
               variant="outline"
               onClick={() => setShowAllLightPresets(!showAllLightPresets)}
-              className="w-full text-xs border border-borderColor  bg-cardBackground/60 text-textColor"
+              className="w-full text-xs border border-borderColor bg-cardBackground/60 text-textColor"
             >
               {showAllLightPresets ? "Show Less" : "Show More"}
             </Button>
           )}
-        </div>
+        </section>
 
         {/* Dark Presets */}
-        <div className="space-y-2">
-          <label className="text-sm text-textColor/80">Dark Presets</label>
+        <section className="space-y-4">
+          <h3 className="text-sm font-semibold text-textColor/80">
+            Dark Presets
+          </h3>
           <div className="grid grid-cols-4 gap-2">
             {visibleDarkPresets.map(
               (preset: BackgroundColors, index: number) => (
@@ -189,118 +189,7 @@ const BackgroundColorsSection = () => {
               {showAllDarkPresets ? "Show Less" : "Show More"}
             </Button>
           )}
-        </div>
-
-        {/* Pattern */}
-        <div className="space-y-2">
-          <label className="text-sm text-textColor/80">Pattern</label>
-          <div className="grid grid-cols-4 gap-2">
-            <div
-              className={`flex justify-center items-center p-2 rounded-md ${
-                pattern === 0
-                  ? "bg-blue-200 border border-blue-500"
-                  : "bg-gray-300"
-              }`}
-              onClick={() => handlePatternChange(0)}
-            >
-              <CircleOff size={16} className="text-gray-500" />
-            </div>
-            {backgroundPatterns.map((patternItem) => (
-              <div
-                key={patternItem.id}
-                className={`flex justify-center items-center p-2 rounded-md ${
-                  pattern === patternItem.id
-                    ? "bg-blue-200 border border-blue-500"
-                    : "bg-gray-300"
-                }`}
-                onClick={() => handlePatternChange(patternItem.id)}
-              >
-                <div
-                  className="w-full h-6 rounded-md"
-                  style={{
-                    backgroundImage: `url("${getBackgroundPattern(
-                      patternItem.id,
-                      background.color4
-                    )}")`,
-                    backgroundSize: "cover",
-                    backgroundPosition: "center",
-                    backgroundRepeat: "repeat",
-                  }}
-                />
-              </div>
-            ))}
-          </div>
-          <div className="space-y-2">
-            <label className="text-xs text-textColor/70">
-              Background Opacity
-            </label>
-            <Slider
-              max={0.05}
-              step={0.01}
-              value={[layout.backgroundOpacity]}
-              onValueChange={(value) =>
-                dispatch(setBackgroundOpacity(value[0]))
-              }
-            />
-          </div>
-        </div>
-        <div className="space-y-2">
-          <div className="flex items-center justify-between">
-            <label className="text-sm text-textColor/80">Gradient</label>
-            <Switch
-              checked={layout.gradient}
-              onCheckedChange={(checked) => dispatch(setGradient(checked))}
-            />
-          </div>
-        </div>
-
-        {/* Shared Elements */}
-        <div className="space-y-2">
-          <label className="text-sm text-textColor/80">Shared Elements</label>
-          <div className="grid grid-cols-4 gap-2">
-            <div
-              className={`flex justify-center items-center p-2 rounded-md ${
-                sharedSelectedElement?.id === 0
-                  ? "bg-blue-200 border border-blue-500"
-                  : "bg-gray-300"
-              }`}
-              onClick={() => {
-                dispatch(setSharedSelectedElementId(0));
-                dispatch(setSharedSelectedElementOpacity(0.4));
-              }}
-            >
-              <CircleOff size={16} className="text-textColor" />
-            </div>
-            {sharedElements.map((element) => (
-              <div
-                key={element?.id}
-                className={`flex justify-center items-center p-2 rounded-md ${
-                  sharedSelectedElement?.id === element?.id
-                    ? "bg-blue-200 border border-blue-500"
-                    : "bg-gray-300"
-                }`}
-                onClick={() => {
-                  dispatch(setSharedSelectedElementId(element.id));
-                  dispatch(setSharedSelectedElementOpacity(0.4));
-                }}
-              >
-                {/* blue color */}
-                <element.component />
-              </div>
-            ))}
-          </div>
-          <div className="space-y-2">
-            <label className="text-xs text-textColor/70">Opacity</label>
-            <Slider
-              max={1}
-              step={0.01}
-              value={[sharedSelectedElement?.opacity || 0]}
-              onValueChange={(value) =>
-                dispatch(setSharedSelectedElementOpacity(value[0]))
-              }
-            />
-          </div>
-        </div>
+        </section>
       </div>
     </div>
   );
