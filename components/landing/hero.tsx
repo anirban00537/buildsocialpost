@@ -174,10 +174,16 @@ const Hero = () => {
             <Link href="/editor">
               <ShimmerButton className="shadow-2xl ">
                 <span className="whitespace-pre-wrap text-center text-sm font-medium leading-none tracking-tight text-white dark:from-white dark:to-slate-900/10 lg:text-lg">
-                  It's free. Sign up now
+                  Create Carousel
                 </span>
               </ShimmerButton>
             </Link>
+            <a
+              href="https://www.linkedin.com/in/anirban00537/"
+              className="bg-background/50 backdrop-blur-sm h-[59px] ml-5 w-32 rounded-full border-4 border-borderColor flex items-center justify-center px-4 py-2 text-textColor transition-all duration-300 hover:scale-105"
+            >
+              <div className="text-white">Hire Me</div>
+            </a>
           </div>
         </motion.div>
 

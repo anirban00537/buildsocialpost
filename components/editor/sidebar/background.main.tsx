@@ -13,8 +13,6 @@ import {
   lightColorPresets,
   darkColorPresets,
 } from "@/lib/color-presets";
-import { Button } from "@/components/ui/button";
-import BackgroundPatternsAndElements from "./background-patterns-elements";
 import { Switch } from "@/components/ui/switch";
 
 const BackgroundColorsSection = () => {
@@ -67,6 +65,7 @@ const BackgroundColorsSection = () => {
             />
           </div>
         </section>
+
         {/* Custom Background Colors */}
         <section className="space-y-4">
           <h3 className="text-sm font-semibold text-textColor/80">
@@ -136,29 +135,27 @@ const BackgroundColorsSection = () => {
             Dark Presets
           </h3>
           <div className="grid grid-cols-4 gap-2">
-            {darkColorPresets.map(
-              (preset: BackgroundColors, index: number) => (
-                <div
-                  key={index}
-                  className="w-full h-8 border border-borderColor  cursor-pointer rounded-md grid grid-cols-4 transition-all hover:scale-105"
-                  onClick={() => handlePresetSelect(preset)}
-                >
-                  {Object.values(preset).map((color, colorIndex) => (
-                    <div
-                      key={colorIndex}
-                      className={`transition-colors duration-200 ease-in-out ${
-                        colorIndex === 0
-                          ? "rounded-l-md"
-                          : colorIndex === 3
-                          ? "rounded-r-md"
-                          : ""
-                      }`}
-                      style={{ backgroundColor: color }}
-                    />
-                  ))}
-                </div>
-              )
-            )}
+            {darkColorPresets.map((preset: BackgroundColors, index: number) => (
+              <div
+                key={index}
+                className="w-full h-8 border border-borderColor  cursor-pointer rounded-md grid grid-cols-4 transition-all hover:scale-105"
+                onClick={() => handlePresetSelect(preset)}
+              >
+                {Object.values(preset).map((color, colorIndex) => (
+                  <div
+                    key={colorIndex}
+                    className={`transition-colors duration-200 ease-in-out ${
+                      colorIndex === 0
+                        ? "rounded-l-md"
+                        : colorIndex === 3
+                        ? "rounded-r-md"
+                        : ""
+                    }`}
+                    style={{ backgroundColor: color }}
+                  />
+                ))}
+              </div>
+            ))}
           </div>
         </section>
       </div>

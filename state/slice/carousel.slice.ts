@@ -48,6 +48,7 @@ const initialState: CarouselState = {
     gradient: true,
   },
   fontFamily: "poppins",
+  globalBackground: null,
 };
 
 type UpdatePayload = {
@@ -164,6 +165,9 @@ const carouselSlice = createSlice({
     setGradient: (state, action: PayloadAction<boolean>) => {
       state.layout.gradient = action.payload;
     },
+    setBackgroundImageToAllSlides: (state, action: PayloadAction<string | null>) => {
+      state.globalBackground = action.payload;
+    },
     setNewCarousel: (state) => {
       state.name = "New Carousel";
       state.slides = initialSlides;
@@ -231,6 +235,7 @@ export const {
   setNewCarousel,
   removeBackgroundImage,
   setGradient,
+  setBackgroundImageToAllSlides,
 } = carouselSlice.actions;
 
 export default carouselSlice.reducer;

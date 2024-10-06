@@ -33,6 +33,7 @@ const SlideComponent: React.FC<SlideProps> = ({
     taglineTextSettings,
     layout,
     sharedSelectedElement,
+    globalBackground,
   } = useSelector((state: RootState) => state.slides);
   const { gradient } = useSelector((state: RootState) => state.slides.layout);
   const { subscribed } = useSelector((state: RootState) => state.user);
@@ -48,9 +49,11 @@ const SlideComponent: React.FC<SlideProps> = ({
   );
 
   const backgroundImageStyle: CSSProperties = {
-    ...(slide.backgroundImage
+    ...(slide.backgroundImage || globalBackground
       ? {
-          backgroundImage: `url("${slide.backgroundImage}")`,
+          backgroundImage: `url("${
+            slide.backgroundImage ? slide.backgroundImage : globalBackground
+          }")`,
           backgroundSize: "cover",
           backgroundPosition: "center",
           backgroundRepeat: "no-repeat",
@@ -66,7 +69,8 @@ const SlideComponent: React.FC<SlideProps> = ({
     left: 0,
     right: 0,
     bottom: 0,
-    opacity: slide.backgroundImage ? 0.3 : backgroundOpacity,
+    opacity:
+      slide.backgroundImage || globalBackground ? 0.5 : backgroundOpacity,
     zIndex: 0,
   };
   return (
@@ -163,7 +167,9 @@ const SlideComponent: React.FC<SlideProps> = ({
       <Background
         backgroundImageStyle={backgroundImageStyle}
         color1={color1}
-        backgroundImage={slide.backgroundImage}
+        backgroundImage={
+          globalBackground ? globalBackground : slide.backgroundImage
+        }
       />
       <div
         style={{

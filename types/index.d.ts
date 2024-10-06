@@ -70,6 +70,7 @@ export interface CarouselState {
   fontFamily: string;
   createdAt?: string;
   updatedAt?: string;
+  globalBackground?: string | null;
 }
 
 export interface FirestoreCarouselState extends CarouselState {

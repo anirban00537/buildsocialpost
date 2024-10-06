@@ -14,6 +14,8 @@ import TextSettingsSection from "./text-settings.main";
 import BackgroundColorsSection from "./background.main";
 import BackgroundPatternsAndElements from "./background-patterns-elements";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
+import BackgroundImagesSection from "./BackgroundImagesSection";
+import { FaPallet } from "react-icons/fa";
 
 interface MainSidebarProps {
   isCollapsed: boolean;
@@ -79,8 +81,9 @@ const MainSidebar: React.FC<MainSidebarProps> = ({
               { name: "ai-settings", icon: <Wand2 size={20} /> },
               { name: "branding", icon: <User size={20} /> },
               { name: "text-settings", icon: <Type size={20} /> },
-              { name: "background", icon: <Image size={20} /> },
+              { name: "background", icon: <FaPallet size={20} /> },
               { name: "patterns-elements", icon: <Shapes size={20} /> },
+              { name: "background-images", icon: <Image size={20} /> },
             ].map((tab) => (
               <button
                 key={tab.name}
@@ -105,7 +108,10 @@ const MainSidebar: React.FC<MainSidebarProps> = ({
           {activeTab === "branding" && <BrandingSection />}
           {activeTab === "text-settings" && <TextSettingsSection />}
           {activeTab === "background" && <BackgroundColorsSection />}
-          {activeTab === "patterns-elements" && <BackgroundPatternsAndElements />}
+          {activeTab === "patterns-elements" && (
+            <BackgroundPatternsAndElements />
+          )}
+          {activeTab === "background-images" && <BackgroundImagesSection />}
         </div>
       </aside>
     </>

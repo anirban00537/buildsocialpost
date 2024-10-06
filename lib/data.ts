@@ -8,6 +8,7 @@ export const initialSlides: Slide[] = [
     description:
       "Welcome to this demo presentation. Here you can add a brief introduction to your topic.",
     imageUrl: null,
+    backgroundImage: null,
     showImage: false,
     showTagline: true,
     showTitle: true,
@@ -19,6 +20,7 @@ export const initialSlides: Slide[] = [
     description:
       "This is where you can put your main content. Add key points, data, or any information relevant to your presentation.",
     imageUrl: null,
+    backgroundImage: null,
     showImage: true,
     showTagline: false,
     showTitle: true,
@@ -30,6 +32,7 @@ export const initialSlides: Slide[] = [
     tagline: "What's Next?",
     description: "Summarize your key points and provide a clear call to action for your audience.",
     imageUrl: null,
+    backgroundImage: null,
     showImage: false,
     showTagline: true,
     showTitle: true,

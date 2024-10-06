@@ -47,6 +47,7 @@ export const useCarouselManager = () => {
     name,
     sharedSelectedElement,
     fontFamily,
+    globalBackground,
   } = useSelector((state: RootState) => state.slides);
 
   const convertToFirestoreData = (
@@ -74,6 +75,7 @@ export const useCarouselManager = () => {
     fontFamily: data.fontFamily,
     createdAt: data.createdAt || new Date().toISOString(),
     updatedAt: new Date().toISOString(),
+    globalBackground: data.globalBackground,
   });
   const getCarouselsCreatedThisMonth = useCallback(async (userId: string) => {
     const now = new Date();
@@ -132,6 +134,7 @@ export const useCarouselManager = () => {
           ? carousel?.createdAt || new Date().toISOString()
           : new Date().toISOString(),
         updatedAt: new Date().toISOString(),
+        globalBackground: globalBackground,
       };
 
       try {
@@ -141,6 +144,7 @@ export const useCarouselManager = () => {
         let docRef;
         if (id) {
           docRef = doc(db, "carousels", id);
+          console.log(firestoreData, "firestoreData");
           await updateDoc(docRef, { ...firestoreData });
         } else {
           docRef = doc(collection(db, "carousels"));
@@ -186,6 +190,7 @@ export const useCarouselManager = () => {
       taglineTextSettings,
       layout,
       background,
+      globalBackground,
       slides,
       sharedSelectedElement,
       fontFamily,
@@ -253,6 +258,13 @@ export const useCarouselManager = () => {
               value: data.fontFamily || "poppins",
             })
           );
+          dispatch(
+            setProperty({
+              key: "globalBackground",
+              value: data.globalBackground || null,
+            })
+          );
+          console.log(data, "getting data");
         } else {
           toast.error("Carousel not found");
           router.push("/editor");
