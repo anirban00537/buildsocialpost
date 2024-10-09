@@ -1,17 +1,20 @@
-import { useState, ChangeEvent, useEffect, FormEvent } from "react";
+import { useState, ChangeEvent, FormEvent } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import toast from "react-hot-toast";
 import { RootState } from "@/state/store";
 import { setHandle, setHeadshot, setName } from "@/state/slice/branding.slice";
 import { useMutation, useQuery } from "react-query";
 import axios from "axios";
+import { useSession } from "next-auth/react";
 
 const useBranding = () => {
   const dispatch = useDispatch();
   const { name, handle, headshot } = useSelector(
     (state: RootState) => state.branding
   );
+  const { data: session } = useSession();
   const [originalHeadshot, setOriginalHeadshot] = useState<string | null>(null);
+  const [imageFile, setImageFile] = useState<File | null>(null);
 
   // Fetch branding data
   const { data: brandingData, isLoading: isFetchingBranding } = useQuery(
@@ -41,6 +44,7 @@ const useBranding = () => {
   const handleImageUpload = (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
+      setImageFile(file);
       dispatch(setHeadshot(URL.createObjectURL(file)));
     }
   };
@@ -51,18 +55,20 @@ const useBranding = () => {
       handle: string;
       headshot: string | null;
     }) => {
-      let finalHeadshot = brandingData.headshot;
-
-      if (brandingData.headshot && brandingData.headshot.startsWith("blob:")) {
-        // Here you would typically upload the file to your storage solution
-        // and get back a URL. For this example, we'll assume it's done and
-        // we have a URL.
-        finalHeadshot = "https://example.com/uploaded-image.jpg";
+      const formData = new FormData();
+      formData.append('name', brandingData.name);
+      formData.append('handle', brandingData.handle);
+      
+      if (imageFile) {
+        formData.append('headshot', imageFile);
+      } else if (brandingData.headshot) {
+        formData.append('headshot', brandingData.headshot);
       }
 
-      const response = await axios.post("/api/branding", {
-        ...brandingData,
-        headshot: finalHeadshot,
+      const response = await axios.post("/api/branding", formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
       });
 
       return response.data;
@@ -70,6 +76,7 @@ const useBranding = () => {
     {
       onSuccess: () => {
         toast.success("Branding data saved successfully!");
+        setImageFile(null); // Reset the image file after successful upload
       },
       onError: (error: Error) => {
         toast.error(error.message || "Failed to save branding data.");
@@ -91,6 +98,8 @@ const useBranding = () => {
     handleImageUpload,
     handleSubmit,
     loading: isFetchingBranding || isSaving,
+    session,
+    imageFile,
   };
 };
 

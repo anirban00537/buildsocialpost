@@ -13,10 +13,13 @@ export async function POST(req: Request) {
       });
     }
 
-    if (!auth.user.email) {
-      return new NextResponse(JSON.stringify({ error: "User email not found" }), {
-        status: 400,
-      });
+    if (!auth.user?.email) {
+      return new NextResponse(
+        JSON.stringify({ error: "User email not found" }),
+        {
+          status: 400,
+        }
+      );
     }
 
     const user = await prisma.user.findUnique({

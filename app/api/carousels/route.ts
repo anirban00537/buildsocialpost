@@ -12,7 +12,7 @@ export async function GET(req: Request) {
 
   try {
     const carousels = await prisma.carousel.findMany({
-      where: { userId: auth.user.id },
+      where: { userId: auth.user?.id || "" },
       orderBy: { createdAt: "desc" },
     });
 
@@ -47,7 +47,7 @@ export async function POST(req: Request) {
     const newCarousel = await prisma.carousel.create({
       data: {
         ...carouselData,
-        userId: auth.user.id,
+        userId: auth.user?.id || "",
       },
     });
 

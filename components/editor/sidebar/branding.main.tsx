@@ -16,7 +16,7 @@ const BrandingSection: React.FC = () => {
     handleHandleChange,
     handleImageUpload,
     handleSubmit,
-    user,
+    session,
   } = useBranding();
 
   return (
@@ -87,7 +87,7 @@ const BrandingSection: React.FC = () => {
             variant="default"
             size="sm"
             className="w-full text-sm"
-            disabled={loading || !user}
+            disabled={loading || !session}
           >
             {loading ? (
               <>
