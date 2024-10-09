@@ -6,6 +6,7 @@ import { CarouselState } from "@/types";
 import { addAllSlides, setProperty } from "@/state/slice/carousel.slice";
 import toast from "react-hot-toast";
 import axios from "axios";
+import { setLoading } from "@/state/slice/user.slice";
 
 // Define a new interface for the API response
 interface CarouselResponse {
@@ -116,6 +117,7 @@ export const useCarouselManager = () => {
 
   const getCarouselDetailsById = useCallback(
     async (id: string) => {
+      dispatch(setLoading(true));
       setIsFetchingDetails(true);
       try {
         const response = await axios.get(`/api/carousels/${id}`);
@@ -167,6 +169,7 @@ export const useCarouselManager = () => {
         router.push("/editor");
       } finally {
         setIsFetchingDetails(false);
+        dispatch(setLoading(true));
       }
     },
     [dispatch, router]
@@ -189,6 +192,7 @@ export const useCarouselManager = () => {
 
   const getAllCarousels = useCallback(async () => {
     setIsFetchingAll(true);
+    dispatch(setLoading(true));
     try {
       const response = await axios.get<CarouselResponse[]>("/api/carousels");
       setCarousels(response.data);
@@ -197,6 +201,7 @@ export const useCarouselManager = () => {
       toast.error("Failed to fetch carousels");
     } finally {
       setIsFetchingAll(false);
+      dispatch(setLoading(false));
     }
   }, []);
 

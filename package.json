@@ -2,8 +2,14 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
-    "start": "next start"
+    "build": "prisma generate && next build",
+    "start": "next start",
+    "prisma:generate": "prisma generate",
+    "prisma:studio": "prisma studio",
+    "prisma:migrate:dev": "prisma migrate dev",
+    "prisma:migrate:reset": "prisma migrate reset",
+    "prisma:db:push": "prisma db push",
+    "prisma:db:seed": "prisma db seed"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.3.4",
@@ -80,5 +86,8 @@
     "@types/react-dom": "18.2.25",
     "@types/react-slick": "^0.23.13",
     "encoding": "^0.1.13"
+  },
+  "prisma": {
+    "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/seed.ts"
   }
 }
