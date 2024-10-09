@@ -1,19 +1,24 @@
 "use client";
-import { useAuthUser } from "@/hooks/useAuth";
-import React, { ReactNode } from "react";
+import { useAuth } from "@/hooks/useAuth";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 import FullScreenLoading from "../loading/fullscreen.loading";
-import useAnalytics from "@/hooks/useAnalytics";
 
-interface AuthCheckLayoutProps {
-  children: ReactNode;
-}
+const AuthCheckLayout = ({ children }: { children: React.ReactNode }) => {
+  const { isAuthenticated, isLoading } = useAuth();
+  const router = useRouter();
 
-const AuthCheckLayout: React.FC<AuthCheckLayoutProps> = ({ children }) => {
-  const { loading } = useAuthUser();
+  useEffect(() => {
+    if (!isLoading && !isAuthenticated) {
+      router.push("/login");
+    }
+  }, [isAuthenticated, isLoading, router]);
 
-  useAnalytics();
-  if (loading) return <FullScreenLoading />;
-  return <div>{children}</div>;
+  if (isLoading) {
+    return <FullScreenLoading />;
+  }
+
+  return isAuthenticated ? <>{children}</> : null;
 };
 
 export default AuthCheckLayout;

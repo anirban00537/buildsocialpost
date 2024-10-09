@@ -1,7 +1,8 @@
 import { Poppins } from "next/font/google";
 import "./globals.css";
 import DefaultLayout from "@/components/layout/default.layout";
-import AuthCheckLayout from "@/components/layout/authCheckLayout";
+import SessionProvider from "@/components/layout/SessionProvider";
+
 const poppins = Poppins({
   weight: ["400", "700"],
   subsets: ["latin"],
@@ -47,8 +48,6 @@ export const metadata = {
       {
         url: "https://www.buildcarousel.com/creators.jpg",
         width: 800,
-
-        
         height: 600,
         alt: "BuildCarousel - AI Carousel Maker for Social Media",
       },
@@ -88,7 +87,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${poppins.className}`}>
-        <DefaultLayout>{children}</DefaultLayout>
+        <SessionProvider>
+          <DefaultLayout>{children}</DefaultLayout>
+        </SessionProvider>
       </body>
     </html>
   );

@@ -1,11 +1,10 @@
 "use client";
 import React from "react";
-import { useGoogleLogin } from "@/hooks/useAuth";
-import { Alert, AlertDescription } from "@/components/ui/alert";
+import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
+import { FaGoogle } from "react-icons/fa";
 import { motion } from "framer-motion";
 import {
-  FaGoogle,
   FaPalette,
   FaImage,
   FaFont,
@@ -63,18 +62,7 @@ const features = [
 ];
 
 const LoginPage = () => {
-  const {
-    loginWithGoogle,
-    loading: googleLoginLoading,
-    error: googleLoginError,
-    success: googleLoginSuccess,
-  } = useGoogleLogin();
-
-  const handleGoogleLogin = (event: React.MouseEvent<HTMLButtonElement>) => {
-    event.preventDefault();
-    console.log("Google login button clicked");
-    loginWithGoogle();
-  };
+  const { loginWithGoogle, isLoading } = useAuth();
 
   return (
     <div className="flex min-h-screen bg-gray-900 text-gray-100">
@@ -144,38 +132,14 @@ const LoginPage = () => {
             transition={{ delay: 0.3, duration: 0.5 }}
           >
             <Button
-              className="w-full bg-gradient-to-r from-blue-500 to-primary hover:from-blue-600 hover:to-primary text-white py-4 rounded-lg flex items-center justify-center gap-3 transition duration-300 text-lg font-semibold"
-              onClick={handleGoogleLogin}
-              disabled={googleLoginLoading}
+              className="w-full flex items-center justify-center gap-2 bg-white text-gray-600 border border-gray-300 hover:bg-gray-100"
+              onClick={loginWithGoogle}
+              disabled={isLoading}
             >
-              <FaGoogle />
-              {googleLoginLoading ? "Signing in..." : "Sign in with Google"}
+              <FaGoogle className="w-5 h-5" />
+              {isLoading ? "Signing in..." : "Sign in with Google"}
             </Button>
           </motion.div>
-
-          {googleLoginError && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.3 }}
-            >
-              <Alert variant="destructive" className="mt-6">
-                <AlertDescription>{googleLoginError}</AlertDescription>
-              </Alert>
-            </motion.div>
-          )}
-          {googleLoginSuccess && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.3 }}
-              className="mt-6 text-center text-green-400 font-semibold bg-background p-4 rounded-lg border border-green-400"
-            >
-              <Alert className="mt-6">
-                <AlertDescription>{googleLoginSuccess}</AlertDescription>
-              </Alert>
-            </motion.div>
-          )}
         </div>
       </motion.div>
     </div>

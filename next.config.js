@@ -16,7 +16,6 @@ module.exports = {
     domains: [
       "images.unsplash.com",
       "media.licdn.com",
-      "firebasestorage.googleapis.com",
       "aceternity.com",
       "plus.unsplash.com",
     ],

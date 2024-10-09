@@ -1,8 +1,9 @@
 "use client";
-import { auth } from "@/services/firebase";
 import axios from "axios";
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
+import { signIn } from "next-auth/react";
 
 const plan = {
   name: "Pro plan",
@@ -23,28 +24,20 @@ const Pricing = () => {
   const [loading, setLoading] = useState(false);
   const [selectedPlan, setSelectedPlan] = useState("yearly");
   const router = useRouter();
+  const { data: session, status } = useSession();
 
   const buyProduct = async () => {
     setLoading(true);
-    const user = auth.currentUser;
-    if (user) {
+    if (session) {
       try {
-        const token = await user.getIdToken();
         const productId =
           selectedPlan === "monthly"
             ? process.env.NEXT_PUBLIC_MONTHLY_PRODUCT_ID
             : process.env.NEXT_PUBLIC_YEARLY_PRODUCT_ID;
-        const response = await axios.post(
-          "/api/purchaseProduct",
-          { productId },
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+        const response = await axios.post("/api/purchaseProduct", {
+          productId,
+        });
         console.log(response, "response");
-        // Open the checkout URL in a new tab
         window.open(response.data.checkoutUrl, "_blank", "noopener,noreferrer");
       } catch (error) {
         console.error("Error purchasing product:", error);
@@ -55,7 +48,7 @@ const Pricing = () => {
         setLoading(false);
       }
     } else {
-      router.push("/login");
+      signIn(); // Redirect to sign-in page
       setLoading(false);
     }
   };
@@ -113,7 +106,7 @@ const Pricing = () => {
               <button
                 className="w-full py-2 px-4 bg-primary hover:bg-indigo-700 rounded-md font-medium transition-colors"
                 onClick={buyProduct}
-                disabled={loading}
+                disabled={loading || status === "loading"}
               >
                 {loading ? "Processing..." : "Get Started"}
               </button>

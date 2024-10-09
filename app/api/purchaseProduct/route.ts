@@ -1,29 +1,29 @@
 export const dynamic = "force-dynamic";
 import { lemonSqueezyApiInstance } from "@/utils/axios";
-import { getAuth } from "firebase-admin/auth";
-import { initializeApp, cert, getApps } from "firebase-admin/app";
-
-if (!process.env.NEXT_PUBLIC_FIREBASE_PRIVATE_KEY) {
-  throw new Error(
-    "The NEXT_PUBLIC_FIREBASE_PRIVATE_KEY environment variable is not defined"
-  );
-}
-
-if (!getApps().length) {
-  initializeApp({
-    credential: cert({
-      projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
-      clientEmail: process.env.NEXT_PUBLIC_FIREBASE_CLIENT_EMAIL,
-      privateKey: process.env.NEXT_PUBLIC_FIREBASE_PRIVATE_KEY.replace(
-        /\\n/g,
-        "\n"
-      ),
-    }),
-  });
-}
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "../auth/[...nextauth]/route";
+import { prisma } from "@/lib/db";
 
 export async function POST(req: Request) {
   try {
+    // Get the user's session
+    const session = await getServerSession(authOptions);
+    if (!session || !session.user?.email) {
+      return new Response(JSON.stringify({ error: "Unauthorized" }), {
+        status: 401,
+      });
+    }
+
+    const user = await prisma.user.findUnique({
+      where: { email: session.user.email },
+    });
+
+    if (!user) {
+      return new Response(JSON.stringify({ error: "User not found" }), {
+        status: 404,
+      });
+    }
+
     const authHeader = req.headers.get("Authorization");
     if (!authHeader) {
       return new Response(
@@ -35,9 +35,6 @@ export async function POST(req: Request) {
     }
 
     const token = authHeader.split(" ")[1];
-    const decodedToken = await getAuth().verifyIdToken(token);
-    const userId = decodedToken.uid;
-
     const reqData: { productId: string; redirectUrl: string } =
       await req.json();
     if (!reqData.productId) {
@@ -52,7 +49,7 @@ export async function POST(req: Request) {
         attributes: {
           checkout_data: {
             custom: {
-              user_id: userId,
+              user_id: user.id,
             },
           },
           product_options: {
@@ -77,20 +74,6 @@ export async function POST(req: Request) {
     });
 
     const checkoutUrl = response.data.data.attributes.url;
-
-    // Store the subscription data in Firestore
-    // const endDate = new Date();
-    // endDate.setMonth(endDate.getMonth() + 1); // Example: setting the subscription duration to 1 month
-
-    // const subscriptionData = {
-    //   userId,
-    //   productId: reqData.productId,
-    //   checkoutUrl,
-    //   status: "pending",
-    //   endDate: endDate.toISOString(),
-    //   createdAt: new Date().toISOString(),
-    // };
-    // await setDoc(doc(db, "subscriptions", userId), subscriptionData);
 
     return new Response(JSON.stringify({ checkoutUrl }), { status: 200 });
   } catch (error) {

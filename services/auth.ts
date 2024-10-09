@@ -1,32 +1,20 @@
-import { auth } from "./firebase";
-import {
-  GoogleAuthProvider,
-  signInWithPopup,
-  signOut as firebaseSignOut,
-  onAuthStateChanged,
-  User,
-} from "firebase/auth";
+import { signIn, signOut as nextAuthSignOut, useSession } from "next-auth/react";
+import { Session } from "next-auth";
 
-const googleProvider = new GoogleAuthProvider();
+export const signInWithGoogle = () => signIn("google");
 
-export const signInWithGoogle = () => signInWithPopup(auth, googleProvider);
+export const signOut = () => nextAuthSignOut();
 
-export const signOut = () => firebaseSignOut(auth);
-
-export const onAuthStateChange = (callback: (user: User | null) => void) => {
-  return onAuthStateChanged(auth, callback);
+export const useAuth = () => {
+  const { data: session, status } = useSession();
+  return {
+    user: session?.user || null,
+    loading: status === "loading",
+  };
 };
 
-export const getCurrentUser = (): Promise<User | null> => {
-  return new Promise((resolve, reject) => {
-    const unsubscribe = onAuthStateChanged(
-      auth,
-      (user) => {
-        unsubscribe();
-        resolve(user);
-      },
-      reject
-    );
-  });
+export const getCurrentUser = async (): Promise<Session["user"] | null> => {
+  const { data: session } = useSession();
+  return session?.user || null;
 };
 

@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/state/store";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useCarouselManager } from "@/hooks/useCarouselManager";
-import { useLogout } from "@/hooks/useAuth";
+import { signOut } from "@/services/auth";
 import useCarousel from "@/hooks/useCarousel";
 import {
   DropdownMenu,
@@ -280,7 +280,6 @@ const EditorNavbar: React.FC = () => {
     isDeleting,
     isFetchingAll,
   } = useCarouselManager();
-  const { logout } = useLogout();
   const user = useSelector((state: RootState) => state.user.userinfo);
   const { name } = useSelector((state: RootState) => state.slides);
   const searchParams = useSearchParams();
@@ -391,7 +390,7 @@ const EditorNavbar: React.FC = () => {
             </Button>
             <SubscriptionInfo />
             {user && user.email ? (
-              <UserDropdown user={user} onLogout={logout} />
+              <UserDropdown user={user} onLogout={signOut} />
             ) : (
               <Link href="/login">
                 <Button
@@ -441,7 +440,7 @@ const EditorNavbar: React.FC = () => {
             {user && user.email ? (
               <Button
                 onClick={() => {
-                  logout();
+                  signOut();
                   setIsMenuOpen(false);
                 }}
                 className="w-full justify-start text-textColor/85"

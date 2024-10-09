@@ -1,0 +1,67 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider = "postgresql"
+    url      = env("DATABASE_URL")
+}
+
+model User {
+    id            String         @id @default(uuid())
+    email         String         @unique
+    displayName   String?
+    photoURL      String?
+    subscriptions Subscription[]
+    carousels     Carousel[]
+    branding      UserBranding?
+    images        Image[]
+}
+
+model Subscription {
+    id        String   @id @default(uuid())
+    userId    String
+    endDate   DateTime
+    createdAt DateTime @default(now())
+    user      User     @relation(fields: [userId], references: [id])
+}
+
+model Carousel {
+    id                      String   @id @default(uuid())
+    userId                  String
+    name                    String
+    titleTextSettings       Json
+    descriptionTextSettings Json
+    taglineTextSettings     Json
+    layout                  Json
+    background              Json
+    slides                  Json
+    sharedSelectedElement   Json?
+    fontFamily              String
+    createdAt               DateTime @default(now())
+    updatedAt               DateTime @updatedAt
+    globalBackground        Json?
+    user                    User     @relation(fields: [userId], references: [id])
+}
+
+model UserBranding {
+    id       String  @id @default(uuid())
+    userId   String  @unique
+    name     String
+    handle   String
+    headshot String?
+    user     User    @relation(fields: [userId], references: [id])
+}
+
+model Image {
+    id        String   @id @default(uuid())
+    userId    String
+    url       String
+    name      String
+    size      Int
+    createdAt DateTime @default(now())
+    user      User     @relation(fields: [userId], references: [id])
+}
