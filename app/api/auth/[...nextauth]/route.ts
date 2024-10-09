@@ -11,44 +11,32 @@ export const authOptions: NextAuthOptions = {
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
     }),
   ],
-  secret: process.env.NEXTAUTH_SECRET,
-  session: {
-    strategy: "jwt",
-  },
   callbacks: {
-    async jwt({ token, user }) {
-      if (user) {
-        token.userId = user.id;
-      }
-      return token;
-    },
-    async session({ session, token }) {
-      if (session.user) {
-        session.user.email = token.email as string;
+    session: async ({ session, user }) => {
+      if (session?.user) {
+        session.user.email = user.email;
+
+        // Check if email exists
+        if (!user.email) {
+          // If email doesn't exist, fetch user info from the database
+          const dbUser = await prisma.user.findUnique({
+            where: { id: user.id },
+            select: { email: true, name: true, image: true },
+          });
+
+          if (dbUser) {
+            session.user.email = dbUser.email;
+            session.user.name = dbUser.name;
+            session.user.image = dbUser.image;
+          }
+        } else {
+          session.user.email = user.email;
+        }
       }
       return session;
-    },
-  },
-  events: {
-    async signIn({ user, account, profile }) {
-      if (account?.provider === "google") {
-        await prisma.user.upsert({
-          where: { email: user.email! },
-          update: {
-            displayName: profile?.name,
-            photoURL: profile?.image,
-          },
-          create: {
-            email: user.email!,
-            displayName: profile?.name,
-            photoURL: profile?.image,
-          },
-        });
-      }
     },
   },
 };
 
 const handler = NextAuth(authOptions);
-
 export { handler as GET, handler as POST };

@@ -1,26 +1,30 @@
 export const dynamic = "force-dynamic";
 import { lemonSqueezyApiInstance } from "@/utils/axios";
-import { getServerSession } from "next-auth/next";
-import { authOptions } from "../auth/[...nextauth]/route";
 import { prisma } from "@/lib/db";
 import { authenticateAndGetUser } from "@/lib/authCheck";
 import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
   try {
-   const auth = await authenticateAndGetUser();
-   if ("error" in auth) {
-     return new NextResponse(JSON.stringify({ error: auth.error }), {
-       status: auth.status,
-     });
-   }
+    const auth = await authenticateAndGetUser();
+    if ("error" in auth) {
+      return new NextResponse(JSON.stringify({ error: auth.error }), {
+        status: auth.status,
+      });
+    }
+
+    if (!auth.user.email) {
+      return new NextResponse(JSON.stringify({ error: "User email not found" }), {
+        status: 400,
+      });
+    }
 
     const user = await prisma.user.findUnique({
       where: { email: auth.user.email },
     });
 
     if (!user) {
-      return new Response(JSON.stringify({ error: "User not found" }), {
+      return new NextResponse(JSON.stringify({ error: "User not found" }), {
         status: 404,
       });
     }
@@ -79,6 +83,6 @@ export async function POST(req: Request) {
     return new Response(JSON.stringify({ checkoutUrl }), { status: 200 });
   } catch (error) {
     console.error(error);
-    return new Response("An error occurred", { status: 500 });
+    return new NextResponse("An error occurred", { status: 500 });
   }
 }

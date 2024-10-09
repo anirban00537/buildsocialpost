@@ -13,7 +13,7 @@ export async function GET(req: Request) {
   }
 
   const user = await prisma.user.findUnique({
-    where: { email: auth.user.email },
+    where: { email: auth.user?.email as string },
   });
   if (!user) {
     return new NextResponse(JSON.stringify({ error: "User not found" }), {

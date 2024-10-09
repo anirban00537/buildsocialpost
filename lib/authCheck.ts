@@ -7,14 +7,14 @@ export async function getOrCreateUser(email: string) {
     where: { email: email },
   });
 
-  if (!user) {
-    user = await prisma.user.create({
-      data: {
-        email: email,
-        // You can add more fields here if needed
-      },
-    });
-  }
+  // if (!user) {
+  //   user = await prisma.user.create({
+  //     data: {
+  //       email: email,
+  //       // You can add more fields here if needed
+  //     },
+  //   });
+  // }
 
   return user;
 }

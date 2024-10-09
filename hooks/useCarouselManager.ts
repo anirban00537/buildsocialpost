@@ -24,7 +24,9 @@ export const useCarouselManager = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const dispatch = useDispatch();
-  const { userinfo, subscribed } = useSelector((state: RootState) => state.user);
+  const { userinfo, subscribed } = useSelector(
+    (state: RootState) => state.user
+  );
   const user = userinfo;
   const {
     titleTextSettings,
@@ -39,102 +41,145 @@ export const useCarouselManager = () => {
     globalBackground,
   } = useSelector((state: RootState) => state.slides);
 
-  const getCarouselsCreatedThisMonth = useCallback(async () => {
-    const response = await axios.get('/api/carousels/count');
-    return response.data.count;
-  }, []);
+  const createOrUpdateCarousel = useCallback(
+    async (newName?: string, id?: string) => {
+      setIsCreatingOrUpdating(true);
 
-  const createOrUpdateCarousel = useCallback(async (newName?: string, id?: string) => {
-    setIsCreatingOrUpdating(true);
-
-    if (!user?.id) {
-      setIsCreatingOrUpdating(false);
-      return;
-    }
-
-    if (!subscribed && !id) {
-      const carouselsCreatedThisMonth = await getCarouselsCreatedThisMonth();
-      if (carouselsCreatedThisMonth >= 2) {
-        toast.error("You have reached the limit of 2 carousels per month. Please upgrade to create more.");
+      if (!user?.email) {
         setIsCreatingOrUpdating(false);
         return;
       }
-    }
 
-    const carouselData: CarouselState = {
-      name: newName || name,
+      const carouselData: CarouselState = {
+        name: newName || name,
+        titleTextSettings,
+        descriptionTextSettings,
+        taglineTextSettings,
+        layout,
+        background,
+        slides,
+        sharedSelectedElement,
+        fontFamily,
+        globalBackground,
+      };
+
+      try {
+        let response;
+        if (id) {
+          response = await axios.put(`/api/carousels/${id}`, carouselData);
+        } else {
+          response = await axios.post("/api/carousels", carouselData);
+        }
+
+        const updatedCarousel = { id: response.data.id, data: response.data };
+        setCarousels((prevCarousels) =>
+          id
+            ? prevCarousels.map((carousel) =>
+                carousel.id === id ? updatedCarousel : carousel
+              )
+            : [...prevCarousels, updatedCarousel]
+        );
+
+        setCarousel(response.data);
+
+        if (!id) {
+          const newSearchParams = new URLSearchParams(searchParams.toString());
+          newSearchParams.set("id", response.data.id);
+          const newUrl = `${
+            window.location.pathname
+          }?${newSearchParams.toString()}`;
+          router.replace(newUrl);
+        }
+      } catch (err) {
+        toast.error("Failed to save carousel");
+      } finally {
+        setIsCreatingOrUpdating(false);
+      }
+    },
+    [
+      user?.id,
+      subscribed,
+      name,
       titleTextSettings,
       descriptionTextSettings,
       taglineTextSettings,
       layout,
       background,
+      globalBackground,
       slides,
       sharedSelectedElement,
       fontFamily,
-      globalBackground,
-    };
+      router,
+      searchParams,
+    ]
+  );
 
-    try {
-      let response;
-      if (id) {
-        response = await axios.put(`/api/carousels/${id}`, carouselData);
-      } else {
-        response = await axios.post('/api/carousels', carouselData);
+  const getCarouselDetailsById = useCallback(
+    async (id: string) => {
+      setIsFetchingDetails(true);
+      try {
+        const response = await axios.get(`/api/carousels/${id}`);
+        const data = response.data;
+        setCarousel(data);
+
+        dispatch(setProperty({ key: "name", value: data.name }));
+        dispatch(addAllSlides(data.slides));
+        dispatch(setProperty({ key: "background", value: data.background }));
+        dispatch(
+          setProperty({
+            key: "titleTextSettings",
+            value: data.titleTextSettings,
+          })
+        );
+        dispatch(
+          setProperty({
+            key: "descriptionTextSettings",
+            value: data.descriptionTextSettings,
+          })
+        );
+        dispatch(
+          setProperty({
+            key: "taglineTextSettings",
+            value: data.taglineTextSettings,
+          })
+        );
+        dispatch(setProperty({ key: "layout", value: data.layout }));
+        dispatch(
+          setProperty({
+            key: "sharedSelectedElement",
+            value: data.sharedSelectedElement,
+          })
+        );
+        dispatch(
+          setProperty({
+            key: "fontFamily",
+            value: data.fontFamily || "poppins",
+          })
+        );
+        dispatch(
+          setProperty({
+            key: "globalBackground",
+            value: data.globalBackground || null,
+          })
+        );
+      } catch (err) {
+        toast.error("Failed to fetch carousel details");
+        router.push("/editor");
+      } finally {
+        setIsFetchingDetails(false);
       }
-
-      const updatedCarousel = { id: response.data.id, data: response.data };
-      setCarousels((prevCarousels) =>
-        id
-          ? prevCarousels.map((carousel) => (carousel.id === id ? updatedCarousel : carousel))
-          : [...prevCarousels, updatedCarousel]
-      );
-
-      setCarousel(response.data);
-
-      if (!id) {
-        const newSearchParams = new URLSearchParams(searchParams.toString());
-        newSearchParams.set("id", response.data.id);
-        const newUrl = `${window.location.pathname}?${newSearchParams.toString()}`;
-        router.replace(newUrl);
-      }
-    } catch (err) {
-      toast.error("Failed to save carousel");
-    } finally {
-      setIsCreatingOrUpdating(false);
-    }
-  }, [user?.id, subscribed, name, titleTextSettings, descriptionTextSettings, taglineTextSettings, layout, background, globalBackground, slides, sharedSelectedElement, fontFamily, router, searchParams, getCarouselsCreatedThisMonth]);
-
-  const getCarouselDetailsById = useCallback(async (id: string) => {
-    setIsFetchingDetails(true);
-    try {
-      const response = await axios.get(`/api/carousels/${id}`);
-      const data = response.data;
-      setCarousel(data);
-
-      dispatch(setProperty({ key: "name", value: data.name }));
-      dispatch(addAllSlides(data.slides));
-      dispatch(setProperty({ key: "background", value: data.background }));
-      dispatch(setProperty({ key: "titleTextSettings", value: data.titleTextSettings }));
-      dispatch(setProperty({ key: "descriptionTextSettings", value: data.descriptionTextSettings }));
-      dispatch(setProperty({ key: "taglineTextSettings", value: data.taglineTextSettings }));
-      dispatch(setProperty({ key: "layout", value: data.layout }));
-      dispatch(setProperty({ key: "sharedSelectedElement", value: data.sharedSelectedElement }));
-      dispatch(setProperty({ key: "fontFamily", value: data.fontFamily || "poppins" }));
-      dispatch(setProperty({ key: "globalBackground", value: data.globalBackground || null }));
-    } catch (err) {
-      toast.error("Failed to fetch carousel details");
-      router.push("/editor");
-    } finally {
-      setIsFetchingDetails(false);
-    }
-  }, [dispatch, router]);
+    },
+    [dispatch, router]
+  );
 
   const deleteCarousel = useCallback(async (id: string) => {
     setIsDeleting(true);
     try {
       await axios.delete(`/api/carousels/${id}`);
       setCarousel(null);
-      setCarousels((prevCarousels) => prevCarousels.filter((carousel) => carousel.id !== id));
+      setCarousels((prevCarousels) =>
+        prevCarousels.filter((carousel) => carousel.id !== id)
+      );
     } catch (err) {
       toast.error("Failed to delete carousel");
     } finally {
@@ -145,7 +190,7 @@ export const useCarouselManager = () => {
   const getAllCarousels = useCallback(async () => {
     setIsFetchingAll(true);
     try {
-      const response = await axios.get<CarouselResponse[]>('/api/carousels');
+      const response = await axios.get<CarouselResponse[]>("/api/carousels");
       setCarousels(response.data);
     } catch (err) {
       console.error("Error fetching carousels:", err);

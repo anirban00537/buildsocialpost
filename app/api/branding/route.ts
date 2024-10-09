@@ -12,11 +12,9 @@ export async function GET(req: Request) {
     });
   }
 
-
-
   const user = await prisma.user.findUnique({
-    where: { email: auth.user.email },
-    include: { branding: true },
+    where: { email: auth.user.email || "" },
+    include: { UserBranding: true },
   });
 
   if (!user) {
@@ -26,7 +24,7 @@ export async function GET(req: Request) {
   }
 
   return NextResponse.json(
-    user.branding || { name: "", handle: "", headshot: null }
+    user.UserBranding || { name: "", handle: "", headshot: null }
   );
 }
 
