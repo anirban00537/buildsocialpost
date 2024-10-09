@@ -1,63 +1,64 @@
 import { NextResponse } from "next/server";
-import { getServerSession } from "next-auth/next";
-import { authOptions } from "../auth/[...nextauth]/route";
 import { prisma } from "@/lib/db";
+import { authenticateAndGetUser } from "@/lib/authCheck";
 
 export async function GET(req: Request) {
-  const session = await getServerSession(authOptions);
-  if (!session || !session.user?.email) {
-    return new NextResponse(JSON.stringify({ error: "Unauthorized" }), {
-      status: 401,
+  const auth = await authenticateAndGetUser();
+  if ("error" in auth) {
+    return new NextResponse(JSON.stringify({ error: auth.error }), {
+      status: auth.status,
     });
   }
 
-  const user = await prisma.user.findUnique({
-    where: { email: session.user.email },
-  });
-  if (!user) {
-    return new NextResponse(JSON.stringify({ error: "User not found" }), {
-      status: 404,
+  try {
+    const carousels = await prisma.carousel.findMany({
+      where: { userId: auth.user.id },
+      orderBy: { createdAt: "desc" },
     });
+
+    const carouselsWithId = carousels.map((carousel) => ({
+      id: carousel.id,
+      data: carousel,
+    }));
+
+    return NextResponse.json(carouselsWithId);
+  } catch (error) {
+    console.error("Error in GET /api/carousels:", error);
+    return new NextResponse(
+      JSON.stringify({ error: "Internal Server Error" }),
+      {
+        status: 500,
+      }
+    );
   }
-
-  const carousels = await prisma.carousel.findMany({
-    where: { userId: user.id },
-    orderBy: { createdAt: "desc" },
-  });
-
-  const carouselsWithId = carousels.map(carousel => ({
-    id: carousel.id,
-    data: carousel
-  }));
-
-  return NextResponse.json(carouselsWithId);
 }
 
 export async function POST(req: Request) {
-  const session = await getServerSession(authOptions);
-  if (!session || !session.user?.email) {
-    return new NextResponse(JSON.stringify({ error: "Unauthorized" }), {
-      status: 401,
+  const auth = await authenticateAndGetUser();
+  if ("error" in auth) {
+    return new NextResponse(JSON.stringify({ error: auth.error }), {
+      status: auth.status,
     });
   }
 
-  const user = await prisma.user.findUnique({
-    where: { email: session.user.email },
-  });
-  if (!user) {
-    return new NextResponse(JSON.stringify({ error: "User not found" }), {
-      status: 404,
+  try {
+    const carouselData = await req.json();
+
+    const newCarousel = await prisma.carousel.create({
+      data: {
+        ...carouselData,
+        userId: auth.user.id,
+      },
     });
+
+    return NextResponse.json(newCarousel);
+  } catch (error) {
+    console.error("Error in POST /api/carousels:", error);
+    return new NextResponse(
+      JSON.stringify({ error: "Internal Server Error" }),
+      {
+        status: 500,
+      }
+    );
   }
-
-  const carouselData = await req.json();
-
-  const newCarousel = await prisma.carousel.create({
-    data: {
-      ...carouselData,
-      userId: user.id,
-    },
-  });
-
-  return NextResponse.json(newCarousel);
 }

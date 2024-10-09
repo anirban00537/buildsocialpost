@@ -1,4 +1,5 @@
 export const maxDuration = 20;
+import { authenticateAndGetUser } from "@/lib/authCheck";
 import {
   generateCarouselColorPaletteFromPromptTopic,
   generateCaruselContentFromTopic,
@@ -8,6 +9,12 @@ import {
 import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
+  const auth = await authenticateAndGetUser();
+  if ("error" in auth) {
+    return new NextResponse(JSON.stringify({ error: auth.error }), {
+      status: auth.status,
+    });
+  }
   try {
     const {
       topic,

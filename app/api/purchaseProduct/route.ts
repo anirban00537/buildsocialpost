@@ -3,19 +3,20 @@ import { lemonSqueezyApiInstance } from "@/utils/axios";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "../auth/[...nextauth]/route";
 import { prisma } from "@/lib/db";
+import { authenticateAndGetUser } from "@/lib/authCheck";
+import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
   try {
-    // Get the user's session
-    const session = await getServerSession(authOptions);
-    if (!session || !session.user?.email) {
-      return new Response(JSON.stringify({ error: "Unauthorized" }), {
-        status: 401,
-      });
-    }
+   const auth = await authenticateAndGetUser();
+   if ("error" in auth) {
+     return new NextResponse(JSON.stringify({ error: auth.error }), {
+       status: auth.status,
+     });
+   }
 
     const user = await prisma.user.findUnique({
-      where: { email: session.user.email },
+      where: { email: auth.user.email },
     });
 
     if (!user) {

@@ -2,15 +2,16 @@ import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "../../auth/[...nextauth]/route";
 import { prisma } from "@/lib/db";
+import { authenticateAndGetUser } from "@/lib/authCheck";
 
 export async function DELETE(
   req: Request,
   { params }: { params: { id: string } }
 ) {
-  const session = await getServerSession(authOptions);
-  if (!session || !session.user?.email) {
-    return new NextResponse(JSON.stringify({ error: "Unauthorized" }), {
-      status: 401,
+  const auth = await authenticateAndGetUser();
+  if ("error" in auth) {
+    return new NextResponse(JSON.stringify({ error: auth.error }), {
+      status: auth.status,
     });
   }
 

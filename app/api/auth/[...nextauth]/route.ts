@@ -1,26 +1,50 @@
 import NextAuth, { NextAuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
-import { JWT } from "next-auth/jwt";
+import { PrismaAdapter } from "@next-auth/prisma-adapter";
+import { prisma } from "@/lib/db";
 
 export const authOptions: NextAuthOptions = {
+  adapter: PrismaAdapter(prisma),
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID!,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
     }),
   ],
+  secret: process.env.NEXTAUTH_SECRET,
+  session: {
+    strategy: "jwt",
+  },
   callbacks: {
-    async jwt({ token, account }: { token: JWT; account: any }) {
-      // Persist the OAuth access_token to the token right after signin
-      if (account) {
-        token.accessToken = account.access_token;
+    async jwt({ token, user }) {
+      if (user) {
+        token.userId = user.id;
       }
       return token;
     },
-    async session({ session, token }: { session: any; token: JWT }) {
-      // Send properties to the client, like an access_token from a provider.
-      session.accessToken = token.accessToken;
+    async session({ session, token }) {
+      if (session.user) {
+        session.user.email = token.email as string;
+      }
       return session;
+    },
+  },
+  events: {
+    async signIn({ user, account, profile }) {
+      if (account?.provider === "google") {
+        await prisma.user.upsert({
+          where: { email: user.email! },
+          update: {
+            displayName: profile?.name,
+            photoURL: profile?.image,
+          },
+          create: {
+            email: user.email!,
+            displayName: profile?.name,
+            photoURL: profile?.image,
+          },
+        });
+      }
     },
   },
 };
