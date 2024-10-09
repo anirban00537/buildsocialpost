@@ -19,7 +19,7 @@ const ImageUploadModal: React.FC<ImageUploadModalProps> = ({
   onImageSelect,
 }) => {
   const {
-    uid,
+    session,
     uploadedImages,
     currentPage,
     jumpToPage,
@@ -71,7 +71,7 @@ const ImageUploadModal: React.FC<ImageUploadModalProps> = ({
           Image Management
         </h2>
 
-        {!uid ? (
+        {!session ? (
           <p className="text-center text-red-500">
             Please log in to upload and manage images.
           </p>
@@ -105,9 +105,7 @@ const ImageUploadModal: React.FC<ImageUploadModalProps> = ({
             </div>
 
             {isLoading ? (
-              <p className="mt-4 text-center text-white">
-                Loading images...
-              </p>
+              <p className="mt-4 text-center text-white">Loading images...</p>
             ) : uploadedImages.length === 0 ? (
               <p className="mt-4 text-center text-white">
                 No images uploaded yet.
@@ -130,7 +128,7 @@ const ImageUploadModal: React.FC<ImageUploadModalProps> = ({
                         />
                       </div>
                       <button
-                        onClick={() => handleDeleteImage(image.id, image.url)}
+                        onClick={() => handleDeleteImage(image.id)}
                         className="absolute top-2 right-2 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
                         disabled={uploadLoading}
                       >

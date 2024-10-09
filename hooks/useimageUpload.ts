@@ -5,6 +5,7 @@ import { useDropzone } from "react-dropzone";
 import { useMutation, useQueryClient, useQuery } from "react-query";
 import toast from "react-hot-toast";
 import axios from "axios";
+import { useSession } from "next-auth/react";
 
 interface ImageInfo {
   url: string;
@@ -23,7 +24,7 @@ export const useImageUpload = (isOpen: boolean) => {
   const [jumpToPage, setJumpToPage] = useState("");
   const [totalUsage, setTotalUsage] = useState(0);
   const imagesPerPage = 9;
-
+  const { data: session } = useSession();
   const queryClient = useQueryClient();
 
   // Fetch images
@@ -73,15 +74,13 @@ export const useImageUpload = (isOpen: boolean) => {
           throw new Error(`Uploading this image would exceed your ${MAX_STORAGE_MB} MB storage limit.`);
         }
 
-        // Here you would typically upload the file to your storage solution
-        // and get back a URL. For this example, we'll assume it's done and
-        // we have a URL.
-        const uploadedFileUrl = "https://example.com/uploaded-image.jpg";
+        const formData = new FormData();
+        formData.append('file', file);
 
-        const response = await axios.post("/api/images", {
-          url: uploadedFileUrl,
-          name: file.name,
-          size: file.size,
+        const response = await axios.post("/api/images", formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
         });
 
         uploadedImages.push(response.data);
@@ -92,6 +91,7 @@ export const useImageUpload = (isOpen: boolean) => {
       onSuccess: (newImages) => {
         queryClient.invalidateQueries("images");
         queryClient.invalidateQueries("imageUsage");
+        refetch(); // Add this line to refetch the images
         toast.success("Images uploaded successfully!");
       },
       onError: (error: Error) => {
@@ -107,13 +107,13 @@ export const useImageUpload = (isOpen: boolean) => {
       return;
     }
 
-    if (!subscribed) {
-      toast.error("Please subscribe to upload images.");
-      return;
-    }
+    // if (!subscribed) {
+    //   toast.error("Please subscribe to upload images.");
+    //   return;
+    // }
 
     handleUpload(acceptedFiles);
-  }, [userinfo, subscribed, handleUpload]);
+  }, [userinfo, subscribed, handleUpload, refetch]); // Add refetch to the dependency array
 
   // Delete image
   const handleDeleteImage = useMutation(
@@ -182,5 +182,7 @@ export const useImageUpload = (isOpen: boolean) => {
     MAX_STORAGE_MB,
     onDrop,
     subscribed,
+    userinfo,
+    session
   };
 };
