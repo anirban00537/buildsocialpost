@@ -1,12 +1,12 @@
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth/next";
-import { authOptions } from "../auth/[...nextauth]/route";
 import { prisma } from "@/lib/db";
 import { authenticateAndGetUser } from "@/lib/authCheck";
 import { writeFile, mkdir } from 'fs/promises';
 import path from 'path';
 //@ts-ignore
 import { v4 as uuidv4 } from 'uuid';
+import { authOptions } from "@/lib/auth";
 
 export async function GET(req: Request) {
   const auth = await authenticateAndGetUser();
@@ -69,6 +69,7 @@ export async function POST(req: Request) {
     await mkdir(uploadsDir, { recursive: true });
 
     // Save the file
+    //@ts-ignore
     await writeFile(filePath, buffer);
 
     const newImage = await prisma.image.create({

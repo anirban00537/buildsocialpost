@@ -14,7 +14,7 @@ export async function POST(req: Request) {
       "utf8"
     );
     const signature = Buffer.from(req.headers.get("X-Signature") || "", "utf8");
-
+//@ts-ignore
     if (!crypto.timingSafeEqual(digest, signature)) {
       throw new Error("Invalid signature.");
     }
