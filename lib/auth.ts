@@ -21,6 +21,16 @@ declare module "next-auth" {
   }
 }
 
+const getBaseUrl = () => {
+  if (process.env.NEXTAUTH_URL) {
+    return process.env.NEXTAUTH_URL;
+  }
+  if (process.env.VERCEL_URL) {
+    return `https://${process.env.VERCEL_URL}`;
+  }
+  return "http://localhost:3000"; // Fallback for local development
+};
+
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
   providers: [
@@ -55,16 +65,16 @@ export const authOptions: NextAuthOptions = {
       return session;
     },
     redirect({ url, baseUrl }) {
-      const nextAuthUrl = process.env.NEXTAUTH_URL;
-      if (!nextAuthUrl) {
-        console.warn("NEXTAUTH_URL is not set");
-        return baseUrl;
-      }
+      const baseUrlFromEnv = getBaseUrl();
       // Allows relative callback URLs
-      if (url.startsWith("/")) return `${nextAuthUrl}${url}`;
+      if (url.startsWith("/")) return `${baseUrlFromEnv}${url}`;
       // Allows callback URLs on the same origin
-      else if (new URL(url).origin === nextAuthUrl) return url;
-      return nextAuthUrl;
+      else if (new URL(url).origin === baseUrlFromEnv) return url;
+      return baseUrlFromEnv;
     },
+  },
+  pages: {
+    signIn: '/auth/signin',
+    error: '/auth/error',
   },
 };
