@@ -62,7 +62,13 @@ export async function POST(req: Request) {
 
     const bytes = await file.arrayBuffer();
     const buffer = new Uint8Array(bytes);
-    const fileName = uuidv4(); // Use only UUID for the filename
+
+    // Extract file extension
+    const fileExtension = path.extname(file.name);
+    
+    // Generate filename with UUID and extension
+    const fileName = `${uuidv4()}${fileExtension}`;
+    
     const uploadsDir = path.join(process.cwd(), 'public', 'uploads');
     const filePath = path.join(uploadsDir, fileName);
 

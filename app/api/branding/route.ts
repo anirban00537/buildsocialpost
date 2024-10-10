@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { authenticateAndGetUser } from "@/lib/authCheck";
 import { writeFile, mkdir } from "fs/promises";
-import { join } from "path";
+import { join, extname } from "path";
 //@ts-ignore
 import { v4 as uuidv4 } from "uuid";
 
@@ -78,8 +78,11 @@ export async function POST(req: Request) {
         }
       }
 
-      // Generate a unique filename using UUID only
-      headshotFilename = `${uuidv4()}`;
+      // Extract file extension
+      const fileExtension = extname(file.name);
+
+      // Generate a unique filename using UUID and include the file extension
+      headshotFilename = `${uuidv4()}${fileExtension}`;
       const filePath = join(uploadsDir, headshotFilename);
 
       await writeFile(filePath, buffer);
