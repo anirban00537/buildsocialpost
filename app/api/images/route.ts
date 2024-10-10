@@ -60,8 +60,9 @@ export async function POST(req: Request) {
       });
     }
 
-    const buffer = Buffer.from(await file.arrayBuffer());
-    const fileName = `${uuidv4()}-${file.name}`;
+    const bytes = await file.arrayBuffer();
+    const buffer = new Uint8Array(bytes);
+    const fileName = uuidv4(); // Use only UUID for the filename
     const uploadsDir = path.join(process.cwd(), 'public', 'uploads');
     const filePath = path.join(uploadsDir, fileName);
 
@@ -69,14 +70,13 @@ export async function POST(req: Request) {
     await mkdir(uploadsDir, { recursive: true });
 
     // Save the file
-    //@ts-ignore
     await writeFile(filePath, buffer);
 
     const newImage = await prisma.image.create({
       data: {
         userId: user.id,
         url: `/uploads/${fileName}`,
-        name: file.name,
+        name: file.name, // Keep the original file name in the database
         size: file.size,
       },
     });
