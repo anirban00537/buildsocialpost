@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { authenticateAndGetUser } from "@/lib/authCheck";
 import { writeFile, mkdir } from "fs/promises";
-import { join } from "path";
+import { join, extname } from "path";
 //@ts-ignore
 import { v4 as uuidv4 } from "uuid";
 
@@ -25,9 +25,16 @@ export async function GET(req: Request) {
     });
   }
 
-  return NextResponse.json(
-    user.UserBranding || { name: "", handle: "", headshot: null }
-  );
+  const userBranding = user.UserBranding 
+    ? {
+        ...user.UserBranding,
+        headshot: user.UserBranding.headshot 
+          ? `/uploads/${user.UserBranding.headshot}` 
+          : null
+      }
+    : { name: "", handle: "", headshot: null };
+
+  return NextResponse.json(userBranding);
 }
 
 export async function POST(req: Request) {
@@ -51,42 +58,55 @@ export async function POST(req: Request) {
     const formData = await req.formData();
     const name = formData.get("name") as string;
     const handle = formData.get("handle") as string;
-    const headshot = formData.get("headshot") as File | null;
+    const file = formData.get("headshot") as File | null;
 
-    let headshotUrl = null;
-    if (headshot && headshot instanceof File) {
-      const bytes = await headshot.arrayBuffer();
-      const buffer = Buffer.from(bytes);
+    let headshotFilename = null;
 
-      // Generate a unique filename
-      const filename = `${uuidv4()}-${headshot.name}`;
+    if (file) {
+      const bytes = await file.arrayBuffer();
+      const buffer = new Uint8Array(bytes);
+
       const uploadsDir = join(process.cwd(), "public", "uploads");
-      const filePath = join(uploadsDir, filename);
 
       // Ensure the uploads directory exists
-      await mkdir(uploadsDir, { recursive: true });
+      try {
+        await mkdir(uploadsDir, { recursive: true });
+      } catch (error) {
+        // Ignore the error if the directory already exists
+        if ((error as NodeJS.ErrnoException).code !== "EEXIST") {
+          throw error;
+        }
+      }
 
-      // Save the file - convert Buffer to Uint8Array
-      await writeFile(filePath, new Uint8Array(buffer));
-      headshotUrl = `/uploads/${filename}`;
-    } else if (typeof headshot === "string") {
-      headshotUrl = headshot;
+      // Generate a unique filename using UUID
+      const fileExtension = extname(file.name);
+      headshotFilename = `${uuidv4()}${fileExtension}`;
+      const filePath = join(uploadsDir, headshotFilename);
+
+      await writeFile(filePath, buffer);
     }
 
     const updatedBranding = await prisma.userBranding.upsert({
       where: { userId: user.id },
-      update: { name, handle, headshot: headshotUrl },
-      create: { name, handle, headshot: headshotUrl, userId: user.id },
+      update: {
+        name,
+        handle,
+        headshot: headshotFilename, // Save only the filename
+      },
+      create: {
+        name,
+        handle,
+        headshot: headshotFilename,
+        user: { connect: { id: user.id } },
+      },
     });
 
     return NextResponse.json(updatedBranding);
   } catch (error) {
     console.error("Error in POST /api/branding:", error);
-    return new NextResponse(
-      JSON.stringify({ error: "Internal Server Error" }),
-      {
-        status: 500,
-      }
+    return NextResponse.json(
+      { error: "Internal Server Error" },
+      { status: 500 }
     );
   }
 }

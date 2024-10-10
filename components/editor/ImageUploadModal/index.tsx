@@ -120,7 +120,7 @@ const ImageUploadModal: React.FC<ImageUploadModalProps> = ({
                         onClick={() => onImageSelect(image.url)}
                       >
                         <Image
-                          src={image.url}
+                          src={`${process.env.NEXT_PUBLIC_URL}/${image.url}`}
                           alt={image.name}
                           width={240}
                           height={240}

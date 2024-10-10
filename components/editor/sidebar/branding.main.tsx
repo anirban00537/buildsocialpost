@@ -73,7 +73,7 @@ const BrandingSection: React.FC = () => {
               </label>
               {headshot && (
                 <Image
-                  src={headshot}
+                  src={`${process.env.NEXT_PUBLIC_URL}/${headshot}`}
                   alt="Headshot"
                   width={32}
                   height={32}
