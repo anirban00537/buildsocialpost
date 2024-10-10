@@ -117,12 +117,12 @@ const Page = () => {
               ))} */}
             </div>
             <li className="order-2 py-5 md:py-0">
-              <a
+              {/* <a
                 href="https://www.linkedin.com/in/anirban00537/"
                 className="group relative inline-flex items-center justify-center py-3 px-6 text-sm text-white font-medium bg-[#1e2530] rounded-full hover:bg-[#2a3441] transition-all duration-300 shadow-lg hover:shadow-xl overflow-hidden"
               >
                 Hire Me � For Your next project
-              </a>
+              </a> */}
             </li>
           </ul>
         </nav>
