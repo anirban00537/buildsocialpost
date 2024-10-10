@@ -1,4 +1,4 @@
-import NextAuth, { DefaultSession } from "next-auth";
+import NextAuth, { DefaultSession, NextAuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { prisma } from "@/lib/db";
@@ -21,7 +21,7 @@ declare module "next-auth" {
   }
 }
 
-export const authOptions = {
+export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
   providers: [
     GoogleProvider({
@@ -53,6 +53,18 @@ export const authOptions = {
         }
       }
       return session;
+    },
+    redirect({ url, baseUrl }) {
+      const nextAuthUrl = process.env.NEXTAUTH_URL;
+      if (!nextAuthUrl) {
+        console.warn("NEXTAUTH_URL is not set");
+        return baseUrl;
+      }
+      // Allows relative callback URLs
+      if (url.startsWith("/")) return `${nextAuthUrl}${url}`;
+      // Allows callback URLs on the same origin
+      else if (new URL(url).origin === nextAuthUrl) return url;
+      return nextAuthUrl;
     },
   },
 };
