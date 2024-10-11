@@ -6,7 +6,7 @@ export async function POST(req: Request) {
     const clonedReq = req.clone();
     const eventType = req.headers.get("X-Event-Name");
     const body = await req.json();
-
+    console.log(eventType, "eventTypeeventTypeeventTypeeventType");
     const secret = process.env.NEXT_PUBLIC_LEMONSQUEEZY_WEBHOOK_SIGNATURE || "";
     const hmac = crypto.createHmac("sha256", secret);
     const digest = Buffer.from(
@@ -14,7 +14,7 @@ export async function POST(req: Request) {
       "utf8"
     );
     const signature = Buffer.from(req.headers.get("X-Signature") || "", "utf8");
-//@ts-ignore
+    //@ts-ignore
     if (!crypto.timingSafeEqual(digest, signature)) {
       throw new Error("Invalid signature.");
     }
@@ -55,13 +55,20 @@ export async function POST(req: Request) {
         currency: body.data.attributes.currency,
       };
 
-      await prisma.subscription.upsert({
-        where: { id: userId },
-        update: subscriptionData,
-        create: subscriptionData,
+      await prisma.subscription.create({
+        data: {
+          userId,
+          orderId: body.data.id,
+          status: isSuccessful ? "active" : "pending",
+          endDate,
+          createdAt: orderCreatedAt,
+          productName: firstOrderItem.product_name,
+          variantName: firstOrderItem.variant_name,
+          subscriptionLengthInMonths,
+          totalAmount: parseFloat(body.data.attributes.total),
+          currency: body.data.attributes.currency,
+        },
       });
-
-      console.log("Subscription created/updated:", subscriptionData);
     }
 
     return new Response(JSON.stringify({ message: "Webhook received" }), {

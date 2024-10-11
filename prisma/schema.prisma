@@ -26,11 +26,18 @@ model User {
 }
 
 model Subscription {
-    id        String   @id @default(uuid())
-    userId    String
-    endDate   DateTime
-    createdAt DateTime @default(now())
-    user      User     @relation(fields: [userId], references: [id])
+    id                         String   @id @default(cuid())
+    userId                     String   @unique
+    orderId                    String   @unique // Add this line
+    status                     String
+    endDate                    DateTime
+    createdAt                  DateTime @default(now())
+    productName                String
+    variantName                String
+    subscriptionLengthInMonths Int
+    totalAmount                Float
+    currency                   String
+    user                       User     @relation(fields: [userId], references: [id])
 }
 
 model Carousel {
