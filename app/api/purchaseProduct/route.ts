@@ -32,17 +32,6 @@ export async function POST(req: Request) {
       });
     }
 
-    const authHeader = req.headers.get("Authorization");
-    if (!authHeader) {
-      return new Response(
-        JSON.stringify({ error: "Authorization header missing" }),
-        {
-          status: 401,
-        }
-      );
-    }
-
-    const token = authHeader.split(" ")[1];
     const reqData: { productId: string; redirectUrl: string } =
       await req.json();
     if (!reqData.productId) {
