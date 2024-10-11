@@ -66,9 +66,8 @@ const useBranding = () => {
       formData.append('handle', brandingData.handle);
       
       if (imageFile) {
+        // Only append the headshot if there's a new file
         formData.append('headshot', imageFile);
-      } else if (brandingData.headshot) {
-        formData.append('headshot', brandingData.headshot);
       }
 
       const response = await axios.post("/api/branding", formData, {

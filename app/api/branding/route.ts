@@ -50,7 +50,7 @@ export async function POST(req: Request) {
 
     const user = await prisma.user.findUnique({
       where: { email: auth.user?.email || "" },
-      include: { UserBranding: true }, // Include UserBranding to check for existing headshot
+      include: { UserBranding: true },
     });
     if (!user) {
       return new NextResponse(JSON.stringify({ error: "User not found" }), {
@@ -106,12 +106,12 @@ export async function POST(req: Request) {
       update: {
         name,
         handle,
-        headshot: headshotFilename,
+        ...(headshotFilename ? { headshot: headshotFilename } : {}),
       },
       create: {
         name,
         handle,
-        headshot: headshotFilename,
+        ...(headshotFilename ? { headshot: headshotFilename } : {}),
         user: { connect: { id: user.id } },
       },
     });
