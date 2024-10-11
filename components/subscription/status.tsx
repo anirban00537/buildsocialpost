@@ -13,17 +13,15 @@ import {
 import { DiamondSVG } from "../shared-components/svg-icons";
 
 const SubscriptionInfo = () => {
-  const { subscribed, endDate, loading } = useSelector(
-    (state: RootState) => state.user
-  );
+  const { subscribed, endDate } = useSelector((state: RootState) => state.user);
 
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center p-2 text-sm text-gray-500 animate-pulse">
-        Loading...
-      </div>
-    );
-  }
+  // if (loading) {
+  //   return (
+  //     <div className="flex items-center justify-center p-2 text-sm text-gray-500 animate-pulse">
+  //       Loading...
+  //     </div>
+  //   );
+  // }
 
   if (!subscribed || !endDate) {
     return (
