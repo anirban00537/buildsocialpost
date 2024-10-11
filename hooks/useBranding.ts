@@ -66,7 +66,6 @@ const useBranding = () => {
       formData.append('handle', brandingData.handle);
       
       if (imageFile) {
-        // Only append the headshot if there's a new file
         formData.append('headshot', imageFile);
       }
 
