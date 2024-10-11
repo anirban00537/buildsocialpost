@@ -1,10 +1,12 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { authenticateAndGetUser } from "@/lib/authCheck";
-import { writeFile, mkdir } from "fs/promises";
+import { writeFile, mkdir, readFile } from "fs/promises";
 import { join, extname } from "path";
 //@ts-ignore
 import { v4 as uuidv4 } from "uuid";
+
+const getUploadsDir = () => join(process.cwd(), "uploads");
 
 export async function GET(req: Request) {
   const auth = await authenticateAndGetUser();
@@ -25,12 +27,12 @@ export async function GET(req: Request) {
     });
   }
 
-  const userBranding = user.UserBranding 
+  const userBranding = user.UserBranding
     ? {
         ...user.UserBranding,
-        headshot: user.UserBranding.headshot 
-          ? `/uploads/${user.UserBranding.headshot}` 
-          : null
+        headshot: user.UserBranding.headshot
+          ? user.UserBranding.headshot // Just return the filename
+          : null,
       }
     : { name: "", handle: "", headshot: null };
 
@@ -66,9 +68,8 @@ export async function POST(req: Request) {
       const bytes = await file.arrayBuffer();
       const buffer = new Uint8Array(bytes);
 
-      const uploadsDir = join(process.cwd(), "public", "uploads");
+      const uploadsDir = getUploadsDir();
 
-      // Ensure the uploads directory exists
       try {
         await mkdir(uploadsDir, { recursive: true });
       } catch (error) {

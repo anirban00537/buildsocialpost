@@ -119,8 +119,8 @@ const ImageUploadModal: React.FC<ImageUploadModalProps> = ({
                         className="cursor-pointer overflow-hidden rounded-lg"
                         onClick={() => onImageSelect(image.url)}
                       >
-                        <img
-                          src={`${process.env.NEXT_PUBLIC_URL}/${image.url}`}
+                        <Image
+                          src={`${process.env.NEXT_PUBLIC_URL}/api/images/show-image?file=${image.url}`}
                           alt={image.name}
                           width={240}
                           height={240}

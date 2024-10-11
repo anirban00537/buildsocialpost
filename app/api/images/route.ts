@@ -8,6 +8,9 @@ import path from 'path';
 import { v4 as uuidv4 } from 'uuid';
 import { authOptions } from "@/lib/auth";
 
+// Helper function to get uploads directory
+const getUploadsDir = () => path.join(process.cwd(), 'uploads');
+
 export async function GET(req: Request) {
   const auth = await authenticateAndGetUser();
   if ("error" in auth) {
@@ -69,7 +72,7 @@ export async function POST(req: Request) {
     // Generate filename with UUID and extension
     const fileName = `${uuidv4()}${fileExtension}`;
     
-    const uploadsDir = path.join(process.cwd(), 'public', 'uploads');
+    const uploadsDir = getUploadsDir();
     const filePath = path.join(uploadsDir, fileName);
 
     // Ensure the uploads directory exists
@@ -81,7 +84,7 @@ export async function POST(req: Request) {
     const newImage = await prisma.image.create({
       data: {
         userId: user.id,
-        url: `/uploads/${fileName}`,
+        url: fileName, // Store only the filename, not the full path
         name: file.name, // Keep the original file name in the database
         size: file.size,
       },
