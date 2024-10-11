@@ -124,6 +124,7 @@ export const useImageUpload = (isOpen: boolean) => {
       onSuccess: () => {
         queryClient.invalidateQueries("images");
         queryClient.invalidateQueries("imageUsage");
+        refetch(); // Add this line to refetch the images
         toast.success("Image deleted successfully!");
       },
       onError: (error) => {

@@ -17,6 +17,7 @@ const BrandingSection: React.FC = () => {
     handleImageUpload,
     handleSubmit,
     session,
+    previewImage,
   } = useBranding();
 
   return (
@@ -71,9 +72,9 @@ const BrandingSection: React.FC = () => {
                 <UploadIcon size={14} />
                 Upload Headshot
               </label>
-              {headshot && (
+              {(previewImage || headshot) && (
                 <Image
-                  src={`${process.env.NEXT_PUBLIC_URL}/api/images/show-image?file=${headshot}`}
+                  src={previewImage || `${process.env.NEXT_PUBLIC_URL}/api/images/show-image?file=${headshot}`}
                   alt="Headshot"
                   width={32}
                   height={32}

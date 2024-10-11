@@ -15,6 +15,7 @@ const useBranding = () => {
   const { data: session } = useSession();
   const [originalHeadshot, setOriginalHeadshot] = useState<string | null>(null);
   const [imageFile, setImageFile] = useState<File | null>(null);
+  const [previewImage, setPreviewImage] = useState<string | null>(null);
 
   // Fetch branding data
   const { data: brandingData, isLoading: isFetchingBranding } = useQuery(
@@ -44,6 +45,11 @@ const useBranding = () => {
   const handleImageUpload = (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPreviewImage(reader.result as string);
+      };
+      reader.readAsDataURL(file);
       setImageFile(file);
       dispatch(setHeadshot(URL.createObjectURL(file)));
     }
@@ -100,6 +106,8 @@ const useBranding = () => {
     loading: isFetchingBranding || isSaving,
     session,
     imageFile,
+    previewImage,
+    setPreviewImage,
   };
 };
 

@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { authenticateAndGetUser } from "@/lib/authCheck";
-import { writeFile, mkdir, readFile } from "fs/promises";
+import { writeFile, mkdir, readFile, unlink } from "fs/promises";
 import { join, extname } from "path";
 //@ts-ignore
 import { v4 as uuidv4 } from "uuid";
@@ -50,6 +50,7 @@ export async function POST(req: Request) {
 
     const user = await prisma.user.findUnique({
       where: { email: auth.user?.email || "" },
+      include: { UserBranding: true }, // Include UserBranding to check for existing headshot
     });
     if (!user) {
       return new NextResponse(JSON.stringify({ error: "User not found" }), {
@@ -65,6 +66,17 @@ export async function POST(req: Request) {
     let headshotFilename = null;
 
     if (file) {
+      // Delete existing headshot if it exists
+      if (user.UserBranding?.headshot) {
+        const existingFilePath = join(getUploadsDir(), user.UserBranding.headshot);
+        try {
+          await unlink(existingFilePath);
+        } catch (error) {
+          console.error("Error deleting existing headshot:", error);
+          // Continue with the upload even if deletion fails
+        }
+      }
+
       const bytes = await file.arrayBuffer();
       const buffer = new Uint8Array(bytes);
 
