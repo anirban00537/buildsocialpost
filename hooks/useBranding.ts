@@ -5,14 +5,13 @@ import { RootState } from "@/state/store";
 import { setHandle, setHeadshot, setName } from "@/state/slice/branding.slice";
 import { useMutation, useQuery } from "react-query";
 import axios from "axios";
-import { useSession } from "next-auth/react";
 
 const useBranding = () => {
   const dispatch = useDispatch();
   const { name, handle, headshot } = useSelector(
     (state: RootState) => state.branding
   );
-  const { data: session } = useSession();
+  const { loggedin } = useSelector((state: RootState) => state.user);
   const [originalHeadshot, setOriginalHeadshot] = useState<string | null>(null);
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [previewImage, setPreviewImage] = useState<string | null>(null);
@@ -31,6 +30,7 @@ const useBranding = () => {
         dispatch(setHeadshot(data.headshot));
         setOriginalHeadshot(data.headshot);
       },
+      enabled: loggedin,
     }
   );
 
@@ -92,7 +92,11 @@ const useBranding = () => {
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    saveBrandingData({ name, handle, headshot });
+    if (loggedin) {
+      saveBrandingData({ name, handle, headshot });
+    } else {
+      toast.error("You must be logged in to save branding data.");
+    }
   };
 
   return {
@@ -104,10 +108,10 @@ const useBranding = () => {
     handleImageUpload,
     handleSubmit,
     loading: isFetchingBranding || isSaving,
-    session,
     imageFile,
     previewImage,
     setPreviewImage,
+    isAuthenticated: loggedin,
   };
 };
 

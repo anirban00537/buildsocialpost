@@ -1,10 +1,4 @@
-import { Poppins } from "next/font/google";
-import DefaultLayout from "@/components/layout/default.layout";
 import AuthCheckLayout from "@/components/layout/authCheckLayout";
-const poppins = Poppins({
-  weight: ["400", "700"],
-  subsets: ["latin"],
-});
 
 const defaultUrl = process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}`

@@ -19,7 +19,7 @@ const ImageUploadModal: React.FC<ImageUploadModalProps> = ({
   onImageSelect,
 }) => {
   const {
-    session,
+    loggedin,
     uploadedImages,
     currentPage,
     jumpToPage,
@@ -71,7 +71,7 @@ const ImageUploadModal: React.FC<ImageUploadModalProps> = ({
           Image Management
         </h2>
 
-        {!session ? (
+        {!loggedin ? (
           <p className="text-center text-red-500">
             Please log in to upload and manage images.
           </p>

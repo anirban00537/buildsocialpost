@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState, useCallback, useMemo } from "react";
+import React, { useState, useCallback, useMemo, useEffect } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import SubscriptionInfo from "@/components/subscription/status";
@@ -45,6 +45,7 @@ import {
 } from "@/state/slice/carousel.slice";
 import BillingModal from "@/components/subscription/billingModal";
 import FullScreenLoading from "@/components/loading/fullscreen.loading";
+import { useQuery } from 'react-query';
 
 const getInitials = (email: string): string =>
   email ? email.charAt(0).toUpperCase() : "U";
@@ -54,7 +55,6 @@ const UserDropdown: React.FC<{ user: any; onLogout: () => void }> = React.memo(
     const [imageError, setImageError] = useState(false);
 
     useEffect(() => {
-      // Reset image error state when user changes
       setImageError(false);
     }, [user]);
 
@@ -270,15 +270,14 @@ const EditorNavbar: React.FC = () => {
   const { exportSlidesToPDF, exportSlidesToZip, pdfLoading, zipLoading } =
     useCarousel();
   const {
-    createOrUpdateCarousel,
-    getCarouselDetailsById,
-    getAllCarousels,
     carousels,
-    deleteCarousel,
+    fetchCarouselDetails,
     isCreatingOrUpdating,
-    isFetchingDetails,
     isDeleting,
     isFetchingAll,
+    createOrUpdateCarousel,
+    deleteCarousel,
+    isAuthenticated
   } = useCarouselManager();
   const user = useSelector((state: RootState) => state.user.userinfo);
   const { name } = useSelector((state: RootState) => state.slides);
@@ -288,18 +287,18 @@ const EditorNavbar: React.FC = () => {
   const [isViewAllModalOpen, setIsViewAllModalOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const router = useRouter();
-  useEffect(() => {
-    if (carouselId) {
-      getCarouselDetailsById(carouselId);
-    }
-  }, [carouselId, getCarouselDetailsById]);
 
-  useEffect(() => {
-    getAllCarousels();
-  }, [getAllCarousels]);
+  // Use useQuery to fetch carousel details
+  const { data: carouselDetails, isLoading: isFetchingDetails } = useQuery(
+    ['carouselDetails', carouselId],
+    () => carouselId ? fetchCarouselDetails(carouselId) : null,
+    {
+      enabled: !!carouselId && isAuthenticated,
+    }
+  );
 
   const handleSaveCarousel = useCallback(() => {
-    createOrUpdateCarousel(name, carouselId ?? undefined);
+    createOrUpdateCarousel({ newName: name, id: carouselId ?? undefined });
   }, [name, carouselId, createOrUpdateCarousel]);
 
   const handleNameChange = useCallback(
@@ -312,14 +311,16 @@ const EditorNavbar: React.FC = () => {
   const handleAddNew = useCallback(() => {
     dispatch(setNewCarousel());
     router.replace("/editor");
-  }, []);
+  }, [dispatch, router]);
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
   const memoizedCarousels = useMemo(() => carousels, [carousels]);
+
   if (isFetchingAll) {
     return <FullScreenLoading />;
   }
+
   return (
     <header className="bg-background sticky top-0 z-40 border-b border-borderColor shadow-sm">
       <div className="mx-auto px-4">

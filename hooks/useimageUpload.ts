@@ -1,11 +1,10 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useCallback } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "@/state/store";
 import { useDropzone } from "react-dropzone";
 import { useMutation, useQueryClient, useQuery } from "react-query";
 import toast from "react-hot-toast";
 import axios from "axios";
-import { useSession } from "next-auth/react";
 
 interface ImageInfo {
   url: string;
@@ -19,68 +18,67 @@ const MAX_STORAGE_MB = 500;
 const MB_TO_BYTES = 1024 * 1024;
 
 export const useImageUpload = (isOpen: boolean) => {
-  const { userinfo, subscribed } = useSelector((state: RootState) => state.user);
+  const { userinfo, subscribed, loggedin } = useSelector(
+    (state: RootState) => state.user
+  );
   const [currentPage, setCurrentPage] = useState(1);
   const [jumpToPage, setJumpToPage] = useState("");
-  const [totalUsage, setTotalUsage] = useState(0);
   const imagesPerPage = 9;
-  const { data: session } = useSession();
   const queryClient = useQueryClient();
 
   // Fetch images
-  const { data: uploadedImages = [], isLoading, refetch } = useQuery<ImageInfo[]>(
+  const {
+    data: uploadedImages = [],
+    isLoading,
+    refetch: refetchImages,
+  } = useQuery<ImageInfo[]>(
     "images",
     async () => {
       const response = await axios.get("/api/images");
       return response.data;
     },
     {
-      enabled: isOpen && !!userinfo,
-      onSuccess: (data) => calculateTotalUsage(data),
+      enabled: isOpen && loggedin,
     }
   );
 
   // Fetch total usage
-  const { data: usageData } = useQuery(
+  const { data: usageData } = useQuery<{ totalUsage: number }>(
     "imageUsage",
     async () => {
       const response = await axios.get("/api/images/usage");
       return response.data;
     },
     {
-      enabled: isOpen && !!userinfo,
-      onSuccess: (data) => setTotalUsage(data.totalUsage / MB_TO_BYTES),
+      enabled: isOpen && loggedin,
     }
   );
 
-  const calculateTotalUsage = useCallback((images: ImageInfo[]) => {
-    const totalBytes = images.reduce((acc, image) => acc + image.size, 0);
-    const totalMB = totalBytes / MB_TO_BYTES;
-    setTotalUsage(totalMB);
-    return totalMB;
-  }, []);
+  const totalUsage = usageData ? usageData.totalUsage / MB_TO_BYTES : 0;
 
-  // Upload images
-  const { mutate: handleUpload, isLoading: uploadLoading } = useMutation(
-    async (files: File[]) => {
+  // Upload images mutation
+  const uploadMutation = useMutation<ImageInfo[], Error, File[]>(
+    async (files) => {
       const uploadedImages: ImageInfo[] = [];
       for (const file of files) {
         if (file.size > MAX_STORAGE_MB * MB_TO_BYTES) {
-          throw new Error(`Image ${file.name} exceeds the ${MAX_STORAGE_MB} MB limit.`);
+          throw new Error(
+            `Image ${file.name} exceeds the ${MAX_STORAGE_MB} MB limit.`
+          );
         }
 
         const newTotalUsage = totalUsage + file.size / MB_TO_BYTES;
         if (newTotalUsage > MAX_STORAGE_MB) {
-          throw new Error(`Uploading this image would exceed your ${MAX_STORAGE_MB} MB storage limit.`);
+          throw new Error(
+            `Uploading this image would exceed your ${MAX_STORAGE_MB} MB storage limit.`
+          );
         }
 
         const formData = new FormData();
-        formData.append('file', file);
+        formData.append("file", file);
 
         const response = await axios.post("/api/images", formData, {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
+          headers: { "Content-Type": "multipart/form-data" },
         });
 
         uploadedImages.push(response.data);
@@ -88,10 +86,9 @@ export const useImageUpload = (isOpen: boolean) => {
       return uploadedImages;
     },
     {
-      onSuccess: (newImages) => {
+      onSuccess: () => {
         queryClient.invalidateQueries("images");
         queryClient.invalidateQueries("imageUsage");
-        refetch(); // Add this line to refetch the images
         toast.success("Images uploaded successfully!");
       },
       onError: (error: Error) => {
@@ -101,30 +98,38 @@ export const useImageUpload = (isOpen: boolean) => {
     }
   );
 
-  const onDrop = useCallback((acceptedFiles: File[]) => {
-    if (!userinfo) {
-      toast.error("Please log in to upload images.");
-      return;
-    }
+  const onDrop = useCallback(
+    async (acceptedFiles: File[]) => {
+      if (!userinfo) {
+        toast.error("Please log in to upload images.");
+        return;
+      }
 
-    // if (!subscribed) {
-    //   toast.error("Please subscribe to upload images.");
-    //   return;
-    // }
+      if (!subscribed) {
+        toast.error("Please subscribe to upload images.");
+        return;
+      }
 
-    handleUpload(acceptedFiles);
-  }, [userinfo, subscribed, handleUpload, refetch]); // Add refetch to the dependency array
+      if (loggedin) {
+        try {
+          await uploadMutation.mutateAsync(acceptedFiles);
+        } catch (error) {
+          console.error("Error in onDrop:", error);
+        }
+      }
+    },
+    [loggedin, subscribed, uploadMutation, userinfo]
+  );
 
-  // Delete image
-  const handleDeleteImage = useMutation(
-    async (imageId: string) => {
+  // Delete image mutation
+  const deleteMutation = useMutation<void, Error, string>(
+    async (imageId) => {
       await axios.delete(`/api/images/${imageId}`);
     },
     {
       onSuccess: () => {
         queryClient.invalidateQueries("images");
         queryClient.invalidateQueries("imageUsage");
-        refetch(); // Add this line to refetch the images
         toast.success("Image deleted successfully!");
       },
       onError: (error) => {
@@ -134,18 +139,29 @@ export const useImageUpload = (isOpen: boolean) => {
     }
   );
 
+  const handleDeleteImage = async (imageId: string) => {
+    try {
+      await deleteMutation.mutateAsync(imageId);
+    } catch (error) {
+      console.error("Error in handleDeleteImage:", error);
+    }
+  };
+
   const { getRootProps, getInputProps } = useDropzone({
     onDrop,
     accept: {
       "image/*": [".jpeg", ".jpg", ".png"],
     },
     maxSize: MAX_STORAGE_MB * MB_TO_BYTES,
-    disabled: uploadLoading,
+    disabled: uploadMutation.isLoading,
   });
 
   const indexOfLastImage = currentPage * imagesPerPage;
   const indexOfFirstImage = indexOfLastImage - imagesPerPage;
-  const currentImages = uploadedImages.slice(indexOfFirstImage, indexOfLastImage);
+  const currentImages = uploadedImages.slice(
+    indexOfFirstImage,
+    indexOfLastImage
+  );
   const totalPages = Math.ceil(uploadedImages.length / imagesPerPage);
 
   const handlePageChange = (page: number) => {
@@ -161,7 +177,9 @@ export const useImageUpload = (isOpen: boolean) => {
       setCurrentPage(pageNumber);
       setJumpToPage("");
     } else {
-      toast.error(`Please enter a valid page number between 1 and ${totalPages}`);
+      toast.error(
+        `Please enter a valid page number between 1 and ${totalPages}`
+      );
     }
   };
 
@@ -171,12 +189,12 @@ export const useImageUpload = (isOpen: boolean) => {
     jumpToPage,
     isLoading,
     totalUsage,
-    uploadLoading,
+    uploadLoading: uploadMutation.isLoading,
     currentImages,
     totalPages,
     getRootProps,
     getInputProps,
-    handleDeleteImage: handleDeleteImage.mutate,
+    handleDeleteImage,
     handlePageChange,
     handleJumpToPage,
     setJumpToPage,
@@ -184,6 +202,7 @@ export const useImageUpload = (isOpen: boolean) => {
     onDrop,
     subscribed,
     userinfo,
-    session
+    refetchImages,
+    loggedin,
   };
 };
