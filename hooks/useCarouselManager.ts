@@ -75,9 +75,9 @@ export const useCarouselManager = () => {
           queryClient.invalidateQueries("carousels");
           if (!variables.id) {
             const newSearchParams = new URLSearchParams(
-              searchParams.toString()
+              searchParams?.toString()
             );
-            newSearchParams.set("id", response.data.id);
+            newSearchParams?.set("id", response.data.id);
             const newUrl = `${
               window.location.pathname
             }?${newSearchParams.toString()}`;

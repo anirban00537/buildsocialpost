@@ -44,7 +44,7 @@ const MainSidebar: React.FC<MainSidebarProps> = ({
   }, [setIsCollapsed]);
 
   useEffect(() => {
-    const tab = searchParams.get("tab");
+    const tab = searchParams?.get("tab");
     if (tab) {
       setActiveTab(tab);
       setIsCollapsed(false);
@@ -56,10 +56,10 @@ const MainSidebar: React.FC<MainSidebarProps> = ({
     setIsCollapsed(false);
 
     // Create a new URLSearchParams object with the current query parameters
-    const newSearchParams = new URLSearchParams(searchParams.toString());
-    
+    const newSearchParams = new URLSearchParams(searchParams?.toString());
+
     // Update or add the 'tab' parameter
-    newSearchParams.set("tab", tab);
+    newSearchParams?.set("tab", tab);
 
     // Construct the new URL with updated query parameters
     const newUrl = `${pathname}?${newSearchParams.toString()}`;

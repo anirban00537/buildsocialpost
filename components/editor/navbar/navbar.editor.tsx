@@ -282,7 +282,7 @@ const EditorNavbar: React.FC = () => {
   const user = useSelector((state: RootState) => state.user.userinfo);
   const { name } = useSelector((state: RootState) => state.slides);
   const searchParams = useSearchParams();
-  const carouselId = searchParams.get("id");
+  const carouselId = searchParams?.get("id");
   const dispatch = useDispatch();
   const [isViewAllModalOpen, setIsViewAllModalOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
