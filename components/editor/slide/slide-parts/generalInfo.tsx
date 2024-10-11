@@ -37,7 +37,7 @@ const GeneralInfo: React.FC<GeneralInfoProps> = ({
       >
         {headshot && (
           <img
-            src={headshot}
+            src={`${process.env.NEXT_PUBLIC_URL}/api/images/show-image?file=${headshot}`}
             alt="Headshot"
             style={{
               width: "40px",
