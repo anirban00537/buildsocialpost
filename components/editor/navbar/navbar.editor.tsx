@@ -9,6 +9,7 @@ import { useSearchParams, useRouter } from "next/navigation";
 import { useCarouselManager } from "@/hooks/useCarouselManager";
 import { signOut } from "@/services/auth";
 import useCarousel from "@/hooks/useCarousel";
+import LoginModal from "@/components/auth/login.modal";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -45,7 +46,8 @@ import {
 } from "@/state/slice/carousel.slice";
 import BillingModal from "@/components/subscription/billingModal";
 import FullScreenLoading from "@/components/loading/fullscreen.loading";
-import { useQuery } from 'react-query';
+import { useQuery } from "react-query";
+import { useToast } from "@/components/ui/use-toast";
 
 const getInitials = (email: string): string =>
   email ? email.charAt(0).toUpperCase() : "U";
@@ -116,9 +118,25 @@ const DownloadDropdown: React.FC<{
   pdfLoading: boolean;
   zipLoading: boolean;
   className?: string;
+  isAuthenticated: boolean;
+  onLoginRequired: () => void;
 }> = React.memo(
-  ({ onDownloadPDF, onDownloadZip, pdfLoading, zipLoading, className }) => {
+  ({ onDownloadPDF, onDownloadZip, pdfLoading, zipLoading, className, isAuthenticated, onLoginRequired }) => {
     const isDownloading = pdfLoading || zipLoading;
+    const { toast } = useToast();
+
+    const handleDownload = (action: () => void) => {
+      if (!isAuthenticated) {
+        toast({
+          title: "Login Required",
+          description: "Please log in to download your carousel.",
+          variant: "destructive",
+        });
+        onLoginRequired();
+      } else {
+        action();
+      }
+    };
 
     return (
       <DropdownMenu>
@@ -133,10 +151,10 @@ const DownloadDropdown: React.FC<{
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent className="bg-gradient-to-t from-cardBackground to-background text-textColor/85 hover:bg-primary/50 border border-borderColor">
-          <DropdownMenuItem onClick={onDownloadPDF} disabled={pdfLoading}>
+          <DropdownMenuItem onClick={() => handleDownload(onDownloadPDF)} disabled={pdfLoading}>
             {pdfLoading ? "Downloading PDF..." : "Download PDF"}
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={onDownloadZip} disabled={zipLoading}>
+          <DropdownMenuItem onClick={() => handleDownload(onDownloadZip)} disabled={zipLoading}>
             {zipLoading ? "Downloading Zip..." : "Download Zip"}
           </DropdownMenuItem>
         </DropdownMenuContent>
@@ -277,7 +295,7 @@ const EditorNavbar: React.FC = () => {
     isFetchingAll,
     createOrUpdateCarousel,
     deleteCarousel,
-    isAuthenticated
+    isAuthenticated,
   } = useCarouselManager();
   const user = useSelector((state: RootState) => state.user.userinfo);
   const { name } = useSelector((state: RootState) => state.slides);
@@ -287,11 +305,12 @@ const EditorNavbar: React.FC = () => {
   const [isViewAllModalOpen, setIsViewAllModalOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const router = useRouter();
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
 
   // Use useQuery to fetch carousel details
   const { data: carouselDetails, isLoading: isFetchingDetails } = useQuery(
-    ['carouselDetails', carouselId],
-    () => carouselId ? fetchCarouselDetails(carouselId) : null,
+    ["carouselDetails", carouselId],
+    () => (carouselId ? fetchCarouselDetails(carouselId) : null),
     {
       enabled: !!carouselId && isAuthenticated,
     }
@@ -316,6 +335,10 @@ const EditorNavbar: React.FC = () => {
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
   const memoizedCarousels = useMemo(() => carousels, [carousels]);
+
+  const handleLoginRequired = () => {
+    setIsLoginModalOpen(true);
+  };
 
   if (isFetchingAll) {
     return <FullScreenLoading />;
@@ -374,34 +397,35 @@ const EditorNavbar: React.FC = () => {
           </div>
 
           <div className="hidden lg:flex items-center space-x-2">
-            <CarouselSizeDropdown className="w-40" />
+            <CarouselSizeDropdown className="w-48" />
             <DownloadDropdown
               onDownloadPDF={exportSlidesToPDF}
               onDownloadZip={exportSlidesToZip}
               pdfLoading={pdfLoading}
               zipLoading={zipLoading}
+              isAuthenticated={isAuthenticated}
+              onLoginRequired={handleLoginRequired}
             />
             <Button
               onClick={handleSaveCarousel}
-              disabled={isCreatingOrUpdating}
+              disabled={isCreatingOrUpdating || !isAuthenticated}
               size="xs"
               className="whitespace-nowrap"
             >
               {isCreatingOrUpdating ? "Saving..." : "Save Progress"}
             </Button>
             <SubscriptionInfo />
-            {user && user.email ? (
-              <UserDropdown user={user} onLogout={signOut} />
+            {!user || !user.email ? (
+              <Button
+                variant="outline"
+                size="sm"
+                className="bg-cardBackground hover:bg-primary/50 border border-borderColor text-textColor/85"
+                onClick={() => setIsLoginModalOpen(true)}
+              >
+                Sign in
+              </Button>
             ) : (
-              <Link href="/login">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="bg-cardBackground hover:bg-primary/50 border border-borderColor text-textColor/85"
-                >
-                  Sign in
-                </Button>
-              </Link>
+              <UserDropdown user={user} onLogout={signOut} />
             )}
           </div>
 
@@ -429,6 +453,8 @@ const EditorNavbar: React.FC = () => {
               pdfLoading={pdfLoading}
               zipLoading={zipLoading}
               className="w-full h-8"
+              isAuthenticated={isAuthenticated}
+              onLoginRequired={handleLoginRequired}
             />
             <Button
               onClick={handleSaveCarousel}
@@ -438,7 +464,18 @@ const EditorNavbar: React.FC = () => {
               {isCreatingOrUpdating ? "Saving..." : "Save Carousel"}
             </Button>
             <SubscriptionInfo />
-            {user && user.email ? (
+            {!user || !user.email ? (
+              <Button
+                variant="outline"
+                className="w-full bg-cardBackground hover:bg-primary/50 border border-borderColor text-textColor/85"
+                onClick={() => {
+                  setIsLoginModalOpen(true);
+                  setIsMenuOpen(false);
+                }}
+              >
+                Sign in
+              </Button>
+            ) : (
               <Button
                 onClick={() => {
                   signOut();
@@ -450,15 +487,6 @@ const EditorNavbar: React.FC = () => {
                 <LogOut className="w-4 h-4 mr-2" />
                 Logout
               </Button>
-            ) : (
-              <Link href="/login" className="block">
-                <Button
-                  variant="outline"
-                  className="w-full bg-cardBackground hover:bg-primary/50 border border-borderColor text-textColor/85"
-                >
-                  Sign in
-                </Button>
-              </Link>
             )}
           </div>
         </div>
@@ -467,6 +495,11 @@ const EditorNavbar: React.FC = () => {
       <CarouselListModal
         isOpen={isViewAllModalOpen}
         onClose={() => setIsViewAllModalOpen(false)}
+      />
+      
+      <LoginModal
+        isOpen={isLoginModalOpen}
+        onClose={() => setIsLoginModalOpen(false)}
       />
     </header>
   );

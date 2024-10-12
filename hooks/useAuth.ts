@@ -63,18 +63,15 @@ export const useAuth = () => {
   );
 
   const loginMutation = useMutation(
-    () => signIn("google", { callbackUrl: "/editor" }),
+    () => signIn("google", { callbackUrl: "/editor", redirect: false }),
     {
-      onSuccess: () => {
-        if (session?.user) {
-          dispatch(
-            setUser({
-              uid: session.user.id,
-              email: session.user.email,
-              displayName: session.user.name,
-              photoURL: session.user.image,
-            })
-          );
+      onSuccess: (result) => {
+        if (result?.error) {
+          toast.error(`Failed to log in: ${result.error}`);
+        } else if (result?.ok) {
+          toast.success("Logged in successfully");
+          // Optionally, you can refresh the session here
+          // router.push('/editor');
         }
       },
       onError: (error: Error) => {
@@ -94,8 +91,8 @@ export const useAuth = () => {
     },
   });
 
-  const loginWithGoogle = () => {
-    loginMutation.mutate();
+  const loginWithGoogle = async () => {
+    await loginMutation.mutateAsync();
   };
 
   const logoutUser = () => {
