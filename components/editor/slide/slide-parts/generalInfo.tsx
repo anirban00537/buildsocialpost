@@ -37,7 +37,11 @@ const GeneralInfo: React.FC<GeneralInfoProps> = ({
       >
         {headshot && (
           <img
-            src={`${process.env.NEXT_PUBLIC_URL}/api/images/show-image?file=${headshot}`}
+            src={
+              headshot === "/creator.jpg"
+                ? "/creator.jpg"
+                : `${process.env.NEXT_PUBLIC_URL}/api/images/show-image?file=${headshot}`
+            }
             alt="Headshot"
             style={{
               width: "40px",
