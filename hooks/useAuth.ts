@@ -10,6 +10,7 @@ import {
   setSubscribed,
   setEndDate,
 } from "@/state/slice/user.slice";
+import { useEffect } from "react";
 
 interface Subscription {
   id: string;
@@ -100,7 +101,18 @@ export const useAuth = () => {
   const logoutUser = () => {
     logoutMutation.mutate();
   };
-
+  useEffect(() => {
+    if (status === "authenticated" && session?.user) {
+      dispatch(
+        setUser({
+          uid: session.user.email,
+          email: session.user.email,
+          displayName: session.user.name,
+          photoURL: session.user.image,
+        })
+      );
+    }
+  }, [status, session, dispatch]);
   return {
     user: session?.user,
     isAuthenticated: status === "authenticated",

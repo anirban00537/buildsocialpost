@@ -69,7 +69,7 @@ const UserDropdown: React.FC<{ user: any; onLogout: () => void }> = React.memo(
             variant="ghost"
             className="h-7 w-8 p-0 border border-primary rounded-full overflow-hidden"
           >
-            {user.photoURL && !imageError ? (
+            {user.photoURL ? (
               <img
                 className="h-full w-full object-cover"
                 src={user.photoURL}

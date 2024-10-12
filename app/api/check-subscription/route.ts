@@ -1,12 +1,17 @@
+import { authenticateAndGetUser } from "@/lib/authCheck";
 import { prisma } from "@/lib/db";
 import { NextResponse } from "next/server";
 
-export async function GET(req: Request) {
+export async function GET() {
   try {
-    const { searchParams } = new URL(req.url);
-    const userId = searchParams.get("userId");
+    const auth = await authenticateAndGetUser();
+    if ("error" in auth) {
+      return new NextResponse(JSON.stringify({ error: auth.error }), {
+        status: auth.status,
+      });
+    }
 
-    if (!userId) {
+    if (!auth.user?.id) {
       return NextResponse.json(
         { error: "User ID is required" },
         { status: 400 }
@@ -15,7 +20,7 @@ export async function GET(req: Request) {
 
     const subscription = await prisma.subscription.findFirst({
       where: {
-        userId: userId,
+        userId: auth.user?.id,
         status: "active",
         endDate: {
           gte: new Date(),

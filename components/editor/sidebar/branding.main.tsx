@@ -72,10 +72,21 @@ const BrandingSection: React.FC = () => {
                 <UploadIcon size={14} />
                 Upload Headshot
               </label>
-              {(previewImage || headshot) && (
+              {previewImage || headshot !== "/creator.jpg" ? (
                 <Image
-                  src={previewImage || `${process.env.NEXT_PUBLIC_URL}/api/images/show-image?file=${headshot}`}
+                  src={
+                    previewImage ||
+                    `${process.env.NEXT_PUBLIC_URL}/api/images/show-image?file=${headshot}`
+                  }
                   alt="Headshot"
+                  width={32}
+                  height={32}
+                  className="rounded-full"
+                />
+              ) : (
+                <Image
+                  src={"/creator.jpg"}
+                  alt="Default Headshot"
                   width={32}
                   height={32}
                   className="rounded-full"
