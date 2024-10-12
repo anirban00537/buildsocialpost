@@ -1,1 +1,1 @@
-export const getUploadsDir = () => "/uploads";
+export const getUploadsDir = () => `/uploads/buildcarousel`;
