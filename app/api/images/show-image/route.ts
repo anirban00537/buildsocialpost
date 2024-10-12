@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { join } from "path";
 import { writeFile, mkdir, readFile } from "fs/promises";
-const getUploadsDir = () => join(process.cwd(), "uploads");
+import { getUploadsDir } from "@/lib/functions";
 
 // New route to serve images
 export async function GET(req: Request) {

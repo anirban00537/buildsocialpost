@@ -5,8 +5,8 @@ import { writeFile, mkdir, readFile, unlink } from "fs/promises";
 import { join, extname } from "path";
 //@ts-ignore
 import { v4 as uuidv4 } from "uuid";
+import { getUploadsDir } from "@/lib/functions";
 
-const getUploadsDir = () => join(process.cwd(), "uploads");
 
 export async function GET(req: Request) {
   const auth = await authenticateAndGetUser();

@@ -7,9 +7,9 @@ import path from 'path';
 //@ts-ignore
 import { v4 as uuidv4 } from 'uuid';
 import { authOptions } from "@/lib/auth";
+import { getUploadsDir } from "@/lib/functions";
 
 // Helper function to get uploads directory
-const getUploadsDir = () => path.join(process.cwd(), 'uploads');
 
 export async function GET(req: Request) {
   const auth = await authenticateAndGetUser();

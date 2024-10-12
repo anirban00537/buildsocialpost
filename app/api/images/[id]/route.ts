@@ -3,9 +3,9 @@ import { prisma } from "@/lib/db";
 import { authenticateAndGetUser } from "@/lib/authCheck";
 import { unlink } from 'fs/promises';
 import path from 'path';
+import { getUploadsDir } from "@/lib/functions";
 
 // Helper function to get uploads directory
-const getUploadsDir = () => path.join(process.cwd(), 'uploads');
 
 export async function DELETE(
   req: Request,
