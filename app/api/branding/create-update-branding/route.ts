@@ -1,43 +1,11 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { authenticateAndGetUser } from "@/lib/authCheck";
-import { writeFile, mkdir, readFile, unlink } from "fs/promises";
+import { writeFile, mkdir, unlink } from "fs/promises";
 import { join, extname } from "path";
 //@ts-ignore
 import { v4 as uuidv4 } from "uuid";
 import { getUploadsDir } from "@/lib/functions";
-
-
-export async function GET(req: Request) {
-  const auth = await authenticateAndGetUser();
-  if ("error" in auth) {
-    return new NextResponse(JSON.stringify({ error: auth.error }), {
-      status: auth.status,
-    });
-  }
-
-  const user = await prisma.user.findUnique({
-    where: { email: auth.user?.email || "" },
-    include: { UserBranding: true },
-  });
-
-  if (!user) {
-    return new NextResponse(JSON.stringify({ error: "User not found" }), {
-      status: 404,
-    });
-  }
-
-  const userBranding = user.UserBranding
-    ? {
-        ...user.UserBranding,
-        headshot: user.UserBranding.headshot
-          ? user.UserBranding.headshot // Just return the filename
-          : null,
-      }
-    : { name: "", handle: "", headshot: null };
-
-  return NextResponse.json(userBranding);
-}
 
 export async function POST(req: Request) {
   try {
@@ -68,7 +36,10 @@ export async function POST(req: Request) {
     if (file) {
       // Delete existing headshot if it exists
       if (user.UserBranding?.headshot) {
-        const existingFilePath = join(getUploadsDir(), user.UserBranding.headshot);
+        const existingFilePath = join(
+          getUploadsDir(),
+          user.UserBranding.headshot
+        );
         try {
           await unlink(existingFilePath);
         } catch (error) {

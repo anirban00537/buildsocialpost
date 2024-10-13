@@ -20,7 +20,7 @@ const useBranding = () => {
   const { data: brandingData, isLoading: isFetchingBranding } = useQuery(
     "branding",
     async () => {
-      const response = await axios.get("/api/branding");
+      const response = await axios.get("/api/branding/get-branding-data");
       return response.data;
     },
     {
@@ -62,18 +62,22 @@ const useBranding = () => {
       headshot: string | null;
     }) => {
       const formData = new FormData();
-      formData.append('name', brandingData.name);
-      formData.append('handle', brandingData.handle);
-      
+      formData.append("name", brandingData.name);
+      formData.append("handle", brandingData.handle);
+
       if (imageFile) {
-        formData.append('headshot', imageFile);
+        formData.append("headshot", imageFile);
       }
 
-      const response = await axios.post("/api/branding", formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
+      const response = await axios.post(
+        "/api/branding/create-update-branding",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
 
       return response.data;
     },
