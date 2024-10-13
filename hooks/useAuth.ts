@@ -26,11 +26,9 @@ interface SubscriptionResponse {
   subscription: Subscription | null;
 }
 
-const fetchSubscription = async (
-  userId: string
-): Promise<SubscriptionResponse> => {
+const fetchSubscription = async (): Promise<SubscriptionResponse> => {
   const { data } = await axios.get<SubscriptionResponse>(
-    `/api/check-subscription?userId=${userId}`
+    `/api/subscriptions/check-subscription`
   );
   return data;
 };
@@ -46,8 +44,8 @@ export const useAuth = () => {
     isLoading: isSubscriptionLoading,
     refetch: refetchSubscription,
   } = useQuery<SubscriptionResponse, Error>(
-    ["subscription", session?.user?.id],
-    () => fetchSubscription(session?.user?.id as string),
+    ["subscription"],
+    fetchSubscription,
     {
       enabled: !!session?.user?.id,
       staleTime: 1000 * 60 * 5, // 5 minutes

@@ -38,7 +38,7 @@ export const useCarouselManager = () => {
   >(
     "carousels",
     async () => {
-      const response = await axios.get<CarouselResponse[]>("/api/carousels");
+      const response = await axios.get<CarouselResponse[]>("/api/carousels/get-carousels");
       return response.data;
     },
     {
@@ -65,9 +65,9 @@ export const useCarouselManager = () => {
         };
 
         if (id) {
-          return axios.put(`/api/carousels/${id}`, carouselData);
+          return axios.put(`/api/carousels/update-carousel/${id}`, carouselData);
         } else {
-          return axios.post("/api/carousels", carouselData);
+          return axios.post("/api/carousels/create-carousel", carouselData);
         }
       },
       {
@@ -97,7 +97,7 @@ export const useCarouselManager = () => {
     void,
     Error,
     string
-  >((id: string) => axios.delete(`/api/carousels/${id}`).then(() => {}), {
+  >((id: string) => axios.delete(`/api/carousels/delete-carousel/${id}`).then(() => {}), {
     onSuccess: () => {
       queryClient.invalidateQueries("carousels");
       toast.success("Carousel deleted successfully");
@@ -111,7 +111,7 @@ export const useCarouselManager = () => {
   // Function to fetch carousel details
   const fetchCarouselDetails = async (id: string) => {
     try {
-      const response = await axios.get(`/api/carousels/${id}`);
+      const response = await axios.get(`/api/carousels/get-carousel-details/${id}`);
       const data = response.data;
       if (data) {
         dispatch(setProperty({ key: "name", value: data.name }));

@@ -1,4 +1,5 @@
 import { addAllSlides, setBackground } from "@/state/slice/carousel.slice";
+import axios from "axios";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 
@@ -18,30 +19,28 @@ export const useGenerateContent = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      const response = await fetch("/api/create-content", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          topic,
-          numSlides,
-          language,
-          mood,
-          theme,
-          contentStyle,
-          targetAudience,
-          themeActive,
-        }),
-      });
+      const response = await axios.post(
+        "/api/carousels/create-carousel-content",
+        {
+          body: JSON.stringify({
+            topic,
+            numSlides,
+            language,
+            mood,
+            theme,
+            contentStyle,
+            targetAudience,
+            themeActive,
+          }),
+        }
+      );
 
-      if (!response.ok) {
+      if (response.status !== 200) {
         throw new Error(`Error: ${response.statusText}`);
       }
 
-      const data = await response;
-      const dataJson = await data.json();
-      const { carousels, colorPalette } = dataJson;
+      const data = response.data;
+      const { carousels, colorPalette } = data;
       dispatch(addAllSlides(carousels));
       if (themeActive) {
         dispatch(

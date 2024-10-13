@@ -34,7 +34,7 @@ const Pricing = () => {
           selectedPlan === "monthly"
             ? process.env.NEXT_PUBLIC_MONTHLY_PRODUCT_ID
             : process.env.NEXT_PUBLIC_YEARLY_PRODUCT_ID;
-        const response = await axios.post("/api/purchaseProduct", {
+        const response = await axios.post("/api/subscriptions/purchase-product", {
           productId,
         });
         console.log(response, "response");
