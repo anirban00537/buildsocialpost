@@ -10,7 +10,9 @@ import {
   setSubscribed,
   setEndDate,
 } from "@/state/slice/user.slice";
-import { useEffect } from "react";
+import { useCallback, useEffect } from "react";
+import { CredentialResponse } from "@react-oauth/google";
+import { googleSignIn } from "@/services/auth";
 
 interface Subscription {
   id: string;
@@ -61,15 +63,13 @@ export const useAuth = () => {
   );
 
   const loginMutation = useMutation(
-    () => signIn("google", { callbackUrl: "/editor", redirect: false }),
+    (idToken: string) => googleSignIn(idToken),
     {
       onSuccess: (result) => {
         if (result?.error) {
           toast.error(`Failed to log in: ${result.error}`);
         } else if (result?.ok) {
           toast.success("Logged in successfully");
-          // Optionally, you can refresh the session here
-          // router.push('/editor');
         }
       },
       onError: (error: Error) => {
@@ -89,9 +89,17 @@ export const useAuth = () => {
     },
   });
 
-  const loginWithGoogle = async () => {
-    await loginMutation.mutateAsync();
-  };
+  const handleGoogleLogin = useCallback(
+    async (credentialResponse: CredentialResponse, onClose: () => void) => {
+      try {
+        console.log("Credential Response:", credentialResponse);
+        if (credentialResponse.credential) {
+          await loginMutation.mutateAsync(credentialResponse.credential);
+        }
+      } catch (error) {}
+    },
+    [loginMutation]
+  );
 
   const logoutUser = () => {
     logoutMutation.mutate();
@@ -112,7 +120,7 @@ export const useAuth = () => {
     user: session?.user,
     isAuthenticated: status === "authenticated",
     isLoading: status === "loading",
-    loginWithGoogle,
+    handleGoogleLogin,
     logoutUser,
     subscriptionData,
     isSubscriptionLoading,

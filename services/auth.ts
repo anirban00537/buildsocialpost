@@ -1,20 +1,6 @@
-import { signIn, signOut as nextAuthSignOut, useSession } from "next-auth/react";
-import { Session } from "next-auth";
+import request from "@/lib/request";
 
-export const signInWithGoogle = () => signIn("google");
-
-export const signOut = () => nextAuthSignOut();
-
-export const useAuth = () => {
-  const { data: session, status } = useSession();
-  return {
-    user: session?.user || null,
-    loading: status === "loading",
-  };
+export const googleSignIn = async (idToken: string) => {
+  const response = await request.post("/auth/google-login", { idToken });
+  return response.data;
 };
-
-export const getCurrentUser = async (): Promise<Session["user"] | null> => {
-  const { data: session } = useSession();
-  return session?.user || null;
-};
-

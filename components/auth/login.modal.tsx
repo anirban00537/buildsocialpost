@@ -4,11 +4,15 @@ import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { FaGoogle } from "react-icons/fa";
 import { motion } from "framer-motion";
+import { CredentialResponse, GoogleLogin } from "@react-oauth/google";
 import Image from "next/image";
 import {
   Dialog,
   DialogContent,
+  DialogTitle,
+  DialogDescription,
 } from "@/components/ui/dialog";
+import { useCallback } from "react";
 
 const LoginModal = ({
   isOpen,
@@ -17,25 +21,29 @@ const LoginModal = ({
   isOpen: boolean;
   onClose: () => void;
 }) => {
-  const { loginWithGoogle, isLoading } = useAuth();
+  const { handleGoogleLogin, isLoading } = useAuth();
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="bg-opacity-80 bg-background backdrop-filter backdrop-blur-md border border-borderColor rounded-lg text-white sm:max-w-[425px]">
-        <div className="flex flex-col gap-4">
-          <h2 className="text-2xl font-bold mb-4  w-full text-center bg-gradient-to-r from-blue-400 to-primary text-transparent bg-clip-text">
+      <DialogContent className="bg-opacity-80 bg-background backdrop-filter backdrop-blur-md border border-borderColor rounded-lg text-white sm:max-w-[425px] flex flex-col h-[90vh] sm:h-auto">
+        <div className="flex flex-col justify-center items-center flex-grow">
+          <DialogTitle className="text-2xl font-bold mb-4 w-full text-center bg-gradient-to-r from-blue-400 to-primary text-transparent bg-clip-text">
             Login
-          </h2>
-          <div className="flex flex-col items-center">
+          </DialogTitle>
+          <DialogDescription className="sr-only">
+            Sign in and start creating your own carousels with BuildCarousel.com
+          </DialogDescription>
+          <div className="flex flex-col items-center w-full">
             <Image
               src="/logo.svg"
-              height={100}
-              width={100}
+              height={80}
+              width={80}
               alt="buildcarousel.com"
               className="mb-4"
             />
             <p className="mb-6 text-gray-300 text-center">
-              Sign in and start creating your own carousels with BuildCarousel.com
+              Sign in and start creating your own carousels with
+              BuildCarousel.com
             </p>
             <motion.div
               initial={{ y: 20, opacity: 0 }}
@@ -43,14 +51,16 @@ const LoginModal = ({
               transition={{ delay: 0.3, duration: 0.5 }}
               className="w-full"
             >
-              <Button
-                className="w-full flex items-center justify-center gap-2 bg-opacity-70 bg-gray-700 text-white hover:bg-opacity-90 border border-gray-600 transition-all duration-200"
-                onClick={loginWithGoogle}
-                disabled={isLoading}
-              >
-                <FaGoogle className="w-5 h-5" />
-                {isLoading ? "Signing in..." : "Sign in with Google"}
-              </Button>
+              <GoogleLogin
+                onSuccess={(credentialResponse) =>
+                  handleGoogleLogin(credentialResponse, onClose)
+                }
+                onError={() => {
+                  console.error("Google Login Failed");
+                }}
+                shape="circle"
+                width={370}
+              />
             </motion.div>
           </div>
         </div>
