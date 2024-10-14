@@ -1,18 +1,21 @@
-import { signIn, signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import axios from "axios";
 import toast from "react-hot-toast";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   setUser,
   logout,
   setSubscribed,
   setEndDate,
+  setLoading,
 } from "@/state/slice/user.slice";
-import { useCallback, useEffect } from "react";
+import { useCallback } from "react";
 import { CredentialResponse } from "@react-oauth/google";
-import { googleSignIn } from "@/services/auth";
+import { googleSignIn, profile } from "@/services/auth";
+import Cookies from "js-cookie";
+import { RootState } from "@/state/store"; // Adjust this import based on your store setup
+import { ResponseData, UserInfo } from "@/types";
 
 interface Subscription {
   id: string;
@@ -36,10 +39,20 @@ const fetchSubscription = async (): Promise<SubscriptionResponse> => {
 };
 
 export const useAuth = () => {
-  const { data: session, status } = useSession();
   const router = useRouter();
   const queryClient = useQueryClient();
   const dispatch = useDispatch();
+  const { userinfo, loggedin, loading, subscribed, endDate } = useSelector(
+    (state: RootState) => state.user
+  );
+  const token = Cookies.get("token");
+
+  const { data: userData } = useQuery<ResponseData, Error>(["user"], profile, {
+    enabled: !!token,
+    onSuccess: (data: ResponseData) => {
+      dispatch(setUser(data.data as UserInfo));
+    },
+  });
 
   const {
     data: subscriptionData,
@@ -49,7 +62,7 @@ export const useAuth = () => {
     ["subscription"],
     fetchSubscription,
     {
-      enabled: !!session?.user?.id,
+      enabled: loggedin,
       staleTime: 1000 * 60 * 5, // 5 minutes
       cacheTime: 1000 * 60 * 30, // 30 minutes
       onSuccess: (data: SubscriptionResponse) => {
@@ -66,10 +79,19 @@ export const useAuth = () => {
     (idToken: string) => googleSignIn(idToken),
     {
       onSuccess: (result) => {
-        if (result?.error) {
-          toast.error(`Failed to log in: ${result.error}`);
-        } else if (result?.ok) {
+        if (result.success) {
+          const { accessToken, refreshToken, user, isAdmin } = result.data;
+          dispatch(setUser(user as UserInfo));
+
+          // Set cookies
+          Cookies.set("token", accessToken, { expires: 7 }); // expires in 7 days
+          Cookies.set("refreshToken", refreshToken, { expires: 30 }); // expires in 30 days
+          Cookies.set("user", JSON.stringify(user), { expires: 7 });
+
           toast.success("Logged in successfully");
+          router.push("/dashboard");
+        } else {
+          toast.error(`Failed to log in: ${result.message}`);
         }
       },
       onError: (error: Error) => {
@@ -78,25 +100,41 @@ export const useAuth = () => {
     }
   );
 
-  const logoutMutation = useMutation(() => signOut({ callbackUrl: "/" }), {
-    onSuccess: () => {
-      queryClient.clear(); // Clear all queries on logout
-      dispatch(logout());
-      toast.success("Logged out successfully");
+  const logoutMutation = useMutation(
+    () => {
+      // Implement your logout logic here
+      return Promise.resolve();
     },
-    onError: (error: Error) => {
-      toast.error(`Failed to log out: ${error.message}`);
-    },
-  });
+    {
+      onSuccess: () => {
+        dispatch(logout());
+        queryClient.clear();
+
+        // Remove cookies
+        Cookies.remove("token");
+        Cookies.remove("refreshToken");
+        Cookies.remove("user");
+
+        toast.success("Logged out successfully");
+        router.push("/");
+      },
+      onError: (error: Error) => {
+        toast.error(`Failed to log out: ${error.message}`);
+      },
+    }
+  );
 
   const handleGoogleLogin = useCallback(
-    async (credentialResponse: CredentialResponse, onClose: () => void) => {
+    async (credentialResponse: CredentialResponse) => {
       try {
-        console.log("Credential Response:", credentialResponse);
         if (credentialResponse.credential) {
           await loginMutation.mutateAsync(credentialResponse.credential);
+        } else {
+          console.error("No credential received from Google");
         }
-      } catch (error) {}
+      } catch (error) {
+        console.error("Error during Google login:", error);
+      }
     },
     [loginMutation]
   );
@@ -104,28 +142,15 @@ export const useAuth = () => {
   const logoutUser = () => {
     logoutMutation.mutate();
   };
-  useEffect(() => {
-    if (status === "authenticated" && session?.user) {
-      dispatch(
-        setUser({
-          uid: session.user.email,
-          email: session.user.email,
-          displayName: session.user.name,
-          photoURL: session.user.image,
-        })
-      );
-    }
-  }, [status, session, dispatch]);
+
   return {
-    user: session?.user,
-    isAuthenticated: status === "authenticated",
-    isLoading: status === "loading",
+    user: userinfo,
+    isAuthenticated: loggedin,
+    isLoading: loading,
     handleGoogleLogin,
     logoutUser,
     subscriptionData,
     isSubscriptionLoading,
     refetchSubscription,
-    isLoginLoading: loginMutation.isLoading,
-    isLogoutLoading: logoutMutation.isLoading,
   };
 };

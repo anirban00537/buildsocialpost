@@ -19,9 +19,7 @@ const DefaultLayout = ({ children }: { children: React.ReactNode }) => {
 
   return (
     <GoogleOAuthProvider
-      clientId={
-        "593782118274-0fsmjklda5us3mg9jiisekfrh2p24l2f.apps.googleusercontent.com"
-      }
+      clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID as string}
     >
       <Provider store={store}>
         <TooltipProvider>

@@ -2,31 +2,12 @@
 import React from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { motion } from "framer-motion";
-import { CredentialResponse, GoogleLogin } from "@react-oauth/google";
+import { GoogleLogin } from "@react-oauth/google";
 import Image from "next/image";
 import Link from "next/link";
-import { useCallback } from "react";
 
 const LoginPage = () => {
-  const { loginWithGoogle, isLoading } = useAuth();
-
-  const handleGoogleLogin = useCallback(
-    async (credentialResponse: CredentialResponse) => {
-      try {
-        console.log("Credential Response:", credentialResponse);
-        if (credentialResponse.credential) {
-          // await loginWithGoogle(credentialResponse.credential);
-          console.log("Login successful", credentialResponse.credential);
-          // Redirect or update state as needed
-        } else {
-          console.error("No credential received from Google");
-        }
-      } catch (error) {
-        console.error("Error during Google login:", error);
-      }
-    },
-    [loginWithGoogle]
-  );
+  const { handleGoogleLogin, isLoading } = useAuth();
 
   return (
     <div className="flex min-h-screen bg-gray-900 text-gray-100">
@@ -51,6 +32,7 @@ const LoginPage = () => {
                 alt="buildcarousel.com"
                 className="mx-auto mb-4"
               />
+              BuildCarousel
             </h1>
           </Link>
           <p className="mb-8 text-gray-300 text-center">

@@ -1,8 +1,6 @@
 "use client";
 import React from "react";
 import { useAuth } from "@/hooks/useAuth";
-import { Button } from "@/components/ui/button";
-import { FaGoogle } from "react-icons/fa";
 import { motion } from "framer-motion";
 import { CredentialResponse, GoogleLogin } from "@react-oauth/google";
 import Image from "next/image";
@@ -22,6 +20,20 @@ const LoginModal = ({
   onClose: () => void;
 }) => {
   const { handleGoogleLogin, isLoading } = useAuth();
+
+  const onLoginSuccess = useCallback(
+    (credentialResponse: CredentialResponse) => {
+      handleGoogleLogin(credentialResponse)
+        .then(() => {
+          onClose(); // Close the modal after successful login
+        })
+        .catch((error) => {
+          console.error("Login failed:", error);
+          // Optionally show an error message to the user
+        });
+    },
+    [handleGoogleLogin, onClose]
+  );
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -52,11 +64,10 @@ const LoginModal = ({
               className="w-full"
             >
               <GoogleLogin
-                onSuccess={(credentialResponse) =>
-                  handleGoogleLogin(credentialResponse, onClose)
-                }
+                onSuccess={onLoginSuccess}
                 onError={() => {
                   console.error("Google Login Failed");
+                  // Optionally show an error message to the user
                 }}
                 shape="circle"
                 width={370}

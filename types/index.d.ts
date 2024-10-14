@@ -76,3 +76,29 @@ export interface CarouselState {
 export interface FirestoreCarouselState extends CarouselState {
   userId: string;
 }
+export interface ResponseData {
+  data: any;
+  message: string;
+  success: boolean;
+}
+export interface UserInfo {
+  id: number;
+  email: string;
+  first_name: string;
+  last_name: string;
+  user_name: string;
+  unique_code: string;
+  phone: string | null;
+  photo: string | null;
+  country: string | null;
+  birth_date: string | null;
+  role: number;
+  status: number;
+  is_subscribed: number;
+  email_verified: number;
+  phone_verified: number;
+  gender: number;
+  createdAt: string;
+  updatedAt: string;
+  login_provider: string;
+}
