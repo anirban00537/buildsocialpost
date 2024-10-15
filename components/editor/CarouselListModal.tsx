@@ -1,11 +1,10 @@
-import React, { FC, useState, useCallback } from "react";
+import React, { FC, useState, useCallback, useEffect } from "react";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight, FileText, Trash } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useCarouselManager } from "@/hooks/useCarouselManager";
 import toast from "react-hot-toast";
-import { useQuery } from "react-query";
 
 interface CarouselListModalProps {
   isOpen: boolean;
@@ -13,27 +12,24 @@ interface CarouselListModalProps {
 }
 
 const CarouselListModal: FC<CarouselListModalProps> = ({ isOpen, onClose }) => {
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 5;
   const router = useRouter();
 
   const {
     carousels,
+    pagination,
     deleteCarousel,
     isDeleting,
     isFetchingAll,
     isAuthenticated,
   } = useCarouselManager();
 
-  // Use React Query to fetch carousels
-  const { data: fetchedCarousels, refetch } = useQuery(
-    "carousels",
-    () => carousels,
-    {
-      enabled: isOpen && isAuthenticated,
-      refetchOnWindowFocus: false,
+  const [currentPage, setCurrentPage] = useState(1);
+
+  useEffect(() => {
+    if (pagination) {
+      setCurrentPage(pagination.currentPage);
     }
-  );
+  }, [pagination]);
 
   const handleOpenCarousel = useCallback(
     (carousel: any) => {
@@ -48,23 +44,19 @@ const CarouselListModal: FC<CarouselListModalProps> = ({ isOpen, onClose }) => {
       try {
         await deleteCarousel(carouselId);
         toast.success("Carousel deleted successfully");
-        refetch(); // Refresh the list
       } catch (error) {
         console.error("Error deleting carousel:", error);
         toast.error("Failed to delete carousel");
       }
     },
-    [deleteCarousel, refetch]
+    [deleteCarousel]
   );
 
   const handlePageChange = useCallback((newPage: number) => {
     setCurrentPage(newPage);
+    // Here you would typically refetch the carousels with the new page number
+    // This depends on how you've set up your query in useCarouselManager
   }, []);
-
-  const paginatedCarousels = fetchedCarousels?.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
-  );
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -75,18 +67,18 @@ const CarouselListModal: FC<CarouselListModalProps> = ({ isOpen, onClose }) => {
             <div className="flex justify-center items-center h-16 text-white">
               <p>Loading carousels...</p>
             </div>
-          ) : fetchedCarousels?.length === 0 ? (
+          ) : !carousels || carousels.length === 0 ? (
             <div className="flex justify-center items-center h-16 text-white">
               <p>No carousels found</p>
             </div>
           ) : (
-            paginatedCarousels?.map((carousel) => (
+            carousels.map((carousel) => (
               <div
-                key={carousel?.id}
+                key={carousel.id}
                 className="flex justify-between items-center p-2 bg-opacity-60 bg-cardBackground hover:bg-opacity-70 rounded-lg transition-all duration-200"
               >
                 <span className="text-white ml-5">
-                  {carousel?.data?.name || "Unnamed Carousel"}
+                  {carousel.name || "Unnamed Carousel"}
                 </span>
                 <div className="flex gap-2">
                   <Button
@@ -102,7 +94,7 @@ const CarouselListModal: FC<CarouselListModalProps> = ({ isOpen, onClose }) => {
                     variant="outline"
                     size="sm"
                     className="bg-opacity-70 bg-red-900 text-white hover:bg-opacity-90 border border-red-700 transition-all duration-200"
-                    onClick={() => handleDeleteCarousel(carousel?.id)}
+                    onClick={() => handleDeleteCarousel(carousel.id)}
                     disabled={isDeleting}
                   >
                     <Trash className="w-3 h-3 mr-1" />
@@ -114,7 +106,7 @@ const CarouselListModal: FC<CarouselListModalProps> = ({ isOpen, onClose }) => {
           )}
 
           {/* Pagination controls */}
-          {fetchedCarousels && fetchedCarousels.length > itemsPerPage && (
+          {pagination && pagination.totalPages > 1 && (
             <div className="flex justify-between items-center mt-4">
               <Button
                 variant="outline"
@@ -127,18 +119,14 @@ const CarouselListModal: FC<CarouselListModalProps> = ({ isOpen, onClose }) => {
                 Previous
               </Button>
               <span className="text-white">
-                Page {currentPage} of{" "}
-                {Math.ceil(fetchedCarousels.length / itemsPerPage)}
+                Page {currentPage} of {pagination.totalPages}
               </span>
               <Button
                 variant="outline"
                 size="sm"
                 className="bg-opacity-70 bg-gray-700 text-white hover:bg-opacity-90 border border-gray-600 transition-all duration-200"
                 onClick={() => handlePageChange(currentPage + 1)}
-                disabled={
-                  currentPage ===
-                  Math.ceil(fetchedCarousels.length / itemsPerPage)
-                }
+                disabled={currentPage === pagination.totalPages}
               >
                 Next
                 <ChevronRight className="w-3 h-3 ml-1" />

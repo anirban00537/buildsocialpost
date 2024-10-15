@@ -14,7 +14,6 @@ const useBranding = () => {
     (state: RootState) => state.branding
   );
   const { loggedin } = useSelector((state: RootState) => state.user);
-  const [originalHeadshot, setOriginalHeadshot] = useState<string | null>(null);
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [previewImage, setPreviewImage] = useState<string | null>(null);
 
@@ -23,12 +22,10 @@ const useBranding = () => {
     getBrandingData,
     {
       onSuccess: (data) => {
-        const brandingData = data.data.branding;
-        console.log("brandingData", brandingData);
-        dispatch(setName(brandingData.name));
-        dispatch(setHandle(brandingData.handle));
-        dispatch(setHeadshot(brandingData.headshot));
-        setOriginalHeadshot(brandingData.headshot);
+        const brandingData = data?.data?.branding;
+        dispatch(setName(brandingData?.name));
+        dispatch(setHandle(brandingData?.handle));
+        dispatch(setHeadshot(brandingData?.headshot));
       },
       enabled: loggedin,
     }
@@ -62,17 +59,14 @@ const useBranding = () => {
       formData.append("handle", brandingData.handle);
 
       if (imageFile) {
-        console.log("imageFile", imageFile);
         formData.append("headshot", imageFile);
       }
 
       const response = await createOrUpdateBranding(formData);
-      console.log(response, "responseresponsesssssssssssssssss");
       return response;
     },
     {
       onSuccess: (response: ApiResponse) => {
-        // console.log(response, "responseresponsesssssssssssssssss");
         processApiResponse(response);
         setImageFile(null);
       },

@@ -1,21 +1,36 @@
 import request from "@/lib/request";
+import fRequest from "@/lib/f-request";
 
-export const uploadImage = async (imageData: any) => {
-  const response = await request.post("/images/upload-image", imageData);
+interface PaginationParams {
+  page?: number;
+  pageSize?: number;
+}
+
+export const uploadImage = async (file: File) => {
+  const formData = new FormData();
+  formData.append("file", file);
+  const response = await fRequest.post("/files/upload", formData);
   return response.data;
 };
 
-export const deleteImage = async (imageId: string) => {
-  const response = await request.delete(`/images/delete-image/${imageId}`);
+export const getImages = async ({ page, pageSize }: PaginationParams = {}) => {
+  const response = await request.get("/files", {
+    params: { page, pageSize },
+  });
   return response.data;
 };
 
-export const getImages = async () => {
-  const response = await request.get("/images/get-images");
+export const getImage = async (id: string) => {
+  const response = await request.get(`/files/${id}`);
+  return response.data;
+};
+
+export const deleteImage = async (id: string) => {
+  const response = await request.delete(`/files/${id}`);
   return response.data;
 };
 
 export const getImageUsage = async () => {
-  const response = await request.get("/images/get-image-usage");
+  const response = await request.get("/files/usages");
   return response.data;
 };

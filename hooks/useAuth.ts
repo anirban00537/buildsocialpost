@@ -10,7 +10,7 @@ import {
   setEndDate,
   setLoading,
 } from "@/state/slice/user.slice";
-import { useCallback } from "react";
+import { useCallback, useEffect } from "react";
 import { CredentialResponse } from "@react-oauth/google";
 import { googleSignIn, profile } from "@/services/auth";
 import { checkSubscription } from "@/services/subscription";
@@ -20,11 +20,16 @@ import { ResponseData, UserInfo } from "@/types";
 
 interface Subscription {
   id: string;
+  userId: number;
+  orderId: string;
   status: string;
+  endDate: string;
+  createdAt: string;
   productName: string;
   variantName: string;
-  endDate: string;
   subscriptionLengthInMonths: number;
+  totalAmount: number;
+  currency: string;
 }
 
 interface SubscriptionResponse {
@@ -33,9 +38,10 @@ interface SubscriptionResponse {
   data: {
     isSubscribed: boolean;
     subscription: Subscription | null;
-    daysLeft: number | null;
+    daysLeft: number;
   };
 }
+
 export const useAuth = () => {
   const router = useRouter();
   const queryClient = useQueryClient();
@@ -44,7 +50,10 @@ export const useAuth = () => {
     (state: RootState) => state.user
   );
 
-  useQuery<ResponseData, Error>(["user"], profile, {
+  const { data: userData, isLoading: isUserLoading } = useQuery<
+    ResponseData,
+    Error
+  >(["user"], profile, {
     enabled: !loggedin,
     onSuccess: (data: ResponseData) => {
       dispatch(setUser(data.data as UserInfo));
@@ -65,8 +74,14 @@ export const useAuth = () => {
       onSuccess: (data: SubscriptionResponse) => {
         console.log(data.data.isSubscribed, "data.data.isSubscribed");
         dispatch(setSubscribed(data.data.isSubscribed));
-        dispatch(setEndDate(data.data.subscription?.endDate || null));
-        // You might want to handle daysLeft here as well, if needed
+        if (data.data.subscription) {
+          dispatch(setEndDate(data.data.subscription.endDate));
+        } else {
+          dispatch(setEndDate(null));
+        }
+        // You can handle daysLeft here if needed
+        // For example, you could dispatch an action to store it in the Redux state
+        // dispatch(setDaysLeft(data.data.daysLeft));
       },
       onError: (error: Error) => {
         toast.error(`Failed to fetch subscription: ${error.message}`);
@@ -141,7 +156,9 @@ export const useAuth = () => {
   const logoutUser = () => {
     logoutMutation.mutate();
   };
-
+  useEffect(() => {
+    if (!isUserLoading && !isSubscriptionLoading) dispatch(setLoading(false));
+  }, [isUserLoading, isSubscriptionLoading]);
   return {
     user: userinfo,
     isAuthenticated: loggedin,

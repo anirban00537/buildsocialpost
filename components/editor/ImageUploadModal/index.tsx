@@ -106,7 +106,7 @@ const ImageUploadModal: React.FC<ImageUploadModalProps> = ({
 
             {isLoading ? (
               <p className="mt-4 text-center text-white">Loading images...</p>
-            ) : uploadedImages.length === 0 ? (
+            ) : currentImages.length === 0 ? (
               <p className="mt-4 text-center text-white">
                 No images uploaded yet.
               </p>
@@ -120,7 +120,7 @@ const ImageUploadModal: React.FC<ImageUploadModalProps> = ({
                         onClick={() => onImageSelect(image.url)}
                       >
                         <Image
-                          src={`${process.env.NEXT_PUBLIC_URL}/api/images/show-image?file=${image.url}`}
+                          src={image.url}
                           alt={image.name}
                           width={240}
                           height={240}

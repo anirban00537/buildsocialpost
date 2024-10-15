@@ -303,12 +303,10 @@ const EditorNavbar: React.FC = () => {
     useCarousel();
   const {
     carousels,
-    isCreatingOrUpdating,
-    isDeleting,
     isFetchingAll,
-    createOrUpdateCarousel,
-    deleteCarousel,
     isAuthenticated,
+    createOrUpdateCarousel,
+    isCreatingOrUpdating,
   } = useCarouselManager();
   const user = useSelector((state: RootState) => state.user.userinfo);
   const { name } = useSelector((state: RootState) => state.slides);
@@ -323,11 +321,14 @@ const EditorNavbar: React.FC = () => {
   // Use useQuery to fetch carousel details
 
   const handleSaveCarousel = useCallback(() => {
-    createOrUpdateCarousel({
-      newName: name || "Default Carousel",
-      id: carouselId ?? undefined,
-    });
-    console.log("name", name);
+    if (createOrUpdateCarousel) {
+      createOrUpdateCarousel({
+        newName: name || "Default Carousel",
+        id: carouselId ?? undefined,
+      });
+    } else {
+      console.error("createOrUpdateCarousel function is not available");
+    }
   }, [name, carouselId, createOrUpdateCarousel]);
 
   const handleNameChange = useCallback(

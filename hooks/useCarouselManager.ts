@@ -13,11 +13,29 @@ import {
   getCarouselDetails,
 } from "@/services/carousels.service";
 import { processApiResponse } from "@/lib/functions";
+import { useEffect } from "react";
+import { setLoading } from "@/state/slice/user.slice";
 
 // Define a new interface for the API response
 interface CarouselResponse {
+  success: boolean;
+  message: string;
+  data: {
+    items: CarouselItem[];
+    pagination: {
+      currentPage: number;
+      pageSize: number;
+      totalCount: number;
+      totalPages: number;
+    };
+  };
+}
+
+interface CarouselItem {
   id: string;
-  data: CarouselState;
+  userId: number;
+  name: string;
+  // ... other properties ...
 }
 
 export const useCarouselManager = () => {
@@ -40,16 +58,18 @@ export const useCarouselManager = () => {
     globalBackground,
   } = useSelector((state: RootState) => state.slides);
 
-  const { data: carousels, isLoading: isFetchingAll } = useQuery<
-    CarouselResponse[]
-  >(
-    ["carousels", 1, 10], // Assuming default page and pageSize
-    () => getCarousels(1, 10),
-    {
-      enabled: loggedin,
-      onError: () => toast.error("Failed to fetch carousels"),
-    }
-  );
+  const { data: carouselsResponse, isLoading: isFetchingAll } =
+    useQuery<CarouselResponse>(
+      ["carousels", 1, 10], // Assuming default page and pageSize
+      () => getCarousels(1, 10),
+      {
+        enabled: loggedin,
+        onSuccess: (response) => {
+          console.log("carousels response", response);
+        },
+        onError: () => toast.error("Failed to fetch carousels"),
+      }
+    );
 
   const { mutate: createOrUpdateCarousel, isLoading: isCreatingOrUpdating } =
     useMutation<CarouselResponse, Error, { newName?: string; id?: string }>(
@@ -75,16 +95,24 @@ export const useCarouselManager = () => {
       },
       {
         onSuccess: (response: any, variables) => {
-          queryClient.invalidateQueries("carousels");
-          console.log("response.data.id", response);
-          if (response && response.data.id) {
-            const newUrl = `/editor?id=${response.data.id}`;
-            router.replace(newUrl);
+          console.log("Response from create/update:", response);
+          if (response && response.success && response.data) {
+            let newId = response.data.id;
+            if (typeof response.data === 'object' && 'items' in response.data) {
+              newId = response.data.items[0]?.id;
+            }
+            if (newId) {
+              const newUrl = `/editor?id=${newId}`;
+              router.replace(newUrl);
+            } else {
+              console.error("No carousel ID found in the response");
+            }
           }
-          toast.success("Carousel saved successfully");
           processApiResponse(response);
+          queryClient.invalidateQueries("carousels");
         },
         onError: (error) => {
+          console.error("Error in create/update:", error);
           processApiResponse(error);
         },
       }
@@ -170,22 +198,18 @@ export const useCarouselManager = () => {
     }
   );
 
-  // Get the current carousel ID from the URL
-  const currentCarouselId = searchParams.get("id");
-
-  // Use the carousel details query
+  useEffect(() => {
+    if (!isLoadingCarouselDetails) dispatch(setLoading(false));
+  }, [isLoadingCarouselDetails]);
 
   return {
-    carousels,
-    carouselDetails,
-    isLoadingCarouselDetails,
-    isErrorCarouselDetails,
-    refetchCarouselDetails,
-    isCreatingOrUpdating,
+    carousels: carouselsResponse?.data?.items,
+    pagination: carouselsResponse?.data?.pagination,
+    deleteCarousel: deleteCarouselMutation,
     isDeleting,
     isFetchingAll,
-    createOrUpdateCarousel,
-    deleteCarousel: deleteCarouselMutation,
     isAuthenticated: loggedin,
+    createOrUpdateCarousel,
+    isCreatingOrUpdating,
   };
 };

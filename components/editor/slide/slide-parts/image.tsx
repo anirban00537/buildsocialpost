@@ -68,7 +68,7 @@ const Image: React.FC<ImageProps> = ({ imageUrl, index, updateSlide }) => {
         {imageUrl ? (
           <>
             <img
-              src={`${process.env.NEXT_PUBLIC_URL}/api/images/show-image?file=${imageUrl}`}
+              src={imageUrl}
               alt="Slide image"
               style={{
                 maxWidth: "100%",

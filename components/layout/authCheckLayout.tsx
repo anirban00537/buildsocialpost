@@ -16,9 +16,9 @@ const AuthCheckLayout = ({ children }: { children: React.ReactNode }) => {
   //   }
   // }, [isAuthenticated, isLoading, router]);
 
-  // if (isLoading) {
-  //   return <FullScreenLoading />;
-  // }
+  if (isLoading) {
+    return <FullScreenLoading />;
+  }
 
   return <>{children}</>;
 };
