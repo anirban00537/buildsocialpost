@@ -40,13 +40,24 @@ export interface TextSettings {
   fontWeight: "normal" | "bold" | number;
 }
 
-export interface BackgroundColors {
-  color1: string; // Background Color
-  color2: string; // Text Color
-  color3: string; // Tint Color
-  color4: string; // Accent Color
+interface ApiResponse {
+  success: boolean;
+  message: string;
+  data?: {
+    [key: string]: any;
+  };
 }
 
+interface ApiError {
+  response?: {
+    data?: {
+      statusCode?: number;
+      message?: string | string[];
+      error?: string;
+    };
+  };
+  message?: string;
+}
 export interface LayoutSettings {
   height: number;
   width: number;

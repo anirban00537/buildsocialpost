@@ -13,8 +13,9 @@ import {
 import { useCallback } from "react";
 import { CredentialResponse } from "@react-oauth/google";
 import { googleSignIn, profile } from "@/services/auth";
+import { checkSubscription } from "@/services/subscription";
 import Cookies from "js-cookie";
-import { RootState } from "@/state/store"; // Adjust this import based on your store setup
+import { RootState } from "@/state/store";
 import { ResponseData, UserInfo } from "@/types";
 
 interface Subscription {
@@ -27,17 +28,14 @@ interface Subscription {
 }
 
 interface SubscriptionResponse {
-  hasActiveSubscription: boolean;
-  subscription: Subscription | null;
+  success: boolean;
+  message: string;
+  data: {
+    isSubscribed: boolean;
+    subscription: Subscription | null;
+    daysLeft: number | null;
+  };
 }
-
-const fetchSubscription = async (): Promise<SubscriptionResponse> => {
-  const { data } = await axios.get<SubscriptionResponse>(
-    `/api/subscriptions/check-subscription`
-  );
-  return data;
-};
-
 export const useAuth = () => {
   const router = useRouter();
   const queryClient = useQueryClient();
@@ -45,10 +43,9 @@ export const useAuth = () => {
   const { userinfo, loggedin, loading, subscribed, endDate } = useSelector(
     (state: RootState) => state.user
   );
-  const token = Cookies.get("token");
 
-  const { data: userData } = useQuery<ResponseData, Error>(["user"], profile, {
-    enabled: !!token,
+  useQuery<ResponseData, Error>(["user"], profile, {
+    enabled: !loggedin,
     onSuccess: (data: ResponseData) => {
       dispatch(setUser(data.data as UserInfo));
     },
@@ -60,14 +57,16 @@ export const useAuth = () => {
     refetch: refetchSubscription,
   } = useQuery<SubscriptionResponse, Error>(
     ["subscription"],
-    fetchSubscription,
+    checkSubscription,
     {
       enabled: loggedin,
       staleTime: 1000 * 60 * 5, // 5 minutes
       cacheTime: 1000 * 60 * 30, // 30 minutes
       onSuccess: (data: SubscriptionResponse) => {
-        dispatch(setSubscribed(data.hasActiveSubscription));
-        dispatch(setEndDate(data.subscription?.endDate || null));
+        console.log(data.data.isSubscribed, "data.data.isSubscribed");
+        dispatch(setSubscribed(data.data.isSubscribed));
+        dispatch(setEndDate(data.data.subscription?.endDate || null));
+        // You might want to handle daysLeft here as well, if needed
       },
       onError: (error: Error) => {
         toast.error(`Failed to fetch subscription: ${error.message}`);
@@ -152,5 +151,6 @@ export const useAuth = () => {
     subscriptionData,
     isSubscriptionLoading,
     refetchSubscription,
+    checkSubscription,
   };
 };

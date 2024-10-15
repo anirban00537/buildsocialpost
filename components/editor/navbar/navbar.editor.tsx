@@ -121,7 +121,15 @@ const DownloadDropdown: React.FC<{
   isAuthenticated: boolean;
   onLoginRequired: () => void;
 }> = React.memo(
-  ({ onDownloadPDF, onDownloadZip, pdfLoading, zipLoading, className, isAuthenticated, onLoginRequired }) => {
+  ({
+    onDownloadPDF,
+    onDownloadZip,
+    pdfLoading,
+    zipLoading,
+    className,
+    isAuthenticated,
+    onLoginRequired,
+  }) => {
     const isDownloading = pdfLoading || zipLoading;
     const { toast } = useToast();
 
@@ -151,10 +159,16 @@ const DownloadDropdown: React.FC<{
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent className="bg-gradient-to-t from-cardBackground to-background text-textColor/85 hover:bg-primary/50 border border-borderColor">
-          <DropdownMenuItem onClick={() => handleDownload(onDownloadPDF)} disabled={pdfLoading}>
+          <DropdownMenuItem
+            onClick={() => handleDownload(onDownloadPDF)}
+            disabled={pdfLoading}
+          >
             {pdfLoading ? "Downloading PDF..." : "Download PDF"}
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => handleDownload(onDownloadZip)} disabled={zipLoading}>
+          <DropdownMenuItem
+            onClick={() => handleDownload(onDownloadZip)}
+            disabled={zipLoading}
+          >
             {zipLoading ? "Downloading Zip..." : "Download Zip"}
           </DropdownMenuItem>
         </DropdownMenuContent>
@@ -289,7 +303,6 @@ const EditorNavbar: React.FC = () => {
     useCarousel();
   const {
     carousels,
-    fetchCarouselDetails,
     isCreatingOrUpdating,
     isDeleting,
     isFetchingAll,
@@ -308,16 +321,13 @@ const EditorNavbar: React.FC = () => {
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
 
   // Use useQuery to fetch carousel details
-  const { data: carouselDetails, isLoading: isFetchingDetails } = useQuery(
-    ["carouselDetails", carouselId],
-    () => (carouselId ? fetchCarouselDetails(carouselId) : null),
-    {
-      enabled: !!carouselId && isAuthenticated,
-    }
-  );
 
   const handleSaveCarousel = useCallback(() => {
-    createOrUpdateCarousel({ newName: name, id: carouselId ?? undefined });
+    createOrUpdateCarousel({
+      newName: name || "Default Carousel",
+      id: carouselId ?? undefined,
+    });
+    console.log("name", name);
   }, [name, carouselId, createOrUpdateCarousel]);
 
   const handleNameChange = useCallback(
@@ -390,7 +400,6 @@ const EditorNavbar: React.FC = () => {
                   value={name}
                   onChange={handleNameChange}
                   aria-label="Carousel name"
-                  disabled={isFetchingDetails}
                 />
               </div>
             </div>
@@ -496,7 +505,7 @@ const EditorNavbar: React.FC = () => {
         isOpen={isViewAllModalOpen}
         onClose={() => setIsViewAllModalOpen(false)}
       />
-      
+
       <LoginModal
         isOpen={isLoginModalOpen}
         onClose={() => setIsLoginModalOpen(false)}

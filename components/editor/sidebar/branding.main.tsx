@@ -73,11 +73,8 @@ const BrandingSection: React.FC = () => {
                 Upload Headshot
               </label>
               {previewImage || headshot !== "/creator.jpg" ? (
-                <Image
-                  src={
-                    previewImage ||
-                    `${process.env.NEXT_PUBLIC_URL}/api/images/show-image?file=${headshot}`
-                  }
+                <img
+                  src={previewImage || headshot || "/creator.jpg"}
                   alt="Headshot"
                   width={32}
                   height={32}

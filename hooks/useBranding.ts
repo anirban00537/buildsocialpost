@@ -4,7 +4,9 @@ import toast from "react-hot-toast";
 import { RootState } from "@/state/store";
 import { setHandle, setHeadshot, setName } from "@/state/slice/branding.slice";
 import { useMutation, useQuery } from "react-query";
-import axios from "axios";
+import { getBrandingData, createOrUpdateBranding } from "@/services/branding.service";
+import { ApiResponse } from "@/types";
+import { processApiResponse } from "@/lib/functions";
 
 const useBranding = () => {
   const dispatch = useDispatch();
@@ -16,19 +18,17 @@ const useBranding = () => {
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [previewImage, setPreviewImage] = useState<string | null>(null);
 
-  // Fetch branding data
   const { data: brandingData, isLoading: isFetchingBranding } = useQuery(
     "branding",
-    async () => {
-      const response = await axios.get("/api/branding/get-branding-data");
-      return response.data;
-    },
+    getBrandingData,
     {
       onSuccess: (data) => {
-        dispatch(setName(data.name));
-        dispatch(setHandle(data.handle));
-        dispatch(setHeadshot(data.headshot));
-        setOriginalHeadshot(data.headshot);
+        const brandingData = data.data.branding;
+        console.log("brandingData", brandingData);
+        dispatch(setName(brandingData.name));
+        dispatch(setHandle(brandingData.handle));
+        dispatch(setHeadshot(brandingData.headshot));
+        setOriginalHeadshot(brandingData.headshot);
       },
       enabled: loggedin,
     }
@@ -56,38 +56,28 @@ const useBranding = () => {
   };
 
   const { mutate: saveBrandingData, isLoading: isSaving } = useMutation(
-    async (brandingData: {
-      name: string;
-      handle: string;
-      headshot: string | null;
-    }) => {
+    async (brandingData: any) => {
       const formData = new FormData();
       formData.append("name", brandingData.name);
       formData.append("handle", brandingData.handle);
 
       if (imageFile) {
+        console.log("imageFile", imageFile);
         formData.append("headshot", imageFile);
       }
 
-      const response = await axios.post(
-        "/api/branding/create-update-branding",
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
-
-      return response.data;
+      const response = await createOrUpdateBranding(formData);
+      console.log(response, "responseresponsesssssssssssssssss");
+      return response;
     },
     {
-      onSuccess: () => {
-        toast.success("Branding data saved successfully!");
-        setImageFile(null); // Reset the image file after successful upload
+      onSuccess: (response: ApiResponse) => {
+        // console.log(response, "responseresponsesssssssssssssssss");
+        processApiResponse(response);
+        setImageFile(null);
       },
       onError: (error: Error) => {
-        toast.error(error.message || "Failed to save branding data.");
+        processApiResponse(error);
       },
     }
   );

@@ -1,11 +1,18 @@
 import { useRouter, useSearchParams } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/state/store";
-import { CarouselState } from "@/types";
+import { CarouselState, ResponseData } from "@/types";
 import { addAllSlides, setProperty } from "@/state/slice/carousel.slice";
 import toast from "react-hot-toast";
-import axios, { AxiosResponse } from "axios";
 import { useQuery, useMutation, useQueryClient } from "react-query";
+import {
+  getCarousels,
+  createCarousel,
+  updateCarousel,
+  deleteCarousel,
+  getCarouselDetails,
+} from "@/services/carousels.service";
+import { processApiResponse } from "@/lib/functions";
 
 // Define a new interface for the API response
 interface CarouselResponse {
@@ -18,6 +25,7 @@ export const useCarouselManager = () => {
   const searchParams = useSearchParams();
   const dispatch = useDispatch();
   const queryClient = useQueryClient();
+  const carouselId = searchParams?.get("id");
   const { loggedin, userinfo } = useSelector((state: RootState) => state.user);
   const {
     titleTextSettings,
@@ -32,24 +40,19 @@ export const useCarouselManager = () => {
     globalBackground,
   } = useSelector((state: RootState) => state.slides);
 
-  // Fetch all carousels
   const { data: carousels, isLoading: isFetchingAll } = useQuery<
     CarouselResponse[]
   >(
-    "carousels",
-    async () => {
-      const response = await axios.get<CarouselResponse[]>("/api/carousels/get-carousels");
-      return response.data;
-    },
+    ["carousels", 1, 10], // Assuming default page and pageSize
+    () => getCarousels(1, 10),
     {
       enabled: loggedin,
       onError: () => toast.error("Failed to fetch carousels"),
     }
   );
 
-  // Create or update carousel mutation
   const { mutate: createOrUpdateCarousel, isLoading: isCreatingOrUpdating } =
-    useMutation<AxiosResponse<any>, Error, { newName?: string; id?: string }>(
+    useMutation<CarouselResponse, Error, { newName?: string; id?: string }>(
       async ({ newName, id }) => {
         const carouselData: CarouselState = {
           name: newName || name,
@@ -65,82 +68,124 @@ export const useCarouselManager = () => {
         };
 
         if (id) {
-          return axios.put(`/api/carousels/update-carousel/${id}`, carouselData);
+          return updateCarousel({ id, ...carouselData });
         } else {
-          return axios.post("/api/carousels/create-carousel", carouselData);
+          return createCarousel(carouselData);
         }
       },
       {
-        onSuccess: (response, variables) => {
+        onSuccess: (response: any, variables) => {
           queryClient.invalidateQueries("carousels");
-          if (!variables.id) {
-            const newSearchParams = new URLSearchParams(
-              searchParams?.toString()
-            );
-            newSearchParams?.set("id", response.data.id);
-            const newUrl = `${
-              window.location.pathname
-            }?${newSearchParams.toString()}`;
+          console.log("response.data.id", response);
+          if (response && response.data.id) {
+            const newUrl = `/editor?id=${response.data.id}`;
             router.replace(newUrl);
           }
           toast.success("Carousel saved successfully");
+          processApiResponse(response);
         },
         onError: (error) => {
-          console.error("Error saving carousel:", error);
-          toast.error("Failed to save carousel");
+          processApiResponse(error);
         },
       }
     );
 
   // Delete carousel mutation
-  const { mutate: deleteCarousel, isLoading: isDeleting } = useMutation<
-    void,
+  const { mutate: deleteCarouselMutation, isLoading: isDeleting } = useMutation<
+    ResponseData,
     Error,
     string
-  >((id: string) => axios.delete(`/api/carousels/delete-carousel/${id}`).then(() => {}), {
-    onSuccess: () => {
+  >((id: string) => deleteCarousel(id), {
+    onSuccess: (response: ResponseData) => {
       queryClient.invalidateQueries("carousels");
       toast.success("Carousel deleted successfully");
+      processApiResponse(response);
     },
     onError: (error) => {
-      console.error("Error deleting carousel:", error);
-      toast.error("Failed to delete carousel");
+      processApiResponse(error);
     },
   });
 
-  // Function to fetch carousel details
-  const fetchCarouselDetails = async (id: string) => {
-    try {
-      const response = await axios.get(`/api/carousels/get-carousel-details/${id}`);
-      const data = response.data;
-      if (data) {
-        dispatch(setProperty({ key: "name", value: data.name }));
-        dispatch(addAllSlides(data.slides));
-        dispatch(setProperty({ key: "background", value: data.background }));
-        dispatch(setProperty({ key: "titleTextSettings", value: data.titleTextSettings }));
-        dispatch(setProperty({ key: "descriptionTextSettings", value: data.descriptionTextSettings }));
-        dispatch(setProperty({ key: "taglineTextSettings", value: data.taglineTextSettings }));
-        dispatch(setProperty({ key: "layout", value: data.layout }));
-        dispatch(setProperty({ key: "sharedSelectedElement", value: data.sharedSelectedElement }));
-        dispatch(setProperty({ key: "fontFamily", value: data.fontFamily || "poppins" }));
-        dispatch(setProperty({ key: "globalBackground", value: data.globalBackground || null }));
-      }
-      return data;
-    } catch (error) {
-      toast.error("Failed to fetch carousel details");
-      router.push("/editor");
-      throw error;
+  const {
+    data: carouselDetails,
+    isLoading: isLoadingCarouselDetails,
+    isError: isErrorCarouselDetails,
+    refetch: refetchCarouselDetails,
+  } = useQuery<CarouselState, Error>(
+    ["carouselDetails", carouselId],
+    () => getCarouselDetails(carouselId!),
+    {
+      enabled: !!carouselId,
+      onSuccess: (data: any) => {
+        if (data) {
+          console.log(data.data.slides, "data.slides");
+          dispatch(setProperty({ key: "name", value: data.data.name }));
+          dispatch(addAllSlides(data.data.slides));
+          dispatch(
+            setProperty({ key: "background", value: data.data.background })
+          );
+          dispatch(
+            setProperty({
+              key: "titleTextSettings",
+              value: data.data.titleTextSettings,
+            })
+          );
+          dispatch(
+            setProperty({
+              key: "descriptionTextSettings",
+              value: data.data.descriptionTextSettings,
+            })
+          );
+          dispatch(
+            setProperty({
+              key: "taglineTextSettings",
+              value: data.data.taglineTextSettings,
+            })
+          );
+          dispatch(setProperty({ key: "layout", value: data.data.layout }));
+          dispatch(
+            setProperty({
+              key: "sharedSelectedElement",
+              value: data.data.sharedSelectedElement,
+            })
+          );
+          dispatch(
+            setProperty({
+              key: "fontFamily",
+              value: data.data.fontFamily || "poppins",
+            })
+          );
+          dispatch(
+            setProperty({
+              key: "globalBackground",
+              value: data.data.globalBackground || null,
+            })
+          );
+        }
+      },
+      onError: (error: Error) => {
+        toast.error("Failed to fetch carousel details");
+        console.error("Error fetching carousel details:", error);
+      },
     }
-  };
+  );
+
+  // Get the current carousel ID from the URL
+  const currentCarouselId = searchParams.get("id");
+
+  // Use the carousel details query
 
   return {
     carousels,
-    fetchCarouselDetails,
+    carouselDetails,
+    isLoadingCarouselDetails,
+    isErrorCarouselDetails,
+    refetchCarouselDetails,
     isCreatingOrUpdating,
     isDeleting,
     isFetchingAll,
     createOrUpdateCarousel,
-    deleteCarousel,
+    deleteCarousel: deleteCarouselMutation,
     isAuthenticated: loggedin,
   };
 };
