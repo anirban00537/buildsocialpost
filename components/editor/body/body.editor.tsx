@@ -77,6 +77,18 @@ const CarouselEditor: React.FC = () => {
                   backgroundPosition: "center",
                 }}
               >
+                <SlideControls
+                  index={index}
+                  slide={slide}
+                  handleInsertSlide={handleInsertSlide}
+                  handleCopySlide={handleCopySlide}
+                  handleDeleteSlide={handleDeleteSlide}
+                  handleMoveSlideLeft={handleMoveSlideLeft}
+                  handleMoveSlideRight={handleMoveSlideRight}
+                  handleImageIconClick={handleImageIconClick}
+                  handleSettingChange={handleSettingChange}
+                  handleRemoveImage={handleRemoveImage}
+                />
                 <div
                   id={`slide-${index}`}
                   style={{
@@ -92,18 +104,6 @@ const CarouselEditor: React.FC = () => {
                     slideNumber={index}
                   />
                 </div>
-                <SlideControls
-                  index={index}
-                  slide={slide}
-                  handleInsertSlide={handleInsertSlide}
-                  handleCopySlide={handleCopySlide}
-                  handleDeleteSlide={handleDeleteSlide}
-                  handleMoveSlideLeft={handleMoveSlideLeft}
-                  handleMoveSlideRight={handleMoveSlideRight}
-                  handleImageIconClick={handleImageIconClick}
-                  handleSettingChange={handleSettingChange}
-                  handleRemoveImage={handleRemoveImage}
-                />
               </SwiperSlide>
             ))}
           </Swiper>
