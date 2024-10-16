@@ -4,8 +4,6 @@ import {
   User,
   Type,
   Image,
-  ChevronLeft,
-  ChevronRight,
   Shapes,
 } from "lucide-react";
 import AiSettingsComponent from "./ai.main";
@@ -73,10 +71,10 @@ const MainSidebar: React.FC<MainSidebarProps> = ({
       <aside
         className={`flex flex-col md:flex-row h-screen transition-all duration-300 ${
           isCollapsed ? "w-[70px]" : "w-full md:w-[420px]"
-        } border border-borderColor bg-background`}
+        } border border-borderColor/50   bg-background`}
       >
-        <div className="sticky top-0 w-full md:w-[70px] order-first md:order-first border-r border-borderColor bg-background shadow-md">
-          <div className="flex flex-wrap md:flex-col w-full h-full justify-start items-center md:border-r border-b md:border-b-0 border-borderColor">
+        <div className="sticky top-0 w-full md:w-[70px] order-first md:order-first border-r border-borderColor/50 bg-background shadow-md">
+          <div className="flex flex-wrap md:flex-col w-full h-full justify-start items-center md:border-r border-b md:border-b-0 border-borderColor/50">
             {[
               { name: "ai-settings", icon: <Wand2 size={20} /> },
               { name: "branding", icon: <User size={20} /> },

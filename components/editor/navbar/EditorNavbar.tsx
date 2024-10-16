@@ -86,7 +86,7 @@ const EditorNavbar: React.FC = () => {
   }
 
   return (
-    <header className="bg-background sticky top-0 z-40 border-b border-borderColor shadow-sm">
+    <header className="bg-background sticky top-0 z-40 border-b border-borderColor/50">
       <div className="mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-2 sm:space-y-0 sm:space-x-4 w-full">
@@ -103,7 +103,7 @@ const EditorNavbar: React.FC = () => {
               <div className="flex space-x-2 w-full sm:w-auto">
                 <Button
                   onClick={() => setIsViewAllModalOpen(true)}
-                  className="flex-1 sm:flex-initial h-8 justify-start text-textColor/85 bg-gradient-to-t from-cardBackground to-background hover:bg-primary/50 border border-borderColor"
+                  className="flex-1 sm:flex-initial h-8 justify-start text-textColor/85 bg-cardBackground hover:bg-primary/50 border border-borderColor"
                   variant="outline"
                   size="sm"
                   disabled={isFetchingAll}
@@ -114,7 +114,7 @@ const EditorNavbar: React.FC = () => {
 
                 <Button
                   onClick={handleAddNew}
-                  className="flex-1 sm:flex-initial h-8 justify-start text-textColor/85 bg-gradient-to-t from-cardBackground to-background hover:bg-primary/50 border border-borderColor"
+                  className="flex-1 sm:flex-initial h-8 justify-start text-textColor/85 bg-cardBackground  hover:bg-primary/50 border border-borderColor"
                   variant="outline"
                   size="sm"
                   disabled={isCreatingOrUpdating}
@@ -123,7 +123,7 @@ const EditorNavbar: React.FC = () => {
                   <span>New</span>
                 </Button>
               </div>
-              <div className="flex items-center bg-gradient-to-t from-cardBackground to-background border border-borderColor rounded-md h-8 w-full sm:w-auto">
+              <div className="flex items-center bg-cardBackground border border-borderColor/50 rounded-md h-8 w-full sm:w-auto">
                 <Edit className="w-4 h-4 mr-2 text-textColor/85 ml-2" />
                 <input
                   type="text"
@@ -151,7 +151,7 @@ const EditorNavbar: React.FC = () => {
               onClick={handleSaveCarousel}
               disabled={isCreatingOrUpdating || !isAuthenticated}
               size="xs"
-              className="whitespace-nowrap"
+              className="whitespace-nowrap h-8"
             >
               {isCreatingOrUpdating ? "Saving..." : "Save Progress"}
             </Button>
@@ -159,7 +159,7 @@ const EditorNavbar: React.FC = () => {
             {!user || !user.email ? (
               <Button
                 variant="outline"
-                size="sm"
+                size="xs"
                 className="bg-cardBackground hover:bg-primary/50 border border-borderColor text-textColor/85"
                 onClick={() => setIsLoginModalOpen(true)}
               >
@@ -208,7 +208,7 @@ const EditorNavbar: React.FC = () => {
             {!user || !user.email ? (
               <Button
                 variant="outline"
-                className="w-full bg-cardBackground hover:bg-primary/50 border border-borderColor text-textColor/85"
+                className="w-full bg-cardBackground hover:bg-primary/50 border border-borderColor/50 text-textColor/85"
                 onClick={() => {
                   setIsLoginModalOpen(true);
                   setIsMenuOpen(false);

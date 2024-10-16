@@ -51,13 +51,13 @@ const DownloadDropdown: React.FC<DownloadDropdownProps> = React.memo(
           <Button
             variant="outline"
             size="xs"
-            className={`bg-gradient-to-t from-cardBackground to-background text-textColor/85 hover:bg-primary/50 border border-borderColor ${className}`}
+            className={`bg-cardBackground text-textColor/85 hover:bg-primary/50 border border-borderColor/50 h-8 ${className}`}
           >
             <Download className="w-4 h-4 mr-2" />
             {isDownloading ? "Downloading..." : "Download"}
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent className="bg-gradient-to-t from-cardBackground to-background text-textColor/85 hover:bg-primary/50 border border-borderColor">
+        <DropdownMenuContent className="bg-cardBackground text-textColor/85 hover:bg-primary/50 border border-borderColor">
           <DropdownMenuItem
             onClick={() => handleDownload(onDownloadPDF)}
             disabled={pdfLoading}

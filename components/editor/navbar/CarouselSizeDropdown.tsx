@@ -88,7 +88,7 @@ const CarouselSizeDropdown: React.FC<CarouselSizeDropdownProps> = ({
         <Button
           variant="outline"
           size="sm"
-          className={`h-8 px-2 bg-gradient-to-t from-cardBackground to-background text-textColor/85 hover:bg-primary/50 border border-borderColor ${className}`}
+          className={`h-8 px-2 bg-cardBackground text-textColor/85 hover:bg-primary/50 border border-borderColor ${className}`}
         >
           <div className="flex items-center space-x-1.5">
             <div className="flex">
