@@ -12,7 +12,7 @@ interface GeneralInfoProps {
 }
 
 const GeneralInfo: React.FC<GeneralInfoProps> = ({
-  headshot = "images/headshot.png",
+  headshot = "/creator.jpg",
   name,
   handle,
   color2,
@@ -40,7 +40,7 @@ const GeneralInfo: React.FC<GeneralInfoProps> = ({
             src={
               headshot === "/creator.jpg"
                 ? "/creator.jpg"
-                : headshot
+                : `${headshot}`
             }
             alt="Headshot"
             style={{

@@ -73,7 +73,7 @@ const FeaturesSection = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="text-center">
           <motion.h2
-            className="text-4xl font-bold text-white mb-4"
+            className="text-4xl font-bold text-textColor mb-4"
             initial={{ y: -20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 0.2, duration: 0.5 }}
@@ -81,7 +81,7 @@ const FeaturesSection = () => {
             Powerful Features
           </motion.h2>
           <motion.p
-            className="text-xl text-gray-300 max-w-2xl mx-auto"
+            className="text-xl text-textColor/70 max-w-2xl mx-auto"
             initial={{ y: -20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 0.4, duration: 0.5 }}
@@ -106,10 +106,10 @@ const FeaturesSection = () => {
                     className: "w-6 h-6 text-primary",
                   })}
                 </div>
-                <h3 className="text-xl font-semibold text-white mb-2">
+                <h3 className="text-xl font-semibold text-textColor mb-2">
                   {feature.name}
                 </h3>
-                <p className="text-gray-300">{feature.description}</p>
+                <p className="text-textColor/70">{feature.description}</p>
               </div>
             </motion.div>
           ))}

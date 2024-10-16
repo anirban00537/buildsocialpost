@@ -6,51 +6,11 @@ import {
   BackgroundColors,
   LayoutSettings,
 } from "@/types";
-import { initialSlides } from "@/lib/data";
+import { initialSlides, initialCarousel } from "@/lib/data";
 import { sharedElements } from "@/lib/coreConstants";
 
-const initialState: CarouselState = {
-  name: "Default Carousel",
-  slides: initialSlides,
-  background: {
-    color1: "#081022", // Very Dark Blue
-    color2: "#F7FAFC", // Almost White
-    color3: "#2D3748", // Dark Grayish Blue
-    color4: "#63B3ED", // Bright Blue
-  },
-  sharedSelectedElement: {
-    id: sharedElements[0].id,
-    opacity: 0.099,
-  },
-  titleTextSettings: {
-    alignment: "left",
-    fontSize: 48,
-    fontStyle: "normal",
-    fontWeight: "bold",
-  },
-  descriptionTextSettings: {
-    alignment: "left",
-    fontSize: 16,
-    fontStyle: "normal",
-    fontWeight: "normal",
-  },
-  taglineTextSettings: {
-    alignment: "left",
-    fontSize: 16,
-    fontStyle: "normal",
-    fontWeight: "normal",
-  },
-  layout: {
-    height: 600,
-    width: 600,
-    pattern: 7,
-    backgroundOpacity: 0.02,
-    gradient: true,
-  },
-  fontFamily: "poppins",
-  globalBackground: null,
-};
-
+const initialState: CarouselState = initialCarousel;
+  
 type UpdatePayload = {
   key: keyof CarouselState;
   value: any;
@@ -60,6 +20,9 @@ const carouselSlice = createSlice({
   name: "carousel",
   initialState,
   reducers: {
+    setAllData: (state, action: PayloadAction<CarouselState>) => {
+      return action.payload;
+    },
     insertSlide: (state, action: PayloadAction<number>) => {
       const newSlide: Slide = {
         title: "New Slide",
@@ -165,49 +128,14 @@ const carouselSlice = createSlice({
     setGradient: (state, action: PayloadAction<boolean>) => {
       state.layout.gradient = action.payload;
     },
-    setBackgroundImageToAllSlides: (state, action: PayloadAction<string | null>) => {
+    setBackgroundImageToAllSlides: (
+      state,
+      action: PayloadAction<string | null>
+    ) => {
       state.globalBackground = action.payload;
     },
     setNewCarousel: (state) => {
-      state.name = "New Carousel";
-      state.slides = initialSlides;
-      state.background = {
-        color1: "#081022", // Very Dark Blue
-        color2: "#F7FAFC", // Almost White
-        color3: "#2D3748", // Dark Grayish Blue
-        color4: "#63B3ED", // Bright Blue
-      };
-      state.sharedSelectedElement = {
-        id: sharedElements[0].id,
-        opacity: 0.099,
-      };
-      state.titleTextSettings = {
-        alignment: "left",
-        fontSize: 48,
-        fontStyle: "normal",
-        fontWeight: "bold",
-      };
-      state.descriptionTextSettings = {
-        alignment: "left",
-        fontSize: 16,
-        fontStyle: "normal",
-        fontWeight: "normal",
-      };
-      state.taglineTextSettings = {
-        alignment: "left",
-        fontSize: 16,
-        fontStyle: "normal",
-        fontWeight: "normal",
-      };
-      state.layout = {
-        height: 600,
-        width: 600,
-        pattern: 1,
-        backgroundOpacity: 0.02,
-        gradient: true,
-      };
-      state.fontFamily = "poppins";
-      state.slides = initialSlides;
+      return initialCarousel;
     },
   },
 });
@@ -236,6 +164,7 @@ export const {
   removeBackgroundImage,
   setGradient,
   setBackgroundImageToAllSlides,
+  setAllData,
 } = carouselSlice.actions;
 
 export default carouselSlice.reducer;

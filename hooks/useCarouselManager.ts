@@ -2,7 +2,11 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/state/store";
 import { CarouselState, ResponseData } from "@/types";
-import { addAllSlides, setProperty } from "@/state/slice/carousel.slice";
+import {
+  addAllSlides,
+  setAllData,
+  setProperty,
+} from "@/state/slice/carousel.slice";
 import toast from "react-hot-toast";
 import { useQuery, useMutation, useQueryClient } from "react-query";
 import {
@@ -45,52 +49,32 @@ export const useCarouselManager = () => {
   const queryClient = useQueryClient();
   const carouselId = searchParams?.get("id");
   const { loggedin, userinfo } = useSelector((state: RootState) => state.user);
-  const {
-    titleTextSettings,
-    descriptionTextSettings,
-    taglineTextSettings,
-    layout,
-    background,
-    slides,
-    name,
-    sharedSelectedElement,
-    fontFamily,
-    globalBackground,
-  } = useSelector((state: RootState) => state.slides);
 
-  const { data: carouselsResponse, isLoading: isFetchingAll } =
-    useQuery<CarouselResponse>(
-      ["carousels", 1, 10], // Assuming default page and pageSize
-      () => getCarousels(1, 10),
-      {
-        enabled: loggedin,
-        onSuccess: (response) => {
-          console.log("carousels response", response);
-        },
-        onError: () => toast.error("Failed to fetch carousels"),
-      }
-    );
+  const CarouselData = useSelector((state: RootState) => state.slides);
+
+  const {
+    data: carouselsResponse,
+    isLoading: isFetchingAll,
+    refetch: refetchCarousels
+  } = useQuery<CarouselResponse>(
+    ["carousels", 1, 10], // Assuming default page and pageSize
+    () => getCarousels(1, 10),
+    {
+      enabled: loggedin,
+      onSuccess: (response) => {
+        console.log("carousels response", response);
+      },
+      onError: () => toast.error("Failed to fetch carousels"),
+    }
+  );
 
   const { mutate: createOrUpdateCarousel, isLoading: isCreatingOrUpdating } =
     useMutation<CarouselResponse, Error, { newName?: string; id?: string }>(
       async ({ newName, id }) => {
-        const carouselData: CarouselState = {
-          name: newName || name,
-          titleTextSettings,
-          descriptionTextSettings,
-          taglineTextSettings,
-          layout,
-          background,
-          slides,
-          sharedSelectedElement,
-          fontFamily,
-          globalBackground,
-        };
-
         if (id) {
-          return updateCarousel({ id, ...carouselData });
+          return updateCarousel({ id, data: CarouselData });
         } else {
-          return createCarousel(carouselData);
+          return createCarousel({ data: CarouselData });
         }
       },
       {
@@ -98,7 +82,7 @@ export const useCarouselManager = () => {
           console.log("Response from create/update:", response);
           if (response && response.success && response.data) {
             let newId = response.data.id;
-            if (typeof response.data === 'object' && 'items' in response.data) {
+            if (typeof response.data === "object" && "items" in response.data) {
               newId = response.data.items[0]?.id;
             }
             if (newId) {
@@ -145,51 +129,8 @@ export const useCarouselManager = () => {
     {
       enabled: !!carouselId,
       onSuccess: (data: any) => {
-        if (data) {
-          console.log(data.data.slides, "data.slides");
-          dispatch(setProperty({ key: "name", value: data.data.name }));
-          dispatch(addAllSlides(data.data.slides));
-          dispatch(
-            setProperty({ key: "background", value: data.data.background })
-          );
-          dispatch(
-            setProperty({
-              key: "titleTextSettings",
-              value: data.data.titleTextSettings,
-            })
-          );
-          dispatch(
-            setProperty({
-              key: "descriptionTextSettings",
-              value: data.data.descriptionTextSettings,
-            })
-          );
-          dispatch(
-            setProperty({
-              key: "taglineTextSettings",
-              value: data.data.taglineTextSettings,
-            })
-          );
-          dispatch(setProperty({ key: "layout", value: data.data.layout }));
-          dispatch(
-            setProperty({
-              key: "sharedSelectedElement",
-              value: data.data.sharedSelectedElement,
-            })
-          );
-          dispatch(
-            setProperty({
-              key: "fontFamily",
-              value: data.data.fontFamily || "poppins",
-            })
-          );
-          dispatch(
-            setProperty({
-              key: "globalBackground",
-              value: data.data.globalBackground || null,
-            })
-          );
-        }
+        console.log(data.data.data, "data.slides");
+        dispatch(setAllData(data.data.data));
       },
       onError: (error: Error) => {
         toast.error("Failed to fetch carousel details");
@@ -211,5 +152,6 @@ export const useCarouselManager = () => {
     isAuthenticated: loggedin,
     createOrUpdateCarousel,
     isCreatingOrUpdating,
+    refetchCarousels, // Add this to the return object
   };
 };

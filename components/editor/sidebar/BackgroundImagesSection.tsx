@@ -36,7 +36,7 @@ const BackgroundImagesSection = () => {
         </h2>
       </div>
 
-      <div className="grid grid-cols-6 gap-2">
+      <div className="grid grid-cols-3 gap-2">
         {backgroundImages.map((imageUrl, index) => (
           <div
             key={index}
@@ -54,7 +54,7 @@ const BackgroundImagesSection = () => {
       </div>
       <Button
         size="xs"
-        className="text-textColor mt-6 hover:text-textColor h-8 w-full bg-background/50 backdrop-blur-sm border border-white/55"
+        className="text-textColor mt-6 hover:text-[#fff] h-8 w-full bg-background/50 backdrop-blur-sm border border-borderColor hover:border-borderColor/80 "
         onClick={() => dispatch(setBackgroundImageToAllSlides(null))}
       >
         Remove

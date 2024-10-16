@@ -27,10 +27,9 @@ const LoginPage = () => {
             <h1 className="text-4xl font-bold mb-6 text-center bg-gradient-to-r from-blue-400 to-primary text-transparent bg-clip-text">
               <Image
                 src="/logo.svg"
-                height={100}
-                width={100}
+                height={200}
+                width={200}
                 alt="buildcarousel.com"
-                className="mx-auto mb-4"
               />
               BuildCarousel
             </h1>

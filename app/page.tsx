@@ -60,8 +60,8 @@ const Page = () => {
             <a href="javascript:void(0)">
               <Image
                 src="/logo.svg"
-                height={168}
-                width={168}
+                height={200}
+                width={200}
                 alt="buildcarousel.com"
               />
             </a>
@@ -116,14 +116,7 @@ const Page = () => {
                 </li>
               ))} */}
             </div>
-            <li className="order-2 py-5 md:py-0">
-              {/* <a
-                href="https://www.linkedin.com/in/anirban00537/"
-                className="group relative inline-flex items-center justify-center py-3 px-6 text-sm text-white font-medium bg-[#1e2530] rounded-full hover:bg-[#2a3441] transition-all duration-300 shadow-lg hover:shadow-xl overflow-hidden"
-              >
-                Hire Me � For Your next project
-              </a> */}
-            </li>
+            <li className="order-2 py-5 md:py-0"></li>
           </ul>
         </nav>
 
@@ -147,10 +140,9 @@ const Page = () => {
           <div className="space-y-6 sm:max-w-md sm:mx-auto sm:text-center">
             <Image
               src="/logo.svg"
-              className="w-32 sm:mx-auto"
-              alt="Logo"
-              width={128}
-              height={128}
+              height={200}
+              width={200}
+              alt="buildcarousel.com"
             />
             <p className="text-textColor/80">
               Create professional carousels easily with our AI-powered tool.

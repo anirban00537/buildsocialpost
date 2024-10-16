@@ -30,10 +30,10 @@ const SubscriptionInfo = () => {
           <Button
             variant="outline"
             size="xs"
-            className="ml-auto flex items-center gap-2 px-4 py-2 text-sm font-bold text-white bg-background transition-all duration-300 border-2 border-yellow-600 hover:bg-background/10 rounded-full shadow-xl ease-in-out transform hover:scale-105   relative overflow-hidden group"
+            className="ml-auto flex items-center gap-2 px-4 py-2 text-sm font-normal text-textColor hover:text-textColor/80 bg-background transition-all duration-300 border-2 border-yellow-600 hover:bg-background/10 rounded-full ease-in-out transform hover:scale-105   relative overflow-hidden group"
           >
             <span className="absolute inset-0 bg-white opacity-10 transform rotate-45 translate-x-3 -translate-y-2 group-hover:translate-x-3 group-hover:translate-y-2 transition-all duration-500 ease-out"></span>
-            <img src="/premium.svg" className="w-5 h-5 filter drop-shadow-md" />
+            <img src="/premium.svg" className="w-5 h-5 " />
             <span className="hidden sm:inline relative z-10">
               Upgrade to Premium
             </span>

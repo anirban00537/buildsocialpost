@@ -48,10 +48,9 @@ const LoginModal = ({
           <div className="flex flex-col items-center w-full">
             <Image
               src="/logo.svg"
-              height={80}
-              width={80}
+              height={200}
+              width={200}
               alt="buildcarousel.com"
-              className="mb-4"
             />
             <p className="mb-6 text-gray-300 text-center">
               Sign in and start creating your own carousels with

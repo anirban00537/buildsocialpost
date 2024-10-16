@@ -5,6 +5,12 @@ export interface Purchase {
   status: string;
   createdAt: string;
 }
+export interface BackgroundColors {
+  color1: string; // Background Color
+  color2: string; // Text Color
+  color3: string; // Tint Color
+  color4: string; // Accent Color
+}
 
 export interface Subscription {
   userId: string;

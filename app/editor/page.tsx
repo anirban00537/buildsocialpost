@@ -2,8 +2,8 @@
 import EditorBody from "@/components/editor/body/body.editor";
 import React, { Suspense, useState, useEffect } from "react";
 import MainSidebar from "@/components/editor/sidebar/main.sidebar";
-import EditorNavbar from "@/components/editor/navbar/navbar.editor";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import EditorNavbar from "@/components/editor/navbar/EditorNavbar";
 
 function Dashboard() {
   const [isCollapsed, setIsCollapsed] = useState(false);

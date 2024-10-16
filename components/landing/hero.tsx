@@ -116,7 +116,7 @@ const Hero = () => {
                 "group rounded-full border border-borderColor bg-cardBackground text-base !text-textColor transition-all ease-in hover:cursor-pointer hover:bg-neutral-200 dark:border-white/5 dark:bg-neutral-900 dark:hover:bg-neutral-800"
               )}
             >
-              <AnimatedShinyText className="inline-flex   items-center justify-center px-4 py-1 transition ease-out hover:text-neutral-600 hover:duration-300 hover:dark:text-neutral-400">
+              <AnimatedShinyText className="inline-flex text-textColor   items-center justify-center px-4 py-1 transition ease-out hover:text-neutral-600 hover:duration-300 hover:dark:text-neutral-400">
                 <span>✨ Create Stunning Viral Carousels with AI</span>
                 <ArrowRightIcon className="ml-1 size-3 transition-transform duration-300 ease-in-out group-hover:translate-x-0.5" />
               </AnimatedShinyText>
@@ -127,10 +127,10 @@ const Hero = () => {
             style={{ lineHeight: "1.2" }}
             variants={textVariants}
           >
-            <span className="inline-block text-transparent bg-clip-text bg-gradient-to-b from-gray-100 via-gray-300 to-gray-600">
+            <span className="inline-block text-transparent bg-clip-text bg-gradient-to-b from-gray-600 via-gray-500 to-gray-900">
               Create Viral{" "}
             </span>
-            <div className="text-transparent bg-clip-text bg-gradient-to-b from-gray-100 via-gray-300 to-gray-600">
+            <div className="text-transparent bg-clip-text bg-gradient-to-b from-gray-600 via-gray-500 to-gray-900">
               <motion.span
                 className=" text-transparent bg-clip-text bg-primary"
                 key={currentPlatform}
@@ -141,7 +141,7 @@ const Hero = () => {
                 {platforms[currentPlatform].name}
               </motion.span>{" "}
             </div>
-            <div className="inline-block text-transparent bg-clip-text bg-gradient-to-b from-gray-100 via-gray-300 to-gray-600">
+            <div className="inline-block text-transparent bg-clip-text bg-gradient-to-b from-gray-600 via-gray-500 to-gray-900">
               Carousels With AI
             </div>
           </motion.h2>
@@ -182,7 +182,7 @@ const Hero = () => {
               href="https://www.linkedin.com/in/anirban00537/"
               className="bg-background/50 backdrop-blur-sm h-[59px] ml-5 w-32 rounded-full border-4 border-borderColor flex items-center justify-center px-4 py-2 text-textColor transition-all duration-300 hover:scale-105"
             >
-              <div className="text-white">Hire Me</div>
+              <div className="text-textColor">Hire Me</div>
             </a>
           </div>
         </motion.div>

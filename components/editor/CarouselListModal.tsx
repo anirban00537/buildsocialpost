@@ -11,6 +11,15 @@ interface CarouselListModalProps {
   onClose: () => void;
 }
 
+interface CarouselItem {
+  id: string;
+  userId: number;
+  data: {
+    name: string;
+    // ... other properties
+  };
+}
+
 const CarouselListModal: FC<CarouselListModalProps> = ({ isOpen, onClose }) => {
   const router = useRouter();
 
@@ -20,10 +29,16 @@ const CarouselListModal: FC<CarouselListModalProps> = ({ isOpen, onClose }) => {
     deleteCarousel,
     isDeleting,
     isFetchingAll,
-    isAuthenticated,
+    refetchCarousels,
   } = useCarouselManager();
 
   const [currentPage, setCurrentPage] = useState(1);
+
+  useEffect(() => {
+    if (isOpen) {
+      refetchCarousels();
+    }
+  }, [isOpen, refetchCarousels]);
 
   useEffect(() => {
     if (pagination) {
@@ -32,8 +47,8 @@ const CarouselListModal: FC<CarouselListModalProps> = ({ isOpen, onClose }) => {
   }, [pagination]);
 
   const handleOpenCarousel = useCallback(
-    (carousel: any) => {
-      router.push(`?id=${carousel?.id}`);
+    (carousel: CarouselItem) => {
+      router.push(`?id=${carousel.id}`);
       onClose();
     },
     [router, onClose]
@@ -44,18 +59,18 @@ const CarouselListModal: FC<CarouselListModalProps> = ({ isOpen, onClose }) => {
       try {
         await deleteCarousel(carouselId);
         toast.success("Carousel deleted successfully");
+        refetchCarousels(); // Refetch after deletion
       } catch (error) {
         console.error("Error deleting carousel:", error);
         toast.error("Failed to delete carousel");
       }
     },
-    [deleteCarousel]
+    [deleteCarousel, refetchCarousels]
   );
 
   const handlePageChange = useCallback((newPage: number) => {
     setCurrentPage(newPage);
-    // Here you would typically refetch the carousels with the new page number
-    // This depends on how you've set up your query in useCarouselManager
+    // Implement pagination logic here if needed
   }, []);
 
   return (
@@ -72,13 +87,13 @@ const CarouselListModal: FC<CarouselListModalProps> = ({ isOpen, onClose }) => {
               <p>No carousels found</p>
             </div>
           ) : (
-            carousels.map((carousel) => (
+            carousels.map((carousel: any) => (
               <div
                 key={carousel.id}
                 className="flex justify-between items-center p-2 bg-opacity-60 bg-cardBackground hover:bg-opacity-70 rounded-lg transition-all duration-200"
               >
                 <span className="text-white ml-5">
-                  {carousel.name || "Unnamed Carousel"}
+                  {carousel.data.name || "Unnamed Carousel"}
                 </span>
                 <div className="flex gap-2">
                   <Button
