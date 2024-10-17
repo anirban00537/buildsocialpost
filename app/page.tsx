@@ -62,7 +62,7 @@ const Page = () => {
                 src="/logo.svg"
                 height={200}
                 width={200}
-                alt="buildcarousel.com"
+                alt="buildsocialpost.com"
               />
             </a>
             <button
@@ -142,7 +142,7 @@ const Page = () => {
               src="/logo.svg"
               height={200}
               width={200}
-              alt="buildcarousel.com"
+              alt="buildsocialpost.com"
             />
             <p className="text-textColor/80">
               Create professional carousels easily with our AI-powered tool.

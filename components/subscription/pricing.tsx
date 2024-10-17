@@ -1,9 +1,8 @@
 "use client";
-import axios from "axios";
 import React, { useState } from "react";
-import { useRouter } from "next/navigation";
-import { useSession } from "next-auth/react";
-import { signIn } from "next-auth/react";
+import { createCheckout } from "@/services/subscription";
+import { useSelector } from "react-redux";
+import { RootState } from "@/state/store";
 
 const plan = {
   name: "Pro plan",
@@ -23,22 +22,26 @@ const plan = {
 const Pricing = () => {
   const [loading, setLoading] = useState(false);
   const [selectedPlan, setSelectedPlan] = useState("yearly");
-  const router = useRouter();
-  const { data: session, status } = useSession();
+  const { loggedin } = useSelector((state: RootState) => state.user);
 
   const buyProduct = async () => {
     setLoading(true);
-    if (session) {
+    if (loggedin) {
       try {
         const productId =
           selectedPlan === "monthly"
             ? process.env.NEXT_PUBLIC_MONTHLY_PRODUCT_ID
             : process.env.NEXT_PUBLIC_YEARLY_PRODUCT_ID;
-        const response = await axios.post("/api/subscriptions/purchase-product", {
+
+        if (!productId) {
+          throw new Error("Product ID is not defined");
+        }
+
+        const response = await createCheckout({
           productId,
+          redirectUrl: window.location.origin,
         });
-        console.log(response, "response");
-        window.open(response.data.checkoutUrl, "_blank", "noopener,noreferrer");
+        window.open(response.checkoutUrl, "_blank", "noopener,noreferrer");
       } catch (error) {
         console.error("Error purchasing product:", error);
         alert(
@@ -48,7 +51,6 @@ const Pricing = () => {
         setLoading(false);
       }
     } else {
-      signIn(); // Redirect to sign-in page
       setLoading(false);
     }
   };

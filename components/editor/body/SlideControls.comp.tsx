@@ -69,7 +69,7 @@ const SlideControls: React.FC<SlideControlsProps> = ({
   );
 
   return (
-    <div className="flex items-center justify-between w-full px-4 py-3 bg-cardBackground/80 backdrop-blur-sm border border-borderColor rounded-lg shadow-md">
+    <div className="flex items-center justify-between w-full px-4 py-3 bg-cardBackground/80 backdrop-blur-sm border rounded-t-lg ">
       <div className="flex items-center space-x-2">
         <ControlButton
           onClick={() => handleInsertSlide(index)}

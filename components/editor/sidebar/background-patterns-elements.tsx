@@ -32,10 +32,10 @@ const BackgroundPatternsAndElements = () => {
         <h3 className="text-sm font-semibold text-textColor/80">Pattern</h3>
         <div className="grid grid-cols-4 gap-2">
           <div
-            className={`flex justify-center items-center p-2 rounded-md ${
+            className={`flex justify-center items-center border p-2 rounded-md ${
               pattern === 0
-                ? "bg-blue-200 border border-blue-500"
-                : "bg-gray-300"
+                ? "bg-primary/15 border border-primary"
+                : ""
             }`}
             onClick={() => handlePatternChange(0)}
           >
@@ -44,10 +44,10 @@ const BackgroundPatternsAndElements = () => {
           {backgroundPatterns.map((patternItem) => (
             <div
               key={patternItem.id}
-              className={`flex justify-center items-center p-2 rounded-md ${
+              className={`flex justify-center items-center  border rounded-md ${
                 pattern === patternItem.id
-                  ? "bg-blue-200 border border-blue-500"
-                  : "bg-gray-300"
+                  ? "bg-primary/15 border border-primary"
+                  : ""
               }`}
               onClick={() => handlePatternChange(patternItem.id)}
             >
@@ -79,17 +79,17 @@ const BackgroundPatternsAndElements = () => {
         </div>
       </section>
 
-   
-
       {/* Shared Elements Section */}
       <section className="space-y-4">
-        <h3 className="text-sm font-semibold text-textColor/80">Shared Elements</h3>
+        <h3 className="text-sm font-semibold text-textColor/80">
+          Shared Elements
+        </h3>
         <div className="grid grid-cols-4 gap-2">
           <div
-            className={`flex justify-center items-center p-2 rounded-md ${
+            className={`flex justify-center items-center p-2 border  rounded-md ${
               sharedSelectedElement?.id === 0
-                ? "bg-blue-200 border border-blue-500"
-                : "bg-gray-300"
+                ? "border border-primary"
+                : "bg-white "
             }`}
             onClick={() => {
               dispatch(setSharedSelectedElementId(0));
@@ -101,10 +101,10 @@ const BackgroundPatternsAndElements = () => {
           {sharedElements.map((element) => (
             <div
               key={element?.id}
-              className={`flex justify-center items-center p-2 rounded-md ${
+              className={`flex justify-center items-center p-2 rounded-md border ${
                 sharedSelectedElement?.id === element?.id
-                  ? "bg-blue-200 border border-blue-500"
-                  : "bg-gray-300"
+                  ? "bg-primary/15 border border-primary"
+                  : ""
               }`}
               onClick={() => {
                 dispatch(setSharedSelectedElementId(element.id));

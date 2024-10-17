@@ -72,9 +72,6 @@ const CarouselEditor: React.FC = () => {
                 style={{
                   width: layout.width + "px",
                   height: layout.height + "px",
-                  backgroundImage: `url(${slide.backgroundImage || ""})`,
-                  backgroundSize: "cover",
-                  backgroundPosition: "center",
                 }}
               >
                 <SlideControls

@@ -66,8 +66,8 @@ const ImageUploadModal: React.FC<ImageUploadModalProps> = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="w-[800px] max-h-[85vh] overflow-y-auto bg-opacity-80 bg-background backdrop-filter backdrop-blur-md border border-borderColor rounded-lg text-white">
-        <h2 className="text-lg font-semibold mb-4 text-white">
+      <DialogContent className="w-[800px] max-h-[85vh] overflow-y-auto bg-opacity-80 bg-background backdrop-filter backdrop-blur-md border border-borderColor rounded-lg text-textColor">
+        <h2 className="text-lg font-semibold mb-4 text-textColor">
           Image Management
         </h2>
 
@@ -78,7 +78,7 @@ const ImageUploadModal: React.FC<ImageUploadModalProps> = ({
         ) : (
           <>
             <div className="mb-4">
-              <p className="text-white">
+              <p className="text-textColor">
                 Total Usage: {totalUsage.toFixed(2)} MB / {MAX_STORAGE_MB} MB
               </p>
               <progress
@@ -97,7 +97,7 @@ const ImageUploadModal: React.FC<ImageUploadModalProps> = ({
               }`}
             >
               <input {...getInputProps()} />
-              <p className="text-center text-white">
+              <p className="text-center text-textColor">
                 {uploadLoading
                   ? "Uploading..."
                   : "Drag & drop images here, or click to select images (max 100 MB)"}
@@ -105,9 +105,11 @@ const ImageUploadModal: React.FC<ImageUploadModalProps> = ({
             </div>
 
             {isLoading ? (
-              <p className="mt-4 text-center text-white">Loading images...</p>
+              <p className="mt-4 text-center text-textColor">
+                Loading images...
+              </p>
             ) : currentImages.length === 0 ? (
-              <p className="mt-4 text-center text-white">
+              <p className="mt-4 text-center text-textColor">
                 No images uploaded yet.
               </p>
             ) : (
