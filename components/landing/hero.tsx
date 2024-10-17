@@ -24,16 +24,6 @@ const textVariants = {
   visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } },
 };
 
-const videoVariants = {
-  hidden: { opacity: 0, scale: 0.8, rotate: -5 },
-  visible: {
-    opacity: 1,
-    scale: 1,
-    rotate: 0,
-    transition: { duration: 1, ease: "easeOut" },
-  },
-};
-
 const people = [
   {
     id: 1,
@@ -105,7 +95,7 @@ const Hero = () => {
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
     >
-      <div className=" flex flex-col items-center text-center px-4 md:px-8">
+      <div className="flex flex-col items-center text-center px-4 md:px-8">
         <motion.div
           className="space-y-8 w-full"
           variants={textContainerVariants}
@@ -172,7 +162,7 @@ const Hero = () => {
           </motion.div> */}
           <div className="z-10 flex items-center justify-center">
             <Link href="/editor">
-              <ShimmerButton className="shadow-2xl ">
+              <ShimmerButton className="shadow-2xl " background="#3369E7">
                 <span className="whitespace-pre-wrap text-center text-sm font-medium leading-none tracking-tight text-white dark:from-white dark:to-slate-900/10 lg:text-lg">
                   Create Carousel
                 </span>
