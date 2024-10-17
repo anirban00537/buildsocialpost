@@ -16,27 +16,25 @@ const LandingNavbar = () => {
     <nav className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-sm shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
-          <div className="flex items-center">
-            <Link href="/" className="flex-shrink-0">
-              <Image
-                src="/logo.svg"
-                height={150}
-                width={150}
-                alt="buildsocialpost.com"
-              />
-            </Link>
-            <div className="hidden md:block ml-10">
-              <div className="flex items-baseline space-x-4">
-                {navigation.map((item, idx) => (
-                  <a
-                    key={idx}
-                    href={item.path}
-                    className="text-textColor hover:text-primary px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200"
-                  >
-                    {item.title}
-                  </a>
-                ))}
-              </div>
+          <Link href="/" className="flex-shrink-0">
+            <Image
+              src="/logo.svg"
+              height={150}
+              width={150}
+              alt="buildsocialpost.com"
+            />
+          </Link>
+          <div className="hidden md:flex flex-grow items-center justify-center">
+            <div className="flex items-center space-x-4">
+              {navigation.map((item, idx) => (
+                <a
+                  key={idx}
+                  href={item.path}
+                  className="text-textColor hover:text-primary px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200"
+                >
+                  {item.title}
+                </a>
+              ))}
             </div>
           </div>
           <div className="hidden md:block">

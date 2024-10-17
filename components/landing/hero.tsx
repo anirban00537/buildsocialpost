@@ -1,12 +1,12 @@
 import Link from "next/link";
 import React from "react";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion } from "framer-motion";
 import { AnimatedTooltip } from "../ui/animated-tooltip";
-import { ArrowRight, ArrowRightIcon, Sparkles } from "lucide-react";
-import Image from "next/image";
+import { ArrowRightIcon } from "lucide-react";
 import AnimatedShinyText from "../magicui/animated-shiny-text";
 import { cn } from "@/lib/utils";
 import ShimmerButton from "../magicui/shimmer-button";
+import HeroVideoDialog from "../ui/hero-video-dialog";
 
 const textContainerVariants = {
   hidden: { opacity: 0 },
@@ -71,15 +71,6 @@ const platforms = [
 
 const Hero = () => {
   const [currentPlatform, setCurrentPlatform] = React.useState(0);
-  const demoRef = React.useRef(null);
-  const { scrollYProgress } = useScroll({
-    target: demoRef,
-    offset: ["start end", "end start"],
-  });
-
-  // Adjusted scale range to prevent overflow
-  const scale = useTransform(scrollYProgress, [0, 1], [0.9, 1.1]);
-  const opacity = useTransform(scrollYProgress, [0, 0.5], [0.6, 1]);
 
   React.useEffect(() => {
     const interval = setInterval(() => {
@@ -144,28 +135,12 @@ const Hero = () => {
             generate content, customize designs, and create stunning carousels
             in minutes.
           </motion.p>
-          {/* <motion.div
-            className="flex flex-col sm:flex-row items-center justify-center gap-4"
-            variants={textVariants}
-          >
-            <Link
-              href="/editor"
-              className="group relative inline-flex items-center justify-center py-3 px-6 text-sm text-white font-medium bg-[#1e2530] rounded-full hover:bg-[#2a3441] transition-all duration-300 shadow-lg hover:shadow-xl overflow-hidden"
-            >
-              <span className="relative z-10">
-                It's free. Sign up now
-                <ArrowRight className="inline-block ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
-              </span>
-              <span className="absolute inset-0 overflow-hidden rounded-full">
-                <span className="absolute inset-0 rounded-full bg-gradient-to-r from-primary via-primary/50 to-primary bg-[length:200%_100%] animate-gradient-x" />
-              </span>
-            </Link>
-          </motion.div> */}
+
           <div className="z-10 flex items-center justify-center">
             <Link href="/editor">
               <ShimmerButton className="shadow-2xl " background="#3369E7">
                 <span className="whitespace-pre-wrap text-center text-sm font-medium leading-none tracking-tight text-white dark:from-white dark:to-slate-900/10 lg:text-lg">
-                  Create Carousel
+                  Create Free Carousel
                 </span>
               </ShimmerButton>
             </Link>
@@ -185,6 +160,22 @@ const Hero = () => {
           <div className="flex flex-wrap justify-center gap-4">
             <AnimatedTooltip items={people} />
           </div>
+        </div>
+        <div className="relative max-w-7xl mx-auto mt-12">
+          <HeroVideoDialog
+            className="dark:hidden block"
+            animationStyle="from-center"
+            videoSrc="https://www.youtube.com/embed/4pgUovPcVBM?si=WW-DhesYVKX3b8J6"
+            thumbnailSrc="/demo.png"
+            thumbnailAlt="Hero Video"
+          />
+          <HeroVideoDialog
+            className="hidden dark:block"
+            animationStyle="from-center"
+            videoSrc="https://www.youtube.com/embed/4pgUovPcVBM?si=WW-DhesYVKX3b8J6"
+            thumbnailSrc="/demo.png"
+            thumbnailAlt="Hero Video"
+          />
         </div>
       </div>
     </motion.section>

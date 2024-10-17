@@ -76,7 +76,10 @@ const CarouselSizeDropdown: React.FC<CarouselSizeDropdownProps> = ({
 
   const renderIcons = (icons: typeof FaInstagram[]) => {
     return icons.map((Icon, index) => (
-      <Icon key={index} className="w-3 h-3 text-textColor/85" />
+      <Icon 
+        key={index} 
+        className="w-3 h-3 mr-1 transition-colors duration-200 text-black group-hover:text-white" 
+      />
     ));
   };
 
@@ -88,10 +91,10 @@ const CarouselSizeDropdown: React.FC<CarouselSizeDropdownProps> = ({
         <Button
           variant="outline"
           size="sm"
-          className={`h-8 px-2 bg-cardBackground text-textColor/85 hover:bg-primary/50 border border-borderColor ${className}`}
+          className={`h-8 px-2 bg-cardBackground text-textColor/85 hover:bg-primary/50 hover:text-white border border-borderColor group ${className}`}
         >
           <div className="flex items-center space-x-1.5">
-            <div className="flex">
+            <div className="flex space-x-1">
               {renderIcons(selectedSize.icons)}
             </div>
             <span className="text-xs font-medium">
@@ -101,7 +104,7 @@ const CarouselSizeDropdown: React.FC<CarouselSizeDropdownProps> = ({
           </div>
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-64 p-2 bg-cardBackground border border-borderColor">
+      <DropdownMenuContent className="w-72 p-2 bg-cardBackground border border-borderColor">
         <DropdownMenuLabel className="text-xs font-semibold bg-cardBackground text-textColor/85 mb-2">
           Choose size
         </DropdownMenuLabel>
@@ -110,22 +113,24 @@ const CarouselSizeDropdown: React.FC<CarouselSizeDropdownProps> = ({
             <DropdownMenuItem
               key={size.ratio}
               onClick={() => handleSizeChange(size.width, size.height)}
-              className={`flex items-center py-1.5 px-2 hover:bg-primary/10 rounded-md cursor-pointer transition-colors duration-200 ${
+              className={`flex items-center py-1.5 px-2 hover:bg-primary/10 rounded-md cursor-pointer transition-colors duration-200 group ${
                 size.width === width && size.height === height ? 'bg-primary/20' : ''
               }`}
             >
               <div className="flex-1 flex items-center">
-                <div className="w-12 flex">
+                <div className="w-16 flex space-x-1">
                   {renderIcons(size.icons)}
                 </div>
                 <div className="flex flex-col ml-2">
-                  <span className="font-medium text-xs text-textColor">{size.name}</span>
-                  <span className="text-[10px] text-textColor/70">
+                  <span className="font-medium text-xs text-textColor group-hover:text-white transition-colors duration-200">
+                    {size.name}
+                  </span>
+                  <span className="text-[10px] text-textColor/70 group-hover:text-white/70 transition-colors duration-200">
                     {size.width} x {size.height}px
                   </span>
                 </div>
               </div>
-              <span className="text-xs font-semibold text-textColor/85 ml-auto">
+              <span className="text-xs font-semibold text-textColor/85 group-hover:text-white transition-colors duration-200 ml-auto">
                 {size.ratio}
               </span>
             </DropdownMenuItem>
