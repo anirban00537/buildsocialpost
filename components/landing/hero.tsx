@@ -117,10 +117,11 @@ const Hero = () => {
             style={{ lineHeight: "1.2" }}
             variants={textVariants}
           >
-            <span className="inline-block text-transparent bg-clip-text bg-gradient-to-b from-gray-600 via-gray-500 to-gray-900">
-              Create Viral{" "}
-            </span>
-            <div className="text-transparent bg-clip-text bg-gradient-to-b from-gray-600 via-gray-500 to-gray-900">
+            <div className="inline-block text-transparent bg-clip-text bg-gradient-to-b from-gray-600 via-gray-500 to-gray-900">
+              Create Viral
+            </div>
+            <br />
+            <div className="inline-block">
               <motion.span
                 className={`text-transparent bg-clip-text bg-gradient-to-r ${platforms[currentPlatform].gradient}`}
                 key={currentPlatform}
@@ -130,9 +131,9 @@ const Hero = () => {
               >
                 {platforms[currentPlatform].name}
               </motion.span>{" "}
-            </div>
-            <div className="inline-block text-transparent bg-clip-text bg-gradient-to-b from-gray-600 via-gray-500 to-gray-900">
-              Carousels With AI
+              <span className="text-transparent bg-clip-text bg-gradient-to-b from-gray-600 via-gray-500 to-gray-900">
+                Carousels With AI
+              </span>
             </div>
           </motion.h2>
           <motion.p
