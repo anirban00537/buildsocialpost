@@ -6,7 +6,7 @@ const defaultUrl = process.env.VERCEL_URL
 
 export const metadata = {
   metadataBase: new URL(defaultUrl),
-  title: "BuildCarousel - Generate Linkedin, TikTok, Instagram Carousel",
+  title: "Buildsocialpost - Generate Linkedin, TikTok, Instagram Carousel",
   description:
     "Create and share your own LinkedIn, TikTok, Instagram and Facebook carousel with ease",
 };

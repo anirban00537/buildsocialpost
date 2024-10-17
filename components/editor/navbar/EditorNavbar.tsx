@@ -92,10 +92,10 @@ const EditorNavbar: React.FC = () => {
           <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-2 sm:space-y-0 sm:space-x-4 w-full">
             <Link href="/" className="flex-shrink-0">
               <Image
-                src="/logo.svg"
-                height={200}
-                width={200}
-                alt="buildcarousel.com"
+                src="/single-logo.svg"
+                height={40}
+                width={40}
+                alt="Buildsocialpost.com"
               />
             </Link>
 

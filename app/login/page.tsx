@@ -11,11 +11,6 @@ const LoginPage = () => {
 
   return (
     <div className="flex min-h-screen bg-gray-900 text-gray-100">
-      <div className="absolute inset-0 z-0">
-        <div className="absolute top-0 left-0 w-1/3 h-1/3 bg-gradient-to-br from-primary/30 to-transparent rounded-full filter blur-3xl"></div>
-        <div className="absolute top-1/4 right-0 w-1/4 h-1/4 bg-gradient-to-bl from-primary/30 to-transparent rounded-full filter blur-3xl"></div>
-        <div className="absolute bottom-0 left-1/4 w-1/3 h-1/3 bg-gradient-to-tr from-primary/30 to-transparent rounded-full filter blur-3xl"></div>
-      </div>
       <div className="w-full max-w-md mx-auto flex flex-col justify-center items-center z-10">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -29,13 +24,14 @@ const LoginPage = () => {
                 src="/logo.svg"
                 height={200}
                 width={200}
-                alt="buildcarousel.com"
+                alt="buildsocialpost.com"
               />
-              BuildCarousel
+              Buildsocialpost
             </h1>
           </Link>
           <p className="mb-8 text-gray-300 text-center">
-            Sign in and start creating your own carousels with BuildCarousel.com
+            Sign in and start creating your own carousels with
+            Buildsocialpost.com
           </p>
           <motion.div
             initial={{ y: 20, opacity: 0 }}

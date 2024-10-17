@@ -307,7 +307,7 @@ const SlideComponent: React.FC<SlideProps> = ({
         >
           Built with{" "}
           <a
-            href="https://buildcarousel.com"
+            href="https://buildsocialpost.com"
             style={{
               color: "inherit",
               textDecoration: "none",
@@ -317,7 +317,7 @@ const SlideComponent: React.FC<SlideProps> = ({
             onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.7")}
             onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}
           >
-            BuildCarousel.com
+            Buildsocialpost.com
           </a>
         </div>
       )}

@@ -105,9 +105,9 @@ const Hero = () => {
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
     >
-      <div className="max-w-7xl mx-auto flex flex-col items-center text-center px-4 md:px-8">
+      <div className=" flex flex-col items-center text-center px-4 md:px-8">
         <motion.div
-          className="space-y-8 sm:max-w-2xl lg:max-w-3xl"
+          className="space-y-8 w-full"
           variants={textContainerVariants}
         >
           <div className="z-10 flex  items-center justify-center">

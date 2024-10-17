@@ -43,18 +43,19 @@ const LoginModal = ({
             Login
           </DialogTitle>
           <DialogDescription className="sr-only">
-            Sign in and start creating your own carousels with BuildCarousel.com
+            Sign in and start creating your own carousels with
+            Buildsocialpost.com
           </DialogDescription>
           <div className="flex flex-col items-center w-full">
             <Image
               src="/logo.svg"
               height={200}
               width={200}
-              alt="buildcarousel.com"
+              alt="Buildsocialpost.com"
             />
             <p className="mb-6 text-gray-300 text-center">
               Sign in and start creating your own carousels with
-              BuildCarousel.com
+              Buildsocialpost.com
             </p>
             <motion.div
               initial={{ y: 20, opacity: 0 }}

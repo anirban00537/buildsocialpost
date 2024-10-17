@@ -78,7 +78,7 @@ const PricingSection = () => {
                 <motion.button
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
-                  className="w-full py-4 px-6 rounded-full font-semibold text-textColor bg-primary hover:bg-primary-dark transition-colors duration-300 text-lg flex items-center justify-center group"
+                  className="w-full py-4 px-6 rounded-full font-semibold text-white bg-primary hover:bg-primary-dark transition-colors duration-300 text-lg flex items-center justify-center group"
                 >
                   Get Started
                   <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />

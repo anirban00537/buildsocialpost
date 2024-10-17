@@ -18,7 +18,6 @@ import HowItWorksSection from "@/components/landing/howItWorks";
 import PlanSection from "@/components/landing/pricing";
 import Testimonial from "@/components/landing/testimonial";
 import Hero from "@/components/landing/hero";
-import { InfiniteCarouselsPreview } from "@/components/landing/carouselsPreview";
 
 const Page = () => {
   const navigation = [
@@ -49,11 +48,6 @@ const Page = () => {
 
   return (
     <div className="mx-auto inset-0 -z-10 h-full w-full bg-background">
-      <div className="absolute inset-0 z-0">
-        <div className="absolute top-0 left-0 w-1/3 h-1/3 bg-gradient-to-br from-primary/30 to-transparent rounded-full filter blur-3xl"></div>
-        <div className="absolute top-1/4 right-0 w-1/4 h-1/4 bg-gradient-to-bl from-primary/30 to-transparent rounded-full filter blur-3xl"></div>
-        <div className="absolute bottom-0 left-1/4 w-1/3 h-1/3 bg-gradient-to-tr from-primary/30 to-transparent rounded-full filter blur-3xl"></div>
-      </div>
       <div className="">
         <nav className="relative items-center pt-5 px-4 mx-auto max-w-screen-xl sm:px-8 md:flex md:space-x-6">
           <div className="flex justify-between items-center">
@@ -122,7 +116,6 @@ const Page = () => {
 
         <Hero />
       </div>
-      <InfiniteCarouselsPreview />
       <FeaturesSection />
       <HowItWorksSection />
       <PlanSection />
@@ -137,28 +130,19 @@ const Page = () => {
         </div>
 
         <div className="max-w-screen-xl mx-auto px-4 text-textColor md:px-8 relative z-10">
-          <div className="space-y-6 sm:max-w-md sm:mx-auto sm:text-center">
+          <div className="space-y-6 flex items-center justify-center flex-col sm:max-w-md sm:mx-auto sm:text-center">
             <Image
-              src="/logo.svg"
-              height={200}
-              width={200}
+              src="/single-logo.svg"
+              height={80}
+              width={80}
               alt="buildsocialpost.com"
             />
             <p className="text-textColor/80">
               Create professional carousels easily with our AI-powered tool.
             </p>
-            <div className="items-center gap-x-3 space-y-3 sm:flex sm:justify-center sm:space-y-0">
-              <a
-                href="#"
-                className="flex items-center justify-center gap-x-2 py-2 px-4 text-textColor hover:text-textColor font-medium duration-150 bg-cardBackground/30 backdrop-blur-md border border-borderColor/50 rounded-lg hover:shadow-lg transition-shadow"
-              >
-                Get access
-                <ChevronDown className="w-5 h-5" />
-              </a>
-            </div>
           </div>
 
-          <div className="mt-10 py-10 flex flex-col border-t text-center border-borderColor/30 items-center justify-center sm:flex">
+          {/* <div className="mt-10 py-10 flex flex-col border-t text-center border-borderColor/30 items-center justify-center sm:flex">
             <p className="text-textColor/70 text-xl font-semibold">
               Our Partners
             </p>
@@ -179,10 +163,10 @@ const Page = () => {
                 AlterOpen
               </a>
             </div>
-          </div>
+          </div> */}
           <div className="mt-10 py-10 border-t text-center border-borderColor/30">
             <p className="text-textColor/70">
-              © {new Date().getFullYear()} BuildCarousel.com. All rights
+              © {new Date().getFullYear()} Buildsocialpost.com. All rights
               reserved.
             </p>
           </div>
