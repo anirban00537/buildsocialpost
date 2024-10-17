@@ -64,9 +64,9 @@ const people = [
 ];
 
 const platforms = [
-  { name: "LinkedIn", gradient: "from-blue-600 to-blue-400" },
-  { name: "TikTok", gradient: "from-[#69C9D0] via-[#EE1D52] to-[#FFFFFF]" },
-  { name: "Instagram", gradient: "from-yellow-400 via-pink-500 to-purple-500" },
+  { name: "LinkedIn", gradient: "from-[#0077B5] to-[#0A66C2]" },
+  { name: "TikTok", gradient: "from-[#00F2EA] to-[#FF0050]" },
+  { name: "Instagram", gradient: "from-[#833AB4] via-[#FD1D1D] to-[#FCAF45]" },
 ];
 
 const Hero = () => {
@@ -122,7 +122,7 @@ const Hero = () => {
             </span>
             <div className="text-transparent bg-clip-text bg-gradient-to-b from-gray-600 via-gray-500 to-gray-900">
               <motion.span
-                className=" text-transparent bg-clip-text bg-primary"
+                className={`text-transparent bg-clip-text bg-gradient-to-r ${platforms[currentPlatform].gradient}`}
                 key={currentPlatform}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
