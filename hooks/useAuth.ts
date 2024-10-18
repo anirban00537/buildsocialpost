@@ -54,7 +54,7 @@ export const useAuth = () => {
     ResponseData,
     Error
   >(["user"], profile, {
-    enabled: !loggedin,
+    enabled: loggedin,
     onSuccess: (data: ResponseData) => {
       dispatch(setUser(data.data as UserInfo));
     },
