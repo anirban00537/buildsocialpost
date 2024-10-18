@@ -259,7 +259,7 @@ sudo systemctl reload nginx
 ```
 cd /var/www/
 mkdir api.buildsocialpost.com && cd api.buildsocialpost.com
-git clone -b development https://gitlab.com/itech-repo/cpocket-exchange/codex-ai-backend.git .
+git clone https://github.com/anirban00537/buildsocialpost-nestjs.git .
 ```
 
 2. Set up environment variables:
@@ -319,7 +319,7 @@ curl localhost:3000
 ```
 cd /var/www/
 mkdir buildsocialpost.com && cd buildsocialpost.com
-git clone -b development https://gitlab.com/itech-repo/cpocket-exchange/codex-ai-frontend.git .
+git clone https://github.com/anirban00537/buildsocialpost.git .
 ```
 
 2. Set up environment variables:
