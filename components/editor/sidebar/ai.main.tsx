@@ -1,5 +1,5 @@
 import React from "react";
-import { Sun, Moon, Sparkles, HelpCircle } from "lucide-react";
+import { Sun, Moon, Sparkles, HelpCircle, ChevronDown } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import {
   Select,
@@ -44,289 +44,277 @@ const AiSettingsComponent = () => {
 
   return (
     <div className="w-full h-full flex flex-col bg-background/50 backdrop-blur-sm">
+      <div className="p-6 border-b border-borderColor/20">
+        <h2 className="text-xl font-semibold text-textColor flex items-center gap-2">
+          <Sparkles size={24} className="text-primary" />
+          AI Content Generator
+        </h2>
+      </div>
       <form onSubmit={generateContent} className="flex flex-col h-full">
-        <div className="flex-grow overflow-y-auto p-4 space-y-6">
+        <div className="flex-grow overflow-y-auto p-6 space-y-8">
+          {/* Topic Input */}
+          <div className="space-y-2">
+            <Label
+              htmlFor="content"
+              className="text-sm font-medium text-textColor/80 flex items-center"
+            >
+              Topic
+              <HelpCircle
+                data-tooltip-id="topic-tooltip"
+                data-tooltip-content="Main subject for AI content"
+                className="ml-2 h-4 w-4 text-textColor/60 hover:text-textColor cursor-help"
+              />
+            </Label>
+            <Textarea
+              id="content"
+              placeholder="Enter your topic..."
+              className="min-h-[6rem] text-sm rounded-md border border-borderColor/50 text-textColor bg-cardBackground/50 resize-none focus:ring-2 focus:ring-primary/50 transition-all duration-300"
+              value={topic}
+              maxLength={100}
+              onChange={(e) => setTopic(e.target.value)}
+            />
+          </div>
+
+          {/* Theme Selection */}
           <div className="space-y-4">
-            <h2 className="text-lg font-semibold text-textColor flex items-center gap-2">
-              <Sparkles size={20} />
-              AI Content Generator
-            </h2>
-            {/* Topic Input */}
-            <div className="space-y-2">
-              <div className="flex items-center">
-                <Label
-                  htmlFor="content"
-                  className="text-sm font-medium text-textColor/80"
-                >
-                  Topic
-                </Label>
+            <div className="flex items-center justify-between">
+              <Label
+                htmlFor="theme"
+                className="text-sm font-medium text-textColor/80 flex items-center"
+              >
+                Theme
                 <HelpCircle
-                  data-tooltip-id="topic-tooltip"
-                  data-tooltip-content="Main subject for AI content"
+                  data-tooltip-id="theme-tooltip"
+                  data-tooltip-content="Color theme for slides"
                   className="ml-2 h-4 w-4 text-textColor/60 hover:text-textColor cursor-help"
                 />
-              </div>
-              <Textarea
-                id="content"
-                placeholder="Enter your topic..."
-                className="min-h-[3rem] text-sm rounded-md border border-borderColor/50 text-textColor bg-cardBackground/50 resize-none"
-                value={topic}
-                maxLength={100}
-                onChange={(e) => setTopic(e.target.value)}
+              </Label>
+              <Switch
+                id="theme"
+                checked={themeActive}
+                onCheckedChange={() => setThemeActive(!themeActive)}
+                className="data-[state=checked]:bg-primary"
               />
             </div>
-            {/* Theme Selection */}
-            <div className="space-y-2">
-              <div className="flex items-center justify-between gap-2">
-                <div className="flex items-center">
-                  <Label htmlFor="theme" className="text-xs text-textColor/70">
-                    Theme
-                  </Label>
-                  <HelpCircle
-                    data-tooltip-id="theme-tooltip"
-                    data-tooltip-content="Color theme for slides"
-                    className="ml-2 h-4 w-4 text-textColor/60 hover:text-textColor cursor-help"
-                  />
-                </div>
-                <Switch
-                  id="theme"
-                  checked={themeActive}
-                  onCheckedChange={() => setThemeActive(!themeActive)}
-                  size="md"
-                />
-              </div>
 
-              {themeActive && (
-                <div
-                  className={`flex gap-2 ${
-                    themeActive ? "opacity-100" : "opacity-50"
-                  }`}
+            {themeActive && (
+              <div className="flex gap-2">
+                <Button
+                  size="sm"
+                  type="button"
+                  variant={theme === "light" ? "default" : "outline"}
+                  className="flex-1 text-xs"
+                  onClick={() => setTheme("light")}
                 >
-                  <Button
-                    size="sm"
-                    type="button"
-                    className={`flex-1 text-xs border border-borderColor/50 text-textColor p-1 flex items-center justify-center rounded-md transition-all duration-150 ${
-                      theme === "light"
-                        ? "bg-primary/80 text-white"
-                        : "hover:bg-primary/20 text-textColor bg-cardBackground/50"
-                    }`}
-                    onClick={() => setTheme("light")}
-                  >
-                    <Sun size={12} className="mr-1" />
-                    Light
-                  </Button>
-                  <Button
-                    size="sm"
-                    type="button"
-                    className={`flex-1 text-xs border border-borderColor/50 text-textColor p-1 flex items-center justify-center rounded-md transition-all duration-150 ${
-                      theme === "dark"
-                        ? "bg-primary/80 text-white"
-                        : "hover:bg-primary/20 text-textColor bg-cardBackground/50"
-                    }`}
-                    onClick={() => setTheme("dark")}
-                  >
-                    <Moon size={12} className="mr-1" />
-                    Dark
-                  </Button>
-                </div>
-              )}
-            </div>
-
-            {/* Number of Slides */}
-            <div className="space-y-2">
-              <div className="flex items-center">
-                <Label htmlFor="slides" className="text-xs text-textColor/70">
-                  Number of Slides
-                </Label>
-                <HelpCircle
-                  data-tooltip-id="slides-tooltip"
-                  data-tooltip-content="Select slide count"
-                  className="ml-2 h-4 w-4 text-textColor/60 hover:text-textColor cursor-help"
-                />
-              </div>
-              <div className="flex items-center gap-2">
-                <Slider
-                  max={10}
-                  step={1}
-                  value={[numSlides]}
-                  onValueChange={(value) => setNumSlides(value[0])}
-                  className="flex-grow"
-                />
-                <span className="text-xs text-textColor/80 font-medium w-6 text-center">
-                  {numSlides}
-                </span>
-              </div>
-            </div>
-
-            {/* Other Settings in Separate Columns */}
-            <div className="grid grid-cols-1 gap-4">
-              <div className="space-y-2">
-                <div className="flex items-center">
-                  <Label
-                    htmlFor="contentStyle"
-                    className="text-xs text-textColor/70"
-                  >
-                    Style
-                  </Label>
-                  <HelpCircle
-                    data-tooltip-id="style-tooltip"
-                    data-tooltip-content="Choose writing style"
-                    className="ml-2 h-4 w-4 text-textColor/60 hover:text-textColor cursor-help"
-                  />
-                </div>
-                <Select value={contentStyle} onValueChange={setContentStyle}>
-                  <SelectTrigger className="w-full h-8 text-xs rounded-md border border-borderColor/50 text-textColor bg-cardBackground/50">
-                    <SelectValue placeholder="Style" />
-                  </SelectTrigger>
-                  <SelectContent className="bg-cardBackground/90 text-textColor border border-borderColor/50">
-                    <SelectItem value="Professional">Professional</SelectItem>
-                    <SelectItem value="Casual">Casual</SelectItem>
-                    <SelectItem value="Academic">Academic</SelectItem>
-                    <SelectItem value="Storytelling">Storytelling</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              <div className="space-y-2">
-                <div className="flex items-center">
-                  <Label
-                    htmlFor="targetAudience"
-                    className="text-xs text-textColor/70"
-                  >
-                    Audience
-                  </Label>
-                  <HelpCircle
-                    data-tooltip-id="audience-tooltip"
-                    data-tooltip-content="Select target audience"
-                    className="ml-2 h-4 w-4 text-sm text-textColor/60 hover:text-textColor cursor-help"
-                  />
-                </div>
-                <Select
-                  value={targetAudience}
-                  onValueChange={setTargetAudience}
+                  <Sun size={14} className="mr-2" />
+                  Light
+                </Button>
+                <Button
+                  size="sm"
+                  type="button"
+                  variant={theme === "dark" ? "default" : "outline"}
+                  className="flex-1 text-xs"
+                  onClick={() => setTheme("dark")}
                 >
-                  <SelectTrigger className="w-full h-8 text-xs rounded-md border border-borderColor/50 text-textColor bg-cardBackground/50">
-                    <SelectValue placeholder="Audience" />
-                  </SelectTrigger>
-                  <SelectContent className="bg-cardBackground/90 text-textColor border border-borderColor/50">
-                    <SelectItem value="General">General</SelectItem>
-                    <SelectItem value="Experts">Experts</SelectItem>
-                    <SelectItem value="Beginners">Beginners</SelectItem>
-                    <SelectItem value="Executives">Executives</SelectItem>
-                  </SelectContent>
-                </Select>
+                  <Moon size={14} className="mr-2" />
+                  Dark
+                </Button>
               </div>
-              <div className="space-y-2">
-                <div className="flex items-center">
-                  <Label htmlFor="mood" className="text-xs text-textColor/70">
-                    Mood
-                  </Label>
-                  <HelpCircle
-                    data-tooltip-id="mood-tooltip"
-                    data-tooltip-content="Set content tone"
-                    className="ml-2 h-4 w-4 text-textColor/60 hover:text-textColor cursor-help"
-                  />
-                </div>
-                <Select value={mood} onValueChange={setMood}>
-                  <SelectTrigger className="w-full h-8 text-xs rounded-md border border-borderColor/50 text-textColor bg-cardBackground/50">
-                    <SelectValue placeholder="Mood" />
-                  </SelectTrigger>
-                  <SelectContent className="bg-cardBackground/90 text-textColor border border-borderColor/50">
-                    <SelectItem value="Narrative">Narrative</SelectItem>
-                    <SelectItem value="Creative">Creative</SelectItem>
-                    <SelectItem value="Happy">Happy</SelectItem>
-                    <SelectItem value="Curious">Curious</SelectItem>
-                    <SelectItem value="Fun">Fun</SelectItem>
-                    <SelectItem value="Neutral">Neutral</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              <div className="space-y-2">
-                <div className="flex items-center">
-                  <Label
-                    htmlFor="language"
-                    className="text-xs text-textColor/70"
-                  >
-                    Language
-                  </Label>
-                  <HelpCircle
-                    data-tooltip-id="language-tooltip"
-                    data-tooltip-content="Choose content language"
-                    className="ml-2 h-4 w-4 text-textColor/60 hover:text-textColor cursor-help"
-                  />
-                </div>
-                <Select value={language} onValueChange={setLanguage}>
-                  <SelectTrigger className="w-full h-8 text-xs rounded-md border border-borderColor/50 text-textColor bg-cardBackground/50">
-                    <SelectValue placeholder="Language" />
-                  </SelectTrigger>
-                  <SelectContent className="bg-cardBackground/90 text-textColor border border-borderColor/50">
-                    <SelectItem value="en">English</SelectItem>
-                    <SelectItem value="es">Spanish</SelectItem>
-                    <SelectItem value="fr">French</SelectItem>
-                    <SelectItem value="de">German</SelectItem>
-                    <SelectItem value="zh">Chinese</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
+            )}
           </div>
-          <div className="py-4 bg-background/80 backdrop-blur-sm border-t pb-36 border-borderColor/50">
-            <Button
-              type="submit"
-              variant="default"
-              size="sm"
-              disabled={loading || !subscribed}
-              className="w-full text-sm"
+
+          {/* Number of Slides */}
+          <div className="space-y-4">
+            <Label
+              htmlFor="slides"
+              className="text-sm font-medium text-textColor/80 flex items-center"
             >
-              {loading ? (
-                <>
-                  <svg
-                    className="animate-spin h-4 w-4 mr-2"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                  >
-                    <circle
-                      className="opacity-25"
-                      cx="12"
-                      cy="12"
-                      r="10"
-                      stroke="currentColor"
-                      strokeWidth="4"
-                    ></circle>
-                    <path
-                      className="opacity-75"
-                      fill="currentColor"
-                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                    ></path>
-                  </svg>
-                  Generating...
-                </>
-              ) : !subscribed ? (
-                <span className="flex items-center gap-2">
-                  <Image
-                    src={"/premium.svg"}
-                    width={16}
-                    height={16}
-                    alt="Premium"
-                  />
-                  Upgrade to Premium
-                </span>
-              ) : (
-                "Generate Content"
-              )}
-            </Button>
+              Number of Slides
+              <HelpCircle
+                data-tooltip-id="slides-tooltip"
+                data-tooltip-content="Select slide count"
+                className="ml-2 h-4 w-4 text-textColor/60 hover:text-textColor cursor-help"
+              />
+            </Label>
+            <div className="flex items-center gap-4">
+              <Slider
+                max={10}
+                step={1}
+                value={[numSlides]}
+                onValueChange={(value) => setNumSlides(value[0])}
+                className="flex-grow"
+              />
+              <span className="text-sm text-textColor font-medium w-8 text-center bg-cardBackground/50 rounded-md py-1">
+                {numSlides}
+              </span>
+            </div>
           </div>
+
+          {/* Other Settings */}
+          <div className="space-y-6">
+            {[
+              {
+                label: "Style",
+                value: contentStyle,
+                onChange: setContentStyle,
+                options: ["Professional", "Casual", "Academic", "Storytelling"],
+                tooltip: "Choose writing style",
+              },
+              {
+                label: "Audience",
+                value: targetAudience,
+                onChange: setTargetAudience,
+                options: ["General", "Experts", "Beginners", "Executives"],
+                tooltip: "Select target audience",
+              },
+              {
+                label: "Mood",
+                value: mood,
+                onChange: setMood,
+                options: [
+                  "Narrative",
+                  "Creative",
+                  "Happy",
+                  "Curious",
+                  "Fun",
+                  "Neutral",
+                ],
+                tooltip: "Set content tone",
+              },
+              {
+                label: "Language",
+                value: language,
+                onChange: setLanguage,
+                options: [
+                  { value: "en", label: "English" },
+                  { value: "es", label: "Spanish" },
+                  { value: "fr", label: "French" },
+                  { value: "de", label: "German" },
+                  { value: "zh", label: "Chinese" },
+                ],
+                tooltip: "Choose content language",
+              },
+            ].map((setting, index) => (
+              <div key={index} className="space-y-2">
+                <Label
+                  htmlFor={setting.label.toLowerCase()}
+                  className="text-sm font-medium text-textColor/80 flex items-center"
+                >
+                  {setting.label}
+                  <HelpCircle
+                    data-tooltip-id={`${setting.label.toLowerCase()}-tooltip`}
+                    data-tooltip-content={setting.tooltip}
+                    className="ml-2 h-4 w-4 text-textColor/60 hover:text-textColor cursor-help"
+                  />
+                </Label>
+                <Select value={setting.value} onValueChange={setting.onChange}>
+                  <SelectTrigger className="w-full h-10 text-sm rounded-md border border-borderColor/50 text-textColor bg-cardBackground/50 focus:ring-2 focus:ring-primary/50 transition-all duration-300">
+                    <SelectValue placeholder={setting.label} />
+                  </SelectTrigger>
+                  <SelectContent className="bg-background/95 backdrop-blur-sm text-textColor border border-borderColor/50 rounded-md shadow-lg">
+                    {setting.options.map((option) => (
+                      <SelectItem
+                        key={typeof option === "string" ? option : option.value}
+                        value={
+                          typeof option === "string" ? option : option.value
+                        }
+                        className="text-sm py-2 hover:bg-primary/10 transition-colors duration-150"
+                      >
+                        {typeof option === "string" ? option : option.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            ))}
+          </div>
+        </div>
+        
+        <div className="p-6 mb-32 bg-background/80 backdrop-blur-sm border-t border-borderColor/50 mt-auto">
+          <Button
+            type="submit"
+            variant="default"
+            size="lg"
+            disabled={loading || !subscribed}
+            className="w-full text-sm font-semibold"
+          >
+            {loading ? (
+              <>
+                <svg
+                  className="animate-spin h-5 w-5 mr-3"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                  ></circle>
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                  ></path>
+                </svg>
+                Generating Content...
+              </>
+            ) : !subscribed ? (
+              <span className="flex items-center justify-center gap-2">
+                <Image
+                  src={"/premium.svg"}
+                  width={20}
+                  height={20}
+                  alt="Premium"
+                />
+                Upgrade to Premium
+              </span>
+            ) : (
+              "Generate Content"
+            )}
+          </Button>
         </div>
       </form>
 
       {/* React-Tooltip components */}
-      <Tooltip id="topic-tooltip" place="left" className="w-40 text-[8px]" />
-      <Tooltip id="theme-tooltip" place="left" className="w-40 text-[8px]" />
-      <Tooltip id="slides-tooltip" place="left" className="w-40 text-[8px]" />
-      <Tooltip id="style-tooltip" place="left" className="w-40 text-[8px]" />
-      <Tooltip id="audience-tooltip" place="left" className="w-40 text-[8px]" />
-      <Tooltip id="mood-tooltip" place="left" className="w-40 text-[8px]" />
-      <Tooltip id="language-tooltip" place="left" className="w-40 text-[8px]" />
+      <Tooltip
+        id="topic-tooltip"
+        place="left"
+        className="z-50 text-xs bg-background/95 backdrop-blur-sm text-textColor border border-borderColor/50 rounded-md shadow-lg p-2"
+      />
+      <Tooltip
+        id="theme-tooltip"
+        place="left"
+        className="z-50 text-xs bg-background/95 backdrop-blur-sm text-textColor border border-borderColor/50 rounded-md shadow-lg p-2"
+      />
+      <Tooltip
+        id="slides-tooltip"
+        place="left"
+        className="z-50 text-xs bg-background/95 backdrop-blur-sm text-textColor border border-borderColor/50 rounded-md shadow-lg p-2"
+      />
+      <Tooltip
+        id="style-tooltip"
+        place="left"
+        className="z-50 text-xs bg-background/95 backdrop-blur-sm text-textColor border border-borderColor/50 rounded-md shadow-lg p-2"
+      />
+      <Tooltip
+        id="audience-tooltip"
+        place="left"
+        className="z-50 text-xs bg-background/95 backdrop-blur-sm text-textColor border border-borderColor/50 rounded-md shadow-lg p-2"
+      />
+      <Tooltip
+        id="mood-tooltip"
+        place="left"
+        className="z-50 text-xs bg-background/95 backdrop-blur-sm text-textColor border border-borderColor/50 rounded-md shadow-lg p-2"
+      />
+      <Tooltip
+        id="language-tooltip"
+        place="left"
+        className="z-50 text-xs bg-background/95 backdrop-blur-sm text-textColor border border-borderColor/50 rounded-md shadow-lg p-2"
+      />
     </div>
   );
 };

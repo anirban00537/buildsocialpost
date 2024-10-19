@@ -23,9 +23,18 @@ const useBranding = () => {
     {
       onSuccess: (data) => {
         const brandingData = data?.data?.branding;
-        dispatch(setName(brandingData?.name));
-        dispatch(setHandle(brandingData?.handle));
-        dispatch(setHeadshot(brandingData?.headshot));
+        brandingData &&
+          brandingData?.name !== "undefined" &&
+          brandingData?.name !== null &&
+          dispatch(setName(brandingData?.name));
+        brandingData &&
+          brandingData?.handle !== "undefined" &&
+          brandingData?.handle !== null &&
+          dispatch(setHandle(brandingData?.handle));
+        brandingData &&
+          brandingData?.headshot !== "undefined" &&
+          brandingData?.headshot !== null &&
+          dispatch(setHeadshot(brandingData?.headshot));
       },
       enabled: loggedin,
     }
