@@ -70,32 +70,16 @@ const MainSidebar: React.FC<MainSidebarProps> = ({
         <div className="sticky top-0 w-full md:w-[80px] order-first md:order-first border-r border-borderColor/50 bg-background ">
           <div className="flex flex-wrap md:flex-col w-full h-full justify-start items-center md:border-r border-b md:border-b-0 border-borderColor/50">
             {[
-              { name: "ai-settings", icon: <Wand2 size={24} />, label: "AI" },
-              { name: "branding", icon: <User size={24} />, label: "Brand" },
-              {
-                name: "text-settings",
-                icon: <Type size={24} />,
-                label: "Text",
-              },
-              {
-                name: "background",
-                icon: <Palette size={24} />,
-                label: "Color",
-              },
-              {
-                name: "patterns-elements",
-                icon: <Shapes size={24} />,
-                label: "Elements",
-              },
-              {
-                name: "background-images",
-                icon: <Image size={24} />,
-                label: "Images",
-              },
+              { name: "ai-settings", icon: <Wand2 size={20} />, label: "AI" },
+              { name: "branding", icon: <User size={20} />, label: "Brand" },
+              { name: "text-settings", icon: <Type size={20} />, label: "Text" },
+              { name: "background", icon: <Palette size={20} />, label: "Color" },
+              { name: "patterns-elements", icon: <Shapes size={20} />, label: "Elements" },
+              { name: "background-images", icon: <Image size={20} />, label: "Images" },
             ].map((tab) => (
               <button
                 key={tab.name}
-                className={`flex flex-col items-center justify-center p-3 w-1/3 md:w-full transition-all my-1 md:my-2 rounded-xl ${
+                className={`flex flex-col items-center justify-center p-2 m-1 transition-all rounded-lg w-[60px] h-[60px] ${
                   activeTab === tab.name
                     ? "bg-primary text-white shadow-lg scale-105"
                     : "text-gray-400 hover:text-white hover:bg-gray-800"
@@ -103,7 +87,7 @@ const MainSidebar: React.FC<MainSidebarProps> = ({
                 onClick={() => handleTabClick(tab.name)}
               >
                 {tab.icon}
-                <span className="text-[10px] mt-1">{tab.label}</span>
+                <span className="text-[9px] mt-1">{tab.label}</span>
               </button>
             ))}
           </div>

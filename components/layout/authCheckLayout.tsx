@@ -1,20 +1,23 @@
 "use client";
 import { useAuth } from "@/hooks/useAuth";
-import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { usePathname } from "next/navigation";
+import { useEffect, useRef } from "react";
 import FullScreenLoading from "../loading/fullscreen.loading";
 import useBranding from "@/hooks/useBranding";
+import { setNewCarousel } from "@/state/slice/carousel.slice";
+import { useDispatch } from "react-redux";
 
 const AuthCheckLayout = ({ children }: { children: React.ReactNode }) => {
   const { isAuthenticated, isLoading } = useAuth();
-  const router = useRouter();
+  const pathname = usePathname();
   useBranding();
+  const dispatch = useDispatch();
 
-  // useEffect(() => {
-  //   if (!isLoading && !isAuthenticated) {
-  //     router.push("/login");
-  //   }
-  // }, [isAuthenticated, isLoading, router]);
+  useEffect(() => {
+    if (pathname) {
+      dispatch(setNewCarousel());
+    }
+  }, [pathname]);
 
   if (isLoading) {
     return <FullScreenLoading />;
