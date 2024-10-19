@@ -80,28 +80,28 @@
 }
 
 ::-webkit-scrollbar-track {
-  background: #FFFFFF; /* Main background color (white) */
+  background: #ffffff; /* Main background color (white) */
   border-radius: 10px; /* Rounded corners of the scrollbar track */
 }
 
 ::-webkit-scrollbar-thumb {
-  background-color: #E2E8F0; /* Light gray for the thumb */
+  background-color: #e2e8f0; /* Light gray for the thumb */
   border-radius: 40px; /* Rounded corners of the scrollbar thumb */
-  border: 3px solid #FFFFFF; /* Border using the main background color (white) */
+  border: 3px solid #ffffff; /* Border using the main background color (white) */
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background-color: #CBD5E1; /* Slightly darker gray on hover */
+  background-color: #cbd5e1; /* Slightly darker gray on hover */
 }
 
 ::-webkit-scrollbar-corner {
-  background: #FFFFFF; /* Main background color (white) */
+  background: #ffffff; /* Main background color (white) */
 }
 
 /* Firefox */
 * {
   scrollbar-width: thin;
-  scrollbar-color: #E2E8F0 #FFFFFF;
+  scrollbar-color: #e2e8f0 #ffffff;
 }
 
 .swiper-container {
@@ -154,4 +154,15 @@ strong {
     overflow: visible;
     scale: 0.4;
   }
+}
+.format-button {
+  @apply p-1 rounded hover:bg-gray-100 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500;
+}
+
+.format-button svg {
+  @apply text-gray-700;
+}
+
+.format-button:hover svg {
+  @apply text-blue-600;
 }
