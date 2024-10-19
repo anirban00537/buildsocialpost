@@ -1,8 +1,11 @@
-import React from "react";
-import { useDispatch } from "react-redux";
+import React, { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { setBackgroundImageToAllSlides } from "@/state/slice/carousel.slice";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
+import { RootState } from "@/state/store";
+import { X, Upload } from "lucide-react";
+import ImageUploadModal from "@/components/editor/ImageUploadModal";
 
 const backgroundImages = [
   "https://images.unsplash.com/photo-1589810264340-0ce27bfbf751?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
@@ -23,24 +26,71 @@ const backgroundImages = [
 
 const BackgroundImagesSection = () => {
   const dispatch = useDispatch();
+  const { globalBackground } = useSelector((state: RootState) => state.slides);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleBackgroundImageSelect = (imageUrl: string) => {
     dispatch(setBackgroundImageToAllSlides(imageUrl));
   };
 
-  return (
-    <div className="w-full h-full p-6 flex flex-col bg-background/50 backdrop-blur-sm">
-      <div className="flex justify-between items-center">
-        <h2 className="text-base font-semibold text-textColor mb-4">
-          Background Images
-        </h2>
-      </div>
+  const handleImageUpload = (url: string) => {
+    handleBackgroundImageSelect(url);
+    setIsModalOpen(false);
+  };
 
-      <div className="grid grid-cols-3 gap-2">
+  return (
+    <div className="w-full h-full p-4 flex flex-col bg-white">
+      <h2 className="text-lg font-semibold text-gray-800 mb-3">
+        Background Image
+      </h2>
+
+      {globalBackground ? (
+        <div className="mb-4 flex items-center">
+          <div className="relative w-20 h-20 rounded-md overflow-hidden shadow-sm mr-3">
+            <Image
+              src={globalBackground}
+              alt="Current Background"
+              layout="fill"
+              objectFit="cover"
+            />
+          </div>
+          <div className="flex-grow">
+            <p className="text-sm text-gray-600 mb-1">Current background</p>
+            <Button
+              size="sm"
+              variant="outline"
+              className="w-full"
+              onClick={() => dispatch(setBackgroundImageToAllSlides(null))}
+            >
+              <X size={14} className="mr-2" />
+              Remove
+            </Button>
+          </div>
+        </div>
+      ) : (
+        <div className="mb-4 flex items-center justify-center w-full h-20 bg-gray-100 rounded-md border border-dashed border-gray-300">
+          <p className="text-sm text-gray-500">No background selected</p>
+        </div>
+      )}
+
+      <div className="flex justify-between items-center mb-3">
+        <h3 className="text-sm font-medium text-gray-700">Choose an image</h3>
+        <Button
+          size="sm"
+          variant="outline"
+          onClick={() => setIsModalOpen(true)}
+          className="flex items-center"
+        >
+          <Upload size={14} className="mr-2" />
+          Upload
+        </Button>
+      </div>
+      
+      <div className="grid grid-cols-3 gap-2 overflow-y-auto max-h-[calc(100vh-250px)] pr-2">
         {backgroundImages.map((imageUrl, index) => (
           <div
             key={index}
-            className="relative w-full pt-[100%] cursor-pointer rounded-md overflow-hidden transition-all hover:scale-105"
+            className="relative aspect-square cursor-pointer rounded-md overflow-hidden transition-all hover:scale-105 shadow-sm hover:shadow-md group"
             onClick={() => handleBackgroundImageSelect(imageUrl)}
           >
             <Image
@@ -49,16 +99,16 @@ const BackgroundImagesSection = () => {
               layout="fill"
               objectFit="cover"
             />
+            <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition-opacity" />
           </div>
         ))}
       </div>
-      <Button
-        size="xs"
-        className="text-textColor mt-6 hover:text-[#fff] h-8 w-full bg-background/50 backdrop-blur-sm border border-borderColor hover:border-borderColor/80 "
-        onClick={() => dispatch(setBackgroundImageToAllSlides(null))}
-      >
-        Remove
-      </Button>
+
+      <ImageUploadModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onImageSelect={handleImageUpload}
+      />
     </div>
   );
 };

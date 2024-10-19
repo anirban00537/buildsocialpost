@@ -1,4 +1,4 @@
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import axios from "axios";
 import toast from "react-hot-toast";
@@ -49,12 +49,14 @@ export const useAuth = () => {
   const { userinfo, loggedin, loading, subscribed, endDate } = useSelector(
     (state: RootState) => state.user
   );
+  const token = Cookies.get("token");
+  const pathname = usePathname();
 
   const { data: userData, isLoading: isUserLoading } = useQuery<
     ResponseData,
     Error
   >(["user"], profile, {
-    enabled: loggedin,
+    enabled: !!token,
     onSuccess: (data: ResponseData) => {
       dispatch(setUser(data.data as UserInfo));
     },
@@ -72,16 +74,12 @@ export const useAuth = () => {
       staleTime: 1000 * 60 * 5, // 5 minutes
       cacheTime: 1000 * 60 * 30, // 30 minutes
       onSuccess: (data: SubscriptionResponse) => {
-        console.log(data.data.isSubscribed, "data.data.isSubscribed");
         dispatch(setSubscribed(data.data.isSubscribed));
         if (data.data.subscription) {
           dispatch(setEndDate(data.data.subscription.endDate));
         } else {
           dispatch(setEndDate(null));
         }
-        // You can handle daysLeft here if needed
-        // For example, you could dispatch an action to store it in the Redux state
-        // dispatch(setDaysLeft(data.data.daysLeft));
       },
       onError: (error: Error) => {
         toast.error(`Failed to fetch subscription: ${error.message}`);
@@ -97,13 +95,14 @@ export const useAuth = () => {
           const { accessToken, refreshToken, user, isAdmin } = result.data;
           dispatch(setUser(user as UserInfo));
 
-          // Set cookies
-          Cookies.set("token", accessToken, { expires: 7 }); // expires in 7 days
-          Cookies.set("refreshToken", refreshToken, { expires: 30 }); // expires in 30 days
+          Cookies.set("token", accessToken, { expires: 7 });
+          Cookies.set("refreshToken", refreshToken, { expires: 30 });
           Cookies.set("user", JSON.stringify(user), { expires: 7 });
 
           toast.success("Logged in successfully");
-          router.push("/editor");
+          if (pathname !== "/editor") {
+            router.push("/editor");
+          }
         } else {
           toast.error(`Failed to log in: ${result.message}`);
         }

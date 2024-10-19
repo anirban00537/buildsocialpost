@@ -1,11 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-  Wand2,
-  User,
-  Type,
-  Image,
-  Shapes,
-} from "lucide-react";
+import { Wand2, User, Type, Image, Shapes, Palette } from "lucide-react";
 import AiSettingsComponent from "./ai.main";
 import BrandingSection from "./branding.main";
 import TextSettingsSection from "./text-settings.main";
@@ -61,42 +55,60 @@ const MainSidebar: React.FC<MainSidebarProps> = ({
 
     // Construct the new URL with updated query parameters
     const newUrl = `${pathname}?${newSearchParams.toString()}`;
-    
+
     // Use router.push to navigate to the new URL
     router.push(newUrl);
   };
 
   return (
     <>
-      <aside
+      <div
         className={`flex flex-col md:flex-row h-screen transition-all duration-300 ${
-          isCollapsed ? "w-[70px]" : "w-full md:w-[420px]"
-        } border border-borderColor/50   bg-background`}
+          isCollapsed ? "w-[80px]" : "w-full md:w-[420px]"
+        } border border-borderColor/50 bg-background`}
       >
-        <div className="sticky top-0 w-full md:w-[70px] order-first md:order-first border-r border-borderColor/50 bg-background shadow-md">
+        <div className="sticky top-0 w-full md:w-[80px] order-first md:order-first border-r border-borderColor/50 bg-background ">
           <div className="flex flex-wrap md:flex-col w-full h-full justify-start items-center md:border-r border-b md:border-b-0 border-borderColor/50">
             {[
-              { name: "ai-settings", icon: <Wand2 size={20} /> },
-              { name: "branding", icon: <User size={20} /> },
-              { name: "text-settings", icon: <Type size={20} /> },
-              { name: "background", icon: <FaPallet size={20} /> },
-              { name: "patterns-elements", icon: <Shapes size={20} /> },
-              { name: "background-images", icon: <Image size={20} /> },
+              { name: "ai-settings", icon: <Wand2 size={24} />, label: "AI" },
+              { name: "branding", icon: <User size={24} />, label: "Brand" },
+              {
+                name: "text-settings",
+                icon: <Type size={24} />,
+                label: "Text",
+              },
+              {
+                name: "background",
+                icon: <Palette size={24} />,
+                label: "Color",
+              },
+              {
+                name: "patterns-elements",
+                icon: <Shapes size={24} />,
+                label: "Elements",
+              },
+              {
+                name: "background-images",
+                icon: <Image size={24} />,
+                label: "Images",
+              },
             ].map((tab) => (
               <button
                 key={tab.name}
-                className={`flex flex-col items-center justify-center p-6 w-1/5 md:w-full transition-colors my-1 md:my-2 rounded-lg duration-200 ${
+                className={`flex flex-col items-center justify-center p-3 w-1/3 md:w-full transition-all my-1 md:my-2 rounded-xl ${
                   activeTab === tab.name
-                    ? "bg-primary text-white"
-                    : "text-gray-500 hover:text-blue-500"
+                    ? "bg-primary text-white shadow-lg scale-105"
+                    : "text-gray-400 hover:text-white hover:bg-gray-800"
                 }`}
                 onClick={() => handleTabClick(tab.name)}
               >
                 {tab.icon}
+                <span className="text-[10px] mt-1">{tab.label}</span>
               </button>
             ))}
           </div>
         </div>
+
         <div
           className={`flex-1 border border-borderColor border-l-0 bg-background overflow-hidden transition-all transform ${
             isCollapsed ? "hidden" : ""
@@ -111,7 +123,7 @@ const MainSidebar: React.FC<MainSidebarProps> = ({
           )}
           {activeTab === "background-images" && <BackgroundImagesSection />}
         </div>
-      </aside>
+      </div>
     </>
   );
 };
