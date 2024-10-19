@@ -59,6 +59,7 @@ export const useAuth = () => {
     enabled: !!token,
     onSuccess: (data: ResponseData) => {
       dispatch(setUser(data.data as UserInfo));
+      refetchSubscription();
     },
   });
 
