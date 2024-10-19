@@ -75,7 +75,6 @@ const EditorNavbar: React.FC = () => {
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
-
   const handleLoginRequired = () => {
     setIsLoginModalOpen(true);
   };
@@ -102,18 +101,18 @@ const EditorNavbar: React.FC = () => {
               <div className="flex space-x-2 w-full sm:w-auto">
                 <Button
                   onClick={() => setIsViewAllModalOpen(true)}
-                  className="flex-1 sm:flex-initial h-8 justify-start text-textColor/85 bg-cardBackground hover:bg-primary/50 border border-borderColor"
+                  className="flex-1 sm:flex-initial h-8 justify-start text-textColor/85 bg-cardBackground hover:bg-primary/80 border  hover:text-white border-borderColor"
                   variant="outline"
                   size="sm"
                   disabled={isFetchingAll}
                 >
-                  <List className="w-4 h-4 mr-2 text-textColor/85" />
+                  <List className="w-4 h-4 mr-2 " />
                   <span>{isFetchingAll ? "Loading..." : "All Carousels"}</span>
                 </Button>
 
                 <Button
                   onClick={handleAddNew}
-                  className="flex-1 sm:flex-initial h-8 justify-start text-textColor/85 bg-cardBackground  hover:bg-primary/50 border border-borderColor"
+                  className="flex-1 sm:flex-initial h-8 justify-start text-textColor/85 bg-cardBackground  hover:bg-primary/80 border border-borderColor"
                   variant="outline"
                   size="sm"
                   disabled={isCreatingOrUpdating}
@@ -159,7 +158,7 @@ const EditorNavbar: React.FC = () => {
               <Button
                 variant="outline"
                 size="xs"
-                className="bg-cardBackground hover:bg-primary/50 border border-borderColor text-textColor/85"
+                className="bg-cardBackground hover:bg-primary/80 border border-borderColor text-textColor/85"
                 onClick={() => setIsLoginModalOpen(true)}
               >
                 Sign in
@@ -207,7 +206,7 @@ const EditorNavbar: React.FC = () => {
             {!user || !user.email ? (
               <Button
                 variant="outline"
-                className="w-full bg-cardBackground hover:bg-primary/50 border border-borderColor/50 text-textColor/85"
+                className="w-full bg-cardBackground hover:bg-primary/80 border border-borderColor/50 text-textColor/85"
                 onClick={() => {
                   setIsLoginModalOpen(true);
                   setIsMenuOpen(false);
