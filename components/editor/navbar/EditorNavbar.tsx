@@ -75,7 +75,6 @@ const EditorNavbar: React.FC = () => {
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
-  const memoizedCarousels = useMemo(() => carousels, [carousels]);
 
   const handleLoginRequired = () => {
     setIsLoginModalOpen(true);

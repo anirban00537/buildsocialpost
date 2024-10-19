@@ -19,6 +19,15 @@ interface UserDropdownProps {
 const getInitials = (email: string): string =>
   email ? email.charAt(0).toUpperCase() : "U";
 
+const getColorFromEmail = (email: string): string => {
+  let hash = 0;
+  for (let i = 0; i < email.length; i++) {
+    hash = email.charCodeAt(i) + ((hash << 5) - hash);
+  }
+  const hue = hash % 360;
+  return `hsl(${hue}, 70%, 80%)`;
+};
+
 const UserDropdown: React.FC<UserDropdownProps> = ({ user, handleLogout }) => {
   const [imageError, setImageError] = React.useState(false);
 
@@ -33,7 +42,7 @@ const UserDropdown: React.FC<UserDropdownProps> = ({ user, handleLogout }) => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className="relative h-8 w-8 rounded-full">
+        <Button variant="ghost" className="relative h-8 w-8 rounded-full p-0 overflow-hidden">
           {user.image && !imageError ? (
             <Image
               src={user.image}
@@ -44,7 +53,10 @@ const UserDropdown: React.FC<UserDropdownProps> = ({ user, handleLogout }) => {
               height={32}
             />
           ) : (
-            <span className="flex h-8 w-8 items-center justify-center rounded-full bg-muted">
+            <span
+              className="flex h-full w-full items-center justify-center text-white text-sm font-medium"
+              style={{ backgroundColor: getColorFromEmail(user.email) }}
+            >
               {getInitials(user.email)}
             </span>
           )}

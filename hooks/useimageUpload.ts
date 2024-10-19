@@ -1,11 +1,11 @@
 import { useState, useCallback } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "@/state/store";
-import { useDropzone } from "react-dropzone";
+import { useDropzone, DropEvent, FileRejection } from "react-dropzone";
 import { useMutation, useQueryClient, useQuery } from "react-query";
 import toast from "react-hot-toast";
 import {
-  uploadImage,
+  uploadImage as uploadImageService,
   getImages,
   deleteImage,
   getImageUsage,
@@ -94,7 +94,7 @@ export const useImageUpload = (isOpen: boolean) => {
 
   // Upload images mutation
   const uploadMutation = useMutation<ImageInfo, Error, File>(
-    (file) => uploadImage(file),
+    (file) => uploadImageService(file),
     {
       onSuccess: () => {
         refetchUsage();
@@ -108,8 +108,25 @@ export const useImageUpload = (isOpen: boolean) => {
     }
   );
 
+  const uploadImage = async (file: File) => {
+    if (!userinfo) {
+      throw new Error("Please log in to upload images.");
+    }
+
+    if (file.size > MAX_STORAGE_MB * MB_TO_BYTES) {
+      throw new Error(`Image ${file.name} exceeds the ${MAX_STORAGE_MB} MB limit.`);
+    }
+
+    const newTotalUsage = totalUsage + file.size / MB_TO_BYTES;
+    if (newTotalUsage > MAX_STORAGE_MB) {
+      throw new Error(`Uploading this image would exceed your ${MAX_STORAGE_MB} MB storage limit.`);
+    }
+
+    return uploadMutation.mutateAsync(file);
+  };
+
   const onDrop = useCallback(
-    async (acceptedFiles: File[]) => {
+    async (acceptedFiles: File[], fileRejections: FileRejection[], event: DropEvent) => {
       if (!userinfo) {
         toast.error("Please log in to upload images.");
         return;
@@ -117,30 +134,24 @@ export const useImageUpload = (isOpen: boolean) => {
 
       if (loggedin) {
         for (const file of acceptedFiles) {
-          if (file.size > MAX_STORAGE_MB * MB_TO_BYTES) {
-            toast.error(
-              `Image ${file.name} exceeds the ${MAX_STORAGE_MB} MB limit.`
-            );
-            continue;
-          }
-
-          const newTotalUsage = totalUsage + file.size / MB_TO_BYTES;
-          if (newTotalUsage > MAX_STORAGE_MB) {
-            toast.error(
-              `Uploading this image would exceed your ${MAX_STORAGE_MB} MB storage limit.`
-            );
-            break;
-          }
-
           try {
-            await uploadMutation.mutateAsync(file);
+            await uploadImage(file);
           } catch (error) {
+            if (error instanceof Error) {
+              toast.error(error.message);
+            }
             console.error("Error in onDrop:", error);
           }
         }
       }
+
+      if (fileRejections.length > 0) {
+        fileRejections.forEach((rejection) => {
+          toast.error(`File ${rejection.file.name} was rejected: ${rejection.errors[0].message}`);
+        });
+      }
     },
-    [loggedin, uploadMutation, userinfo, totalUsage]
+    [loggedin, userinfo, totalUsage, uploadImage]
   );
 
   // Delete image mutation
@@ -169,7 +180,8 @@ export const useImageUpload = (isOpen: boolean) => {
   const { getRootProps, getInputProps } = useDropzone({
     onDrop,
     accept: {
-      "image/*": [".jpeg", ".jpg", ".png"],
+      "image/jpeg": [".jpeg", ".jpg"],
+      "image/png": [".png"],
     },
     maxSize: MAX_STORAGE_MB * MB_TO_BYTES,
     disabled: uploadMutation.isLoading,
@@ -221,5 +233,6 @@ export const useImageUpload = (isOpen: boolean) => {
     userinfo,
     refetchImages,
     loggedin,
+    uploadImage,
   };
 };

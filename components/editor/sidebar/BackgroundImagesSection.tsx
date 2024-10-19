@@ -4,7 +4,7 @@ import { setBackgroundImageToAllSlides } from "@/state/slice/carousel.slice";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { RootState } from "@/state/store";
-import { X, Upload } from "lucide-react";
+import { X, Upload, Check } from "lucide-react";
 import ImageUploadModal from "@/components/editor/ImageUploadModal";
 
 const backgroundImages = [
@@ -40,13 +40,13 @@ const BackgroundImagesSection = () => {
 
   return (
     <div className="w-full h-full p-4 flex flex-col bg-white">
-      <h2 className="text-lg font-semibold text-gray-800 mb-3">
+      <h2 className="text-lg font-semibold text-gray-800 mb-4">
         Background Image
       </h2>
 
       {globalBackground ? (
-        <div className="mb-4 flex items-center">
-          <div className="relative w-20 h-20 rounded-md overflow-hidden shadow-sm mr-3">
+        <div className="mb-4 flex items-center bg-gray-50 p-3 rounded-lg border border-gray-200">
+          <div className="relative w-20 h-20 rounded-md overflow-hidden shadow-md mr-3">
             <Image
               src={globalBackground}
               alt="Current Background"
@@ -55,11 +55,11 @@ const BackgroundImagesSection = () => {
             />
           </div>
           <div className="flex-grow">
-            <p className="text-sm text-gray-600 mb-1">Current background</p>
+            <p className="text-sm font-medium text-gray-700 mb-1">Current background</p>
             <Button
               size="sm"
               variant="outline"
-              className="w-full"
+              className="w-full text-red-500 hover:text-red-700 hover:bg-red-50 transition-colors"
               onClick={() => dispatch(setBackgroundImageToAllSlides(null))}
             >
               <X size={14} className="mr-2" />
@@ -68,7 +68,7 @@ const BackgroundImagesSection = () => {
           </div>
         </div>
       ) : (
-        <div className="mb-4 flex items-center justify-center w-full h-20 bg-gray-100 rounded-md border border-dashed border-gray-300">
+        <div className="mb-4 flex items-center justify-center w-full h-20 bg-gray-50 rounded-lg border border-dashed border-gray-300">
           <p className="text-sm text-gray-500">No background selected</p>
         </div>
       )}
@@ -79,7 +79,7 @@ const BackgroundImagesSection = () => {
           size="sm"
           variant="outline"
           onClick={() => setIsModalOpen(true)}
-          className="flex items-center"
+          className="flex items-center hover:bg-gray-50 transition-colors"
         >
           <Upload size={14} className="mr-2" />
           Upload
@@ -100,6 +100,11 @@ const BackgroundImagesSection = () => {
               objectFit="cover"
             />
             <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition-opacity" />
+            {globalBackground === imageUrl && (
+              <div className="absolute top-2 right-2 bg-white rounded-full p-1">
+                <Check size={12} className="text-green-500" />
+              </div>
+            )}
           </div>
         ))}
       </div>

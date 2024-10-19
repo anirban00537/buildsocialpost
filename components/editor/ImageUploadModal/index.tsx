@@ -1,11 +1,21 @@
-import React from "react";
+import React, { useState } from "react";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import toast from "react-hot-toast";
 import Image from "next/image";
-import { X, ChevronLeft, ChevronRight } from "lucide-react";
+import { X, ChevronLeft, ChevronRight, AlertTriangle, Upload } from "lucide-react";
 import { useImageUpload } from "@/hooks/useimageUpload";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import toast from "react-hot-toast";
 
 interface ImageUploadModalProps {
   isOpen: boolean;
@@ -35,7 +45,43 @@ const ImageUploadModal: React.FC<ImageUploadModalProps> = ({
     handleJumpToPage,
     setJumpToPage,
     MAX_STORAGE_MB,
+    uploadImage,
   } = useImageUpload(isOpen);
+
+  const [deleteImageId, setDeleteImageId] = useState<string | null>(null);
+
+  const handleDeleteConfirm = () => {
+    if (deleteImageId) {
+      handleDeleteImage(deleteImageId);
+      setDeleteImageId(null);
+    }
+  };
+
+  const handleUpload = async (files: File[]) => {
+    for (const file of files) {
+      try {
+        await uploadImage(file);
+        toast.success(`Successfully uploaded ${file.name}`);
+      } catch (error) {
+        toast.error(`Failed to upload ${file.name}`);
+        console.error("Upload error:", error);
+      }
+    }
+  };
+
+  const onDrop = React.useCallback((acceptedFiles: File[]) => {
+    const validFiles = acceptedFiles.filter(file => 
+      file.type === "image/jpeg" || file.type === "image/png"
+    );
+    
+    if (validFiles.length !== acceptedFiles.length) {
+      toast.error("Only JPG and PNG images are allowed.");
+    }
+    
+    if (validFiles.length > 0) {
+      handleUpload(validFiles);
+    }
+  }, [handleUpload]);
 
   const renderPageNumbers = () => {
     const pageNumbers = [];
@@ -96,12 +142,24 @@ const ImageUploadModal: React.FC<ImageUploadModalProps> = ({
                 uploadLoading ? "cursor-not-allowed" : "hover:border-gray-400"
               }`}
             >
-              <input {...getInputProps()} />
-              <p className="text-center text-textColor">
-                {uploadLoading
-                  ? "Uploading..."
-                  : "Drag & drop images here, or click to select images (max 100 MB)"}
-              </p>
+              <input {...getInputProps({ 
+                accept: ".jpg,.jpeg,.png,image/jpeg,image/png" 
+              })} />
+              <div className="text-center text-textColor">
+                {uploadLoading ? (
+                  "Uploading..."
+                ) : (
+                  <>
+                    <Upload className="mx-auto h-12 w-12 text-gray-400" />
+                    <p className="mt-2">
+                      Drag & drop images here, or click to select
+                    </p>
+                    <p className="text-sm text-gray-500">
+                      (Only JPG and PNG, max 100 MB)
+                    </p>
+                  </>
+                )}
+              </div>
             </div>
 
             {isLoading ? (
@@ -130,7 +188,7 @@ const ImageUploadModal: React.FC<ImageUploadModalProps> = ({
                         />
                       </div>
                       <button
-                        onClick={() => handleDeleteImage(image.id)}
+                        onClick={() => setDeleteImageId(image.id)}
                         className="absolute top-2 right-2 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
                         disabled={uploadLoading}
                       >
@@ -197,6 +255,32 @@ const ImageUploadModal: React.FC<ImageUploadModalProps> = ({
             )}
           </>
         )}
+
+        <AlertDialog open={!!deleteImageId} onOpenChange={() => setDeleteImageId(null)}>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle className="flex items-center text-red-600">
+                <AlertTriangle className="w-5 h-5 mr-2" />
+                Confirm Image Deletion
+              </AlertDialogTitle>
+              <AlertDialogDescription className="text-gray-600">
+                Are you sure you want to delete this image? This action cannot be undone.
+                <br /><br />
+                <strong>Warning:</strong> This image may be in use elsewhere in the application. 
+                Deleting it could potentially break layouts or cause missing images in your projects.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel className="bg-gray-100 text-gray-800 hover:bg-gray-200">Cancel</AlertDialogCancel>
+              <AlertDialogAction 
+                onClick={handleDeleteConfirm}
+                className="bg-red-600 text-white hover:bg-red-700"
+              >
+                Delete Image
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
 
         <Button
           variant="default"
