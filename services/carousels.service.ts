@@ -29,11 +29,27 @@ export const getCarouselDetails = async (id: string) => {
   return response.data;
 };
 
-export const generateCarouselContent = async (dto: any) => {
-  const response = await request.get(
+export const generateCarouselContent = async (
+  topic: string,
+  numSlides: number,
+  language: string,
+  mood: string,
+  theme: string,
+  contentStyle: string,
+  targetAudience: string,
+  themeActive: boolean
+) => {
+  const response = await request.post(
     "/my-carousels/generate-carousel-content",
     {
-      data: dto,
+      topic,
+      numSlides,
+      language,
+      mood,
+      theme,
+      contentStyle,
+      targetAudience,
+      themeActive,
     }
   );
   return response.data;

@@ -1,7 +1,7 @@
 import { addAllSlides, setBackground } from "@/state/slice/carousel.slice";
-import axios from "axios";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
+import { generateCarouselContent } from "@/services/carousels.service";
 
 export const useGenerateContent = () => {
   const [topic, setTopic] = useState("");
@@ -19,38 +19,43 @@ export const useGenerateContent = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      const response = await axios.post(
-        "/api/carousels/create-carousel-content",
-        {
-          body: JSON.stringify({
-            topic,
-            numSlides,
-            language,
-            mood,
-            theme,
-            contentStyle,
-            targetAudience,
-            themeActive,
-          }),
-        }
+      const dto = {
+        topic,
+        numSlides,
+        language,
+        mood,
+        theme,
+        contentStyle,
+        targetAudience,
+        themeActive,
+      };
+
+      const result = await generateCarouselContent(
+        topic,
+        numSlides,
+        language,
+        mood,
+        theme,
+        contentStyle,
+        targetAudience,
+        themeActive
       );
 
-      if (response.status !== 200) {
-        throw new Error(`Error: ${response.statusText}`);
-      }
-
-      const data = response.data;
-      const { carousels, colorPalette } = data;
-      dispatch(addAllSlides(carousels));
-      if (themeActive) {
-        dispatch(
-          setBackground({
-            color1: colorPalette.color1,
-            color2: colorPalette.color2,
-            color3: colorPalette.color3,
-            color4: colorPalette.color4,
-          })
-        );
+      if (result.success) {
+        const { response, colorPalette } = result.data;
+        dispatch(addAllSlides(response));
+        if (themeActive) {
+          dispatch(
+            setBackground({
+              color1: colorPalette.color1,
+              color2: colorPalette.color2,
+              color3: colorPalette.color3,
+              color4: colorPalette.color4,
+            })
+          );
+        }
+      } else {
+        throw new Error(result.message || "Failed to generate content");
       }
     } catch (error) {
       console.error("Error generating content:", error);
