@@ -14,38 +14,19 @@ import {
   darkColorPresets,
 } from "@/lib/color-presets";
 import { Switch } from "@/components/ui/switch";
-import { Palette, Sun, Moon, Droplet } from "lucide-react";
+import { Palette, Sun, Moon, Droplet, Check } from "lucide-react";
+import { motion } from "framer-motion";
 
 const BackgroundColorsSection = () => {
   const dispatch = useDispatch();
   const background = useSelector((state: RootState) => state.slides.background);
   const layout = useSelector((state: RootState) => state.slides.layout);
 
-  const [displayColorPicker, setDisplayColorPicker] = useState<{
-    [key: string]: boolean;
-  }>({
-    color1: false,
-    color2: false,
-    color3: false,
-    color4: false,
-  });
-
   const handleColorChange = (
     colorKey: keyof BackgroundColors,
     colorValue: string
   ) => {
     dispatch(setBackground({ ...background, [colorKey]: colorValue }));
-  };
-
-  const handleColorPickerClick = (colorKey: keyof BackgroundColors) => {
-    setDisplayColorPicker({
-      ...displayColorPicker,
-      [colorKey]: !displayColorPicker[colorKey],
-    });
-  };
-
-  const handleColorPickerClose = (colorKey: keyof BackgroundColors) => {
-    setDisplayColorPicker({ ...displayColorPicker, [colorKey]: false });
   };
 
   const handlePresetSelect = (preset: BackgroundColors) =>
@@ -86,15 +67,19 @@ const BackgroundColorsSection = () => {
               (colorKey) => (
                 <Popover key={colorKey}>
                   <PopoverTrigger asChild>
-                    <div
-                      className="w-full h-12 border border-borderColor/50 cursor-pointer rounded-md transition-all hover:scale-105 shadow-sm"
+                    <motion.div
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      className="w-full h-12 border border-borderColor/50 cursor-pointer rounded-md shadow-sm overflow-hidden"
                       style={{ backgroundColor: background[colorKey] }}
-                      onClick={() => handleColorPickerClick(colorKey)}
-                    />
+                    >
+                      <div className="w-full h-full flex items-center justify-center bg-black bg-opacity-0 hover:bg-opacity-10 transition-all duration-200">
+                        <Palette className="w-5 h-5 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
+                      </div>
+                    </motion.div>
                   </PopoverTrigger>
                   <PopoverContent
                     className="w-auto p-3 border-none rounded-lg shadow-lg"
-                    onMouseLeave={() => handleColorPickerClose(colorKey)}
                   >
                     <HexColorPicker
                       color={background[colorKey]}
@@ -116,25 +101,23 @@ const BackgroundColorsSection = () => {
           <div className="grid grid-cols-4 gap-3">
             {lightColorPresets.map(
               (preset: BackgroundColors, index: number) => (
-                <div
+                <motion.div
                   key={index}
-                  className="w-full h-12 border border-borderColor/50 cursor-pointer rounded-md grid grid-cols-4 transition-all hover:scale-105 shadow-sm"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="w-full h-12 border border-borderColor/50 cursor-pointer rounded-md grid grid-cols-4 shadow-sm overflow-hidden relative"
                   onClick={() => handlePresetSelect(preset)}
                 >
                   {Object.values(preset).map((color, colorIndex) => (
                     <div
                       key={colorIndex}
-                      className={`transition-colors duration-200 ease-in-out ${
-                        colorIndex === 0
-                          ? "rounded-l-md"
-                          : colorIndex === 3
-                          ? "rounded-r-md"
-                          : ""
-                      }`}
                       style={{ backgroundColor: color }}
                     />
                   ))}
-                </div>
+                  <div className="absolute inset-0 bg-black bg-opacity-0 hover:bg-opacity-10 transition-all duration-200 flex items-center justify-center">
+                    <Check className="w-5 h-5 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
+                  </div>
+                </motion.div>
               )
             )}
           </div>
@@ -148,25 +131,23 @@ const BackgroundColorsSection = () => {
           </h3>
           <div className="grid grid-cols-4 gap-3">
             {darkColorPresets.map((preset: BackgroundColors, index: number) => (
-              <div
+              <motion.div
                 key={index}
-                className="w-full h-12 border border-borderColor/50 cursor-pointer rounded-md grid grid-cols-4 transition-all hover:scale-105 shadow-sm"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="w-full h-12 border border-borderColor/50 cursor-pointer rounded-md grid grid-cols-4 shadow-sm overflow-hidden relative"
                 onClick={() => handlePresetSelect(preset)}
               >
                 {Object.values(preset).map((color, colorIndex) => (
                   <div
                     key={colorIndex}
-                    className={`transition-colors duration-200 ease-in-out ${
-                      colorIndex === 0
-                        ? "rounded-l-md"
-                        : colorIndex === 3
-                        ? "rounded-r-md"
-                        : ""
-                    }`}
                     style={{ backgroundColor: color }}
                   />
                 ))}
-              </div>
+                <div className="absolute inset-0 bg-black bg-opacity-0 hover:bg-opacity-10 transition-all duration-200 flex items-center justify-center">
+                  <Check className="w-5 h-5 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
+                </div>
+              </motion.div>
             ))}
           </div>
         </section>

@@ -4,6 +4,7 @@ import {
   AlignRightIcon,
   BoldIcon,
   ItalicIcon,
+  Type,
 } from "lucide-react";
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -132,7 +133,10 @@ const TextSettingsSection = () => {
   return (
     <div className="w-full h-full flex flex-col bg-background/50 backdrop-blur-sm">
       <div className="p-6 border-b border-borderColor/20">
-        <h2 className="text-xl font-semibold text-textColor">Typography</h2>
+        <h2 className="text-xl font-semibold text-textColor flex items-center gap-2">
+          <Type className="w-6 h-6 text-primary" />
+          Typography
+        </h2>
       </div>
       <div className="flex-grow overflow-y-auto">
         <div className="p-6 space-y-6">

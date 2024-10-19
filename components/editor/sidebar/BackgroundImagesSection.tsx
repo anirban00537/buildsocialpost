@@ -4,8 +4,9 @@ import { setBackgroundImageToAllSlides } from "@/state/slice/carousel.slice";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { RootState } from "@/state/store";
-import { X, Upload, Check } from "lucide-react";
+import { X, Upload, Check, Image as ImageIcon } from "lucide-react";
 import ImageUploadModal from "@/components/editor/ImageUploadModal";
+import { motion } from "framer-motion";
 
 const backgroundImages = [
   "https://images.unsplash.com/photo-1589810264340-0ce27bfbf751?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
@@ -39,74 +40,89 @@ const BackgroundImagesSection = () => {
   };
 
   return (
-    <div className="w-full h-full p-4 flex flex-col bg-white">
-      <h2 className="text-lg font-semibold text-gray-800 mb-4">
-        Background Image
-      </h2>
-
-      {globalBackground ? (
-        <div className="mb-4 flex items-center bg-gray-50 p-3 rounded-lg border border-gray-200">
-          <div className="relative w-20 h-20 rounded-md overflow-hidden shadow-md mr-3">
-            <Image
-              src={globalBackground}
-              alt="Current Background"
-              layout="fill"
-              objectFit="cover"
-            />
-          </div>
-          <div className="flex-grow">
-            <p className="text-sm font-medium text-gray-700 mb-1">Current background</p>
-            <Button
-              size="sm"
-              variant="outline"
-              className="w-full text-red-500 hover:text-red-700 hover:bg-red-50 transition-colors"
-              onClick={() => dispatch(setBackgroundImageToAllSlides(null))}
-            >
-              <X size={14} className="mr-2" />
-              Remove
-            </Button>
-          </div>
-        </div>
-      ) : (
-        <div className="mb-4 flex items-center justify-center w-full h-20 bg-gray-50 rounded-lg border border-dashed border-gray-300">
-          <p className="text-sm text-gray-500">No background selected</p>
-        </div>
-      )}
-
-      <div className="flex justify-between items-center mb-3">
-        <h3 className="text-sm font-medium text-gray-700">Choose an image</h3>
-        <Button
-          size="sm"
-          variant="outline"
-          onClick={() => setIsModalOpen(true)}
-          className="flex items-center hover:bg-gray-50 transition-colors"
-        >
-          <Upload size={14} className="mr-2" />
-          Upload
-        </Button>
+    <div className="w-full h-full flex flex-col bg-background/50 backdrop-blur-sm">
+      <div className="p-6 border-b border-borderColor/20">
+        <h2 className="text-xl font-semibold text-textColor flex items-center gap-2">
+          <ImageIcon className="w-6 h-6 text-primary" />
+          Background Image
+        </h2>
       </div>
       
-      <div className="grid grid-cols-3 gap-2 overflow-y-auto max-h-[calc(100vh-250px)] pr-2">
-        {backgroundImages.map((imageUrl, index) => (
-          <div
-            key={index}
-            className="relative aspect-square cursor-pointer rounded-md overflow-hidden transition-all hover:scale-105 shadow-sm hover:shadow-md group"
-            onClick={() => handleBackgroundImageSelect(imageUrl)}
+      <div className="flex-grow overflow-y-auto p-6 space-y-6">
+        {globalBackground ? (
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="flex items-center bg-background/70 p-4 rounded-lg border border-borderColor/50 shadow-sm"
           >
-            <Image
-              src={imageUrl}
-              alt={`Background ${index + 1}`}
-              layout="fill"
-              objectFit="cover"
-            />
-            <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition-opacity" />
-            {globalBackground === imageUrl && (
-              <div className="absolute top-2 right-2 bg-white rounded-full p-1">
-                <Check size={12} className="text-green-500" />
-              </div>
-            )}
-          </div>
-        ))}
+            <div className="relative w-24 h-24 rounded-md overflow-hidden shadow-md mr-4">
+              <Image
+                src={globalBackground}
+                alt="Current Background"
+                layout="fill"
+                objectFit="cover"
+              />
+            </div>
+            <div className="flex-grow">
+              <p className="text-sm font-medium text-textColor mb-2">Current background</p>
+              <Button
+                size="sm"
+                variant="destructive"
+                className="w-full"
+                onClick={() => dispatch(setBackgroundImageToAllSlides(null))}
+              >
+                <X size={14} className="mr-2" />
+                Remove
+              </Button>
+            </div>
+          </motion.div>
+        ) : (
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="flex items-center justify-center w-full h-24 bg-background/70 rounded-lg border border-dashed border-borderColor/50"
+          >
+            <p className="text-sm text-textColor/60">No background selected</p>
+          </motion.div>
+        )}
+
+        <div className="flex justify-between items-center">
+          <h3 className="text-sm font-semibold text-textColor">Choose an image</h3>
+          <Button
+            size="sm"
+            variant="outline"
+            onClick={() => setIsModalOpen(true)}
+            className="flex items-center hover:bg-background/70 transition-colors"
+          >
+            <Upload size={14} className="mr-2" />
+            Upload
+          </Button>
+        </div>
+        
+        <div className="grid grid-cols-3 gap-4 pb-6">
+          {backgroundImages.map((imageUrl, index) => (
+            <motion.div
+              key={index}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="relative aspect-square cursor-pointer rounded-md overflow-hidden shadow-sm hover:shadow-md transition-all duration-200"
+              onClick={() => handleBackgroundImageSelect(imageUrl)}
+            >
+              <Image
+                src={imageUrl}
+                alt={`Background ${index + 1}`}
+                layout="fill"
+                objectFit="cover"
+              />
+              <div className="absolute inset-0 bg-black bg-opacity-0 hover:bg-opacity-30 transition-opacity duration-200" />
+              {globalBackground === imageUrl && (
+                <div className="absolute inset-0 flex items-center justify-center bg-primary bg-opacity-20">
+                  <Check size={24} className="text-primary" />
+                </div>
+              )}
+            </motion.div>
+          ))}
+        </div>
       </div>
 
       <ImageUploadModal

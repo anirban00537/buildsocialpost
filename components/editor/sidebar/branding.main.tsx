@@ -28,7 +28,8 @@ const BrandingSection: React.FC = () => {
   return (
     <div className="w-full h-full p-6 flex flex-col bg-background/50 backdrop-blur-sm">
       <form className="flex flex-col h-full" onSubmit={handleSubmit}>
-        <h2 className="text-xl font-bold text-textColor mb-6">
+        <h2 className="text-xl font-bold text-textColor mb-6 flex items-center gap-2">
+          <User className="w-6 h-6 text-primary" />
           Brand Identity
         </h2>
         <div className="flex-grow overflow-y-auto pr-2 mb-6 space-y-6">
