@@ -164,5 +164,6 @@ export const useCarouselManager = () => {
     handlePageChange,
     currentPage,
     pageSize,
+    
   };
 };

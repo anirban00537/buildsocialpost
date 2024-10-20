@@ -29,6 +29,7 @@ const EditorNavbar: React.FC = () => {
     isAuthenticated,
     createOrUpdateCarousel,
     isCreatingOrUpdating,
+    refetchCarousels,
   } = useCarouselManager();
   const user = useSelector((state: RootState) => state.user.userinfo);
   const { name } = useSelector((state: RootState) => state.slides);
@@ -72,6 +73,10 @@ const EditorNavbar: React.FC = () => {
     dispatch(setNewCarousel());
     router.replace("/editor");
   }, [dispatch, router]);
+  const handleOpenCarouselModal = useCallback(() => {
+    refetchCarousels();
+    setIsViewAllModalOpen(true);
+  }, [refetchCarousels]);
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
@@ -100,7 +105,7 @@ const EditorNavbar: React.FC = () => {
             <div className="hidden lg:flex flex-col sm:flex-row items-start sm:items-center space-y-2 sm:space-y-0 sm:space-x-2 w-full">
               <div className="flex space-x-2 w-full sm:w-auto">
                 <Button
-                  onClick={() => setIsViewAllModalOpen(true)}
+                  onClick={handleOpenCarouselModal}
                   className="flex-1 sm:flex-initial h-8 justify-start text-textColor/85 bg-cardBackground hover:bg-primary/80 border  hover:text-white border-borderColor"
                   variant="outline"
                   size="sm"
