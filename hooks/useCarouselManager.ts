@@ -53,7 +53,7 @@ export const useCarouselManager = () => {
   const CarouselData = useSelector((state: RootState) => state.slides);
 
   const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize, setPageSize] = useState(10);
+  const [pageSize, setPageSize] = useState(6);
 
   const {
     data: carouselsResponse,
@@ -148,6 +148,7 @@ export const useCarouselManager = () => {
 
   const handlePageChange = (newPage: number) => {
     setCurrentPage(newPage);
+    refetchCarousels(); // Add this line to refetch when page changes
   };
 
   return {
@@ -162,5 +163,6 @@ export const useCarouselManager = () => {
     refetchCarousels,
     handlePageChange,
     currentPage,
+    pageSize,
   };
 };

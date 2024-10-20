@@ -1,7 +1,14 @@
 import React, { FC, useState, useCallback, useEffect } from "react";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { ChevronLeft, ChevronRight, FileText, Trash } from "lucide-react";
+import {
+  ChevronLeft,
+  ChevronRight,
+  FileText,
+  Trash,
+  Calendar,
+  Layout,
+} from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useCarouselManager } from "@/hooks/useCarouselManager";
 import toast from "react-hot-toast";
@@ -32,6 +39,7 @@ const CarouselListModal: FC<CarouselListModalProps> = ({ isOpen, onClose }) => {
     refetchCarousels,
     handlePageChange,
     currentPage,
+    pageSize,
   } = useCarouselManager();
 
   const handleOpenCarousel = useCallback(
@@ -56,13 +64,16 @@ const CarouselListModal: FC<CarouselListModalProps> = ({ isOpen, onClose }) => {
     [deleteCarousel, refetchCarousels]
   );
 
-  const onPageChange = useCallback((newPage: number) => {
-    handlePageChange(newPage);
-  }, [handlePageChange]);
+  const onPageChange = useCallback(
+    (newPage: number) => {
+      handlePageChange(newPage);
+    },
+    [handlePageChange]
+  );
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="bg-opacity-80 bg-background backdrop-filter backdrop-blur-md border border-borderColor rounded-lg text-textColor">
+      <DialogContent className=" bg-background backdrop-filter backdrop-blur-md border border-borderColor rounded-lg text-textColor">
         <div className="flex flex-col gap-4">
           <h2 className="text-lg font-medium text-textColor">All Carousels</h2>
           {isFetchingAll ? (
@@ -77,16 +88,26 @@ const CarouselListModal: FC<CarouselListModalProps> = ({ isOpen, onClose }) => {
             carousels.map((carousel: any) => (
               <div
                 key={carousel.id}
-                className="flex justify-between items-center p-2 bg-opacity-60 bg-cardBackground hover:bg-opacity-70 rounded-lg transition-all duration-200"
+                className="flex justify-between items-center p-2 bg-cardBackground hover:bg-opacity-70 rounded-lg transition-all duration-200"
               >
-                <span className="text-textColor ml-5">
-                  {carousel.data.name || "Unnamed Carousel"}
-                </span>
+                <div className="flex flex-col ml-5">
+                  <span className="text-textColor font-medium">
+                    {carousel.data.name || "Unnamed Carousel"}
+                  </span>
+                  <div className="flex items-center text-sm text-gray-500 mt-1">
+                    <Calendar className="w-3 h-3 mr-1" />
+                    <span className="mr-3">
+                      {new Date(carousel.createdAt).toLocaleDateString()}
+                    </span>
+                    <Layout className="w-3 h-3 mr-1" />
+                    <span>{carousel.data.slides.length} slides</span>
+                  </div>
+                </div>
                 <div className="flex gap-2">
                   <Button
-                    variant="outline"
-                    size="sm"
-                    className="bg-opacity-70 bg-gray-700 text-white hover:bg-opacity-90 border border-gray-600 transition-all duration-200"
+                    variant="default"
+                    size="xs"
+                    className="transition-all duration-200"
                     onClick={() => handleOpenCarousel(carousel)}
                   >
                     <FileText className="w-3 h-3 mr-1" />
@@ -94,8 +115,8 @@ const CarouselListModal: FC<CarouselListModalProps> = ({ isOpen, onClose }) => {
                   </Button>
                   <Button
                     variant="outline"
-                    size="sm"
-                    className="bg-opacity-70 bg-red-900 text-white hover:bg-opacity-90 border border-red-700 transition-all duration-200"
+                    size="xs"
+                    className="transition-all duration-200"
                     onClick={() => handleDeleteCarousel(carousel.id)}
                     disabled={isDeleting}
                   >
@@ -110,27 +131,27 @@ const CarouselListModal: FC<CarouselListModalProps> = ({ isOpen, onClose }) => {
           {pagination && pagination.totalPages > 1 && (
             <div className="flex justify-between items-center mt-4">
               <Button
-                variant="outline"
+                variant="ghost"
                 size="sm"
-                className="bg-opacity-70 bg-gray-700 text-white hover:bg-opacity-90 border border-gray-600 transition-all duration-200"
+                className="text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded px-3 py-1.5 flex items-center"
                 onClick={() => onPageChange(currentPage - 1)}
                 disabled={currentPage === 1}
               >
-                <ChevronLeft className="w-3 h-3 mr-1" />
+                <ChevronLeft className="w-4 h-4 mr-1" />
                 Previous
               </Button>
               <span className="text-textColor">
                 Page {currentPage} of {pagination.totalPages}
               </span>
               <Button
-                variant="outline"
+                variant="ghost"
                 size="sm"
-                className="bg-opacity-70 bg-gray-700 text-white hover:bg-opacity-90 border border-gray-600 transition-all duration-200"
+                className="text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded px-3 py-1.5 flex items-center"
                 onClick={() => onPageChange(currentPage + 1)}
                 disabled={currentPage === pagination.totalPages}
               >
                 Next
-                <ChevronRight className="w-3 h-3 ml-1" />
+                <ChevronRight className="w-4 h-4 ml-1" />
               </Button>
             </div>
           )}
