@@ -17,7 +17,7 @@ import {
   getCarouselDetails,
 } from "@/services/carousels.service";
 import { processApiResponse } from "@/lib/functions";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { setLoading } from "@/state/slice/user.slice";
 
 // Define a new interface for the API response
@@ -52,13 +52,16 @@ export const useCarouselManager = () => {
 
   const CarouselData = useSelector((state: RootState) => state.slides);
 
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
+
   const {
     data: carouselsResponse,
     isLoading: isFetchingAll,
     refetch: refetchCarousels
   } = useQuery<CarouselResponse>(
-    ["carousels", 1, 10], // Assuming default page and pageSize
-    () => getCarousels(1, 10),
+    ["carousels", currentPage, pageSize],
+    () => getCarousels(currentPage, pageSize),
     {
       enabled: loggedin,
       onSuccess: (response) => {
@@ -143,6 +146,10 @@ export const useCarouselManager = () => {
     if (!isLoadingCarouselDetails) dispatch(setLoading(false));
   }, [isLoadingCarouselDetails]);
 
+  const handlePageChange = (newPage: number) => {
+    setCurrentPage(newPage);
+  };
+
   return {
     carousels: carouselsResponse?.data?.items,
     pagination: carouselsResponse?.data?.pagination,
@@ -152,6 +159,8 @@ export const useCarouselManager = () => {
     isAuthenticated: loggedin,
     createOrUpdateCarousel,
     isCreatingOrUpdating,
-    refetchCarousels, // Add this to the return object
+    refetchCarousels,
+    handlePageChange,
+    currentPage,
   };
 };

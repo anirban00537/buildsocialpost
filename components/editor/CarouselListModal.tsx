@@ -30,21 +30,9 @@ const CarouselListModal: FC<CarouselListModalProps> = ({ isOpen, onClose }) => {
     isDeleting,
     isFetchingAll,
     refetchCarousels,
+    handlePageChange,
+    currentPage,
   } = useCarouselManager();
-
-  const [currentPage, setCurrentPage] = useState(1);
-
-  useEffect(() => {
-    if (isOpen) {
-      refetchCarousels();
-    }
-  }, [isOpen, refetchCarousels]);
-
-  useEffect(() => {
-    if (pagination) {
-      setCurrentPage(pagination.currentPage);
-    }
-  }, [pagination]);
 
   const handleOpenCarousel = useCallback(
     (carousel: CarouselItem) => {
@@ -68,10 +56,9 @@ const CarouselListModal: FC<CarouselListModalProps> = ({ isOpen, onClose }) => {
     [deleteCarousel, refetchCarousels]
   );
 
-  const handlePageChange = useCallback((newPage: number) => {
-    setCurrentPage(newPage);
-    // Implement pagination logic here if needed
-  }, []);
+  const onPageChange = useCallback((newPage: number) => {
+    handlePageChange(newPage);
+  }, [handlePageChange]);
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -126,7 +113,7 @@ const CarouselListModal: FC<CarouselListModalProps> = ({ isOpen, onClose }) => {
                 variant="outline"
                 size="sm"
                 className="bg-opacity-70 bg-gray-700 text-white hover:bg-opacity-90 border border-gray-600 transition-all duration-200"
-                onClick={() => handlePageChange(currentPage - 1)}
+                onClick={() => onPageChange(currentPage - 1)}
                 disabled={currentPage === 1}
               >
                 <ChevronLeft className="w-3 h-3 mr-1" />
@@ -139,7 +126,7 @@ const CarouselListModal: FC<CarouselListModalProps> = ({ isOpen, onClose }) => {
                 variant="outline"
                 size="sm"
                 className="bg-opacity-70 bg-gray-700 text-white hover:bg-opacity-90 border border-gray-600 transition-all duration-200"
-                onClick={() => handlePageChange(currentPage + 1)}
+                onClick={() => onPageChange(currentPage + 1)}
                 disabled={currentPage === pagination.totalPages}
               >
                 Next
