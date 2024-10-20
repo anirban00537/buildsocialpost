@@ -2,154 +2,221 @@
 
 ## Initial Setup and Nginx Installation
 
-1. Check Ubuntu version:
+1. Update the system and install Nginx:
 
-```
-lsb_release -a
-```
-
-Output:
-
-```
-No LSB modules are available.
-Distributor ID: Ubuntu
-Description:    Ubuntu 20.04.6 LTS
-Release:        20.04
-Codename:       focal
-```
-
-2. Update and upgrade system:
-
-```
-sudo apt update && sudo apt upgrade -y
-```
-
-3. Install Nginx:
-
-```
+```bash
+sudo apt update
 sudo apt install nginx
 ```
 
-4. Check UFW status:
+2. Verify the installation:
 
+```bash
+nginx -v
 ```
+
+3. Start Nginx and enable it to start on boot:
+
+```bash
+sudo systemctl start nginx
+sudo systemctl enable nginx
+```
+
+4. Check Nginx status:
+
+```bash
+sudo systemctl status nginx
+```
+
+5. Configure firewall to allow Nginx traffic:
+
+```bash
+sudo ufw allow 'Nginx Full'
+```
+
+6. Verify firewall status:
+
+```bash
 sudo ufw status
 ```
 
-Initial output: `Status: inactive`
+7. Create Nginx server blocks for backend and frontend:
 
-5. List available UFW applications:
+For backend (api.buildsocialpost.com):
 
-```
-sudo ufw app list
-```
-
-Output:
-
-```
-Available applications:
-  Nginx Full
-  Nginx HTTP
-  Nginx HTTPS
-  OpenSSH
+```bash
+sudo nano /etc/nginx/sites-available/api.buildsocialpost.com
 ```
 
-6. Enable UFW:
+Add the following content:
 
-```
-sudo ufw enable
-```
+```nginx
+server {
+    listen 80;
+    listen [::]:80;
+    server_name api.buildsocialpost.com;
+    return 301 https://$server_name$request_uri;
+}
 
-7. Allow HTTP, HTTPS, and SSH traffic:
+server {
+    listen 443 ssl http2;
+    listen [::]:443 ssl http2;
+    server_name api.buildsocialpost.com;
 
-```
-sudo ufw allow 80/tcp
-sudo ufw allow 443/tcp
-sudo ufw allow 22/tcp
-```
+    ssl_certificate /etc/letsencrypt/live/api.buildsocialpost.com/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/api.buildsocialpost.com/privkey.pem;
 
-8. Allow Nginx HTTP specifically:
+    root /var/www/api.buildsocialpost.com;
+    index index.html;
 
-```
-sudo ufw allow "Nginx HTTP"
-```
+    location / {
+        proxy_pass http://localhost:3001;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_cache_bypass $http_upgrade;
+    }
 
-9. Check UFW status after adding rules:
-
-```
-sudo ufw status
-```
-
-Final output:
-
-```
-Status: active
-
-To                         Action      From
---                         ------      ----
-80/tcp                     ALLOW       Anywhere
-443/tcp                    ALLOW       Anywhere
-22/tcp                     ALLOW       Anywhere
-80/tcp (Nginx HTTP)        ALLOW IN    Anywhere
-80/tcp (v6)                ALLOW IN    Anywhere (v6)
-443/tcp (v6)               ALLOW IN    Anywhere (v6)
-22/tcp (v6)                ALLOW IN    Anywhere (v6)
-80/tcp (Nginx HTTP (v6))   ALLOW IN    Anywhere (v6)
+    location /.well-known/acme-challenge/ {
+        root /var/www/html;
+    }
+}
 ```
 
-10. Verify Nginx HTTP profile:
+For frontend (buildsocialpost.com):
 
-```
-sudo ufw app info "Nginx HTTP"
-```
-
-Output:
-
-```
-Profile: Nginx HTTP
-Title: Web Server (Nginx, HTTP)
-Description: Small, but very powerful and efficient web server
-
-Port:
-  80/tcp
+```bash
+sudo nano /etc/nginx/sites-available/buildsocialpost.com
 ```
 
-11. Check UFW configuration file for Nginx:
+Add the following content:
 
+```nginx
+server {
+    listen 80;
+    listen [::]:80;
+    server_name buildsocialpost.com www.buildsocialpost.com;
+    return 301 https://$server_name$request_uri;
+}
+
+server {
+    listen 443 ssl http2;
+    listen [::]:443 ssl http2;
+    server_name buildsocialpost.com www.buildsocialpost.com;
+
+    ssl_certificate /etc/letsencrypt/live/buildsocialpost.com/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/buildsocialpost.com/privkey.pem;
+
+    root /var/www/buildsocialpost.com;
+    index index.html;
+
+    location / {
+        proxy_pass http://localhost:3000;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_cache_bypass $http_upgrade;
+    }
+
+    location /.well-known/acme-challenge/ {
+        root /var/www/html;
+    }
+}
 ```
-cat /etc/ufw/applications.d/nginx
+
+8. Create symbolic links to enable the sites:
+
+```bash
+sudo ln -s /etc/nginx/sites-available/api.buildsocialpost.com /etc/nginx/sites-enabled/
+sudo ln -s /etc/nginx/sites-available/buildsocialpost.com /etc/nginx/sites-enabled/
 ```
 
-Output:
+9. Remove the default Nginx configuration:
 
-```
-[Nginx HTTP]
-title=Web Server (Nginx, HTTP)
-description=Small, but very powerful and efficient web server
-ports=80/tcp
-
-[Nginx HTTPS]
-title=Web Server (Nginx, HTTPS)
-description=Small, but very powerful and efficient web server
-ports=443/tcp
-
-[Nginx Full]
-title=Web Server (Nginx, HTTP + HTTPS)
-description=Small, but very powerful and efficient web server
-ports=80,443/tcp
+```bash
+sudo rm /etc/nginx/sites-enabled/default
 ```
 
-12. Check Nginx status:
+10. Create necessary directories:
 
-```
-sudo systemctl status nginx.service
+```bash
+sudo mkdir -p /var/www/buildsocialpost.com
+sudo mkdir -p /var/www/api.buildsocialpost.com
+sudo mkdir -p /var/www/html/.well-known/acme-challenge
 ```
 
-13. Get server IP:
+11. Set proper permissions:
 
+```bash
+sudo chown -R www-data:www-data /var/www/buildsocialpost.com
+sudo chown -R www-data:www-data /var/www/api.buildsocialpost.com
+sudo chown -R www-data:www-data /var/www/html
 ```
-ip a
+
+12. Test Nginx configuration:
+
+```bash
+sudo nginx -t
 ```
+
+13. If the test is successful, reload Nginx:
+
+```bash
+sudo systemctl reload nginx
+```
+
+14. Install Certbot:
+
+```bash
+sudo snap install --classic certbot
+sudo ln -s /snap/bin/certbot /usr/bin/certbot
+```
+
+15. Obtain SSL certificates:
+
+```bash
+sudo certbot --nginx -d buildsocialpost.com -d www.buildsocialpost.com -d api.buildsocialpost.com
+```
+
+Follow the prompts to complete the SSL certificate installation.
+
+16. Verify the final Nginx configurations:
+
+```bash
+sudo cat /etc/nginx/sites-available/buildsocialpost.com
+sudo cat /etc/nginx/sites-available/api.buildsocialpost.com
+```
+
+17. Reload Nginx one final time:
+
+```bash
+sudo systemctl reload nginx
+```
+
+18. Set up automatic renewal for SSL certificates:
+
+```bash
+sudo systemctl status certbot.timer
+```
+
+This should show that the Certbot timer is active and set to run daily.
+
+19. Test the automatic renewal process:
+
+```bash
+sudo certbot renew --dry-run
+```
+
+If successful, your SSL certificates will automatically renew when needed.
+
+20. Test your websites by accessing them via HTTPS in a web browser:
+    - https://buildsocialpost.com
+    - https://www.buildsocialpost.com
+    - https://api.buildsocialpost.com
+
+This completes the Nginx installation and configuration process, including SSL setup for both domains.
 
 ## PostgreSQL Installation
 
@@ -218,6 +285,48 @@ npm --version
 yarn --version
 ```
 
+## tmux Installation
+
+tmux is a terminal multiplexer that allows you to run multiple terminal sessions within a single window. It's useful for managing long-running processes on a remote server.
+
+1. Install tmux:
+
+```bash
+sudo apt update
+sudo apt install tmux
+```
+
+2. Verify the installation:
+
+```bash
+tmux -V
+```
+
+3. Basic tmux usage:
+
+- Create a new session:
+  ```bash
+  tmux new -s session_name
+  ```
+
+- Detach from a session:
+  Press `Ctrl+B`, then `D`
+
+- List all sessions:
+  ```bash
+  tmux ls
+  ```
+
+- Attach to a session:
+  ```bash
+  tmux attach -t session_name
+  ```
+
+- Kill a session:
+  ```bash
+  tmux kill-session -t session_name
+  ```
+
 ## Nginx Installation and Configuration
 
 1. Install Nginx:
@@ -271,10 +380,24 @@ Add the following content:
 ```nginx
 server {
     listen 80;
+    listen [::]:80;
+    server_name api.buildsocialpost.com;
+    return 301 https://$server_name$request_uri;
+}
+
+server {
+    listen 443 ssl http2;
+    listen [::]:443 ssl http2;
     server_name api.buildsocialpost.com;
 
+    ssl_certificate /etc/letsencrypt/live/api.buildsocialpost.com/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/api.buildsocialpost.com/privkey.pem;
+
+    root /var/www/api.buildsocialpost.com;
+    index index.html;
+
     location / {
-        proxy_pass http://127.0.0.1:3001;
+        proxy_pass http://localhost:3001;
         proxy_http_version 1.1;
         proxy_set_header Upgrade $http_upgrade;
         proxy_set_header Connection 'upgrade';
@@ -282,8 +405,7 @@ server {
         proxy_cache_bypass $http_upgrade;
     }
 
-    location /.well-known {
-        allow all;
+    location /.well-known/acme-challenge/ {
         root /var/www/html;
     }
 }
@@ -300,10 +422,24 @@ Add the following content:
 ```nginx
 server {
     listen 80;
-    server_name buildsocialpost.com;
+    listen [::]:80;
+    server_name buildsocialpost.com www.buildsocialpost.com;
+    return 301 https://$server_name$request_uri;
+}
+
+server {
+    listen 443 ssl http2;
+    listen [::]:443 ssl http2;
+    server_name buildsocialpost.com www.buildsocialpost.com;
+
+    ssl_certificate /etc/letsencrypt/live/buildsocialpost.com/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/buildsocialpost.com/privkey.pem;
+
+    root /var/www/buildsocialpost.com;
+    index index.html;
 
     location / {
-        proxy_pass http://127.0.0.1:3000;
+        proxy_pass http://localhost:3000;
         proxy_http_version 1.1;
         proxy_set_header Upgrade $http_upgrade;
         proxy_set_header Connection 'upgrade';
@@ -311,8 +447,7 @@ server {
         proxy_cache_bypass $http_upgrade;
     }
 
-    location /.well-known {
-        allow all;
+    location /.well-known/acme-challenge/ {
         root /var/www/html;
     }
 }
