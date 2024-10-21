@@ -3,7 +3,13 @@ import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import Image from "next/image";
-import { X, ChevronLeft, ChevronRight, AlertTriangle, Upload } from "lucide-react";
+import {
+  X,
+  ChevronLeft,
+  ChevronRight,
+  AlertTriangle,
+  Upload,
+} from "lucide-react";
 import { useImageUpload } from "@/hooks/useimageUpload";
 import {
   AlertDialog,
@@ -69,19 +75,22 @@ const ImageUploadModal: React.FC<ImageUploadModalProps> = ({
     }
   };
 
-  const onDrop = React.useCallback((acceptedFiles: File[]) => {
-    const validFiles = acceptedFiles.filter(file => 
-      file.type === "image/jpeg" || file.type === "image/png"
-    );
-    
-    if (validFiles.length !== acceptedFiles.length) {
-      toast.error("Only JPG and PNG images are allowed.");
-    }
-    
-    if (validFiles.length > 0) {
-      handleUpload(validFiles);
-    }
-  }, [handleUpload]);
+  const onDrop = React.useCallback(
+    (acceptedFiles: File[]) => {
+      const validFiles = acceptedFiles.filter(
+        (file) => file.type === "image/jpeg" || file.type === "image/png"
+      );
+
+      if (validFiles.length !== acceptedFiles.length) {
+        toast.error("Only JPG and PNG images are allowed.");
+      }
+
+      if (validFiles.length > 0) {
+        handleUpload(validFiles);
+      }
+    },
+    [handleUpload]
+  );
 
   const renderPageNumbers = () => {
     const pageNumbers = [];
@@ -98,9 +107,10 @@ const ImageUploadModal: React.FC<ImageUploadModalProps> = ({
       pageNumbers.push(
         <Button
           key={i}
+          size="sm"
           variant={i === currentPage ? "default" : "outline"}
           onClick={() => handlePageChange(i)}
-          className="mx-1 bg-opacity-70 bg-gray-700 text-white hover:bg-opacity-90 border border-gray-600 transition-all duration-200"
+          className="mx-1 transition-all duration-200"
         >
           {i}
         </Button>
@@ -112,7 +122,7 @@ const ImageUploadModal: React.FC<ImageUploadModalProps> = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="w-[800px] max-h-[85vh] overflow-y-auto bg-opacity-80 bg-background backdrop-filter backdrop-blur-md border border-borderColor rounded-lg text-textColor">
+      <DialogContent className="w-[800px] max-h-[85vh] overflow-y-auto bg-background backdrop-filter backdrop-blur-md border border-borderColor rounded-lg text-textColor">
         <h2 className="text-lg font-semibold mb-4 text-textColor">
           Image Management
         </h2>
@@ -130,7 +140,7 @@ const ImageUploadModal: React.FC<ImageUploadModalProps> = ({
               <progress
                 value={totalUsage}
                 max={MAX_STORAGE_MB}
-                className="w-full h-2 bg-gray-200 rounded-full overflow-hidden"
+                className="w-full h-2 bg-slate-100 rounded-lg"
               >
                 {(totalUsage / MAX_STORAGE_MB) * 100}%
               </progress>
@@ -139,12 +149,14 @@ const ImageUploadModal: React.FC<ImageUploadModalProps> = ({
             <div
               {...getRootProps()}
               className={`border-2 border-dashed p-4 rounded-lg cursor-pointer bg-opacity-60 bg-cardBackground hover:bg-opacity-70 transition-all duration-200 ${
-                uploadLoading ? "cursor-not-allowed" : "hover:border-gray-400"
+                uploadLoading ? "cursor-not-allowed" : "hover:border-slate-400"
               }`}
             >
-              <input {...getInputProps({ 
-                accept: ".jpg,.jpeg,.png,image/jpeg,image/png" 
-              })} />
+              <input
+                {...getInputProps({
+                  accept: ".jpg,.jpeg,.png,image/jpeg,image/png",
+                })}
+              />
               <div className="text-center text-textColor">
                 {uploadLoading ? (
                   "Uploading..."
@@ -187,16 +199,16 @@ const ImageUploadModal: React.FC<ImageUploadModalProps> = ({
                           className="object-cover w-full h-48 transition-transform duration-300 group-hover:scale-110"
                         />
                       </div>
-                      <button
+                      <Button
                         onClick={() => setDeleteImageId(image.id)}
-                        className="absolute top-2 right-2 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                        className="absolute top-2 right-2 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300 hover:bg-red-600"
                         disabled={uploadLoading}
                       >
                         <X className="h-4 w-4" />
-                      </button>
+                      </Button>
                       <div className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-50 text-white p-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                         <p className="text-sm truncate">{image.name}</p>
-                        <p className="text-xs">
+                        <p className="text-sm">
                           {(image.size / (1024 * 1024)).toFixed(2)} MB
                         </p>
                       </div>
@@ -204,15 +216,15 @@ const ImageUploadModal: React.FC<ImageUploadModalProps> = ({
                   ))}
                 </div>
 
-                {/* Pagination Controls */}
                 {totalPages > 1 && (
                   <div className="flex flex-col items-center mt-4">
                     <div className="flex items-center mb-2">
                       <Button
                         variant="outline"
+                        size="sm"
                         onClick={() => handlePageChange(currentPage - 1)}
                         disabled={currentPage === 1}
-                        className="mr-2 bg-opacity-70 bg-gray-700 text-white hover:bg-opacity-90 border border-gray-600 transition-all duration-200"
+                        className="mr-2 transition-all duration-200"
                       >
                         <ChevronLeft className="w-4 h-4" />
                         Previous
@@ -220,35 +232,15 @@ const ImageUploadModal: React.FC<ImageUploadModalProps> = ({
                       {renderPageNumbers()}
                       <Button
                         variant="outline"
+                        size="sm"
                         onClick={() => handlePageChange(currentPage + 1)}
                         disabled={currentPage === totalPages}
-                        className="ml-2 bg-opacity-70 bg-gray-700 text-white hover:bg-opacity-90 border border-gray-600 transition-all duration-200"
+                        className="ml-2 transition-all duration-200"
                       >
                         Next
                         <ChevronRight className="w-4 h-4" />
                       </Button>
                     </div>
-                    <form
-                      onSubmit={handleJumpToPage}
-                      className="flex items-center"
-                    >
-                      <Input
-                        type="number"
-                        min="1"
-                        max={totalPages}
-                        value={jumpToPage}
-                        onChange={(e) => setJumpToPage(e.target.value)}
-                        placeholder="Jump to page"
-                        className="w-24 mr-2 bg-opacity-70 bg-gray-700 text-white border border-gray-600"
-                      />
-                      <Button
-                        type="submit"
-                        variant="outline"
-                        className="bg-opacity-70 bg-gray-700 text-white hover:bg-opacity-90 border border-gray-600 transition-all duration-200"
-                      >
-                        Go
-                      </Button>
-                    </form>
                   </div>
                 )}
               </>
@@ -256,7 +248,10 @@ const ImageUploadModal: React.FC<ImageUploadModalProps> = ({
           </>
         )}
 
-        <AlertDialog open={!!deleteImageId} onOpenChange={() => setDeleteImageId(null)}>
+        <AlertDialog
+          open={!!deleteImageId}
+          onOpenChange={() => setDeleteImageId(null)}
+        >
           <AlertDialogContent>
             <AlertDialogHeader>
               <AlertDialogTitle className="flex items-center text-red-600">
@@ -264,15 +259,20 @@ const ImageUploadModal: React.FC<ImageUploadModalProps> = ({
                 Confirm Image Deletion
               </AlertDialogTitle>
               <AlertDialogDescription className="text-gray-600">
-                Are you sure you want to delete this image? This action cannot be undone.
-                <br /><br />
-                <strong>Warning:</strong> This image may be in use elsewhere in the application. 
-                Deleting it could potentially break layouts or cause missing images in your projects.
+                Are you sure you want to delete this image? This action cannot
+                be undone.
+                <br />
+                <br />
+                <strong>Warning:</strong> This image may be in use elsewhere in
+                the application. Deleting it could potentially break layouts or
+                cause missing images in your projects.
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
-              <AlertDialogCancel className="bg-gray-100 text-gray-800 hover:bg-gray-200">Cancel</AlertDialogCancel>
-              <AlertDialogAction 
+              <AlertDialogCancel className="bg-gray-100 text-gray-800 hover:bg-gray-200">
+                Cancel
+              </AlertDialogCancel>
+              <AlertDialogAction
                 onClick={handleDeleteConfirm}
                 className="bg-red-600 text-white hover:bg-red-700"
               >
@@ -285,7 +285,7 @@ const ImageUploadModal: React.FC<ImageUploadModalProps> = ({
         <Button
           variant="default"
           onClick={onClose}
-          className="mt-4 w-full bg-opacity-70 bg-gray-700 text-white hover:bg-opacity-90 border border-gray-600 transition-all duration-200"
+          className="mt-4 w-full transition-all duration-200"
         >
           Close
         </Button>

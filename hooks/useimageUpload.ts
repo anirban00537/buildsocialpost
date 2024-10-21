@@ -10,6 +10,7 @@ import {
   deleteImage,
   getImageUsage,
 } from "@/services/image.service";
+import { processApiResponse } from "@/lib/functions";
 
 interface ImageInfo {
   id: string;
@@ -102,8 +103,7 @@ export const useImageUpload = (isOpen: boolean) => {
         toast.success("Image uploaded successfully!");
       },
       onError: (error: Error) => {
-        console.error("Error uploading image: ", error);
-        toast.error(error.message || "Failed to upload image.");
+        processApiResponse(error);
       },
     }
   );
@@ -114,19 +114,27 @@ export const useImageUpload = (isOpen: boolean) => {
     }
 
     if (file.size > MAX_STORAGE_MB * MB_TO_BYTES) {
-      throw new Error(`Image ${file.name} exceeds the ${MAX_STORAGE_MB} MB limit.`);
+      throw new Error(
+        `Image ${file.name} exceeds the ${MAX_STORAGE_MB} MB limit.`
+      );
     }
 
     const newTotalUsage = totalUsage + file.size / MB_TO_BYTES;
     if (newTotalUsage > MAX_STORAGE_MB) {
-      throw new Error(`Uploading this image would exceed your ${MAX_STORAGE_MB} MB storage limit.`);
+      throw new Error(
+        `Uploading this image would exceed your ${MAX_STORAGE_MB} MB storage limit.`
+      );
     }
 
     return uploadMutation.mutateAsync(file);
   };
 
   const onDrop = useCallback(
-    async (acceptedFiles: File[], fileRejections: FileRejection[], event: DropEvent) => {
+    async (
+      acceptedFiles: File[],
+      fileRejections: FileRejection[],
+      event: DropEvent
+    ) => {
       if (!userinfo) {
         toast.error("Please log in to upload images.");
         return;
@@ -147,14 +155,15 @@ export const useImageUpload = (isOpen: boolean) => {
 
       if (fileRejections.length > 0) {
         fileRejections.forEach((rejection) => {
-          toast.error(`File ${rejection.file.name} was rejected: ${rejection.errors[0].message}`);
+          toast.error(
+            `File ${rejection.file.name} was rejected: ${rejection.errors[0].message}`
+          );
         });
       }
     },
     [loggedin, userinfo, totalUsage, uploadImage]
   );
 
-  // Delete image mutation
   const deleteMutation = useMutation<void, Error, string>(
     (imageId) => deleteImage(imageId),
     {

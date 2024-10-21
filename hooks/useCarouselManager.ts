@@ -1,7 +1,7 @@
 import { useRouter, useSearchParams } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/state/store";
-import { CarouselState, ResponseData } from "@/types";
+import { ApiError, ApiResponse, CarouselState, ResponseData } from "@/types";
 import {
   addAllSlides,
   setAllData,
@@ -58,16 +58,15 @@ export const useCarouselManager = () => {
   const {
     data: carouselsResponse,
     isLoading: isFetchingAll,
-    refetch: refetchCarousels
+    refetch: refetchCarousels,
   } = useQuery<CarouselResponse>(
     ["carousels", currentPage, pageSize],
     () => getCarousels(currentPage, pageSize),
     {
       enabled: loggedin,
       onSuccess: (response) => {
-        console.log("carousels response", response);
       },
-      onError: () => toast.error("Failed to fetch carousels"),
+      onError: (error: any) => processApiResponse(error),
     }
   );
 
@@ -99,13 +98,11 @@ export const useCarouselManager = () => {
           queryClient.invalidateQueries("carousels");
         },
         onError: (error) => {
-          console.error("Error in create/update:", error);
           processApiResponse(error);
         },
       }
     );
 
-  // Delete carousel mutation
   const { mutate: deleteCarouselMutation, isLoading: isDeleting } = useMutation<
     ResponseData,
     Error,
@@ -121,26 +118,18 @@ export const useCarouselManager = () => {
     },
   });
 
-  const {
-    data: carouselDetails,
-    isLoading: isLoadingCarouselDetails,
-    isError: isErrorCarouselDetails,
-    refetch: refetchCarouselDetails,
-  } = useQuery<CarouselState, Error>(
-    ["carouselDetails", carouselId],
-    () => getCarouselDetails(carouselId!),
-    {
-      enabled: !!carouselId,
-      onSuccess: (data: any) => {
-        console.log(data.data.data, "data.slides");
-        dispatch(setAllData(data.data.data));
-      },
-      onError: (error: Error) => {
-        toast.error("Failed to fetch carousel details");
-        console.error("Error fetching carousel details:", error);
-      },
-    }
-  );
+  const { isLoading: isLoadingCarouselDetails } = useQuery<
+    CarouselState,
+    Error
+  >(["carouselDetails", carouselId], () => getCarouselDetails(carouselId!), {
+    enabled: !!carouselId,
+    onSuccess: (data: any) => {
+      dispatch(setAllData(data.data.data));
+    },
+    onError: (error: Error) => {
+      processApiResponse(error);
+    },
+  });
 
   useEffect(() => {
     if (!isLoadingCarouselDetails) dispatch(setLoading(false));
@@ -148,7 +137,7 @@ export const useCarouselManager = () => {
 
   const handlePageChange = (newPage: number) => {
     setCurrentPage(newPage);
-    refetchCarousels(); // Add this line to refetch when page changes
+    refetchCarousels();
   };
 
   return {
@@ -164,6 +153,5 @@ export const useCarouselManager = () => {
     handlePageChange,
     currentPage,
     pageSize,
-    
   };
 };
