@@ -11,6 +11,7 @@ import {
   getImageUsage,
 } from "@/services/image.service";
 import { processApiResponse } from "@/lib/functions";
+import { ApiResponse } from "@/types";
 
 interface ImageInfo {
   id: string;
@@ -94,13 +95,14 @@ export const useImageUpload = (isOpen: boolean) => {
   const totalCount = usageData?.data.totalCount || 0;
 
   // Upload images mutation
-  const uploadMutation = useMutation<ImageInfo, Error, File>(
+  const uploadMutation = useMutation<ApiResponse, Error, File>(
     (file) => uploadImageService(file),
     {
-      onSuccess: () => {
+      onSuccess: (response: ApiResponse) => {
         refetchUsage();
         refetchImages();
-        toast.success("Image uploaded successfully!");
+        console.log(response, "res");
+        processApiResponse(response);
       },
       onError: (error: Error) => {
         processApiResponse(error);

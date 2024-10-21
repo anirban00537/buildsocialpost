@@ -10,7 +10,7 @@ export const uploadImage = async (file: File) => {
   const formData = new FormData();
   formData.append("file", file);
   const response = await fRequest.post("/files/upload", formData);
-  return response.data;
+  return response;
 };
 
 export const getImages = async ({ page, pageSize }: PaginationParams = {}) => {
