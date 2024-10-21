@@ -1,6 +1,8 @@
 import { Poppins } from "next/font/google";
 import "./globals.css";
 import DefaultLayout from "@/components/layout/default.layout";
+import Script from "next/script";
+
 const poppins = Poppins({
   weight: ["400", "700"],
   subsets: ["latin"],
@@ -84,6 +86,15 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
+      <head>
+        <Script
+          defer
+          src="https://umami.buildsocialpost.com/script.js"
+          data-website-id={process.env.NEXT_PUBLIC_UMAMI_WEBSITE_ID}
+          data-host-url="https://umami.buildsocialpost.com"
+          strategy="afterInteractive"
+        />
+      </head>
       <body className={`${poppins.className}`}>
         <DefaultLayout>{children}</DefaultLayout>
       </body>
