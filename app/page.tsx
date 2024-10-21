@@ -1,7 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import ShimmerButton from "@/components/magicui/shimmer-button";
 
 const Page = () => {
   const [countdown, setCountdown] = useState(5);
@@ -48,11 +47,11 @@ const Page = () => {
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  <ShimmerButton className="shadow-2xl" background="#3369E7">
+                  <button className="shadow-2xl bg-[#3369E7]">
                     <span className="whitespace-pre-wrap text-center text-sm font-medium leading-none tracking-tight text-white dark:from-white dark:to-slate-900/10 lg:text-lg">
                       Visit BuildSocialPost.com Now
                     </span>
-                  </ShimmerButton>
+                  </button>
                 </a>
               </div>
             </motion.div>

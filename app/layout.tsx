@@ -1,6 +1,5 @@
 import { Poppins } from "next/font/google";
 import "./globals.css";
-import DefaultLayout from "@/components/layout/default.layout";
 const poppins = Poppins({
   weight: ["400", "700"],
   subsets: ["latin"],
@@ -84,9 +83,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${poppins.className}`}>
-        <DefaultLayout>{children}</DefaultLayout>
-      </body>
+      <body className={`${poppins.className}`}>{children}</body>
     </html>
   );
 }
