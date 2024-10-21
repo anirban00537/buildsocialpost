@@ -4,8 +4,9 @@ import {
   AlignRightIcon,
   BoldIcon,
   ItalicIcon,
+  Type,
 } from "lucide-react";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/state/store";
 import {
@@ -28,11 +29,19 @@ import { fontOptions } from "@/lib/fonts";
 const TextSettingsSection = () => {
   const dispatch = useDispatch();
   const fontFamily = useSelector((state: RootState) => state.slides.fontFamily);
-  const titleTextSettings = useSelector((state: RootState) => state.slides.titleTextSettings);
-  const descriptionTextSettings = useSelector((state: RootState) => state.slides.descriptionTextSettings);
-  const taglineTextSettings = useSelector((state: RootState) => state.slides.taglineTextSettings);
+  const titleTextSettings = useSelector(
+    (state: RootState) => state.slides.titleTextSettings
+  );
+  const descriptionTextSettings = useSelector(
+    (state: RootState) => state.slides.descriptionTextSettings
+  );
+  const taglineTextSettings = useSelector(
+    (state: RootState) => state.slides.taglineTextSettings
+  );
 
-  const [selectedSection, setSelectedSection] = useState<"title" | "description" | "tagline">("title");
+  const [selectedSection, setSelectedSection] = useState<
+    "title" | "description" | "tagline"
+  >("title");
 
   const textSettings =
     selectedSection === "title"
@@ -42,19 +51,31 @@ const TextSettingsSection = () => {
       : taglineTextSettings;
 
   const [fontSize, setFontSize] = useState(textSettings.fontSize);
-  const [fontStyle, setFontStyle] = useState(textSettings.fontStyle || "normal");
-  const [fontWeight, setFontWeight] = useState<number>(
-    typeof textSettings.fontWeight === "number" ? textSettings.fontWeight : textSettings.fontWeight === "bold" ? 700 : 400
-  );
-  const [selectedWeight, setSelectedWeight] = useState(fontWeight === 700 || fontWeight > 500 ? "bold" : "normal");
+  const [fontStyle, setFontStyle] = useState<"normal" | "italic">("normal");
+  const [fontWeight, setFontWeight] = useState<"normal" | "bold">("normal");
 
-  const handleSectionChange = (section: "title" | "description" | "tagline") => {
+  useEffect(() => {
+    setFontStyle(textSettings.fontStyle || "normal");
+    setFontWeight(typeof textSettings.fontWeight === "number"
+      ? textSettings.fontWeight >= 700 ? "bold" : "normal"
+      : textSettings.fontWeight === "bold" ? "bold" : "normal");
+  }, [selectedSection, textSettings]);
+
+  const handleSectionChange = (
+    section: "title" | "description" | "tagline"
+  ) => {
     setSelectedSection(section);
-    const newTextSettings = section === "title" ? titleTextSettings : section === "description" ? descriptionTextSettings : taglineTextSettings;
+    const newTextSettings =
+      section === "title"
+        ? titleTextSettings
+        : section === "description"
+        ? descriptionTextSettings
+        : taglineTextSettings;
     setFontSize(newTextSettings.fontSize);
     setFontStyle(newTextSettings.fontStyle);
-    setFontWeight(typeof newTextSettings.fontWeight === "number" ? newTextSettings.fontWeight : newTextSettings.fontWeight === "bold" ? 700 : 400);
-    setSelectedWeight(newTextSettings.fontWeight === "bold" ? "bold" : "normal");
+    setFontWeight(typeof newTextSettings.fontWeight === "number"
+      ? newTextSettings.fontWeight >= 700 ? "bold" : "normal"
+      : newTextSettings.fontWeight === "bold" ? "bold" : "normal");
   };
 
   const handleFontSizeChange = (size: number) => {
@@ -63,7 +84,10 @@ const TextSettingsSection = () => {
       selectedSection === "title"
         ? setTitleTextSettings({ ...titleTextSettings, fontSize: size })
         : selectedSection === "description"
-        ? setDescriptionTextSettings({ ...descriptionTextSettings, fontSize: size })
+        ? setDescriptionTextSettings({
+            ...descriptionTextSettings,
+            fontSize: size,
+          })
         : setTaglineTextSettings({ ...taglineTextSettings, fontSize: size })
     );
   };
@@ -74,15 +98,17 @@ const TextSettingsSection = () => {
       selectedSection === "title"
         ? setTitleTextSettings({ ...titleTextSettings, fontStyle: style })
         : selectedSection === "description"
-        ? setDescriptionTextSettings({ ...descriptionTextSettings, fontStyle: style })
+        ? setDescriptionTextSettings({
+            ...descriptionTextSettings,
+            fontStyle: style,
+          })
         : setTaglineTextSettings({ ...taglineTextSettings, fontStyle: style })
     );
   };
 
-  const handleWeightTabChange = (weight: "normal" | "bold") => {
-    setSelectedWeight(weight);
+  const handleFontWeightChange = (weight: "normal" | "bold") => {
+    setFontWeight(weight);
     const newWeight = weight === "bold" ? 700 : 400;
-    setFontWeight(newWeight);
     dispatch(
       selectedSection === "title"
         ? setTitleTextSettings({ ...titleTextSettings, fontWeight: newWeight })
@@ -94,7 +120,9 @@ const TextSettingsSection = () => {
 
   const handleAlignmentChange = (alignment: "left" | "center" | "right") => {
     dispatch(setTitleTextSettings({ ...titleTextSettings, alignment }));
-    dispatch(setDescriptionTextSettings({ ...descriptionTextSettings, alignment }));
+    dispatch(
+      setDescriptionTextSettings({ ...descriptionTextSettings, alignment })
+    );
     dispatch(setTaglineTextSettings({ ...taglineTextSettings, alignment }));
   };
 
@@ -104,122 +132,112 @@ const TextSettingsSection = () => {
 
   return (
     <div className="w-full h-full flex flex-col bg-background/50 backdrop-blur-sm">
-      <legend className="text-base font-semibold text-textColor p-4 pb-2">Text Settings</legend>
+      <div className="p-6 border-b border-borderColor/20">
+        <h2 className="text-xl font-semibold text-textColor flex items-center gap-2">
+          <Type className="w-6 h-6 text-primary" />
+          Typography
+        </h2>
+      </div>
       <div className="flex-grow overflow-y-auto">
-        <div className="p-4 pt-2 space-y-4">
-          <div className="flex gap-2">
-            {["title", "description", "tagline"].map((section) => (
-              <Button
-                key={section}
-                type="button"
-                size="sm"
-                className={`text-xs px-2 py-1 border border-borderColor/50 rounded-md ${
-                  selectedSection === section
-                    ? "bg-primary/80 text-white"
-                    : "bg-cardBackground/50 text-textColor hover:bg-primary/20"
-                }`}
-                onClick={() => handleSectionChange(section as any)}
-              >
-                {section.charAt(0).toUpperCase() + section.slice(1)}
-              </Button>
-            ))}
-          </div>
-
-          {/* Font Size */}
+        <div className="p-6 space-y-6">
           <div className="space-y-2">
-            <label className="text-sm text-textColor/80">Font Size</label>
-            <div className="flex items-center gap-2">
-              <Slider
-                max={88}
-                min={10}
-                step={1}
-                value={[fontSize]}
-                onValueChange={(value) => handleFontSizeChange(value[0])}
-                className="flex-grow"
-              />
-              <span className="text-xs font-medium text-textColor/80 w-8 text-right">{fontSize}px</span>
+            <label className="text-sm font-medium text-textColor/80">
+              Text Element
+            </label>
+            <div className="flex gap-2 p-1 bg-cardBackground/30 rounded-lg">
+              {["title", "description", "tagline"].map((section) => (
+                <Button
+                  key={section}
+                  type="button"
+                  size="sm"
+                  variant={selectedSection === section ? "default" : "ghost"}
+                  className={`flex-1 text-xs capitalize ${
+                    selectedSection === section
+                      ? "bg-white text-primary shadow-sm"
+                      : "text-textColor hover:bg-white/50 hover:text-primary"
+                  }`}
+                  onClick={() => handleSectionChange(section as any)}
+                >
+                  {section}
+                </Button>
+              ))}
             </div>
           </div>
 
-          {/* Font Style */}
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <label className="text-sm font-medium text-textColor/80">
+                Font Size
+              </label>
+              <span className="text-xs font-medium text-textColor/60">
+                {fontSize}px
+              </span>
+            </div>
+            <Slider
+              max={88}
+              min={10}
+              step={1}
+              value={[fontSize]}
+              onValueChange={(value) => handleFontSizeChange(value[0])}
+              className="w-full"
+            />
+          </div>
+
           <div className="space-y-2">
-            <label className="text-sm text-textColor/80">Font Style</label>
-            <div className="grid grid-cols-2 gap-2">
+            <label className="text-sm font-medium text-textColor/80">
+              Style & Weight
+            </label>
+            <div className="flex gap-2">
               <Button
                 size="sm"
-                type="button"
-                className={`text-xs border border-borderColor/50 p-1 flex items-center justify-center rounded-md transition-all duration-150 ${
-                  fontStyle === "normal"
-                    ? "bg-primary/80 text-white"
-                    : "hover:bg-primary/20 text-textColor bg-cardBackground/50"
-                }`}
+                variant={fontStyle === "normal" ? "default" : "outline"}
+                className="flex-1 text-xs"
                 onClick={() => handleFontStyleChange("normal")}
-              >
-                <BoldIcon size={14} />
-              </Button>
-              <Button
-                size="sm"
-                type="button"
-                className={`text-xs border border-borderColor/50 p-1 flex items-center justify-center rounded-md transition-all duration-150 ${
-                  fontStyle === "italic"
-                    ? "bg-primary/80 text-white"
-                    : "hover:bg-primary/20 text-textColor bg-cardBackground/50"
-                }`}
-                onClick={() => handleFontStyleChange("italic")}
-              >
-                <ItalicIcon size={14} />
-              </Button>
-            </div>
-          </div>
-
-          {/* Font Weight */}
-          <div className="space-y-2">
-            <label className="text-sm text-textColor/80">Font Weight</label>
-            <div className="grid grid-cols-2 gap-2">
-              <Button
-                size="sm"
-                type="button"
-                className={`text-xs border border-borderColor/50 p-1 flex items-center justify-center rounded-md transition-all duration-150 ${
-                  selectedWeight === "normal"
-                    ? "bg-primary/80 text-white"
-                    : "hover:bg-primary/20 text-textColor bg-cardBackground/50"
-                }`}
-                onClick={() => handleWeightTabChange("normal")}
               >
                 Normal
               </Button>
               <Button
                 size="sm"
-                type="button"
-                className={`text-xs border border-borderColor/50 p-1 flex items-center justify-center rounded-md transition-all duration-150 ${
-                  selectedWeight === "bold"
-                    ? "bg-primary/80 text-white"
-                    : "hover:bg-primary/20 text-textColor bg-cardBackground/50"
-                }`}
-                onClick={() => handleWeightTabChange("bold")}
+                variant={fontStyle === "italic" ? "default" : "outline"}
+                className="flex-1 text-xs"
+                onClick={() => handleFontStyleChange("italic")}
               >
-                Bold
+                <ItalicIcon size={14} className="mr-2" />
+                Italic
               </Button>
             </div>
           </div>
 
-          {/* Text Alignment */}
           <div className="space-y-2">
-            <label className="text-sm text-textColor/80">Text Alignment</label>
-            <div className="grid grid-cols-3 gap-2">
+            <label className="text-sm font-medium text-textColor/80">
+              Alignment
+            </label>
+            <div className="flex gap-2 p-1 bg-cardBackground/30 rounded-lg">
               {[
-                { alignment: "left" as "left", icon: <AlignLeftIcon size={14} /> },
-                { alignment: "center" as "center", icon: <AlignCenterIcon size={14} /> },
-                { alignment: "right" as "right", icon: <AlignRightIcon size={14} /> },
+                {
+                  alignment: "left" as "left",
+                  icon: <AlignLeftIcon size={14} />,
+                },
+                {
+                  alignment: "center" as "center",
+                  icon: <AlignCenterIcon size={14} />,
+                },
+                {
+                  alignment: "right" as "right",
+                  icon: <AlignRightIcon size={14} />,
+                },
               ].map(({ alignment, icon }) => (
                 <Button
-                  size="sm"
-                  type="button"
                   key={alignment}
-                  className={`text-xs border border-borderColor/50 p-1 flex items-center justify-center rounded-md transition-all duration-150 ${
+                  type="button"
+                  size="sm"
+                  variant={
+                    textSettings.alignment === alignment ? "default" : "ghost"
+                  }
+                  className={`flex-1 ${
                     textSettings.alignment === alignment
-                      ? "bg-primary/80 text-white"
-                      : "hover:bg-primary/20 text-textColor bg-cardBackground/50"
+                      ? "bg-white text-primary shadow-sm"
+                      : "text-textColor hover:bg-white/50 hover:text-primary"
                   }`}
                   onClick={() => handleAlignmentChange(alignment)}
                 >
@@ -229,25 +247,51 @@ const TextSettingsSection = () => {
             </div>
           </div>
 
-          {/* Font Family */}
           <div className="space-y-2">
-            <label className="text-sm text-textColor/80">Font Family</label>
+            <label className="text-sm font-medium text-textColor/80">
+              Font Family
+            </label>
             <Select onValueChange={handleFontFamilyChange} value={fontFamily}>
-              <SelectTrigger className="w-full h-8 text-xs rounded-md border border-borderColor/50 text-textColor bg-cardBackground/50">
+              <SelectTrigger className="w-full h-10 text-sm rounded-md border border-borderColor/50 text-textColor bg-cardBackground/50">
                 <SelectValue placeholder="Select a font" />
               </SelectTrigger>
-              <SelectContent className="bg-cardBackground/90 text-textColor border border-borderColor/50">
+              <SelectContent className="bg-background text-textColor border border-borderColor/50">
                 {fontOptions.map((font) => (
                   <SelectItem
                     key={font.slug}
-                    className={`${font.font.className} text-textColor text-xs`}
+                    className={`${font.font.className} text-textColor text-sm py-2`}
                     value={font.slug || "default"}
                   >
-                    <span className="text-textColor">{font.name}</span>
+                    {font.name}
                   </SelectItem>
                 ))}
               </SelectContent>
             </Select>
+          </div>
+
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-textColor/80">
+              Font Weight
+            </label>
+            <div className="flex gap-2">
+              <Button
+                size="sm"
+                variant={fontWeight === "normal" ? "default" : "outline"}
+                className="flex-1 text-xs"
+                onClick={() => handleFontWeightChange("normal")}
+              >
+                Normal
+              </Button>
+              <Button
+                size="sm"
+                variant={fontWeight === "bold" ? "default" : "outline"}
+                className="flex-1 text-xs"
+                onClick={() => handleFontWeightChange("bold")}
+              >
+                <BoldIcon size={14} className="mr-2" />
+                Bold
+              </Button>
+            </div>
           </div>
         </div>
       </div>

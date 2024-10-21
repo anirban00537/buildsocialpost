@@ -1,7 +1,6 @@
 import React from "react";
 import PricingModal from "./pricingModal.subscription";
 import { Button } from "../ui/button";
-import { DiamondPercent } from "lucide-react";
 import { RootState } from "@/state/store";
 import { useSelector } from "react-redux";
 import {
@@ -11,19 +10,11 @@ import {
   TooltipTrigger,
 } from "../ui/tooltip";
 import { DiamondSVG } from "../shared-components/svg-icons";
+import { Sparkles } from "lucide-react";
+import { motion } from "framer-motion";
 
 const SubscriptionInfo = () => {
-  const { subscribed, endDate, loading } = useSelector(
-    (state: RootState) => state.user
-  );
-
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center p-2 text-sm text-gray-500 animate-pulse">
-        Loading...
-      </div>
-    );
-  }
+  const { subscribed, endDate } = useSelector((state: RootState) => state.user);
 
   if (!subscribed || !endDate) {
     return (
@@ -32,33 +23,41 @@ const SubscriptionInfo = () => {
           <Button
             variant="outline"
             size="xs"
-            className="ml-auto flex items-center gap-2 px-4 py-2 text-sm font-bold text-white bg-gradient-to-r from-amber-700 via-yellow-600 to-orange-700 hover:from-amber-800 hover:via-yellow-700 hover:to-orange-800 transition-all duration-300 border-2 border-yellow-600 rounded-full shadow-xl ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-600 relative overflow-hidden group"
+            className="ml-auto flex items-center gap-2 px-4 py-4 text-sm font-medium text-white bg-gradient-to-r from-primary via-primary/90 to-blue-600 hover:from-blue-600 hover:to-blue-400 transition-all duration-300 border-none rounded-xl ease-in-out transform hover:scale-105  hover:shadow-lg"
           >
-            <span className="absolute inset-0 bg-white opacity-10 transform rotate-45 translate-x-3 -translate-y-2 group-hover:translate-x-3 group-hover:translate-y-2 transition-all duration-500 ease-out"></span>
-            <img src="/premium.svg" className="w-5 h-5 filter drop-shadow-md" />
-            <span className="hidden sm:inline relative z-10">
-              Upgrade to Premium
-            </span>
-            <span className="sm:hidden relative z-10">Upgrade</span>
-            <span className="absolute top-0 right-0 w-2 h-2 rounded-full bg-yellow-400 animate-pulse"></span>
+            <Sparkles className="w-4 h-4" />
+            <span className="hidden sm:inline">Upgrade to Pro</span>
+            <span className="sm:hidden">Upgrade</span>
           </Button>
         }
       />
     );
   }
 
-  const endDateString = new Date(endDate).toDateString();
+  const endDateString = new Date(endDate).toLocaleDateString();
 
   return (
     <TooltipProvider>
       <Tooltip>
         <TooltipTrigger asChild>
-          <div className="ml-auto flex items-center justify-center w-8 h-7 text-sm border border-primary rounded-md text-primary transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2">
+          <motion.div
+            className="ml-auto flex items-center justify-center w-8 h-8 text-sm bg-gradient-to-r from-blue-500 to-blue-300 rounded-full text-white transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 shadow-md hover:shadow-lg"
+            animate={{
+              scale: [1, 1.1, 1],
+              rotate: [0, 5, -5, 0],
+            }}
+            transition={{
+              duration: 2,
+              ease: "easeInOut",
+              times: [0, 0.5, 1],
+              repeat: Infinity,
+            }}
+          >
             <DiamondSVG />
-          </div>
+          </motion.div>
         </TooltipTrigger>
         <TooltipContent>
-          <p>Subscribed until {endDateString}</p>
+          <p className="text-sm font-medium">Pro • Expires {endDateString}</p>
         </TooltipContent>
       </Tooltip>
     </TooltipProvider>

@@ -2,8 +2,8 @@
 import EditorBody from "@/components/editor/body/body.editor";
 import React, { Suspense, useState, useEffect } from "react";
 import MainSidebar from "@/components/editor/sidebar/main.sidebar";
-import EditorNavbar from "@/components/editor/navbar/navbar.editor";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import EditorNavbar from "@/components/editor/navbar/EditorNavbar";
 
 function Dashboard() {
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -29,7 +29,7 @@ function Dashboard() {
   };
 
   return (
-    <div className="flex h-screen overflow-hidden bg-background">
+    <div className="flex h-screen overflow-hidden ">
       <div className="flex flex-col flex-1 h-full overflow-hidden">
         <Suspense fallback={<div>Loading...</div>}>
           <EditorNavbar />
@@ -45,7 +45,7 @@ function Dashboard() {
           />
         </div>
         <main
-          className={`flex-1 max-h-full p-5 bg-gradient-to-t from-background via-cardBackground to-background overflow-hidden overflow-y-scroll main-bgs relative transition-all duration-300 ease-in-out ${
+          className={`flex-1 max-h-full p-5 bg-slate-100 overflow-hidden overflow-y-scroll main-bgs relative transition-all duration-300 ease-in-out ${
             isCollapsed ? "ml-0" : "md:ml-[390px]"
           }`}
         >

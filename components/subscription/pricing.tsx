@@ -1,8 +1,8 @@
 "use client";
-import { auth } from "@/services/firebase";
-import axios from "axios";
 import React, { useState } from "react";
-import { useRouter } from "next/navigation";
+import { createCheckout } from "@/services/subscription";
+import { useSelector } from "react-redux";
+import { RootState } from "@/state/store";
 
 const plan = {
   name: "Pro plan",
@@ -22,30 +22,26 @@ const plan = {
 const Pricing = () => {
   const [loading, setLoading] = useState(false);
   const [selectedPlan, setSelectedPlan] = useState("yearly");
-  const router = useRouter();
+  const { loggedin } = useSelector((state: RootState) => state.user);
 
   const buyProduct = async () => {
     setLoading(true);
-    const user = auth.currentUser;
-    if (user) {
+    if (loggedin) {
       try {
-        const token = await user.getIdToken();
         const productId =
           selectedPlan === "monthly"
             ? process.env.NEXT_PUBLIC_MONTHLY_PRODUCT_ID
             : process.env.NEXT_PUBLIC_YEARLY_PRODUCT_ID;
-        const response = await axios.post(
-          "/api/purchaseProduct",
-          { productId },
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        console.log(response, "response");
-        // Open the checkout URL in a new tab
-        window.open(response.data.checkoutUrl, "_blank", "noopener,noreferrer");
+
+        if (!productId) {
+          throw new Error("Product ID is not defined");
+        }
+
+        const response = await createCheckout({
+          productId,
+          redirectUrl: window.location.origin,
+        });
+        window.open(response.checkoutUrl, "_blank", "noopener,noreferrer");
       } catch (error) {
         console.error("Error purchasing product:", error);
         alert(
@@ -55,42 +51,45 @@ const Pricing = () => {
         setLoading(false);
       }
     } else {
-      router.push("/login");
       setLoading(false);
     }
   };
 
   return (
-    <div className="flex flex-col h-full bg-gray-900 text-white overflow-y-auto">
+    <div className="flex flex-col h-full bg-white text-gray-800 overflow-y-auto">
       <div className="flex-shrink-0 p-6 text-center">
-        <h2 className="text-2xl font-bold mb-2">Pricing</h2>
-        <p className="text-gray-300 mb-6">
+        <h2 className="text-3xl font-bold mb-2 text-gray-900">Pricing</h2>
+        <p className="text-gray-600 mb-6">
           Upgrade your carousel building experience
         </p>
       </div>
 
       <div className="flex-grow flex items-center justify-center px-4 pb-6">
         <div className="w-full max-w-md">
-          <div className="bg-gray-800 rounded-lg overflow-hidden shadow-xl">
+          <div className="bg-white rounded-lg overflow-hidden shadow-lg border border-gray-200">
             <div className="relative p-6">
-              <div className="absolute top-0 right-0 bg-primary text-xs font-bold px-3 py-1 rounded-bl-lg">
+              <div className="absolute top-0 right-0 bg-blue-500 text-white text-xs font-bold px-3 py-1 rounded-bl-lg">
                 Most Popular
               </div>
-              <h3 className="text-xl font-bold mb-2">{plan.name}</h3>
-              <p className="text-sm text-gray-400 mb-4">{plan.desc}</p>
+              <h3 className="text-2xl font-bold mb-2 text-gray-900">{plan.name}</h3>
+              <p className="text-sm text-gray-600 mb-4">{plan.desc}</p>
 
               <div className="flex justify-center mb-4">
                 <button
-                  className={`px-4 py-2 text-sm font-medium rounded-l-md ${
-                    selectedPlan === "monthly" ? "bg-primary" : "bg-gray-700"
+                  className={`px-4 py-2 text-sm font-medium rounded-l-md transition-colors ${
+                    selectedPlan === "monthly"
+                      ? "bg-blue-500 text-white"
+                      : "bg-gray-100 text-gray-800 hover:bg-gray-200"
                   }`}
                   onClick={() => setSelectedPlan("monthly")}
                 >
                   Monthly
                 </button>
                 <button
-                  className={`px-4 py-2 text-sm font-medium rounded-r-md ${
-                    selectedPlan === "yearly" ? "bg-primary" : "bg-gray-700"
+                  className={`px-4 py-2 text-sm font-medium rounded-r-md transition-colors ${
+                    selectedPlan === "yearly"
+                      ? "bg-blue-500 text-white"
+                      : "bg-gray-100 text-gray-800 hover:bg-gray-200"
                   }`}
                   onClick={() => setSelectedPlan("yearly")}
                 >
@@ -99,19 +98,16 @@ const Pricing = () => {
               </div>
 
               <div className="text-center mb-6">
-                <span className="text-4xl font-bold">
-                  $
-                  {selectedPlan === "monthly"
-                    ? plan.monthlyPrice
-                    : plan.yearlyPrice}
+                <span className="text-4xl font-bold text-gray-900">
+                  ${selectedPlan === "monthly" ? plan.monthlyPrice : plan.yearlyPrice}
                 </span>
-                <span className="text-gray-400">
+                <span className="text-gray-600">
                   /{selectedPlan === "monthly" ? "mo" : "yr"}
                 </span>
               </div>
 
               <button
-                className="w-full py-2 px-4 bg-primary hover:bg-indigo-700 rounded-md font-medium transition-colors"
+                className="w-full py-2 px-4 bg-blue-500 hover:bg-blue-600 text-white rounded-md font-medium transition-colors"
                 onClick={buyProduct}
                 disabled={loading}
               >
@@ -119,13 +115,13 @@ const Pricing = () => {
               </button>
             </div>
 
-            <div className="bg-gray-900 p-6">
-              <h4 className="font-medium mb-3">Features included:</h4>
+            <div className="bg-gray-50 p-6">
+              <h4 className="font-medium mb-3 text-gray-900">Features included:</h4>
               <ul className="space-y-2">
                 {plan.features.map((feature, idx) => (
-                  <li key={idx} className="flex items-center text-sm">
+                  <li key={idx} className="flex items-center text-sm text-gray-700">
                     <svg
-                      className="w-4 h-4 mr-2 text-indigo-400"
+                      className="w-4 h-4 mr-2 text-blue-500"
                       fill="currentColor"
                       viewBox="0 0 20 20"
                     >

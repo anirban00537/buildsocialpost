@@ -1,19 +1,29 @@
 "use client";
-import { useAuthUser } from "@/hooks/useAuth";
-import React, { ReactNode } from "react";
+import { useAuth } from "@/hooks/useAuth";
+import { usePathname } from "next/navigation";
+import { useEffect, useRef } from "react";
 import FullScreenLoading from "../loading/fullscreen.loading";
-import useAnalytics from "@/hooks/useAnalytics";
+import useBranding from "@/hooks/useBranding";
+import { setNewCarousel } from "@/state/slice/carousel.slice";
+import { useDispatch } from "react-redux";
 
-interface AuthCheckLayoutProps {
-  children: ReactNode;
-}
+const AuthCheckLayout = ({ children }: { children: React.ReactNode }) => {
+  const { isAuthenticated, isLoading } = useAuth();
+  const pathname = usePathname();
+  useBranding();
+  const dispatch = useDispatch();
 
-const AuthCheckLayout: React.FC<AuthCheckLayoutProps> = ({ children }) => {
-  const { loading } = useAuthUser();
+  useEffect(() => {
+    if (pathname) {
+      dispatch(setNewCarousel());
+    }
+  }, [pathname]);
 
-  useAnalytics();
-  if (loading) return <FullScreenLoading />;
-  return <div>{children}</div>;
+  if (isLoading) {
+    return <FullScreenLoading />;
+  }
+
+  return <>{children}</>;
 };
 
 export default AuthCheckLayout;

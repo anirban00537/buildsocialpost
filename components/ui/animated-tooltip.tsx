@@ -61,7 +61,7 @@ export const AnimatedTooltip = ({
                 style={{ translateX, rotate, whiteSpace: "nowrap" }}
                 className="absolute -top-20 -left-1/2 translate-x-1/2 flex flex-col items-center justify-center z-50"
               >
-                <div className="px-4 py-3 bg-white/10 backdrop-blur-md rounded-2xl shadow-lg border border-primary">
+                <div className="px-4 py-3 bg-black/40 backdrop-blur-md rounded-2xl shadow-lg border border-primary">
                   <div className="font-bold text-white text-sm mb-1">
                     {item.name}
                   </div>

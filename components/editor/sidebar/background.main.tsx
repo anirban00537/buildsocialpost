@@ -14,20 +14,13 @@ import {
   darkColorPresets,
 } from "@/lib/color-presets";
 import { Switch } from "@/components/ui/switch";
+import { Palette, Sun, Moon, Droplet, Check } from "lucide-react";
+import { motion } from "framer-motion";
 
 const BackgroundColorsSection = () => {
   const dispatch = useDispatch();
   const background = useSelector((state: RootState) => state.slides.background);
   const layout = useSelector((state: RootState) => state.slides.layout);
-
-  const [displayColorPicker, setDisplayColorPicker] = useState<{
-    [key: string]: boolean;
-  }>({
-    color1: false,
-    color2: false,
-    color3: false,
-    color4: false,
-  });
 
   const handleColorChange = (
     colorKey: keyof BackgroundColors,
@@ -35,56 +28,58 @@ const BackgroundColorsSection = () => {
   ) => {
     dispatch(setBackground({ ...background, [colorKey]: colorValue }));
   };
-  const handleColorPickerClick = (colorKey: keyof BackgroundColors) => {
-    setDisplayColorPicker({
-      ...displayColorPicker,
-      [colorKey]: !displayColorPicker[colorKey],
-    });
-  };
-  const handleColorPickerClose = (colorKey: keyof BackgroundColors) => {
-    setDisplayColorPicker({ ...displayColorPicker, [colorKey]: false });
-  };
+
   const handlePresetSelect = (preset: BackgroundColors) =>
     dispatch(setBackground(preset));
 
   return (
-    <div className="w-full h-full p-6 flex flex-col bg-background/50 backdrop-blur-sm">
-      <h2 className="text-base font-semibold text-textColor mb-4">
-        Background Settings
-      </h2>
-      <div className="flex-grow pb-40 overflow-y-auto space-y-6">
+    <div className="w-full h-full flex flex-col bg-background/50 backdrop-blur-sm">
+      <div className="p-6 border-b border-borderColor/20">
+        <h2 className="text-xl font-semibold text-textColor flex items-center gap-2">
+          <Palette className="w-6 h-6 text-primary" />
+          Background Settings
+        </h2>
+      </div>
+      <div className="flex-grow overflow-y-auto p-6 space-y-8 pb-32">
         {/* Gradient Section */}
-        <section className="space-y-2">
+        <section className="space-y-4">
           <div className="flex items-center justify-between">
-            <h3 className="text-sm font-semibold text-textColor/80">
+            <h3 className="text-sm font-semibold text-textColor/80 flex items-center gap-2">
+              <Droplet className="w-4 h-4" />
               Gradient
             </h3>
             <Switch
               checked={layout.gradient}
               onCheckedChange={(checked) => dispatch(setGradient(checked))}
+              className="data-[state=checked]:bg-primary"
             />
           </div>
         </section>
 
         {/* Custom Background Colors */}
         <section className="space-y-4">
-          <h3 className="text-sm font-semibold text-textColor/80">
+          <h3 className="text-sm font-semibold text-textColor/80 flex items-center gap-2">
+            <Palette className="w-4 h-4" />
             Custom Background Color
           </h3>
-          <div className="grid grid-cols-4 gap-2">
+          <div className="grid grid-cols-4 gap-4">
             {(Object.keys(background) as Array<keyof BackgroundColors>).map(
               (colorKey) => (
                 <Popover key={colorKey}>
                   <PopoverTrigger asChild>
-                    <div
-                      className="w-full h-8 border border-borderColor/50 cursor-pointer rounded-md transition-all hover:scale-105"
+                    <motion.div
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      className="w-full h-12 border border-borderColor/50 cursor-pointer rounded-md shadow-sm overflow-hidden"
                       style={{ backgroundColor: background[colorKey] }}
-                      onClick={() => handleColorPickerClick(colorKey)}
-                    />
+                    >
+                      <div className="w-full h-full flex items-center justify-center bg-black bg-opacity-0 hover:bg-opacity-10 transition-all duration-200">
+                        <Palette className="w-5 h-5 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
+                      </div>
+                    </motion.div>
                   </PopoverTrigger>
                   <PopoverContent
-                    className="w-auto p-0 border-none"
-                    onMouseLeave={() => handleColorPickerClose(colorKey)}
+                    className="w-auto p-3 border-none rounded-lg shadow-lg"
                   >
                     <HexColorPicker
                       color={background[colorKey]}
@@ -99,31 +94,30 @@ const BackgroundColorsSection = () => {
 
         {/* Light Presets */}
         <section className="space-y-4">
-          <h3 className="text-sm font-semibold text-textColor/80">
+          <h3 className="text-sm font-semibold text-textColor/80 flex items-center gap-2">
+            <Sun className="w-4 h-4" />
             Light Presets
           </h3>
-          <div className="grid grid-cols-4 gap-2">
+          <div className="grid grid-cols-4 gap-3">
             {lightColorPresets.map(
               (preset: BackgroundColors, index: number) => (
-                <div
+                <motion.div
                   key={index}
-                  className="w-full h-8 border border-borderColor/50 cursor-pointer rounded-md grid grid-cols-4 transition-all hover:scale-105"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="w-full h-12 border border-borderColor/50 cursor-pointer rounded-md grid grid-cols-4 shadow-sm overflow-hidden relative"
                   onClick={() => handlePresetSelect(preset)}
                 >
                   {Object.values(preset).map((color, colorIndex) => (
                     <div
                       key={colorIndex}
-                      className={`transition-colors duration-200 ease-in-out ${
-                        colorIndex === 0
-                          ? "rounded-l-md"
-                          : colorIndex === 3
-                          ? "rounded-r-md"
-                          : ""
-                      }`}
                       style={{ backgroundColor: color }}
                     />
                   ))}
-                </div>
+                  <div className="absolute inset-0 bg-black bg-opacity-0 hover:bg-opacity-10 transition-all duration-200 flex items-center justify-center">
+                    <Check className="w-5 h-5 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
+                  </div>
+                </motion.div>
               )
             )}
           </div>
@@ -131,30 +125,29 @@ const BackgroundColorsSection = () => {
 
         {/* Dark Presets */}
         <section className="space-y-4">
-          <h3 className="text-sm font-semibold text-textColor/80">
+          <h3 className="text-sm font-semibold text-textColor/80 flex items-center gap-2">
+            <Moon className="w-4 h-4" />
             Dark Presets
           </h3>
-          <div className="grid grid-cols-4 gap-2">
+          <div className="grid grid-cols-4 gap-3">
             {darkColorPresets.map((preset: BackgroundColors, index: number) => (
-              <div
+              <motion.div
                 key={index}
-                className="w-full h-8 border border-borderColor  cursor-pointer rounded-md grid grid-cols-4 transition-all hover:scale-105"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="w-full h-12 border border-borderColor/50 cursor-pointer rounded-md grid grid-cols-4 shadow-sm overflow-hidden relative"
                 onClick={() => handlePresetSelect(preset)}
               >
                 {Object.values(preset).map((color, colorIndex) => (
                   <div
                     key={colorIndex}
-                    className={`transition-colors duration-200 ease-in-out ${
-                      colorIndex === 0
-                        ? "rounded-l-md"
-                        : colorIndex === 3
-                        ? "rounded-r-md"
-                        : ""
-                    }`}
                     style={{ backgroundColor: color }}
                   />
                 ))}
-              </div>
+                <div className="absolute inset-0 bg-black bg-opacity-0 hover:bg-opacity-10 transition-all duration-200 flex items-center justify-center">
+                  <Check className="w-5 h-5 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
+                </div>
+              </motion.div>
             ))}
           </div>
         </section>

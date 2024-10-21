@@ -1,8 +1,10 @@
+import { UserInfo } from "@/types";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-// Define the shape of the user state
+
+
 interface UserState {
-  userinfo: any | null;
+  userinfo: UserInfo | null;
   loggedin: boolean;
   loading: boolean;
   carouselDownloading: boolean;
@@ -10,7 +12,6 @@ interface UserState {
   endDate: string | null;
 }
 
-// Define the initial state using the UserState interface
 const initialState: UserState = {
   userinfo: null,
   loggedin: false,
@@ -20,12 +21,11 @@ const initialState: UserState = {
   endDate: null,
 };
 
-// Create the slice
 const userSlice = createSlice({
   name: "user",
   initialState,
   reducers: {
-    setUser: (state, action: PayloadAction<any>) => {
+    setUser: (state, action: PayloadAction<UserInfo>) => {
       state.userinfo = action.payload;
       state.loggedin = true;
     },
