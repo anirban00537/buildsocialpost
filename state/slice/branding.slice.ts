@@ -7,8 +7,8 @@ interface BrandingState {
 }
 
 const initialState: BrandingState = {
-  name: "Anirban Roy",
-  handle: "@anirban00537",
+  name: "BuildSocialPost",
+  handle: "@buildsocialpost",
   headshot: "/creator.jpg",
 };
 
