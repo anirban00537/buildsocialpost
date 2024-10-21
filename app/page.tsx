@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 
 const Page = () => {
-  const [countdown, setCountdown] = useState(5);
+  const [countdown, setCountdown] = useState(10);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -18,6 +18,7 @@ const Page = () => {
 
     return () => clearInterval(timer);
   }, []);
+
   return (
     <div className="bg-background min-h-screen">
       <main className="pt-16">
@@ -38,8 +39,15 @@ const Page = () => {
                 We've Rebranded!
               </h2>
               <p className="text-lg sm:text-xl text-textColor/70 max-w-2xl mx-auto">
-                BuildCarousel.com is now BuildSocialPost.com. You will be
-                redirected in {countdown} seconds...
+                BuildCarousel.com is now{" "}
+                <a
+                  href="https://buildsocialpost.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  BuildSocialPost.com
+                </a>
+                . You will be redirected shortly...
               </p>
               <div className="z-10 flex justify-center">
                 <a
@@ -47,9 +55,9 @@ const Page = () => {
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  <button className="shadow-2xl bg-[#3369E7]">
+                  <button className="shadow-2xl bg-[#3369E7] px-4 py-2 rounded-md">
                     <span className="whitespace-pre-wrap text-center text-sm font-medium leading-none tracking-tight text-white dark:from-white dark:to-slate-900/10 lg:text-lg">
-                      Visit BuildSocialPost.com Now
+                      Visit BuildSocialPost.com Now ({countdown}s)
                     </span>
                   </button>
                 </a>
