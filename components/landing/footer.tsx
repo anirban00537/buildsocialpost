@@ -24,7 +24,7 @@ const Footer = () => {
           </p>
         </div>
 
-        {/* <div className="mt-10 py-10 flex flex-col border-t text-center border-borderColor/30 items-center justify-center sm:flex">
+        <div className="mt-10 py-10 flex flex-col border-t text-center border-borderColor/30 items-center justify-center sm:flex">
             <p className="text-textColor/70 text-xl font-semibold">
               Our Partners
             </p>
@@ -37,15 +37,15 @@ const Footer = () => {
               >
                 Flux AI Pro
               </a>
-              <a
+              {/* <a
                 href="https://alteropen.com/"
                 title="Alternative Open Directory"
                 className="text-textColor/70  hover:text-textColor duration-150 hover:underline text-3xl font-bold"
               >
                 AlterOpen
-              </a>
+              </a> */}
             </div>
-          </div> */}
+          </div>
         <div className="mt-10 py-10 border-t text-center border-borderColor/30">
           <p className="text-textColor/70">
             © {new Date().getFullYear()} Buildsocialpost.com. All rights
