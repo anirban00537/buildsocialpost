@@ -1,8 +1,6 @@
 import React from "react";
-import { ChevronRight } from "lucide-react";
 import { Slide } from "@/types";
-import { useSelector, useDispatch } from "react-redux";
-import { setBackgroundOpacity } from "@/state/slice/carousel.slice";
+import { useSelector } from "react-redux";
 import SharedElementsComponent from "./slide-parts/sharedElements";
 import Text from "./slide-parts/text";
 import Image from "./slide-parts/image";
@@ -11,7 +9,6 @@ import GeneralInfo from "./slide-parts/generalInfo";
 import { RootState } from "@/state/store";
 import { CSSProperties } from "react";
 import { fontOptions } from "@/lib/fonts";
-import { backgroundPatterns } from "@/lib/coreConstants";
 import { getBackgroundPattern } from "@/components/shared-components/backgrounds";
 
 interface SlideProps {

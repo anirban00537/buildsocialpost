@@ -18,6 +18,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Switch } from "@/components/ui/switch";
 import { Slide } from "@/types";
+import { Button } from "@/components/ui/button";
 
 interface SlideControlsProps {
   index: number;
@@ -133,11 +134,14 @@ const SlideControls: React.FC<SlideControlsProps> = ({
         </div>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <ControlButton
-              onClick={() => {}}
+            <Button
+              variant="outline"
+              size="icon"
+              className="flex items-center justify-center bg-background/50  border border-borderColor rounded-md hover:bg-primary/20 hover:border-primary hover:text-primary transition-colors duration-200 h-8 w-8"
               title="Slide settings"
-              icon={Settings}
-            />
+            >
+              <Settings className="h-4 w-4" />
+            </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent className="bg-cardBackground text-textColor border-borderColor">
             <DropdownMenuLabel>Slide Settings</DropdownMenuLabel>

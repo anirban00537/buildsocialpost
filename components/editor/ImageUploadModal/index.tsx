@@ -122,18 +122,16 @@ const ImageUploadModal: React.FC<ImageUploadModalProps> = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="w-[900px] h-[90vh] p-0 overflow-hidden bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 rounded-xl shadow-2xl">
-        <div className="flex flex-col h-full">
-          <header className="flex justify-between items-center p-6 border-b border-gray-200 dark:border-gray-700">
-            <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-100">
-              Image Gallery
-            </h2>
-            <Button variant="ghost" size="icon" onClick={onClose}>
-              <X className="h-6 w-6" />
-            </Button>
-          </header>
+      <DialogContent className="w-[900px] h-[90vh] p-0 flex flex-col bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 rounded-xl shadow-2xl">
+        <header className="flex-shrink-0 flex justify-between items-center p-6 border-b border-gray-200 dark:border-gray-700">
+          <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-100">
+            Image Gallery
+          </h2>
+        
+        </header>
 
-          <div className="flex-grow overflow-y-auto p-6">
+        <div className="flex-grow overflow-y-auto">
+          <div className="p-6">
             {!loggedin ? (
               <div className="flex flex-col items-center justify-center h-full">
                 <AlertTriangle className="w-16 h-16 text-yellow-500 mb-4" />
@@ -281,17 +279,17 @@ const ImageUploadModal: React.FC<ImageUploadModalProps> = ({
               </>
             )}
           </div>
-
-          <footer className="p-4 border-t border-gray-200 dark:border-gray-700">
-            <Button
-              variant="default"
-              onClick={onClose}
-              className="w-full transition-all duration-200"
-            >
-              Close
-            </Button>
-          </footer>
         </div>
+
+        <footer className="flex-shrink-0 p-4 border-t border-gray-200 dark:border-gray-700">
+          <Button
+            variant="default"
+            onClick={onClose}
+            className="w-full transition-all duration-200"
+          >
+            Close
+          </Button>
+        </footer>
 
         <AlertDialog
           open={!!deleteImageId}
