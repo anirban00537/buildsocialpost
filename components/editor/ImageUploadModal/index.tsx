@@ -127,7 +127,6 @@ const ImageUploadModal: React.FC<ImageUploadModalProps> = ({
           <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-100">
             Image Gallery
           </h2>
-        
         </header>
 
         <div className="flex-grow overflow-y-auto">
@@ -211,41 +210,34 @@ const ImageUploadModal: React.FC<ImageUploadModalProps> = ({
                     </p>
                   </div>
                 ) : (
-                  <div className="grid grid-cols-3 gap-6 ">
+                  <div className="mt-4 grid grid-cols-3 gap-4">
                     {currentImages.map((image) => (
-                      <div
-                        key={image.id}
-                        className="group relative overflow-hidden rounded-lg shadow-md transition-all duration-300 hover:shadow-xl"
-                      >
+                      <div key={image.id} className="relative group">
                         <div
-                          className="cursor-pointer"
+                          className="cursor-pointer overflow-hidden rounded-lg"
                           onClick={() => onImageSelect(image.url)}
                         >
                           <Image
                             src={image.url}
                             alt={image.name}
-                            width={300}
-                            height={200}
+                            width={240}
+                            height={240}
                             className="object-cover w-full h-48 transition-transform duration-300 group-hover:scale-110"
                           />
                         </div>
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                          <div className="absolute bottom-0 left-0 right-0 p-4">
-                            <p className="text-white text-sm font-medium truncate">
-                              {image.name}
-                            </p>
-                            <p className="text-gray-300 text-xs">
-                              {(image.size / (1024 * 1024)).toFixed(2)} MB
-                            </p>
-                          </div>
-                        </div>
-                        <Button
+                        <button
                           onClick={() => setDeleteImageId(image.id)}
-                          className="absolute top-2 right-2 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300 hover:bg-red-600"
+                          className="absolute top-2 right-2 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
                           disabled={uploadLoading}
                         >
                           <X className="h-4 w-4" />
-                        </Button>
+                        </button>
+                        <div className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-50 text-white p-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                          <p className="text-sm truncate">{image.name}</p>
+                          <p className="text-xs">
+                            {(image.size / (1024 * 1024)).toFixed(2)} MB
+                          </p>
+                        </div>
                       </div>
                     ))}
                   </div>
