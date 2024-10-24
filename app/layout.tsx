@@ -4,62 +4,90 @@ import DefaultLayout from "@/components/layout/default.layout";
 import Script from "next/script";
 
 const poppins = Poppins({
-  weight: ["400", "700"],
+  weight: ["400", "500", "600", "700"], // Added more weight variants for better typography
   subsets: ["latin"],
   variable: "--font-poppins",
   display: "swap",
 });
 
-const defaultUrl = process.env.VERCEL_URL
-  ? `https://${process.env.VERCEL_URL}`
-  : "http://localhost:3000";
+const defaultUrl = "https://buildsocialpost.com";
 
 export const metadata = {
   metadataBase: new URL(defaultUrl),
-  title: "BuildSocialPost - AI Carousel Maker for Social Media",
+  title:
+    "Free AI Carousel Maker | LinkedIn, TikTok & Instagram | BuildSocialPost",
   description:
-    "Create and share stunning carousels for LinkedIn, TikTok, Instagram, and Facebook with our AI-powered tool. Boost your social media engagement effortlessly.",
-  keywords:
-    "AI carousel maker, social media content, LinkedIn carousel, TikTok slides, Instagram carousel, Facebook carousel, content creation tool",
-  authors: [{ name: "Your Company Name" }],
-  creator: "Your Company Name",
-  publisher: "Your Company Name",
+    "Create professional carousels in seconds with AI. Transform articles, videos & tweets into engaging LinkedIn, TikTok & Instagram carousels. No design skills needed. Free templates, instant generation, and multi-platform support.",
+  keywords: [
+    // Primary Keywords
+    "AI carousel maker",
+    "LinkedIn carousel generator",
+    "free carousel maker",
+    "Instagram carousel creator",
+    "TikTok carousel maker",
+    // Feature-based Keywords
+    "AI content generator",
+    "social media carousel templates",
+    "professional carousel maker",
+    "free LinkedIn carousel tool",
+    // Long-tail Keywords
+    "create LinkedIn carousels with AI",
+    "convert articles to carousel posts",
+    "professional LinkedIn carousel templates",
+    "AI-powered social media content creator",
+    "instant carousel generator",
+    // Intent-based Keywords
+    "how to make LinkedIn carousels",
+    "best carousel maker for social media",
+    "free social media content creator",
+  ].join(", "),
+  authors: [{ name: "Anirban Roy" }],
+  creator: "Anirban Roy",
+  publisher: "Anirban Roy",
+  alternates: {
+    canonical: defaultUrl,
+    languages: {
+      "en-US": "/en-us",
+    },
+  },
   openGraph: {
     type: "website",
     locale: "en_US",
     url: defaultUrl,
-    title: "BuildSocialPost - AI-Powered Social Media Carousel Creator",
+    title:
+      "AI Carousel Maker | Create Professional Social Media Carousels Instantly",
     description:
-      "Elevate your social media presence with AI-generated carousels for LinkedIn, TikTok, Instagram, and Facebook. Create engaging content in minutes.",
+      "Transform your content into engaging carousels for LinkedIn, TikTok & Instagram using AI. No design skills needed. Features: instant generation, professional templates, multi-platform support. Start creating for free!",
     siteName: "BuildSocialPost",
     images: [
       {
-        url: "https://www.buildsocialpost.com/og-image.png",
+        url: `${defaultUrl}/og/hero-image.png`,
         width: 1200,
         height: 630,
-        alt: "BuildSocialPost - AI Carousel Maker for Social Media",
+        alt: "BuildSocialPost - Professional AI Carousel Generator",
       },
       {
-        url: "https://www.buildsocialpost.com/og-image.png",
+        url: `${defaultUrl}/og/feature-showcase.png`,
         width: 1800,
         height: 1200,
-        alt: "BuildSocialPost - AI Carousel Maker for Social Media",
+        alt: "AI-Powered Carousel Creation Tools",
       },
       {
-        url: "https://www.buildsocialpost.com/creators.jpg",
+        url: `${defaultUrl}/og/templates-preview.jpg`,
         width: 800,
         height: 600,
-        alt: "BuildSocialPost - AI Carousel Maker for Social Media",
+        alt: "Professional Social Media Templates",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "BuildSocialPost - AI Carousel Maker for Social Media",
+    title: "Create Professional Carousels with AI | BuildSocialPost",
     description:
-      "Create engaging carousels for LinkedIn, TikTok, Instagram, and Facebook with our AI-powered tool. Boost your social media presence today!",
-    images: ["/creators.jpg"],
-    creator: "@anirban00537",
+      "Transform your content into engaging carousels for LinkedIn, TikTok & Instagram. AI-powered, professional templates, instant generation. Start free!",
+    images: [`${defaultUrl}/og/twitter-card.jpg`],
+    creator: "@buildsocialpost",
+    site: "@buildsocialpost",
   },
   robots: {
     index: true,
@@ -71,11 +99,34 @@ export const metadata = {
       "max-image-preview": "large",
       "max-snippet": -1,
     },
+    nocache: true,
   },
   verification: {
-    google: "your-google-site-verification-code",
-    // yandex: "your-yandex-verification-code",
-    // bing: "your-bing-verification-code",
+    google: process.env.GOOGLE_SITE_VERIFICATION,
+    bing: process.env.BING_SITE_VERIFICATION,
+  },
+  applicationName: "BuildSocialPost",
+  category: "Technology",
+  classification: "Social Media Tools",
+  // Additional metadata for rich results
+  jsonLd: {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    name: "BuildSocialPost",
+    applicationCategory: "DesignApplication",
+    operatingSystem: "Web",
+    offers: {
+      "@type": "Offer",
+      price: "0",
+      priceCurrency: "USD",
+    },
+    features: [
+      "AI-powered content generation",
+      "Professional templates",
+      "Multi-platform support",
+      "Instant carousel creation",
+      "No design skills required",
+    ],
   },
 };
 
@@ -87,6 +138,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
+        {/* Analytics Script */}
         <Script
           defer
           src="https://umami.buildsocialpost.com/script.js"
@@ -94,8 +146,20 @@ export default function RootLayout({
           data-host-url="https://umami.buildsocialpost.com"
           strategy="afterInteractive"
         />
+        {/* Preconnect to key domains */}
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link
+          rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossOrigin="anonymous"
+        />
+        {/* Favicon */}
+        <link rel="icon" href="/favicon.ico" sizes="any" />
+        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+        {/* manifest.json provides metadata used when your web app is installed on a user's mobile device or desktop */}
+        <link rel="manifest" href="/manifest.json" />
       </head>
-      <body className={`${poppins.className}`}>
+      <body className={`${poppins.className} antialiased`}>
         <DefaultLayout>{children}</DefaultLayout>
       </body>
     </html>
