@@ -18,7 +18,7 @@ export const updateCarousel = async (carouselData: any) => {
 };
 
 export const deleteCarousel = async (id: string) => {
-  const response = await request.delete("/my-carousels/delete", { data: id });
+  const response = await request.delete(`/my-carousels/delete/${id}`);
   return response.data;
 };
 

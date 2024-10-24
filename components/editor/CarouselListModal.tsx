@@ -54,10 +54,8 @@ const CarouselListModal: FC<CarouselListModalProps> = ({ isOpen, onClose }) => {
     async (carouselId: string) => {
       try {
         await deleteCarousel(carouselId);
-        toast.success("Carousel deleted successfully");
         refetchCarousels(); // Refetch after deletion
       } catch (error) {
-        console.error("Error deleting carousel:", error);
         toast.error("Failed to delete carousel");
       }
     },

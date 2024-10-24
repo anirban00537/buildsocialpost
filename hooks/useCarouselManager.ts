@@ -109,9 +109,8 @@ export const useCarouselManager = () => {
     string
   >((id: string) => deleteCarousel(id), {
     onSuccess: (response: ResponseData) => {
-      queryClient.invalidateQueries("carousels");
-      toast.success("Carousel deleted successfully");
       processApiResponse(response);
+      refetchCarousels();
     },
     onError: (error) => {
       processApiResponse(error);
