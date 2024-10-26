@@ -24,7 +24,6 @@ const EditorNavbar: React.FC = () => {
   const { exportSlidesToPDF, exportSlidesToZip, pdfLoading, zipLoading } =
     useCarousel();
   const {
-    carousels,
     isFetchingAll,
     isAuthenticated,
     createOrUpdateCarousel,

@@ -23,7 +23,9 @@ const Footer = () => {
               className="mb-3"
             />
             <p className="text-textColor/80 text-sm text-center md:text-left">
-              Create professional carousels easily with our AI-powered tool.
+              Grow your LinkedIn profile with AI-powered tools. Create
+              professional LinkedIn posts, carousels, and more with our easy-to-use
+              tools.
             </p>
           </div>
 

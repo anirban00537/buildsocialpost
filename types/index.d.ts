@@ -119,3 +119,21 @@ export interface UserInfo {
   updatedAt: string;
   login_provider: string;
 }
+interface Workspace {
+  createdAt: string;
+  description: string | null;
+  id: number;
+  isDefault: boolean;
+  name: string;
+  updatedAt: string;
+}
+interface UserState {
+  userinfo: UserInfo | null;
+  loggedin: boolean;
+  loading: boolean;
+  carouselDownloading: boolean;
+  subscribed: boolean;
+  endDate: string | null;
+  currentWorkspace: Workspace | null;
+  workspaces: Workspace[];
+}

@@ -1,6 +1,5 @@
 import { usePathname, useRouter } from "next/navigation";
 import { useMutation, useQuery, useQueryClient } from "react-query";
-import axios from "axios";
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -10,6 +9,7 @@ import {
   setEndDate,
   setLoading,
   setCurrentWorkspace,
+  setWorkspaces,
 } from "@/state/slice/user.slice";
 import { useCallback, useEffect } from "react";
 import { CredentialResponse } from "@react-oauth/google";
@@ -18,33 +18,13 @@ import { checkSubscription } from "@/services/subscription";
 import Cookies from "js-cookie";
 import { RootState } from "@/state/store";
 import { ResponseData, UserInfo } from "@/types";
-import { getWorkspace } from "@/services/workspace";
-
-interface Subscription {
-  id: string;
-  userId: number;
-  orderId: string;
-  status: string;
-  endDate: string;
-  createdAt: string;
-  productName: string;
-  variantName: string;
-  subscriptionLengthInMonths: number;
-  totalAmount: number;
-  currency: string;
-}
-
-interface SubscriptionResponse {
-  success: boolean;
-  message: string;
-  data: any;
-}
+import { getMyWorkspaces } from "@/services/workspace";
 
 export const useAuth = () => {
   const router = useRouter();
   const queryClient = useQueryClient();
   const dispatch = useDispatch();
-  const { userinfo, loggedin, loading, subscribed, endDate } = useSelector(
+  const { userinfo, loggedin, loading } = useSelector(
     (state: RootState) => state.user
   );
   const token = Cookies.get("token");
@@ -82,20 +62,22 @@ export const useAuth = () => {
     },
   });
 
-  const { data: workspaceData, isLoading: isWorkspaceLoading } = useQuery<
-    ResponseData,
-    Error
-  >(["workspace"], getWorkspace, {
-    enabled: loggedin,
-    onSuccess: (data: ResponseData) => {
-      if (data.data.length > 0) {
-        const defaultWorkspace = data.data.find(
-          (workspace: any) => workspace.isDefault
-        );
-        dispatch(setCurrentWorkspace(defaultWorkspace));
-      }
-    },
-  });
+  const { refetch: refetchWorkspace } = useQuery<ResponseData, Error>(
+    ["workspace"],
+    getMyWorkspaces,
+    {
+      enabled: loggedin,
+      onSuccess: (data: ResponseData) => {
+        if (data.data.length > 0) {
+          const defaultWorkspace = data.data.find(
+            (workspace: any) => workspace.isDefault
+          );
+          dispatch(setCurrentWorkspace(defaultWorkspace));
+        }
+        dispatch(setWorkspaces(data.data));
+      },
+    }
+  );
 
   const loginMutation = useMutation(
     (idToken: string) => googleSignIn(idToken),

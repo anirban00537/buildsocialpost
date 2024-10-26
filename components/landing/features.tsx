@@ -106,9 +106,8 @@ const FeaturesSection = () => {
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 0.4, duration: 0.5 }}
           >
-            Create professional LinkedIn, Instagram, and TikTok carousels in
-            minutes with our comprehensive suite of AI-powered design tools and
-            features.
+            Grow your LinkedIn profile with AI-powered tools. Create professional
+            LinkedIn posts, carousels, and more with our easy-to-use tools.
           </motion.p>
         </div>
 

@@ -25,53 +25,53 @@ const textVariants = {
   visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } },
 };
 
-// Enhanced with more relevant professional titles based on target audience
+// Updated people array with new descriptions
 const people = [
   {
     id: 1,
     name: "Sarah Johnson",
-    designation: "Content Marketing Lead",
+    designation: "LinkedIn Strategist",
     image: "/persons/person-1.jpeg",
-    alt: "Sarah Johnson - Content Marketing Professional using BuildSocialPost",
+    alt: "Sarah Johnson - LinkedIn Growth Expert using BuildSocialPost",
   },
   {
     id: 2,
     name: "Emma Thompson",
-    designation: "Social Media Manager",
+    designation: "Personal Branding Coach",
     image: "/persons/person-2.jpeg",
-    alt: "Emma Thompson - Social Media Expert creating carousels",
+    alt: "Emma Thompson - Personal Branding Expert creating LinkedIn content",
   },
   {
     id: 3,
     name: "Michael Chen",
-    designation: "Digital Marketing Director",
+    designation: "B2B Marketing Consultant",
     image: "/persons/person-3.jpeg",
-    alt: "Michael Chen - Marketing Director using AI carousel maker",
+    alt: "Michael Chen - B2B Marketing Specialist using AI for LinkedIn growth",
   },
   {
     id: 4,
     name: "David Rodriguez",
-    designation: "Brand Strategist",
+    designation: "Thought Leadership Advisor",
     image: "/persons/person-4.jpeg",
-    alt: "David Rodriguez - Brand Strategy Professional",
+    alt: "David Rodriguez - Thought Leadership and LinkedIn Content Strategist",
   },
   {
     id: 5,
     name: "Olivia Parker",
-    designation: "Content Creator",
+    designation: "LinkedIn Content Creator",
     image: "/persons/person-5.jpeg",
-    alt: "Olivia Parker - Professional Content Creator",
+    alt: "Olivia Parker - Professional LinkedIn Content Creator",
   },
   {
     id: 6,
     name: "Sophia Lee",
-    designation: "LinkedIn Influencer",
+    designation: "LinkedIn Growth Hacker",
     image: "/persons/person-6.jpeg",
-    alt: "Sophia Lee - Professional LinkedIn Content Creator",
+    alt: "Sophia Lee - LinkedIn Growth and Engagement Specialist",
   },
 ];
 
-// Enhanced with more descriptive platform information
+// Enhanced with more relevant professional titles based on target audience
 const platforms = [
   {
     name: "LinkedIn",
@@ -89,6 +89,28 @@ const platforms = [
     description: "Engaging carousel posts",
   },
 ];
+
+const heroTextVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.8,
+      ease: "easeOut",
+      staggerChildren: 0.2,
+    },
+  },
+};
+
+const heroTextChildVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.5, ease: "easeOut" },
+  },
+};
 
 const Hero = () => {
   const [currentPlatform, setCurrentPlatform] = React.useState(0);
@@ -115,7 +137,7 @@ const Hero = () => {
           className="space-y-6 sm:space-y-8 w-full"
           variants={textContainerVariants}
         >
-          {/* Enhanced announcement banner with more SEO-friendly text */}
+          {/* Updated announcement banner */}
           <div className="z-10 flex items-center justify-center">
             <div
               className={cn(
@@ -126,9 +148,8 @@ const Hero = () => {
             >
               <AnimatedShinyText className="inline-flex text-textColor items-center justify-center px-3 sm:px-4 py-1 transition ease-out hover:text-neutral-600 hover:duration-300 hover:dark:text-neutral-400">
                 <span className="hidden sm:inline">
-                  ✨ Create Viral Carousels with AI - Free Tool
+                  Spend 10 Minutes to prepare weeks of content
                 </span>
-                <span className="sm:hidden">✨ AI Carousel Maker</span>
                 <ArrowRightIcon
                   className="ml-1 size-3 transition-transform duration-300 ease-in-out group-hover:translate-x-0.5"
                   aria-hidden="true"
@@ -137,41 +158,46 @@ const Hero = () => {
             </div>
           </div>
 
-          {/* Enhanced main heading with SEO-optimized text */}
           <motion.h1
-            className="text-3xl sm:text-5xl leading-tight font-extrabold md:text-6xl lg:text-7xl"
-            style={{ lineHeight: "1.2" }}
-            variants={textVariants}
+            className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold text-center text-textColor"
+            variants={heroTextVariants}
+            initial="hidden"
+            animate="visible"
           >
-            <div className="inline-block text-transparent bg-clip-text bg-gradient-to-b from-gray-600 via-gray-500 to-gray-900">
-              Create Professional
-            </div>
+            <motion.div
+              className="inline-block mb-2 sm:mb-4"
+              variants={heroTextChildVariants}
+            >
+              <span className="inline-block">Grow Your</span>
+            </motion.div>
             <br />
-            <div className="inline-block">
-              <span className={`text-transparent bg-clip-text bg-[#0077B5]`}>
+            <motion.div
+              className="inline-block"
+              variants={heroTextChildVariants}
+            >
+              <span className="inline-block text-transparent bg-clip-text bg-[#0077B5]">
                 LinkedIn
               </span>{" "}
-              <span className="text-transparent bg-clip-text bg-gradient-to-b from-gray-600 via-gray-500 to-gray-900">
-                Carousels Instantly
-              </span>
-            </div>
+              <span className="inline-block">Audience</span>{" "}
+              <span className="inline-block">in Weeks</span>
+            </motion.div>
           </motion.h1>
 
-          {/* Enhanced subheading with more specific value propositions */}
+          {/* Updated subheading */}
           <motion.p
             className="text-lg sm:text-xl text-textColor/70 max-w-2xl mx-auto"
             variants={textVariants}
           >
-            Transform your content into engaging carousels using AI. Perfect for
-            LinkedIn, TikTok, and Instagram. No design skills needed - create
-            professional-looking carousels in minutes with our free tool.
+            Create engaging LinkedIn carousels with AI. Boost your influence,
+            showcase expertise, and grow your network effortlessly. No design
+            skills needed - start elevating your LinkedIn presence today.
           </motion.p>
 
-          {/* Enhanced CTA section with more descriptive text */}
+          {/* Updated CTA section */}
           <div className="z-10 flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-4">
             <Link
-              href="/carousel-editor"
-              aria-label="Start creating your free carousel"
+              href="/dashboard"
+              aria-label="Start creating your LinkedIn carousel"
               className="w-full sm:w-auto"
             >
               <ShimmerButton
@@ -179,67 +205,67 @@ const Hero = () => {
                 background="#3369E7"
               >
                 <span className="whitespace-pre-wrap text-center text-sm font-medium leading-none tracking-tight text-white dark:from-white dark:to-slate-900/10 lg:text-lg">
-                  Create Free Carousel Now
+                  Get Started - 7 Days Free Trial
                 </span>
               </ShimmerButton>
             </Link>
             <a
               href="https://www.linkedin.com/in/anirban00537/"
-              className="bg-background/50 backdrop-blur-sm h-[59px] w-[250px]  rounded-full border-4 border-borderColor flex items-center justify-center px-4 py-2 text-textColor transition-all duration-300 hover:scale-105"
-              aria-label="Contact for professional services"
+              className="bg-background/50 backdrop-blur-sm h-[59px] w-[250px] rounded-full border-4 border-borderColor flex items-center justify-center px-4 py-2 text-textColor transition-all duration-300 hover:scale-105"
+              aria-label="Connect for LinkedIn growth strategies"
               rel="noopener noreferrer"
               target="_blank"
             >
               <div className="text-textColor">
-                Contact Us - For SaaS Development
+                Connect for Growth Strategies
               </div>
             </a>
           </div>
         </motion.div>
 
-        {/* Enhanced social proof section */}
+        {/* Updated social proof section */}
         <div className="mt-8 sm:mt-12 mb-6 sm:mb-8">
           <h2 className="text-textColor/70 mb-4 text-lg">
-            Trusted by 10,000+ Professional Content Creators
+            Empowering 10,000+ LinkedIn Professionals to Amplify Their Influence
           </h2>
           <div
             className="flex flex-wrap justify-center gap-2 sm:gap-4"
             role="list"
-            aria-label="Featured users"
+            aria-label="Featured LinkedIn influencers"
           >
             <AnimatedTooltip items={people} />
           </div>
         </div>
 
-        {/* Enhanced video section with better accessibility */}
+        {/* Updated video section */}
         <div
           className="relative w-full max-w-7xl mx-auto mt-8 sm:mt-12"
           role="complementary"
-          aria-label="Product demonstration"
+          aria-label="LinkedIn growth strategy demonstration"
         >
           <HeroVideoDialog
             className="dark:hidden block"
             animationStyle="from-center"
             videoSrc="https://www.youtube.com/embed/4pgUovPcVBM?si=WW-DhesYVKX3b8J6"
             thumbnailSrc="/demo.png"
-            thumbnailAlt="Watch how to create professional carousels with AI"
+            thumbnailAlt="Watch how to boost your LinkedIn presence with AI-powered carousels"
           />
           <HeroVideoDialog
             className="hidden dark:block"
             animationStyle="from-center"
             videoSrc="https://www.youtube.com/embed/4pgUovPcVBM?si=WW-DhesYVKX3b8J6"
             thumbnailSrc="/demo.png"
-            thumbnailAlt="Watch how to create professional carousels with AI - Dark Mode"
+            thumbnailAlt="Discover LinkedIn growth strategies with AI carousels - Dark Mode"
           />
         </div>
 
-        {/* Added structured data for better SEO */}
+        {/* Updated structured data */}
         <script type="application/ld+json">
           {JSON.stringify({
             "@context": "https://schema.org",
             "@type": "SoftwareApplication",
-            name: "BuildSocialPost AI Carousel Maker",
-            applicationCategory: "DesignApplication",
+            name: "BuildSocialPost LinkedIn Carousel Creator",
+            applicationCategory: "BusinessApplication",
             offers: {
               "@type": "Offer",
               price: "0",

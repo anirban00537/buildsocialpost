@@ -1,23 +1,5 @@
-import { UserInfo } from "@/types";
+import { UserInfo, UserState, Workspace } from "@/types";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-
-interface UserState {
-  userinfo: UserInfo | null;
-  loggedin: boolean;
-  loading: boolean;
-  carouselDownloading: boolean;
-  subscribed: boolean;
-  endDate: string | null;
-  currentWorkspace: {
-    createdAt: string;
-    description: string | null;
-    id: number;
-    isDefault: boolean;
-    name: string;
-    updatedAt: string;
-    userId: number;
-  } | null;
-}
 
 const initialState: UserState = {
   userinfo: null,
@@ -27,6 +9,7 @@ const initialState: UserState = {
   subscribed: false,
   endDate: null,
   currentWorkspace: null,
+  workspaces: [],
 };
 
 const userSlice = createSlice({
@@ -58,6 +41,9 @@ const userSlice = createSlice({
     setCurrentWorkspace: (state, action: PayloadAction<any>) => {
       state.currentWorkspace = action.payload;
     },
+    setWorkspaces: (state, action: PayloadAction<Workspace[]>) => {
+      state.workspaces = action.payload;
+    },
   },
 });
 
@@ -70,5 +56,6 @@ export const {
   setEndDate,
   setCarouselDownloading,
   setCurrentWorkspace,
+  setWorkspaces,
 } = userSlice.actions;
 export default userSlice.reducer;

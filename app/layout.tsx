@@ -2,6 +2,7 @@ import { Poppins } from "next/font/google";
 import "./globals.css";
 import DefaultLayout from "@/components/layout/default.layout";
 import Script from "next/script";
+import AuthCheckLayout from "@/components/layout/authCheckLayout";
 
 const poppins = Poppins({
   weight: ["400", "500", "600", "700"], // Added more weight variants for better typography
@@ -15,16 +16,16 @@ const defaultUrl = "https://buildsocialpost.com";
 export const metadata = {
   metadataBase: new URL(defaultUrl),
   title:
-    "Free AI Carousel Maker | LinkedIn, TikTok & Instagram | BuildSocialPost",
+    "Linkedin Growth Tool | Linkedin Personal Branding Tool | BuildSocialPost",
   description:
-    "Create professional carousels in seconds with AI. Transform articles, videos & tweets into engaging LinkedIn, TikTok & Instagram carousels. No design skills needed. Free templates, instant generation, and multi-platform support.",
+    "Grow your LinkedIn profile with AI-powered tools. Create professional LinkedIn posts, carousels, and more with our easy-to-use tools.",
   keywords: [
     // Primary Keywords
-    "AI carousel maker",
-    "LinkedIn carousel generator",
-    "free carousel maker",
-    "Instagram carousel creator",
-    "TikTok carousel maker",
+    "Linkedin growth tool",
+    "Linkedin branding tool",
+    "Linkedin AI tool",
+    "Linkedin content creator",
+    "Linkedin post generator",
     // Feature-based Keywords
     "AI content generator",
     "social media carousel templates",
@@ -37,7 +38,7 @@ export const metadata = {
     "AI-powered social media content creator",
     "instant carousel generator",
     // Intent-based Keywords
-    "how to make LinkedIn carousels",
+    "how to make LinkedIn carousels with AI",
     "best carousel maker for social media",
     "free social media content creator",
   ].join(", "),
@@ -160,7 +161,9 @@ export default function RootLayout({
         <link rel="manifest" href="/manifest.json" />
       </head>
       <body className={`${poppins.className} antialiased`}>
-        <DefaultLayout>{children}</DefaultLayout>
+        <DefaultLayout>
+          <AuthCheckLayout>{children}</AuthCheckLayout>
+        </DefaultLayout>
       </body>
     </html>
   );

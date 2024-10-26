@@ -49,11 +49,11 @@ const HowItWorksSection = () => {
           transition={{ duration: 0.6 }}
         >
           <h2 className="text-3xl font-bold text-textColor sm:text-4xl">
-            Create Professional Carousels in Minutes
+            One Stop Solution for LinkedIn Growth
           </h2>
           <p className="mt-4 text-xl text-textColor/70 max-w-3xl mx-auto">
-            Four simple steps to create engaging carousels using AI. No design
-            experience needed.
+            Grow your LinkedIn profile with AI-powered tools. Create professional
+            LinkedIn posts, carousels, and more with our easy-to-use tools.
           </p>
         </motion.div>
 
