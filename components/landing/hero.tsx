@@ -170,7 +170,7 @@ const Hero = () => {
           {/* Enhanced CTA section with more descriptive text */}
           <div className="z-10 flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-4">
             <Link
-              href="/editor"
+              href="/carousel-editor"
               aria-label="Start creating your free carousel"
               className="w-full sm:w-auto"
             >

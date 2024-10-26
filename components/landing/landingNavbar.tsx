@@ -38,7 +38,7 @@ const LandingNavbar = () => {
             </div>
           </div>
           <div className="hidden md:block">
-            <Link href="/editor">
+            <Link href="/carousel-editor">
               <Button className="ml-4" variant="default">
                 Get Started
               </Button>
@@ -95,7 +95,7 @@ const LandingNavbar = () => {
                 {item.title}
               </a>
             ))}
-            <Link href="/editor">
+            <Link href="/carousel-editor">
               <Button className="w-full mt-4" variant="default">
                 Get Started
               </Button>

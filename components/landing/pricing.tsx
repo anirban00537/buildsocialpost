@@ -74,7 +74,7 @@ const PricingSection = () => {
                   </span>
                 </div>
               </div>
-              <Link href="/editor">
+              <Link href="/carousel-editor">
                 <motion.button
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}

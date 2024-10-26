@@ -71,7 +71,7 @@ const EditorNavbar: React.FC = () => {
 
   const handleAddNew = useCallback(() => {
     dispatch(setNewCarousel());
-    router.replace("/editor");
+    router.replace("/carousel-editor");
   }, [dispatch, router]);
   const handleOpenCarouselModal = useCallback(() => {
     refetchCarousels();
