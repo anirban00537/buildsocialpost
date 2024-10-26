@@ -22,7 +22,7 @@ export const initialSlides: Slide[] = [
       "This is where you can put your main content. Add key points, data, or any information relevant to your presentation.",
     imageUrl: null,
     backgroundImage: null,
-    showImage: true,
+    showImage: false,
     showTagline: false,
     showTitle: true,
     showDescription: true,

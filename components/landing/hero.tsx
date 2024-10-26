@@ -115,7 +115,7 @@ const Hero = () => {
           className="space-y-6 sm:space-y-8 w-full"
           variants={textContainerVariants}
         >
-          {/* Enhanced announcement banner with more SEO-friendly text */}
+          {/* Updated announcement banner */}
           <div className="z-10 flex items-center justify-center">
             <div
               className={cn(
@@ -126,9 +126,9 @@ const Hero = () => {
             >
               <AnimatedShinyText className="inline-flex text-textColor items-center justify-center px-3 sm:px-4 py-1 transition ease-out hover:text-neutral-600 hover:duration-300 hover:dark:text-neutral-400">
                 <span className="hidden sm:inline">
-                  ✨ Create Viral Carousels with AI - Free Tool
+                  ✨ Create Viral LinkedIn Carousels - Free Tool
                 </span>
-                <span className="sm:hidden">✨ AI Carousel Maker</span>
+                <span className="sm:hidden">✨ LinkedIn Carousel Maker</span>
                 <ArrowRightIcon
                   className="ml-1 size-3 transition-transform duration-300 ease-in-out group-hover:translate-x-0.5"
                   aria-hidden="true"
@@ -137,7 +137,7 @@ const Hero = () => {
             </div>
           </div>
 
-          {/* Enhanced main heading with SEO-optimized text */}
+          {/* Updated main heading */}
           <motion.h1
             className="text-3xl sm:text-5xl leading-tight font-extrabold md:text-6xl lg:text-7xl"
             style={{ lineHeight: "1.2" }}
@@ -157,13 +157,12 @@ const Hero = () => {
             </div>
           </motion.h1>
 
-          {/* Enhanced subheading with more specific value propositions */}
+          {/* Updated subheading */}
           <motion.p
             className="text-lg sm:text-xl text-textColor/70 max-w-2xl mx-auto"
             variants={textVariants}
           >
-            Transform your content into engaging carousels using AI. Perfect for
-            LinkedIn, TikTok, and Instagram. No design skills needed - create
+            Transform your content into engaging LinkedIn carousels. No design skills needed - create
             professional-looking carousels in minutes with our free tool.
           </motion.p>
 
@@ -212,7 +211,7 @@ const Hero = () => {
         </div>
 
         {/* Enhanced video section with better accessibility */}
-        <div
+        {/* <div
           className="relative w-full max-w-7xl mx-auto mt-8 sm:mt-12"
           role="complementary"
           aria-label="Product demonstration"
@@ -231,14 +230,14 @@ const Hero = () => {
             thumbnailSrc="/demo.png"
             thumbnailAlt="Watch how to create professional carousels with AI - Dark Mode"
           />
-        </div>
+        </div> */}
 
-        {/* Added structured data for better SEO */}
+        {/* Updated structured data */}
         <script type="application/ld+json">
           {JSON.stringify({
             "@context": "https://schema.org",
             "@type": "SoftwareApplication",
-            name: "BuildSocialPost AI Carousel Maker",
+            name: "BuildSocialPost LinkedIn Carousel Maker",
             applicationCategory: "DesignApplication",
             offers: {
               "@type": "Offer",

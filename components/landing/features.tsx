@@ -1,42 +1,19 @@
 import React from "react";
 import {
-  Cpu,
-  Palette,
   Layers,
   Type,
   FileText,
   DownloadCloud,
-  BookTemplate,
 } from "lucide-react";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 
-// Enhanced features with more SEO-friendly descriptions and keywords
+// Updated features without AI and template sections
 const features = [
-  {
-    name: "AI-Powered Content Generation",
-    description:
-      "Create engaging LinkedIn, Instagram, and TikTok carousel content instantly with our advanced AI. Save hours of content creation time.",
-    icon: <Cpu className="w-8 h-8" />,
-    benefits: ["Instant content creation", "Professional copy", "Time-saving"],
-    ariaLabel: "AI content generation feature",
-  },
-  {
-    name: "Professional Design Templates",
-    description:
-      "Access premium color palettes and design schemes optimized for social media engagement and brand consistency.",
-    icon: <Palette className="w-8 h-8" />,
-    benefits: [
-      "Brand-consistent designs",
-      "Engagement-optimized",
-      "Professional look",
-    ],
-    ariaLabel: "Professional design templates feature",
-  },
   {
     name: "Modern Background Library",
     description:
-      "Choose from 1000+ contemporary backgrounds designed specifically for LinkedIn and Instagram carousels.",
+      "Choose from 1000+ contemporary backgrounds designed specifically for LinkedIn carousels.",
     icon: <Layers className="w-8 h-8" />,
     benefits: ["Extensive library", "Platform-optimized", "Regular updates"],
     ariaLabel: "Background library feature",
@@ -60,7 +37,7 @@ const features = [
   {
     name: "High-Resolution Downloads",
     description:
-      "Download platform-optimized carousel images in high resolution for LinkedIn, Instagram, and TikTok.",
+      "Download platform-optimized carousel images in high resolution for LinkedIn.",
     icon: <DownloadCloud className="w-8 h-8" />,
     benefits: ["Platform-optimized sizes", "High quality", "Instant download"],
     ariaLabel: "Image download feature",
@@ -98,7 +75,7 @@ const FeaturesSection = () => {
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 0.2, duration: 0.5 }}
           >
-            AI-Powered Carousel Creation Features
+            Carousel Creation Features
           </motion.h2>
           <motion.p
             className="text-xl text-textColor/70 max-w-2xl mx-auto"
@@ -106,14 +83,14 @@ const FeaturesSection = () => {
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 0.4, duration: 0.5 }}
           >
-            Create professional LinkedIn, Instagram, and TikTok carousels in
-            minutes with our comprehensive suite of AI-powered design tools and
+            Create professional LinkedIn carousels in
+            minutes with our comprehensive suite of design tools and
             features.
           </motion.p>
         </div>
 
         <div
-          className="mt-20 grid gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
+          className="mt-20 grid gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-2"
           role="list"
           aria-label="Product features list"
         >

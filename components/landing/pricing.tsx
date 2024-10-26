@@ -5,19 +5,16 @@ import Link from "next/link";
 
 const PricingSection = () => {
   const plan = {
-    name: "Basic Plan",
-    price: 9.99,
-    description: "Everything you need to create stunning carousels",
+    name: "Free Plan",
+    description: "Everything you need to create stunning LinkedIn carousels",
     features: [
       "User-Friendly Editor",
-      "Multiple Templates",
-      "Cross-Platform Compatibility",
+      "LinkedIn Optimization",
       "Data Security",
-      "Unlimited manual carousel creation",
-      "Access to free templates",
+      "Unlimited carousel creation",
       "Basic analytics",
       "Community support",
-      "AI-Generated Content",
+      "Professional Design Tools",
       "Dynamic Color Palettes",
       "Modern Backgrounds",
       "Text Customization",
@@ -47,10 +44,10 @@ const PricingSection = () => {
           className="text-center mb-16"
         >
           <h2 className="text-4xl md:text-5xl font-bold text-textColor mb-4">
-            Simple Pricing for Everyone
+            100% Free LinkedIn Carousel Creator
           </h2>
           <p className="text-xl text-textColor/70 max-w-2xl mx-auto">
-            One plan, all features. Start creating amazing carousels today.
+            All features included. Start creating amazing LinkedIn carousels today.
           </p>
         </motion.div>
 
@@ -68,9 +65,9 @@ const PricingSection = () => {
                 </h3>
                 <p className="text-textColor/70 mb-6">{plan.description}</p>
                 <div className="text-5xl font-bold text-primary mb-6">
-                  ${plan.price}{" "}
+                  $0{" "}
                   <span className="text-xl font-normal text-textColor/70">
-                    /month
+                    Forever
                   </span>
                 </div>
               </div>
@@ -80,7 +77,7 @@ const PricingSection = () => {
                   whileTap={{ scale: 0.95 }}
                   className="w-full py-4 px-6 rounded-full font-semibold text-white bg-primary hover:bg-primary-dark transition-colors duration-300 text-lg flex items-center justify-center group"
                 >
-                  Get Started
+                  Start Creating
                   <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
                 </motion.button>
               </Link>

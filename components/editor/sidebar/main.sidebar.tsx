@@ -21,7 +21,7 @@ const MainSidebar: React.FC<MainSidebarProps> = ({
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const [activeTab, setActiveTab] = useState("ai-settings");
+  const [activeTab, setActiveTab] = useState("background");
 
   useEffect(() => {
     const handleResize = () => {
@@ -70,10 +70,10 @@ const MainSidebar: React.FC<MainSidebarProps> = ({
         <div className="sticky top-0 w-full md:w-[80px] order-first md:order-first border-r border-borderColor/50 bg-background ">
           <div className="flex flex-wrap md:flex-col w-full h-full justify-start items-center md:border-r border-b md:border-b-0 border-borderColor/50">
             {[
-              { name: "ai-settings", icon: <Wand2 size={20} />, label: "AI" },
+              // { name: "ai-settings", icon: <Wand2 size={20} />, label: "AI" },
+              { name: "background", icon: <Palette size={20} />, label: "Color" },
               { name: "branding", icon: <User size={20} />, label: "Brand" },
               { name: "text-settings", icon: <Type size={20} />, label: "Text" },
-              { name: "background", icon: <Palette size={20} />, label: "Color" },
               { name: "patterns-elements", icon: <Shapes size={20} />, label: "Elements" },
               { name: "background-images", icon: <Image size={20} />, label: "Images" },
             ].map((tab) => (
@@ -98,10 +98,10 @@ const MainSidebar: React.FC<MainSidebarProps> = ({
             isCollapsed ? "hidden" : ""
           }`}
         >
-          {activeTab === "ai-settings" && <AiSettingsComponent />}
+          {/* {activeTab === "ai-settings" && <AiSettingsComponent />} */}
+          {activeTab === "background" && <BackgroundColorsSection />}
           {activeTab === "branding" && <BrandingSection />}
           {activeTab === "text-settings" && <TextSettingsSection />}
-          {activeTab === "background" && <BackgroundColorsSection />}
           {activeTab === "patterns-elements" && (
             <BackgroundPatternsAndElements />
           )}

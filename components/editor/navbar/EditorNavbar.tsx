@@ -104,7 +104,7 @@ const EditorNavbar: React.FC = () => {
 
             <div className="hidden lg:flex flex-col sm:flex-row items-start sm:items-center space-y-2 sm:space-y-0 sm:space-x-2 w-full">
               <div className="flex space-x-2 w-full sm:w-auto">
-                <Button
+                {/* <Button
                   onClick={handleOpenCarouselModal}
                   className="flex-1 sm:flex-initial h-8 justify-start text-textColor/85 bg-cardBackground hover:bg-primary/80 border  hover:text-white border-borderColor"
                   variant="outline"
@@ -113,7 +113,7 @@ const EditorNavbar: React.FC = () => {
                 >
                   <List className="w-4 h-4 mr-2 " />
                   <span>{isFetchingAll ? "Loading..." : "All Carousels"}</span>
-                </Button>
+                </Button> */}
 
                 <Button
                   onClick={handleAddNew}
@@ -126,7 +126,7 @@ const EditorNavbar: React.FC = () => {
                   <span>New</span>
                 </Button>
               </div>
-              <div className="flex items-center bg-cardBackground border border-borderColor/50 rounded-md h-8 w-full sm:w-auto">
+              {/* <div className="flex items-center bg-cardBackground border border-borderColor/50 rounded-md h-8 w-full sm:w-auto">
                 <Edit className="w-4 h-4 mr-2 text-textColor/85 ml-2" />
                 <input
                   type="text"
@@ -136,7 +136,7 @@ const EditorNavbar: React.FC = () => {
                   onChange={handleNameChange}
                   aria-label="Carousel name"
                 />
-              </div>
+              </div> */}
             </div>
           </div>
 
@@ -150,16 +150,16 @@ const EditorNavbar: React.FC = () => {
               isAuthenticated={isAuthenticated}
               onLoginRequired={handleLoginRequired}
             />
-            <Button
+            {/* <Button
               onClick={handleSaveCarousel}
               disabled={isCreatingOrUpdating || !isAuthenticated}
               size="xs"
               className="whitespace-nowrap h-8"
             >
               {isCreatingOrUpdating ? "Saving..." : "Save Progress"}
-            </Button>
-            <SubscriptionInfo />
-            {!user || !user.email ? (
+            </Button> */}
+            {/* <SubscriptionInfo /> */}
+            {/* {!user || !user.email ? (
               <Button
                 variant="outline"
                 size="xs"
@@ -170,7 +170,7 @@ const EditorNavbar: React.FC = () => {
               </Button>
             ) : (
               <UserDropdown user={user} handleLogout={handleLogout} />
-            )}
+            )} */}
           </div>
 
           <div className="lg:hidden">
@@ -200,15 +200,15 @@ const EditorNavbar: React.FC = () => {
               isAuthenticated={isAuthenticated}
               onLoginRequired={handleLoginRequired}
             />
-            <Button
+            {/* <Button
               onClick={handleSaveCarousel}
               disabled={isCreatingOrUpdating}
               className="w-full h-8"
             >
               {isCreatingOrUpdating ? "Saving..." : "Save Carousel"}
-            </Button>
-            <SubscriptionInfo />
-            {!user || !user.email ? (
+            </Button> */}
+            {/* <SubscriptionInfo /> */}
+            {/* {!user || !user.email ? (
               <Button
                 variant="outline"
                 className="w-full bg-cardBackground hover:bg-primary/80 border border-borderColor/50 text-textColor/85"
@@ -231,7 +231,7 @@ const EditorNavbar: React.FC = () => {
                 <LogOut className="w-4 h-4 mr-2" />
                 Logout
               </Button>
-            )}
+            )} */}
           </div>
         </div>
       )}

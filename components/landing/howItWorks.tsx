@@ -1,5 +1,5 @@
 import React from "react";
-import { Paintbrush, Sliders, Sparkles, Share2 } from "lucide-react";
+import { Paintbrush, Sliders, FileText, Share2 } from "lucide-react";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 
@@ -9,28 +9,28 @@ const steps = [
     number: "01",
     title: "Choose Template",
     description:
-      "Start with professional templates optimized for LinkedIn, Instagram, and TikTok engagement.",
+      "Start with professional templates optimized for LinkedIn engagement.",
   },
   {
     icon: <Sliders className="w-8 h-8" />,
     number: "02",
     title: "Customize Design",
     description:
-      "Personalize your carousel with brand colors, fonts, and AI-suggested layouts.",
+      "Personalize your carousel with brand colors, fonts, and professional layouts.",
   },
   {
-    icon: <Sparkles className="w-8 h-8" />,
+    icon: <FileText className="w-8 h-8" />,
     number: "03",
-    title: "Generate Content",
+    title: "Add Content",
     description:
-      "Transform your ideas into engaging carousel content with our AI copywriting.",
+      "Transform your ideas into engaging carousel content with our user-friendly editor.",
   },
   {
     icon: <Share2 className="w-8 h-8" />,
     number: "04",
     title: "Export & Share",
     description:
-      "Download in platform-optimized formats and share directly to your favorite platforms.",
+      "Download in LinkedIn-optimized formats and share directly to your professional network.",
   },
 ];
 
@@ -39,7 +39,7 @@ const HowItWorksSection = () => {
     <section
       className="py-16 bg-background"
       id="how-it-works"
-      aria-label="How to create carousels"
+      aria-label="How to create LinkedIn carousels"
     >
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
@@ -49,10 +49,10 @@ const HowItWorksSection = () => {
           transition={{ duration: 0.6 }}
         >
           <h2 className="text-3xl font-bold text-textColor sm:text-4xl">
-            Create Professional Carousels in Minutes
+            Create Professional LinkedIn Carousels in Minutes
           </h2>
           <p className="mt-4 text-xl text-textColor/70 max-w-3xl mx-auto">
-            Four simple steps to create engaging carousels using AI. No design
+            Four simple steps to create engaging LinkedIn carousels. No design
             experience needed.
           </p>
         </motion.div>
@@ -96,9 +96,9 @@ const HowItWorksSection = () => {
           {JSON.stringify({
             "@context": "https://schema.org",
             "@type": "HowTo",
-            name: "How to Create Professional Social Media Carousels",
+            name: "How to Create Professional LinkedIn Carousels",
             description:
-              "Create engaging carousels for social media in four simple steps",
+              "Create engaging carousels for LinkedIn in four simple steps",
             step: steps.map((step, index) => ({
               "@type": "HowToStep",
               position: index + 1,

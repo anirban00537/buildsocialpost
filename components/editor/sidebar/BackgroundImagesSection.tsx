@@ -47,10 +47,10 @@ const BackgroundImagesSection = () => {
           Background Image
         </h2>
       </div>
-      
+
       <div className="flex-grow overflow-y-auto p-6 space-y-6">
         {globalBackground ? (
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             className="flex items-center bg-background/70 p-4 rounded-lg border border-borderColor/50 shadow-sm"
@@ -64,7 +64,9 @@ const BackgroundImagesSection = () => {
               />
             </div>
             <div className="flex-grow">
-              <p className="text-sm font-medium text-textColor mb-2">Current background</p>
+              <p className="text-sm font-medium text-textColor mb-2">
+                Current background
+              </p>
               <Button
                 size="sm"
                 variant="destructive"
@@ -77,7 +79,7 @@ const BackgroundImagesSection = () => {
             </div>
           </motion.div>
         ) : (
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             className="flex items-center justify-center w-full h-24 bg-background/70 rounded-lg border border-dashed border-borderColor/50"
@@ -87,8 +89,10 @@ const BackgroundImagesSection = () => {
         )}
 
         <div className="flex justify-between items-center">
-          <h3 className="text-sm font-semibold text-textColor">Choose an image</h3>
-          <Button
+          <h3 className="text-sm font-semibold text-textColor">
+            Choose an image
+          </h3>
+          {/* <Button
             size="sm"
             variant="outline"
             onClick={() => setIsModalOpen(true)}
@@ -96,9 +100,9 @@ const BackgroundImagesSection = () => {
           >
             <Upload size={14} className="mr-2" />
             Upload
-          </Button>
+          </Button> */}
         </div>
-        
+
         <div className="grid grid-cols-3 gap-4 pb-6">
           {backgroundImages.map((imageUrl, index) => (
             <motion.div

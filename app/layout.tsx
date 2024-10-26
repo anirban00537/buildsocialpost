@@ -4,7 +4,7 @@ import DefaultLayout from "@/components/layout/default.layout";
 import Script from "next/script";
 
 const poppins = Poppins({
-  weight: ["400", "500", "600", "700"], // Added more weight variants for better typography
+  weight: ["400", "500", "600", "700"],
   subsets: ["latin"],
   variable: "--font-poppins",
   display: "swap",
@@ -15,31 +15,29 @@ const defaultUrl = "https://buildsocialpost.com";
 export const metadata = {
   metadataBase: new URL(defaultUrl),
   title:
-    "Free AI Carousel Maker | LinkedIn, TikTok & Instagram | BuildSocialPost",
+    "Free LinkedIn Carousel Maker | Professional Carousel Creator | BuildSocialPost",
   description:
-    "Create professional carousels in seconds with AI. Transform articles, videos & tweets into engaging LinkedIn, TikTok & Instagram carousels. No design skills needed. Free templates, instant generation, and multi-platform support.",
+    "Create professional LinkedIn carousels in seconds. Transform your ideas into engaging LinkedIn posts. No design skills needed. Free tool with instant generation and professional templates.",
   keywords: [
     // Primary Keywords
-    "AI carousel maker",
+    "LinkedIn carousel maker",
     "LinkedIn carousel generator",
     "free carousel maker",
-    "Instagram carousel creator",
-    "TikTok carousel maker",
+    "professional carousel creator",
     // Feature-based Keywords
-    "AI content generator",
+    "LinkedIn content creator",
     "social media carousel templates",
     "professional carousel maker",
     "free LinkedIn carousel tool",
     // Long-tail Keywords
-    "create LinkedIn carousels with AI",
-    "convert articles to carousel posts",
+    "create LinkedIn carousels easily",
+    "convert ideas to carousel posts",
     "professional LinkedIn carousel templates",
-    "AI-powered social media content creator",
-    "instant carousel generator",
+    "instant carousel generator for LinkedIn",
     // Intent-based Keywords
     "how to make LinkedIn carousels",
-    "best carousel maker for social media",
-    "free social media content creator",
+    "best carousel maker for LinkedIn",
+    "free LinkedIn content creator",
   ].join(", "),
   authors: [{ name: "Anirban Roy" }],
   creator: "Anirban Roy",
@@ -55,36 +53,36 @@ export const metadata = {
     locale: "en_US",
     url: defaultUrl,
     title:
-      "AI Carousel Maker | Create Professional Social Media Carousels Instantly",
+      "LinkedIn Carousel Maker | Create Professional Carousels Instantly",
     description:
-      "Transform your content into engaging carousels for LinkedIn, TikTok & Instagram using AI. No design skills needed. Features: instant generation, professional templates, multi-platform support. Start creating for free!",
+      "Transform your content into engaging carousels for LinkedIn. No design skills needed. Features: instant generation, professional templates. Start creating for free!",
     siteName: "BuildSocialPost",
     images: [
       {
         url: `${defaultUrl}/og/hero-image.png`,
         width: 1200,
         height: 630,
-        alt: "BuildSocialPost - Professional AI Carousel Generator",
+        alt: "BuildSocialPost - Professional LinkedIn Carousel Generator",
       },
       {
         url: `${defaultUrl}/og/feature-showcase.png`,
         width: 1800,
         height: 1200,
-        alt: "AI-Powered Carousel Creation Tools",
+        alt: "LinkedIn Carousel Creation Tools",
       },
       {
         url: `${defaultUrl}/og/templates-preview.jpg`,
         width: 800,
         height: 600,
-        alt: "Professional Social Media Templates",
+        alt: "Professional LinkedIn Carousel Templates",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Create Professional Carousels with AI | BuildSocialPost",
+    title: "Create Professional LinkedIn Carousels | BuildSocialPost",
     description:
-      "Transform your content into engaging carousels for LinkedIn, TikTok & Instagram. AI-powered, professional templates, instant generation. Start free!",
+      "Transform your content into engaging carousels for LinkedIn. Professional templates, instant generation. Start free!",
     images: [`${defaultUrl}/og/twitter-card.jpg`],
     creator: "@buildsocialpost",
     site: "@buildsocialpost",
@@ -121,10 +119,9 @@ export const metadata = {
       priceCurrency: "USD",
     },
     features: [
-      "AI-powered content generation",
-      "Professional templates",
-      "Multi-platform support",
-      "Instant carousel creation",
+      "Professional content creation",
+      "LinkedIn-optimized templates",
+      "Instant carousel generation",
       "No design skills required",
     ],
   },

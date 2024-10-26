@@ -22,7 +22,6 @@ const BrandingSection: React.FC = () => {
 
   const onImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     await handleImageUpload(e);
-    handleSubmit(e as unknown as React.FormEvent<HTMLFormElement>);
   };
 
   return (
@@ -37,7 +36,7 @@ const BrandingSection: React.FC = () => {
             <div className="flex justify-center">
               <div className="relative group w-32 h-32">
                 <Image
-                  src={previewImage || headshot || "/creator.jpg"}
+                  src={previewImage || "/creator.jpg"}
                   alt="Headshot"
                   layout="fill"
                   objectFit="cover"
@@ -100,7 +99,7 @@ const BrandingSection: React.FC = () => {
               </div>
             </div>
           </div>
-          <Button
+          {/* <Button
             type="submit"
             variant="default"
             size="lg"
@@ -134,7 +133,7 @@ const BrandingSection: React.FC = () => {
             ) : (
               "Save Changes"
             )}
-          </Button>
+          </Button> */}
         </div>
       </form>
     </div>

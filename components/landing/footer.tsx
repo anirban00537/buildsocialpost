@@ -23,7 +23,7 @@ const Footer = () => {
               className="mb-3"
             />
             <p className="text-textColor/80 text-sm text-center md:text-left">
-              Create professional carousels easily with our AI-powered tool.
+              Create professional LinkedIn carousels easily with our free tool.
             </p>
           </div>
 
@@ -76,19 +76,19 @@ const Footer = () => {
                   Home
                 </Link>
               </li>
-              {/* <li>
+              <li>
                 <Link
-                  href="/about"
+                  href="/editor"
                   className="text-textColor/70 hover:text-primary transition-colors duration-200"
                 >
-                  About
+                  Carousel Creator
                 </Link>
-              </li> */}
+              </li>
             </ul>
             <div className="mt-4 text-center md:text-left">
               <h3 className="text-sm font-semibold mb-2">Contact</h3>
               <a
-                href="mailto:anirbansaas@gmail.com"
+                href="mailto:anirban00537@gmail.com"
                 className="text-xs text-textColor/70 hover:text-primary transition-colors duration-200"
               >
                 anirban00537@gmail.com

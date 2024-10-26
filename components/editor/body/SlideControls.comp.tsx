@@ -147,7 +147,7 @@ const SlideControls: React.FC<SlideControlsProps> = ({
             <DropdownMenuLabel>Slide Settings</DropdownMenuLabel>
             {(
               [
-                { value: "showImage", label: "Show Image" },
+                // { value: "showImage", label: "Show Image" },
                 { value: "showTagline", label: "Show Tagline" },
                 { value: "showTitle", label: "Show Title" },
                 { value: "showDescription", label: "Show Description" },
