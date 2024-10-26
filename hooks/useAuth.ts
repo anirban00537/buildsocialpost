@@ -9,6 +9,7 @@ import {
   setSubscribed,
   setEndDate,
   setLoading,
+  setCurrentWorkspace,
 } from "@/state/slice/user.slice";
 import { useCallback, useEffect } from "react";
 import { CredentialResponse } from "@react-oauth/google";
@@ -17,6 +18,7 @@ import { checkSubscription } from "@/services/subscription";
 import Cookies from "js-cookie";
 import { RootState } from "@/state/store";
 import { ResponseData, UserInfo } from "@/types";
+import { getWorkspace } from "@/services/workspace";
 
 interface Subscription {
   id: string;
@@ -35,11 +37,7 @@ interface Subscription {
 interface SubscriptionResponse {
   success: boolean;
   message: string;
-  data: {
-    isSubscribed: boolean;
-    subscription: Subscription | null;
-    daysLeft: number;
-  };
+  data: any;
 }
 
 export const useAuth = () => {
@@ -67,26 +65,37 @@ export const useAuth = () => {
     data: subscriptionData,
     isLoading: isSubscriptionLoading,
     refetch: refetchSubscription,
-  } = useQuery<SubscriptionResponse, Error>(
-    ["subscription"],
-    checkSubscription,
-    {
-      enabled: loggedin,
-      staleTime: 1000 * 60 * 5, // 5 minutes
-      cacheTime: 1000 * 60 * 30, // 30 minutes
-      onSuccess: (data: SubscriptionResponse) => {
-        dispatch(setSubscribed(data.data.isSubscribed));
-        if (data.data.subscription) {
-          dispatch(setEndDate(data.data.subscription.endDate));
-        } else {
-          dispatch(setEndDate(null));
-        }
-      },
-      onError: (error: Error) => {
-        toast.error(`Failed to fetch subscription: ${error.message}`);
-      },
-    }
-  );
+  } = useQuery<ResponseData, Error>(["subscription"], checkSubscription, {
+    enabled: loggedin,
+    staleTime: 1000 * 60 * 5,
+    cacheTime: 1000 * 60 * 30,
+    onSuccess: (data: ResponseData) => {
+      dispatch(setSubscribed(data.data.isSubscribed));
+      if (data.data.subscription) {
+        dispatch(setEndDate(data.data.subscription.endDate));
+      } else {
+        dispatch(setEndDate(null));
+      }
+    },
+    onError: (error: Error) => {
+      toast.error(`Failed to fetch subscription: ${error.message}`);
+    },
+  });
+
+  const { data: workspaceData, isLoading: isWorkspaceLoading } = useQuery<
+    ResponseData,
+    Error
+  >(["workspace"], getWorkspace, {
+    enabled: loggedin,
+    onSuccess: (data: ResponseData) => {
+      if (data.data.length > 0) {
+        const defaultWorkspace = data.data.find(
+          (workspace: any) => workspace.isDefault
+        );
+        dispatch(setCurrentWorkspace(defaultWorkspace));
+      }
+    },
+  });
 
   const loginMutation = useMutation(
     (idToken: string) => googleSignIn(idToken),

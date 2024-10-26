@@ -48,7 +48,9 @@ export const useCarouselManager = () => {
   const dispatch = useDispatch();
   const queryClient = useQueryClient();
   const carouselId = searchParams?.get("id");
-  const { loggedin, userinfo } = useSelector((state: RootState) => state.user);
+  const { loggedin, userinfo, currentWorkspace } = useSelector(
+    (state: RootState) => state.user
+  );
 
   const CarouselData = useSelector((state: RootState) => state.slides);
 
@@ -61,47 +63,56 @@ export const useCarouselManager = () => {
     refetch: refetchCarousels,
   } = useQuery<CarouselResponse>(
     ["carousels", currentPage, pageSize],
-    () => getCarousels(currentPage, pageSize),
+    () => getCarousels(currentPage, pageSize, currentWorkspace?.id || 0),
     {
-      enabled: loggedin,
-      onSuccess: (response) => {
-      },
+      enabled: loggedin && !!currentWorkspace,
+      // enabled: false,
+      onSuccess: (response) => {},
       onError: (error: any) => processApiResponse(error),
     }
   );
 
-  const { mutate: createOrUpdateCarousel, isLoading: isCreatingOrUpdating } =
-    useMutation<CarouselResponse, Error, { newName?: string; id?: string }>(
-      async ({ newName, id }) => {
-        if (id) {
-          return updateCarousel({ id, data: CarouselData });
-        } else {
-          return createCarousel({ data: CarouselData });
-        }
-      },
-      {
-        onSuccess: (response: any, variables) => {
-          console.log("Response from create/update:", response);
-          if (response && response.success && response.data) {
-            let newId = response.data.id;
-            if (typeof response.data === "object" && "items" in response.data) {
-              newId = response.data.items[0]?.id;
-            }
-            if (newId) {
-              const newUrl = `/editor?id=${newId}`;
-              router.replace(newUrl);
-            } else {
-              console.error("No carousel ID found in the response");
-            }
-          }
-          processApiResponse(response);
-          queryClient.invalidateQueries("carousels");
-        },
-        onError: (error) => {
-          processApiResponse(error);
-        },
+  const {
+    mutateAsync: createOrUpdateCarousel,
+    isLoading: isCreatingOrUpdating,
+  } = useMutation<CarouselResponse, Error, { newName?: string; id?: string }>(
+    async ({ newName, id }) => {
+      if (id) {
+        return updateCarousel({
+          id: Number(id),
+          data: CarouselData,
+          workspaceId: currentWorkspace?.id || 0,
+        });
+      } else {
+        return createCarousel({
+          data: CarouselData,
+          workspaceId: currentWorkspace?.id || 0,
+        });
       }
-    );
+    },
+    {
+      onSuccess: (response: any, variables) => {
+        console.log("Response from create/update:", response.data);
+        if (response && response.success && response.data) {
+          let newId = response.data.id;
+          if (typeof response.data === "object" && "items" in response.data) {
+            newId = response.data.items[0]?.id;
+          }
+          if (newId) {
+            const newUrl = `/editor?id=${newId}`;
+            router.replace(newUrl);
+          } else {
+            console.error("No carousel ID found in the response");
+          }
+        }
+        processApiResponse(response);
+        queryClient.invalidateQueries("carousels");
+      },
+      onError: (error) => {
+        processApiResponse(error);
+      },
+    }
+  );
 
   const { mutate: deleteCarouselMutation, isLoading: isDeleting } = useMutation<
     ResponseData,
@@ -120,15 +131,19 @@ export const useCarouselManager = () => {
   const { isLoading: isLoadingCarouselDetails } = useQuery<
     CarouselState,
     Error
-  >(["carouselDetails", carouselId], () => getCarouselDetails(carouselId!), {
-    enabled: !!carouselId,
-    onSuccess: (data: any) => {
-      dispatch(setAllData(data.data.data));
-    },
-    onError: (error: Error) => {
-      processApiResponse(error);
-    },
-  });
+  >(
+    ["carouselDetails", carouselId],
+    () => getCarouselDetails(carouselId!, currentWorkspace?.id || 0),
+    {
+      enabled: !!carouselId,
+      onSuccess: (data: any) => {
+        dispatch(setAllData(data.data.data));
+      },
+      onError: (error: Error) => {
+        processApiResponse(error);
+      },
+    }
+  );
 
   useEffect(() => {
     if (!isLoadingCarouselDetails) dispatch(setLoading(false));

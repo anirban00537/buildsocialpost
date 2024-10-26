@@ -148,15 +148,9 @@ const Hero = () => {
             </div>
             <br />
             <div className="inline-block">
-              <motion.span
-                className={`text-transparent bg-clip-text bg-gradient-to-r ${platforms[currentPlatform].gradient}`}
-                key={currentPlatform}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5 }}
-              >
-                {platforms[currentPlatform].name}
-              </motion.span>{" "}
+              <span className={`text-transparent bg-clip-text bg-[#0077B5]`}>
+                LinkedIn
+              </span>{" "}
               <span className="text-transparent bg-clip-text bg-gradient-to-b from-gray-600 via-gray-500 to-gray-900">
                 Carousels Instantly
               </span>

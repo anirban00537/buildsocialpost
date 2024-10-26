@@ -1,8 +1,12 @@
 import request from "@/lib/request";
 
-export const getCarousels = async (page: number, pageSize: number) => {
+export const getCarousels = async (
+  page: number,
+  pageSize: number,
+  workspaceId: number
+) => {
   const response = await request.get("/my-carousels/get", {
-    params: { page, pageSize },
+    params: { page, pageSize, workspaceId },
   });
   return response.data;
 };
@@ -22,9 +26,9 @@ export const deleteCarousel = async (id: string) => {
   return response.data;
 };
 
-export const getCarouselDetails = async (id: string) => {
+export const getCarouselDetails = async (id: string, workspaceId: number) => {
   const response = await request.get("/my-carousels/get-details", {
-    params: { id },
+    params: { id, workspaceId },
   });
   return response.data;
 };
