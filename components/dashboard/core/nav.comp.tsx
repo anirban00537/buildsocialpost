@@ -36,6 +36,7 @@ import { RootState } from "@/state/store";
 import { useSelector } from "react-redux";
 import SubscriptionInfo from "@/components/subscription/status";
 import { cn } from "@/lib/utils";
+import CreateWorkspaceModal from "@/components/dashboard/workspace/CreateWorkspaceModal";
 
 const Navbar = () => {
   const { workspaces, currentWorkspace } = useSelector(
@@ -44,6 +45,7 @@ const Navbar = () => {
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState(currentWorkspace?.id?.toString() || "");
   const [search, setSearch] = useState("");
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
 
   const filteredWorkspaces = useMemo(() => {
     if (!search) return workspaces;
@@ -51,6 +53,12 @@ const Navbar = () => {
       workspace.name.toLowerCase().includes(search.toLowerCase())
     );
   }, [workspaces, search]);
+
+  const handleCreateWorkspace = (name: string) => {
+    // Implement the logic to create a new workspace
+    console.log(`Creating new workspace: ${name}`);
+    // You might want to dispatch an action here to update your Redux store
+  };
 
   return (
     <header className="bg-white sticky top-0 z-40 border-b border-borderColor">
@@ -130,9 +138,8 @@ const Navbar = () => {
                   <CommandGroup>
                     <CommandItem
                       onSelect={() => {
-                        // Handle create workspace action
+                        setIsCreateModalOpen(true);
                         setOpen(false);
-                        setSearch("");
                       }}
                     >
                       <Plus className="mr-2 h-4 w-4" />
@@ -178,6 +185,12 @@ const Navbar = () => {
           </div>
         </div>
       </div>
+
+      <CreateWorkspaceModal
+        isOpen={isCreateModalOpen}
+        onClose={() => setIsCreateModalOpen(false)}
+        onCreateWorkspace={handleCreateWorkspace}
+      />
     </header>
   );
 };

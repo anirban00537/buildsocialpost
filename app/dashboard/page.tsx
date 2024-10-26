@@ -9,6 +9,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Layers, FileText, ArrowRight } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 
 const ContentCreationTools = () => {
   const creationOptions = [
@@ -19,6 +20,7 @@ const ContentCreationTools = () => {
       link: "/carousel-editor",
       color: "text-purple-600",
       bgColor: "bg-purple-50",
+      logo: "/carousel.png",
     },
     {
       icon: FileText,
@@ -32,38 +34,45 @@ const ContentCreationTools = () => {
   ];
 
   return (
-    <div className="mx-auto p-8 space-y-8 bg-white rounded-lg border border-borderColor">
-      <h2 className="text-2xl font-medium mb-6 text-gray-800">
+    <div className="mx-auto p-6 space-y-6 bg-white rounded-lg border border-borderColor">
+      <h2 className="flex items-center text-xl font-medium mb-4 text-gray-800">
+        <Image
+          src="/ai-content.png"
+          height={20}
+          width={30}
+          alt="Buildsocialpost.com"
+          className="mr-2"
+        />
         Generate Content with AI
       </h2>
-      <div className="grid sm:grid-cols-2 gap-6">
+      <div className="grid sm:grid-cols-2 gap-4">
         {creationOptions.map((option, index) => (
           <Link href={option.link} key={index} className="group">
             <Card
               className={`hover:shadow-md transition-all duration-300 ${option.bgColor} border-none`}
             >
-              <CardHeader>
-                <CardTitle
-                  className={`flex items-center text-xl ${option.color}`}
-                >
-                  <option.icon className="mr-3 h-6 w-6" />
-                  {option.title}
-                </CardTitle>
-                <CardDescription className="mt-2 text-gray-600">
-                  {option.description}
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="flex justify-between items-center">
+              <div className="p-4 flex items-center justify-between">
+                <div>
+                  <CardTitle
+                    className={`flex items-center text-base ${option.color} mb-1`}
+                  >
+                    <option.icon className="mr-2 h-4 w-4" />
+                    {option.title}
+                  </CardTitle>
+                  <CardDescription className="text-xs text-gray-600">
+                    {option.description}
+                  </CardDescription>
+                </div>
                 <Button
                   variant="ghost"
-                  className={`px-0 ${option.color} hover:bg-transparent hover:underline hover:text-primary`}
+                  className={`px-2 py-1 text-xs ${option.color} hover:bg-transparent hover:underline hover:text-primary`}
                 >
-                  Start Creating
+                  Start
+                  <ArrowRight
+                    className={`ml-1 h-3 w-3 ${option.color} opacity-0 group-hover:opacity-100 transition-opacity duration-300`}
+                  />
                 </Button>
-                <ArrowRight
-                  className={`h-5 w-5 ${option.color} opacity-0 group-hover:opacity-100 transition-opacity duration-300`}
-                />
-              </CardContent>
+              </div>
             </Card>
           </Link>
         ))}
