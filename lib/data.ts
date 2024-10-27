@@ -1,5 +1,5 @@
 import { CarouselState, Slide } from "@/types";
-import { sharedElements } from "./coreConstants";
+import { sharedElements } from "./core-constants";
 
 export const initialSlides: Slide[] = [
   {
@@ -31,7 +31,8 @@ export const initialSlides: Slide[] = [
     type: "outro",
     title: "Conclusion and Call to Action",
     tagline: "What's Next?",
-    description: "Summarize your key points and provide a clear call to action for your audience.",
+    description:
+      "Summarize your key points and provide a clear call to action for your audience.",
     imageUrl: null,
     backgroundImage: null,
     showImage: false,
@@ -40,7 +41,6 @@ export const initialSlides: Slide[] = [
     showDescription: true,
   },
 ];
-
 
 export const initialCarousel: CarouselState = {
   name: "New Carousel",
@@ -83,4 +83,3 @@ export const initialCarousel: CarouselState = {
   fontFamily: "poppins",
   globalBackground: null,
 };
-

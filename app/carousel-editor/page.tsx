@@ -1,9 +1,9 @@
 "use client";
-import EditorBody from "@/components/editor/body/body.editor";
+import EditorBody from "@/components/editor/body/Body.editor.comp";
 import React, { Suspense, useState, useEffect } from "react";
-import MainSidebar from "@/components/editor/sidebar/main.sidebar";
+import MainSidebar from "@/components/editor/sidebar/Main.comp";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import EditorNavbar from "@/components/editor/navbar/EditorNavbar";
+import EditorNavbar from "@/components/editor/navbar/Editor-Navbar.comp";
 
 function Dashboard() {
   const [isCollapsed, setIsCollapsed] = useState(false);

@@ -7,11 +7,11 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import PricingModal from "./pricingModal.subscription";
+import PricingModal from "./Pricing-Modal.comp";
 import { useSelector } from "react-redux";
 import { RootState } from "@/state/store";
 import { CreditCard, Diamond } from "lucide-react";
-import { DiamondSVG } from "../shared-components/svg-icons";
+import { DiamondSVG } from "../shared-components/Svg-Icons.comp";
 
 const BillingModal: React.FC = () => {
   const { subscribed, endDate } = useSelector((state: RootState) => state.user);

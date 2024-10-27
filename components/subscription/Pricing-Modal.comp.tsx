@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 
-import Pricing from "./pricing";
+import Pricing from "./Pricing.comp";
 
 export default function PricingModal({
   buttonElement,

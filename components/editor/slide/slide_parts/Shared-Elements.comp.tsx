@@ -1,6 +1,6 @@
 import React from "react";
 
-import { sharedElements } from "@/lib/coreConstants";
+import { sharedElements } from "@/lib/core-constants";
 interface SharedElementsProps {
   positionStyles: React.CSSProperties;
   color4: string;

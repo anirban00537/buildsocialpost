@@ -7,10 +7,10 @@ import {
   LayoutSettings,
 } from "@/types";
 import { initialSlides, initialCarousel } from "@/lib/data";
-import { sharedElements } from "@/lib/coreConstants";
+import { sharedElements } from "@/lib/core-constants";
 
 const initialState: CarouselState = initialCarousel;
-  
+
 type UpdatePayload = {
   key: keyof CarouselState;
   value: any;

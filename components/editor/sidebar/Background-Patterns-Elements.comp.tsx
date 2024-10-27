@@ -7,10 +7,17 @@ import {
   setSharedSelectedElementOpacity,
   setBackgroundOpacity,
 } from "@/state/slice/carousel.slice";
-import { backgroundPatterns, sharedElements } from "@/lib/coreConstants";
+import { backgroundPatterns, sharedElements } from "@/lib/core-constants";
 import { Slider } from "@/components/ui/slider";
-import { CircleOff, ChevronDown, ChevronUp, Grid, Layers, Palette } from "lucide-react";
-import { getBackgroundPattern } from "@/components/shared-components/backgrounds";
+import {
+  CircleOff,
+  ChevronDown,
+  ChevronUp,
+  Grid,
+  Layers,
+  Palette,
+} from "lucide-react";
+import { getBackgroundPattern } from "@/components/shared-components/Backgrounds.comp";
 import { motion, AnimatePresence } from "framer-motion";
 
 const BackgroundPatternsAndElements = () => {
@@ -133,7 +140,9 @@ const BackgroundPatternsAndElements = () => {
                     max={0.05}
                     step={0.01}
                     value={[layout.backgroundOpacity]}
-                    onValueChange={(value) => dispatch(setBackgroundOpacity(value[0]))}
+                    onValueChange={(value) =>
+                      dispatch(setBackgroundOpacity(value[0]))
+                    }
                     className="my-4"
                   />
                 </div>

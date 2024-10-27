@@ -1,4 +1,4 @@
-import AuthCheckLayout from "@/components/layout/authCheckLayout";
+import AuthCheckLayout from "@/components/layout/Auth-Check.layout.comp";
 
 export default function EditorLayout({
   children,

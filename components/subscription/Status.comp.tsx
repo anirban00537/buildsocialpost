@@ -1,5 +1,5 @@
 import React from "react";
-import PricingModal from "./pricingModal.subscription";
+import PricingModal from "./Pricing-Modal.comp";
 import { Button } from "../ui/button";
 import { RootState } from "@/state/store";
 import { useSelector } from "react-redux";
@@ -9,7 +9,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "../ui/tooltip";
-import { DiamondSVG } from "../shared-components/svg-icons";
+import { DiamondSVG } from "../shared-components/Svg-Icons.comp";
 import { Sparkles } from "lucide-react";
 import { motion } from "framer-motion";
 

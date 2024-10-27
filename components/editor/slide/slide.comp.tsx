@@ -1,15 +1,15 @@
 import React from "react";
 import { Slide } from "@/types";
 import { useSelector } from "react-redux";
-import SharedElementsComponent from "./slide-parts/sharedElements";
-import Text from "./slide-parts/text";
-import Image from "./slide-parts/image";
-import Background from "./slide-parts/background";
-import GeneralInfo from "./slide-parts/generalInfo";
+import SharedElementsComponent from "./slide_parts/Shared-Elements.comp";
+import Text from "./slide_parts/Text.comp";
+import Image from "./slide_parts/Image.comp";
+import Background from "./slide_parts/Background.comp";
+import GeneralInfo from "./slide_parts/General-Info.comp";
 import { RootState } from "@/state/store";
 import { CSSProperties } from "react";
 import { fontOptions } from "@/lib/fonts";
-import { getBackgroundPattern } from "@/components/shared-components/backgrounds";
+import { getBackgroundPattern } from "@/components/shared-components/Backgrounds.comp";
 
 interface SlideProps {
   slide: Slide;

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import ImageUploadModal from "../../ImageUploadModal";
+import ImageUploadModal from "../../Image_upload_modal/Image-Upload-Modal.comp";
 import { Slide } from "@/types";
 import useCarousel from "@/hooks/useCarousel";
 import { ImagePlus, X } from "lucide-react";

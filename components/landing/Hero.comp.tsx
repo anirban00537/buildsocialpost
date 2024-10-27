@@ -3,9 +3,9 @@ import React from "react";
 import { motion } from "framer-motion";
 import { AnimatedTooltip } from "../ui/animated-tooltip";
 import { ArrowRightIcon } from "lucide-react";
-import AnimatedShinyText from "../magicui/animated-shiny-text";
+import AnimatedShinyText from "../magicui/Animated-Shiny-Text.comp";
 import { cn } from "@/lib/utils";
-import ShimmerButton from "../magicui/shimmer-button";
+import ShimmerButton from "../magicui/Shimmer-Button.comp";
 import HeroVideoDialog from "../ui/hero-video-dialog";
 import Image from "next/image"; // Added for optimized images
 

@@ -1,8 +1,8 @@
 import { Poppins } from "next/font/google";
 import "./globals.css";
-import DefaultLayout from "@/components/layout/default.layout";
+import DefaultLayout from "@/components/layout/Default.layout.comp";
 import Script from "next/script";
-import AuthCheckLayout from "@/components/layout/authCheckLayout";
+import AuthCheckLayout from "@/components/layout/Auth-Check.layout.comp";
 
 const poppins = Poppins({
   weight: ["400", "500", "600", "700"], // Added more weight variants for better typography

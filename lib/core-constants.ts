@@ -9,7 +9,7 @@ import {
   pattern7,
   pattern8,
   pattern9,
-} from "@/components/shared-components/backgrounds";
+} from "@/components/shared-components/Backgrounds.comp";
 import {
   Icon1,
   Icon2,
@@ -23,7 +23,7 @@ import {
   Icon10,
   Icon11,
   Icon12,
-} from "@/components/shared-components/shared-icons";
+} from "@/components/shared-components/Shared-Icons.comp";
 
 export const carouselsSize = [
   {

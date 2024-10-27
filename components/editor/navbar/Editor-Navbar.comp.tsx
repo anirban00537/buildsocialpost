@@ -1,7 +1,7 @@
 import React, { useState, useCallback, useMemo, useEffect } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import SubscriptionInfo from "@/components/subscription/status";
+import SubscriptionInfo from "@/components/subscription/Status.comp";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/state/store";
 import { useSearchParams, useRouter } from "next/navigation";
@@ -9,16 +9,16 @@ import { useCarouselManager } from "@/hooks/useCarouselManager";
 import { signOut } from "@/services/auth";
 import useCarousel from "@/hooks/useCarousel";
 import LoginModal from "@/components/auth/login.modal";
-import CarouselListModal from "@/components/editor/CarouselListModal";
+import CarouselListModal from "@/components/editor/Carousel-List-Modal.comp";
 import { List, Plus, Menu, X, Edit, LogOut } from "lucide-react";
 import { setNewCarousel, setProperty } from "@/state/slice/carousel.slice";
-import FullScreenLoading from "@/components/loading/fullscreen.loading";
+import FullScreenLoading from "@/components/loading/Fullscreen.loading.comp";
 import Image from "next/image";
 import { logout } from "@/state/slice/user.slice";
 import Cookies from "js-cookie";
-import UserDropdown from "./UserDropdown";
-import DownloadDropdown from "./DownloadDropdown";
-import CarouselSizeDropdown from "./CarouselSizeDropdown";
+import UserDropdown from "./User-Dropdown.comp";
+import DownloadDropdown from "./Download-Dropdown.comp";
+import CarouselSizeDropdown from "./Carousel-Size-Dropdown.comp";
 
 const EditorNavbar: React.FC = () => {
   const { exportSlidesToPDF, exportSlidesToZip, pdfLoading, zipLoading } =

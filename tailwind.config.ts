@@ -28,7 +28,7 @@ const config: Config = {
         ring: "#c0c0c0",
         foreground: "#000000",
         primary: {
-          DEFAULT: "#3369E7",
+          DEFAULT: "#3369e7",
           foreground: "#ffffff",
         },
         secondary: {

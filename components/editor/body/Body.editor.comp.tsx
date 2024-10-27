@@ -16,11 +16,11 @@ import "swiper/css/scrollbar";
 import "swiper/css/a11y";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import useCarousel from "@/hooks/useCarousel";
-import SlideComponent from "../slide/slide.comp";
-import ImageUploadModal from "../ImageUploadModal";
+import SlideComponent from "../slide/Slide.comp";
+import ImageUploadModal from "../Image_upload_modal/Image-Upload-Modal.comp";
 
-import SlideControls from "./SlideControls.comp";
-import DownloadLoading from "@/components/loading/Download.loading";
+import SlideControls from "./Slide-Controls.comp";
+import DownloadLoading from "@/components/loading/Download.loading.comp";
 
 SwiperCore.use([Navigation, Pagination, Scrollbar, A11y, Autoplay]);
 

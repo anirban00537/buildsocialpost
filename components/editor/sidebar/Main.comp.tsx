@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { Wand2, User, Type, Image, Shapes, Palette } from "lucide-react";
-import AiSettingsComponent from "./ai.main";
-import BrandingSection from "./branding.main";
-import TextSettingsSection from "./text-settings.main";
-import BackgroundColorsSection from "./background.main";
-import BackgroundPatternsAndElements from "./background-patterns-elements";
+import AiSettingsComponent from "./Ai.comp";
+import BrandingSection from "./Branding.comp";
+import TextSettingsSection from "./Text-Settings.comp";
+import BackgroundColorsSection from "./Background.comp";
+import BackgroundPatternsAndElements from "./Background-Patterns-Elements.comp";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
-import BackgroundImagesSection from "./BackgroundImagesSection";
+import BackgroundImagesSection from "./Background-ImagesSection";
 import { FaPallet } from "react-icons/fa";
 
 interface MainSidebarProps {
