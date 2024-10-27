@@ -68,8 +68,8 @@ const Navbar = () => {
             <Link href="/" className="flex-shrink-0">
               <Image
                 src="/logo.svg"
-                height={120}
-                width={120}
+                height={250}
+                width={250}
                 alt="Buildsocialpost.com"
                 className=""
               />

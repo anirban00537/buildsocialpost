@@ -211,14 +211,12 @@ const Hero = () => {
             </Link>
             <a
               href="https://www.linkedin.com/in/anirban00537/"
-              className="bg-background/50 backdrop-blur-sm h-[59px] w-[250px] rounded-full border-4 border-borderColor flex items-center justify-center px-4 py-2 text-textColor transition-all duration-300 hover:scale-105"
+              className="bg-background/50 backdrop-blur-sm h-[59px] w-[290px] rounded-full border-4 border-borderColor flex items-center justify-center px-4 py-2 text-textColor transition-all duration-300 hover:scale-105"
               aria-label="Connect for LinkedIn growth strategies"
               rel="noopener noreferrer"
               target="_blank"
             >
-              <div className="text-textColor">
-                Connect for Growth Strategies
-              </div>
+              <div className="text-textColor">Contact for SaaS Development</div>
             </a>
           </div>
         </motion.div>

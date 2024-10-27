@@ -92,9 +92,7 @@ export const useAuth = () => {
           Cookies.set("user", JSON.stringify(user), { expires: 7 });
 
           toast.success("Logged in successfully");
-          if (pathname !== "/carousel-editor") {
-            router.push("/carousel-editor");
-          }
+          router.push("/dashboard");
         } else {
           toast.error(`Failed to log in: ${result.message}`);
         }
