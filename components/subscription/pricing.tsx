@@ -144,3 +144,4 @@ const Pricing = () => {
 };
 
 export default Pricing;
+0
