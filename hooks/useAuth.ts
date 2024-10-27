@@ -19,11 +19,13 @@ import Cookies from "js-cookie";
 import { RootState } from "@/state/store";
 import { ResponseData, UserInfo } from "@/types";
 import { getMyWorkspaces } from "@/services/workspace";
+import { useWorkspaces } from "./useWorkspace";
 
 export const useAuth = () => {
   const router = useRouter();
   const queryClient = useQueryClient();
   const dispatch = useDispatch();
+  const { refetchWorkspace } = useWorkspaces();
   const { userinfo, loggedin, loading } = useSelector(
     (state: RootState) => state.user
   );
@@ -62,22 +64,22 @@ export const useAuth = () => {
     },
   });
 
-  const { refetch: refetchWorkspace } = useQuery<ResponseData, Error>(
-    ["workspace"],
-    getMyWorkspaces,
-    {
-      enabled: loggedin,
-      onSuccess: (data: ResponseData) => {
-        if (data.data.length > 0) {
-          const defaultWorkspace = data.data.find(
-            (workspace: any) => workspace.isDefault
-          );
-          dispatch(setCurrentWorkspace(defaultWorkspace));
-        }
-        dispatch(setWorkspaces(data.data));
-      },
-    }
-  );
+  // const { refetch: refetchWorkspace } = useQuery<ResponseData, Error>(
+  //   ["workspace"],
+  //   getMyWorkspaces,
+  //   {
+  //     enabled: loggedin,
+  //     onSuccess: (data: ResponseData) => {
+  //       if (data.data.length > 0) {
+  //         const defaultWorkspace = data.data.find(
+  //           (workspace: any) => workspace.isDefault
+  //         );
+  //         dispatch(setCurrentWorkspace(defaultWorkspace));
+  //       }
+  //       dispatch(setWorkspaces(data.data));
+  //     },
+  //   }
+  // );
 
   const loginMutation = useMutation(
     (idToken: string) => googleSignIn(idToken),

@@ -13,11 +13,11 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { AlertCircle, Check } from "lucide-react";
+import { useWorkspaces } from "@/hooks/useWorkspace";
 
 interface CreateWorkspaceModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onCreateWorkspace: (name: string, description: string) => void;
 }
 
 interface FormData {
@@ -28,8 +28,8 @@ interface FormData {
 const CreateWorkspaceModal: React.FC<CreateWorkspaceModalProps> = ({
   isOpen,
   onClose,
-  onCreateWorkspace,
 }) => {
+  const { createNewWorkspace } = useWorkspaces();
   const {
     control,
     handleSubmit,
@@ -48,7 +48,10 @@ const CreateWorkspaceModal: React.FC<CreateWorkspaceModalProps> = ({
   const descriptionMaxLength = 200;
 
   const onSubmit = (data: FormData) => {
-    onCreateWorkspace(data.name.trim(), data.description.trim());
+    createNewWorkspace({
+      name: data.name.trim(),
+      description: data.description.trim(),
+    });
     reset();
     onClose();
   };
@@ -60,7 +63,9 @@ const CreateWorkspaceModal: React.FC<CreateWorkspaceModalProps> = ({
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle className="text-2xl font-bold">Create New Workspace</DialogTitle>
+          <DialogTitle className="text-2xl font-bold">
+            Create New Workspace
+          </DialogTitle>
           <DialogDescription className="text-gray-500">
             Enter details for your new workspace.
           </DialogDescription>
@@ -87,7 +92,9 @@ const CreateWorkspaceModal: React.FC<CreateWorkspaceModalProps> = ({
                       {...field}
                       id="name"
                       className={`pr-10 border-2 ${
-                        errors.name ? 'border-red-500' : 'border-gray-300 focus:border-blue-500'
+                        errors.name
+                          ? "border-red-500"
+                          : "border-gray-300 focus:border-blue-500"
                       }`}
                       placeholder="e.g., My Awesome Project"
                       maxLength={nameMaxLength}
@@ -106,7 +113,9 @@ const CreateWorkspaceModal: React.FC<CreateWorkspaceModalProps> = ({
               />
             </div>
             <div className="flex justify-between text-sm text-gray-500">
-              <span>{nameValue.length}/{nameMaxLength} characters</span>
+              <span>
+                {nameValue.length}/{nameMaxLength} characters
+              </span>
               {errors.name && (
                 <span className="text-red-500">{errors.name.message}</span>
               )}
@@ -130,7 +139,9 @@ const CreateWorkspaceModal: React.FC<CreateWorkspaceModalProps> = ({
                   {...field}
                   id="description"
                   className={`border-2 ${
-                    errors.description ? 'border-red-500' : 'border-gray-300 focus:border-blue-500'
+                    errors.description
+                      ? "border-red-500"
+                      : "border-gray-300 focus:border-blue-500"
                   }`}
                   placeholder="Describe the purpose of this workspace..."
                   maxLength={descriptionMaxLength}
@@ -139,9 +150,13 @@ const CreateWorkspaceModal: React.FC<CreateWorkspaceModalProps> = ({
               )}
             />
             <div className="flex justify-between text-sm text-gray-500">
-              <span>{descriptionValue.length}/{descriptionMaxLength} characters</span>
+              <span>
+                {descriptionValue.length}/{descriptionMaxLength} characters
+              </span>
               {errors.description && (
-                <span className="text-red-500">{errors.description.message}</span>
+                <span className="text-red-500">
+                  {errors.description.message}
+                </span>
               )}
             </div>
           </div>

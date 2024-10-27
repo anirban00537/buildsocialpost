@@ -33,12 +33,14 @@ import {
   ChevronsUpDown,
 } from "lucide-react";
 import { RootState } from "@/state/store";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { setCurrentWorkspace } from "@/state/slice/user.slice";
 import SubscriptionInfo from "@/components/subscription/status";
 import { cn } from "@/lib/utils";
 import CreateWorkspaceModal from "@/components/dashboard/workspace/CreateWorkspaceModal";
 
 const Navbar = () => {
+  const dispatch = useDispatch();
   const { workspaces, currentWorkspace } = useSelector(
     (state: RootState) => state.user
   );
@@ -58,6 +60,16 @@ const Navbar = () => {
     // Implement the logic to create a new workspace
     console.log(`Creating new workspace: ${name}`);
     // You might want to dispatch an action here to update your Redux store
+  };
+
+  const handleWorkspaceSelect = (workspaceId: string) => {
+    const selectedWorkspace = workspaces.find(w => w.id.toString() === workspaceId);
+    if (selectedWorkspace) {
+      dispatch(setCurrentWorkspace(selectedWorkspace));
+      setValue(workspaceId);
+      setOpen(false);
+      setSearch("");
+    }
   };
 
   return (
@@ -97,8 +109,8 @@ const Navbar = () => {
               </PopoverTrigger>
               <PopoverContent className="w-64 p-0">
                 <Command>
-                  <CommandInput 
-                    placeholder="Search workspace..." 
+                  <CommandInput
+                    placeholder="Search workspace..."
                     value={search}
                     onValueChange={setSearch}
                   />
@@ -109,13 +121,7 @@ const Navbar = () => {
                         <CommandItem
                           key={workspace.id}
                           value={workspace.id.toString()}
-                          onSelect={(currentValue) => {
-                            setValue(
-                              currentValue === value ? "" : currentValue
-                            );
-                            setOpen(false);
-                            setSearch("");
-                          }}
+                          onSelect={handleWorkspaceSelect}
                         >
                           <Check
                             className={cn(
@@ -189,7 +195,6 @@ const Navbar = () => {
       <CreateWorkspaceModal
         isOpen={isCreateModalOpen}
         onClose={() => setIsCreateModalOpen(false)}
-        onCreateWorkspace={handleCreateWorkspace}
       />
     </header>
   );
