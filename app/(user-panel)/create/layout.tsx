@@ -9,7 +9,7 @@ export default function DashboardLayout({
   return (
     <div className="flex flex-col h-screen bg-background">
       {/* Navbar - now full width */}
-      <Navbar />
+      {/* <Navbar /> */}
 
       {/* Main area - sidebar and content */}
       <div className="flex flex-1 overflow-hidden">
