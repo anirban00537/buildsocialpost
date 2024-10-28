@@ -83,3 +83,17 @@ export const initialCarousel: CarouselState = {
   fontFamily: "poppins",
   globalBackground: null,
 };
+import { FileText, Youtube, Globe } from "lucide-react";
+
+export const contentSources = [
+  { id: "text", label: "Text to Post", icon: FileText },
+  { id: "youtube", label: "YouTube to Post", icon: Youtube },
+  { id: "blog", label: "Blog to Post", icon: Globe },
+];
+
+export const carouselTemplates = [
+  { id: 1, name: "How-to Guide", slides: 5, icon: "📚" },
+  { id: 2, name: "Case Study", slides: 4, icon: "📊" },
+  { id: 3, name: "Tips & Tricks", slides: 6, icon: "💡" },
+  { id: 4, name: "Industry Insights", slides: 5, icon: "🎯" },
+];
