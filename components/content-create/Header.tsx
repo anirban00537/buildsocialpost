@@ -52,7 +52,7 @@ export const Header = () => {
         />
       </div>
 
-      <motion.p
+      {/* <motion.p
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5, delay: 0.6 }}
@@ -62,7 +62,7 @@ export const Header = () => {
         <span className="text-transparent bg-clip-text bg-gradient-to-r from-gray-700 to-gray-600 font-medium">
           AI-powered assistance
         </span>
-      </motion.p>
+      </motion.p> */}
     </motion.div>
   );
 };

@@ -83,26 +83,26 @@ export const initialCarousel: CarouselState = {
   fontFamily: "poppins",
   globalBackground: null,
 };
-import { FileText, Youtube, Globe, Newspaper, BookOpen, MessageSquare } from "lucide-react";
+import { FileText, Youtube, Globe, Newspaper, BookOpen, MessageSquare, Wand2 } from "lucide-react";
 
 export const contentSources = [
   {
     id: "text",
-    label: "Custom Text",
-    icon: FileText,
-    placeholder: "What would you like to write about? Be specific to get better results..."
+    label: "From Prompt",
+    description: "Generate content from your prompt",
+    icon: Wand2,
   },
   {
     id: "youtube",
-    label: "YouTube Video",
+    label: "From YouTube",
+    description: "Convert video content to post",
     icon: Youtube,
-    placeholder: "Paste your YouTube video URL here..."
   },
   {
     id: "blog",
-    label: "Blog Post",
-    icon: Globe,
-    placeholder: "Paste your blog post URL here..."
+    label: "From Blog Post",
+    description: "Transform blog into social content",
+    icon: FileText,
   },
   {
     id: "article",

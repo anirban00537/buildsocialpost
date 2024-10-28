@@ -25,7 +25,7 @@ export const ContentInput = ({
       <div className="rounded-xl border border-primary bg-white p-1.5 hover:border-primary/20 transition-colors">
         <div className="flex items-start gap-3">
           <textarea
-            className="flex-1 px-3.5 py-3 rounded-lg h-[54px] max-h-[64px]
+            className="flex-1 px-3.5 py-3 rounded-lg h-[60px] max-h-[64px]
                      resize-none outline-none bg-white
                      placeholder:text-gray-400 text-gray-600 text-sm
                      border-none focus:ring-1 focus:ring-blue-50/50

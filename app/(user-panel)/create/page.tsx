@@ -30,12 +30,11 @@ const ContentCreationTools: React.FC = () => {
   };
 
   return (
-    <div className="container max-w-[1200px] mx-auto px-6  relative min-h-screen">
+    <div className="container max-w-[1200px] mx-auto px-6 relative min-h-screen">
       <BackgroundEffect />
       <Header />
 
       <div className="space-y-6">
-        {/* Content Creation Card */}
         <Card className="border-none bg-white/95 backdrop-blur-xl">
           <CardHeader className="relative pb-0 px-6 pt-6">
             <div className="space-y-6">
@@ -56,7 +55,7 @@ const ContentCreationTools: React.FC = () => {
             </div>
           </CardHeader>
 
-          <CardContent className="pt-6 px-6">
+          <CardContent className="pt-3 px-6">
             <ContentInput
               contentSource={contentSource}
               isGenerating={isGenerating}
@@ -75,7 +74,31 @@ const ContentCreationTools: React.FC = () => {
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.2 }}
           >
-            <MultiPostPreview content={content} isGenerating={isGenerating} />
+            <Card className="border-none bg-white/95 backdrop-blur-xl">
+              <CardHeader className="pb-0 px-6 pt-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h3 className="text-lg font-semibold text-gray-900">
+                      Preview
+                    </h3>
+                    <p className="text-sm text-gray-500 mt-1">
+                      {activeTab === "text"
+                        ? "See how your post will look"
+                        : "Preview your carousel slides"}
+                    </p>
+                  </div>
+                  <div className="text-sm text-gray-500 bg-gray-50 px-3 py-1 rounded-full">
+                    {activeTab === "text" ? "Single Post" : "Carousel Post"}
+                  </div>
+                </div>
+              </CardHeader>
+              <CardContent className="px-6 pt-6">
+                <MultiPostPreview
+                  content={content}
+                  isGenerating={isGenerating}
+                />
+              </CardContent>
+            </Card>
           </motion.div>
         </AnimatePresence>
       </div>
