@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Layers, FileText, ArrowRight } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
-import UpcomingPosts from "@/components/dashboard/workspace/Upcoming-Section.Modal.comp";
+import UpcomingPosts from "@/components/workspace/Upcoming-Section.Modal.comp";
 
 const ContentCreationTools = () => {
   const creationOptions = [
