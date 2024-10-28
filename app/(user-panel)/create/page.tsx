@@ -36,7 +36,7 @@ const ContentCreationTools: React.FC = () => {
 
       <div className="space-y-6">
         {/* Content Creation Card */}
-        <Card className="shadow-lg border border-gray-200/80 bg-white/95 backdrop-blur-xl">
+        <Card className="shadow-md border border-gray-200/80 bg-white/95 backdrop-blur-xl">
           <CardHeader className="relative pb-0 px-6 pt-6">
             <div className="space-y-6">
               <div className="flex justify-between items-start gap-8">

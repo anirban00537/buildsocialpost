@@ -43,7 +43,7 @@ export const MultiPostPreview = ({
       </div>
 
       {/* Content Cards Container */}
-      <div className="rounded-2xl bg-gradient-to-br from-blue-100 via-indigo-50/50 to-blue-100 border border-gray-200/80 p-6">
+      <div className="shadow-md rounded-2xl bg-gradient-to-br from-blue-100 via-indigo-50/50 to-blue-100 border border-gray-200/80 p-6">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {dummyPosts.map((post, index) => (
             <motion.div

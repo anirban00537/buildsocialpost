@@ -35,7 +35,7 @@ export const PostTypeSelector = ({
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
-              className={`flex items-center gap-2 px-4 py-2.5 text-sm rounded-lg transition-all duration-300 ease-in-out
+              className={`flex items-center gap-2 px-4 py-2 text-sm rounded-lg transition-all duration-300 ease-in-out
                 ${
                   activeTab === tab
                     ? "bg-white text-gray-900 shadow-sm ring-1 ring-gray-200/50"

@@ -28,7 +28,7 @@ export const ContentSourceSelector = ({
       <div className="p-1 bg-cardBackground rounded-lg w-fit ml-auto hover:bg-cardBackground/90 transition-colors">
         <DropdownMenu>
           <DropdownMenuTrigger
-            className={`flex items-center gap-2 px-4 py-2.5 text-sm rounded-lg
+            className={`flex items-center gap-2 px-4 py-2 text-sm rounded-lg
                       bg-white text-gray-900 transition-all duration-300 outline-none w-[200px]`}
           >
             {React.createElement(
