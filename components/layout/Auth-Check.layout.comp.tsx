@@ -2,7 +2,7 @@
 import { useAuth } from "@/hooks/useAuth";
 import { usePathname } from "next/navigation";
 import { useCallback, useEffect } from "react";
-import FullScreenLoading from "../loading/Fullscreen.loading.comp";
+import FullScreenLoading from "../utils-components/loading/Fullscreen.loading.comp";
 import useBranding from "@/hooks/useBranding";
 import { setBackground, setNewCarousel } from "@/state/slice/carousel.slice";
 import { useDispatch } from "react-redux";

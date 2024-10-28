@@ -24,7 +24,7 @@ import moment from "moment";
 import { useWorkspaces } from "@/hooks/useWorkspace";
 import { setCurrentWorkspace } from "@/state/slice/user.slice";
 import WorkspaceForm from "./Workspace-Form.comp";
-import LoadingSection from "@/components/loading/LoadingSection.comp";
+import LoadingSection from "@/components/utils-components/loading/LoadingSection.comp";
 import { toast } from "react-hot-toast";
 
 interface ManageWorkspacesModalProps {
@@ -38,10 +38,19 @@ const ManageWorkspacesModal: FC<ManageWorkspacesModalProps> = ({
 }) => {
   const dispatch = useDispatch();
   const { currentWorkspace } = useSelector((state: RootState) => state.user);
-  const { refetchWorkspace, workspaces, isWorkspaceLoading, deleteWorkspaceFunction } = useWorkspaces();
+  const {
+    refetchWorkspace,
+    workspaces,
+    isWorkspaceLoading,
+    deleteWorkspaceFunction,
+  } = useWorkspaces();
   const [isEditing, setIsEditing] = useState(false);
-  const [editingWorkspace, setEditingWorkspace] = useState<Workspace | null>(null);
-  const [deletingWorkspace, setDeletingWorkspace] = useState<Workspace | null>(null);
+  const [editingWorkspace, setEditingWorkspace] = useState<Workspace | null>(
+    null
+  );
+  const [deletingWorkspace, setDeletingWorkspace] = useState<Workspace | null>(
+    null
+  );
 
   useEffect(() => {
     if (isOpen) {
@@ -51,7 +60,8 @@ const ManageWorkspacesModal: FC<ManageWorkspacesModalProps> = ({
 
   useEffect(() => {
     if (!isWorkspaceLoading && workspaces.length > 0 && !currentWorkspace) {
-      const defaultWorkspace = workspaces.find((w) => w.isDefault) || workspaces[0];
+      const defaultWorkspace =
+        workspaces.find((w) => w.isDefault) || workspaces[0];
       dispatch(setCurrentWorkspace(defaultWorkspace));
     }
   }, [isWorkspaceLoading, workspaces, currentWorkspace, dispatch]);
@@ -146,7 +156,9 @@ const ManageWorkspacesModal: FC<ManageWorkspacesModalProps> = ({
                             {moment(workspace.createdAt).format("MMM D, YYYY")}
                           </span>
                           <Layout className="w-3 h-3 mr-1" />
-                          <span>{workspace.description || "No description"}</span>
+                          <span>
+                            {workspace.description || "No description"}
+                          </span>
                         </div>
                       </div>
                       <div className="flex gap-2">
@@ -187,18 +199,26 @@ const ManageWorkspacesModal: FC<ManageWorkspacesModalProps> = ({
         </DialogContent>
       </Dialog>
 
-      <AlertDialog open={!!deletingWorkspace} onOpenChange={() => setDeletingWorkspace(null)}>
+      <AlertDialog
+        open={!!deletingWorkspace}
+        onOpenChange={() => setDeletingWorkspace(null)}
+      >
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
             <AlertDialogDescription>
-              This action cannot be undone. This will permanently delete the workspace
-              "{deletingWorkspace?.name}" and remove all associated data.
+              This action cannot be undone. This will permanently delete the
+              workspace "{deletingWorkspace?.name}" and remove all associated
+              data.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel onClick={() => setDeletingWorkspace(null)}>Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={confirmDeleteWorkspace}>Delete</AlertDialogAction>
+            <AlertDialogCancel onClick={() => setDeletingWorkspace(null)}>
+              Cancel
+            </AlertDialogCancel>
+            <AlertDialogAction onClick={confirmDeleteWorkspace}>
+              Delete
+            </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>

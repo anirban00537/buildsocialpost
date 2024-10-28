@@ -20,7 +20,7 @@ import SlideComponent from "../slide/Slide.comp";
 import ImageUploadModal from "../Image_upload_modal/Image-Upload-Modal.comp";
 
 import SlideControls from "./Slide-Controls.comp";
-import DownloadLoading from "@/components/loading/Download.loading.comp";
+import DownloadLoading from "@/components/utils-components/loading/Download.loading.comp";
 
 SwiperCore.use([Navigation, Pagination, Scrollbar, A11y, Autoplay]);
 

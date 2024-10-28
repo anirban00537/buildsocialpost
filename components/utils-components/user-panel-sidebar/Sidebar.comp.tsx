@@ -22,7 +22,7 @@ import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import Image from "next/image";
 import SubscriptionInfo from "@/components/subscription/Status.comp";
 import UserMenu from "./User-Menu.comp";
-import ManageWorkspacesModal from "../workspace/Manage-Workspaces-Modal.comp";
+import ManageWorkspacesModal from "../../workspace/Manage-Workspaces-Modal.comp";
 
 const tools = [
   {

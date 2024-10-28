@@ -9,7 +9,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "../ui/tooltip";
-import { DiamondSVG } from "../shared-components/Svg-Icons.comp";
+import { DiamondSVG } from "../editor/shared-components/Svg-Icons.comp";
 import { Sparkles } from "lucide-react";
 import { motion } from "framer-motion";
 

@@ -17,7 +17,7 @@ import {
   Layers,
   Palette,
 } from "lucide-react";
-import { getBackgroundPattern } from "@/components/shared-components/Backgrounds.comp";
+import { getBackgroundPattern } from "@/components/editor/shared-components/Backgrounds.comp";
 import { motion, AnimatePresence } from "framer-motion";
 
 const BackgroundPatternsAndElements = () => {

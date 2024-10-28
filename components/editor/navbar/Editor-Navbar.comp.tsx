@@ -12,7 +12,7 @@ import LoginModal from "@/components/auth/login.modal";
 import CarouselListModal from "@/components/editor/Carousel-List-Modal.comp";
 import { List, Plus, Menu, X, Edit, LogOut } from "lucide-react";
 import { setNewCarousel, setProperty } from "@/state/slice/carousel.slice";
-import FullScreenLoading from "@/components/loading/Fullscreen.loading.comp";
+import FullScreenLoading from "@/components/utils-components/loading/Fullscreen.loading.comp";
 import Image from "next/image";
 import { logout } from "@/state/slice/user.slice";
 import Cookies from "js-cookie";

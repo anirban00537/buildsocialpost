@@ -9,7 +9,7 @@ import GeneralInfo from "./slide_parts/General-Info.comp";
 import { RootState } from "@/state/store";
 import { CSSProperties } from "react";
 import { fontOptions } from "@/lib/fonts";
-import { getBackgroundPattern } from "@/components/shared-components/Backgrounds.comp";
+import { getBackgroundPattern } from "@/components/editor/shared-components/Backgrounds.comp";
 
 interface SlideProps {
   slide: Slide;
