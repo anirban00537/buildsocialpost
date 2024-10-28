@@ -22,10 +22,10 @@ export const ContentInput = ({
         </span>
         <div className="h-px flex-1 bg-gray-100" />
       </div>
-      <div className="rounded-xl border border-gray-200/80 bg-white p-1.5 hover:border-gray-300/50 transition-colors">
+      <div className="rounded-xl border border-primary bg-white p-1.5 hover:border-primary/20 transition-colors">
         <div className="flex items-start gap-3">
           <textarea
-            className="flex-1 px-3.5 py-3 rounded-lg h-[64px] max-h-[64px]
+            className="flex-1 px-3.5 py-3 rounded-lg h-[54px] max-h-[64px]
                      resize-none outline-none bg-white
                      placeholder:text-gray-400 text-gray-600 text-sm
                      border-none focus:ring-1 focus:ring-blue-50/50

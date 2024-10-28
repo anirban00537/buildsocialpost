@@ -19,7 +19,7 @@ export const Header = () => {
         <div className="absolute inset-0 rounded-full bg-gradient-to-r from-gray-900/20 via-gray-600/20 to-gray-400/20 blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
         <Cpu className="h-3.5 w-3.5 text-gray-700 animate-pulse" />
         <span className="bg-gradient-to-r from-gray-700 to-gray-500 inline-block text-transparent bg-clip-text">
-          AI Writing Assistant
+          AI Content Creator
         </span>
         <Sparkles className="h-3.5 w-3.5 text-gray-600 animate-ai-glow" />
       </motion.span>

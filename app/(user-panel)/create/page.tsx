@@ -30,13 +30,13 @@ const ContentCreationTools: React.FC = () => {
   };
 
   return (
-    <div className="container max-w-[1200px] mx-auto px-6 py-12 relative min-h-screen">
+    <div className="container max-w-[1200px] mx-auto px-6  relative min-h-screen">
       <BackgroundEffect />
       <Header />
 
       <div className="space-y-6">
         {/* Content Creation Card */}
-        <Card className="shadow-md border border-gray-200/80 bg-white/95 backdrop-blur-xl">
+        <Card className="border-none bg-white/95 backdrop-blur-xl">
           <CardHeader className="relative pb-0 px-6 pt-6">
             <div className="space-y-6">
               <div className="flex justify-between items-start gap-8">
