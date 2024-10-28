@@ -168,29 +168,33 @@ const Hero = () => {
               className="inline-block mb-2 sm:mb-4"
               variants={heroTextChildVariants}
             >
-              <span className="inline-block">Grow Your</span>
+              <span className="inline-block">
+                Grow{" "}
+                <span className="inline-block text-transparent bg-clip-text bg-[#0077B5]">
+                  LinkedIn
+                </span>{" "}
+              </span>
             </motion.div>
             <br />
             <motion.div
               className="inline-block"
               variants={heroTextChildVariants}
             >
-              <span className="inline-block text-transparent bg-clip-text bg-[#0077B5]">
-                LinkedIn
-              </span>{" "}
               <span className="inline-block">Audience</span>{" "}
-              <span className="inline-block">in Weeks</span>
+              <span className="inline-block">Faster With</span>{" "}
+              <span className="inline-block text-transparent bg-clip-text bg-gradient-to-r from-blue-500  to-primary">
+                AI
+              </span>
             </motion.div>
           </motion.h1>
 
           {/* Updated subheading */}
           <motion.p
-            className="text-lg sm:text-xl text-textColor/70 max-w-2xl mx-auto"
+            className="text-xl sm:text-2xl font-medium text-textColor/70 max-w-2xl mx-auto"
             variants={textVariants}
           >
-            Create engaging LinkedIn carousels with AI. Boost your influence,
-            showcase expertise, and grow your network effortlessly. No design
-            skills needed - start elevating your LinkedIn presence today.
+            Supercharge your LinkedIn growth with AI , Spend minutes to prepare
+            weeks of content
           </motion.p>
 
           {/* Updated CTA section */}

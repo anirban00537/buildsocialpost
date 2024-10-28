@@ -2,15 +2,17 @@
 import Image from "next/image";
 import Link from "next/link";
 import React, { useState } from "react";
+import { useSelector } from "react-redux";
 import { Button } from "@/components/ui/button";
-import { Image as ImageIcon } from "lucide-react";
+import { Image as ImageIcon, Users } from "lucide-react";
 import SubscriptionInfo from "@/components/subscription/Status.comp";
-import CreateWorkspaceModal from "@/components/dashboard/workspace/Create-Workspace-Modal.comp";
-import WorkspaceSelector from "./Workspace-Selector.comp";
-import UserMenu from "./User-Menu.,comp";
+import ManageWorkspacesModal from "@/components/dashboard/workspace/Manage-Workspaces-Modal.comp";
+import { RootState } from "@/state/store";
+import UserMenu from "./User-Menu.comp";
 
 const Navbar = () => {
-  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const { currentWorkspace } = useSelector((state: RootState) => state.user);
+  const [isManageModalOpen, setIsManageModalOpen] = useState(false);
 
   return (
     <header className="bg-white sticky top-0 z-40 border-b border-borderColor">
@@ -28,9 +30,16 @@ const Navbar = () => {
             </Link>
           </div>
           <div className="flex items-center space-x-4">
-            <WorkspaceSelector
-              onCreateWorkspace={() => setIsCreateModalOpen(true)}
-            />
+            <Button
+              variant="outline"
+              onClick={() => setIsManageModalOpen(true)}
+              className="h-9 px-3 bg-white text-gray-700 hover:bg-gray-50 border hover:text-gray-900 border-gray-300 rounded-full transition-colors duration-200"
+            >
+              <Users className="h-4 w-4 text-gray-500 mr-2" />
+              <span className="text-sm font-medium">
+                {currentWorkspace?.name || "Select workspace..."}
+              </span>
+            </Button>
             <Link href="/carousel-editor">
               <Button
                 variant="default"
@@ -46,9 +55,9 @@ const Navbar = () => {
           </div>
         </div>
       </div>
-      <CreateWorkspaceModal
-        isOpen={isCreateModalOpen}
-        onClose={() => setIsCreateModalOpen(false)}
+      <ManageWorkspacesModal
+        isOpen={isManageModalOpen}
+        onClose={() => setIsManageModalOpen(false)}
       />
     </header>
   );

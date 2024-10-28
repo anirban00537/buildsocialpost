@@ -135,5 +135,4 @@ interface UserState {
   subscribed: boolean;
   endDate: string | null;
   currentWorkspace: Workspace | null;
-  workspaces: Workspace[];
 }

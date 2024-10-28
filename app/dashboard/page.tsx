@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Layers, FileText, ArrowRight } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
+import UpcomingPosts from "@/components/dashboard/workspace/Upcoming-Section.Modal.comp";
 
 const ContentCreationTools = () => {
   const creationOptions = [
@@ -34,7 +35,7 @@ const ContentCreationTools = () => {
   ];
 
   return (
-    <div className="mx-auto p-6 space-y-6 bg-white rounded-lg border border-borderColor">
+    <div className="mx-auto p-2 space-y-6 bg-white rounded-lg">
       <h2 className="flex items-center text-xl font-medium mb-4 text-gray-800">
         <Image
           src="/ai-content.png"
@@ -49,7 +50,7 @@ const ContentCreationTools = () => {
         {creationOptions.map((option, index) => (
           <Link href={option.link} key={index} className="group">
             <Card
-              className={`hover:shadow-md transition-all duration-300 ${option.bgColor} border-none`}
+              className={`hover:shadow-md transition-all border-none duration-300 ${option.bgColor}`}
             >
               <div className="p-4 flex items-center justify-between">
                 <div>
@@ -76,6 +77,11 @@ const ContentCreationTools = () => {
             </Card>
           </Link>
         ))}
+      </div>
+
+      {/* Add the UpcomingPosts component here */}
+      <div className="mt-8">
+        <UpcomingPosts />
       </div>
     </div>
   );

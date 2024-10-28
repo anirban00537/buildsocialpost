@@ -9,7 +9,6 @@ const initialState: UserState = {
   subscribed: false,
   endDate: null,
   currentWorkspace: null,
-  workspaces: [],
 };
 
 const userSlice = createSlice({
@@ -41,9 +40,6 @@ const userSlice = createSlice({
     setCurrentWorkspace: (state, action: PayloadAction<any>) => {
       state.currentWorkspace = action.payload;
     },
-    setWorkspaces: (state, action: PayloadAction<Workspace[]>) => {
-      state.workspaces = action.payload;
-    },
   },
 });
 
@@ -56,6 +52,5 @@ export const {
   setEndDate,
   setCarouselDownloading,
   setCurrentWorkspace,
-  setWorkspaces,
 } = userSlice.actions;
 export default userSlice.reducer;

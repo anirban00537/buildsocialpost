@@ -9,7 +9,6 @@ import {
   setEndDate,
   setLoading,
   setCurrentWorkspace,
-  setWorkspaces,
 } from "@/state/slice/user.slice";
 import { useCallback, useEffect } from "react";
 import { CredentialResponse } from "@react-oauth/google";
@@ -25,7 +24,7 @@ export const useAuth = () => {
   const router = useRouter();
   const queryClient = useQueryClient();
   const dispatch = useDispatch();
-  const { refetchWorkspace } = useWorkspaces();
+  useWorkspaces();
   const { userinfo, loggedin, loading } = useSelector(
     (state: RootState) => state.user
   );
@@ -64,22 +63,17 @@ export const useAuth = () => {
     },
   });
 
-  // const { refetch: refetchWorkspace } = useQuery<ResponseData, Error>(
-  //   ["workspace"],
-  //   getMyWorkspaces,
-  //   {
-  //     enabled: loggedin,
-  //     onSuccess: (data: ResponseData) => {
-  //       if (data.data.length > 0) {
-  //         const defaultWorkspace = data.data.find(
-  //           (workspace: any) => workspace.isDefault
-  //         );
-  //         dispatch(setCurrentWorkspace(defaultWorkspace));
-  //       }
-  //       dispatch(setWorkspaces(data.data));
-  //     },
-  //   }
-  // );
+  useQuery<ResponseData, Error>(["workspaceAuth"], getMyWorkspaces, {
+    enabled: loggedin,
+    onSuccess: (data: ResponseData) => {
+      if (data.data.length > 0) {
+        const defaultWorkspace = data.data.find(
+          (workspace: any) => workspace.isDefault
+        );
+        dispatch(setCurrentWorkspace(defaultWorkspace));
+      }
+    },
+  });
 
   const loginMutation = useMutation(
     (idToken: string) => googleSignIn(idToken),
