@@ -83,17 +83,82 @@ export const initialCarousel: CarouselState = {
   fontFamily: "poppins",
   globalBackground: null,
 };
-import { FileText, Youtube, Globe } from "lucide-react";
+import { FileText, Youtube, Globe, Newspaper, BookOpen, MessageSquare } from "lucide-react";
 
 export const contentSources = [
-  { id: "text", label: "Text to Post", icon: FileText },
-  { id: "youtube", label: "YouTube to Post", icon: Youtube },
-  { id: "blog", label: "Blog to Post", icon: Globe },
+  {
+    id: "text",
+    label: "Custom Text",
+    icon: FileText,
+    placeholder: "What would you like to write about? Be specific to get better results..."
+  },
+  {
+    id: "youtube",
+    label: "YouTube Video",
+    icon: Youtube,
+    placeholder: "Paste your YouTube video URL here..."
+  },
+  {
+    id: "blog",
+    label: "Blog Post",
+    icon: Globe,
+    placeholder: "Paste your blog post URL here..."
+  },
+  {
+    id: "article",
+    label: "News Article",
+    icon: Newspaper,
+    placeholder: "Paste the article URL here..."
+  },
+  {
+    id: "book",
+    label: "Book Summary",
+    icon: BookOpen,
+    placeholder: "Enter the book title or paste Goodreads URL..."
+  },
+  {
+    id: "thread",
+    label: "Twitter Thread",
+    icon: MessageSquare,
+    placeholder: "Paste the Twitter thread URL here..."
+  }
 ];
 
 export const carouselTemplates = [
-  { id: 1, name: "How-to Guide", slides: 5, icon: "📚" },
-  { id: 2, name: "Case Study", slides: 4, icon: "📊" },
-  { id: 3, name: "Tips & Tricks", slides: 6, icon: "💡" },
-  { id: 4, name: "Industry Insights", slides: 5, icon: "🎯" },
+  {
+    id: 1,
+    name: "How-To Guide",
+    slides: 5,
+    icon: "📝"
+  },
+  {
+    id: 2,
+    name: "Case Study",
+    slides: 6,
+    icon: "📊"
+  },
+  {
+    id: 3,
+    name: "Tips & Tricks",
+    slides: 4,
+    icon: "💡"
+  },
+  {
+    id: 4,
+    name: "Industry Insights",
+    slides: 5,
+    icon: "🎯"
+  },
+  {
+    id: 5,
+    name: "Product Launch",
+    slides: 6,
+    icon: "🚀"
+  },
+  {
+    id: 6,
+    name: "Success Story",
+    slides: 4,
+    icon: "🏆"
+  }
 ];
