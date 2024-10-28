@@ -25,12 +25,11 @@ import UserMenu from "../dashboardNav/User-Menu.comp";
 import ManageWorkspacesModal from "../workspace/Manage-Workspaces-Modal.comp";
 
 const tools = [
-  { id: "home", name: "Home", icon: Home, href: "/dashboard" },
   {
-    id: "create-post",
-    name: "Create Post",
-    icon: FileText,
-    href: "/dashboard/create-post",
+    id: "schedule-post",
+    name: "Schedule Post",
+    icon: Calendar,
+    href: "/dashboard/schedule-post",
   },
   {
     id: "carousel-editor",
@@ -43,12 +42,6 @@ const tools = [
     name: "Carousel Templates",
     icon: LayoutTemplate,
     href: "/dashboard/carousel-templates",
-  },
-  {
-    id: "calendar",
-    name: "Calendar",
-    icon: Calendar,
-    href: "/dashboard/calendar",
   },
   { id: "drafts", name: "Drafts", icon: FileEdit, href: "/dashboard/drafts" },
 ];
@@ -107,9 +100,7 @@ const Sidebar = () => {
 
       {/* Create Button - More Prominent */}
       <div className="px-4 py-2">
-        <Button
-          className="w-full bg-gradient-to-r from-blue-600 to-blue-700 text-white hover:from-blue-700 hover:to-blue-800 transition-all duration-200 shadow-sm hover:shadow rounded-xl h-10"
-        >
+        <Button className="w-full bg-gradient-to-r from-blue-600 to-blue-700 text-white hover:from-blue-700 hover:to-blue-800 transition-all duration-200 shadow-sm hover:shadow rounded-xl h-10">
           <Plus className="h-4 w-4 mr-2" />
           Create New
         </Button>
