@@ -4,22 +4,18 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { motion, AnimatePresence } from "framer-motion";
 import { Header } from "../../../components/content-create/Header";
 import { BackgroundEffect } from "../../../components/content-create/BackgroundEffect";
-import { PostTypeSelector } from "../../../components/content-create/PostTypeSelector";
-import { ContentSourceSelector } from "../../../components/content-create/ContentSourceSelector";
 import { ContentInput } from "../../../components/content-create/ContentInput";
-import { contentSources } from "@/lib/data";
-import { carouselTemplates } from "@/lib/data";
 import { MultiPostPreview } from "../../../components/content-create/MultiPostPreview";
+import { ContentSourceSelector } from "../../../components/content-create/ContentSourceSelector";
+import { contentSources } from "@/lib/data";
 
 const ContentCreationTools: React.FC = () => {
-  const [activeTab, setActiveTab] = useState("text");
   const [isGenerating, setIsGenerating] = useState(false);
   const [characterCount, setCharacterCount] = useState(0);
-  const [contentSource, setContentSource] = useState("text");
-  const [selectedTemplate, setSelectedTemplate] = useState<number | null>(null);
   const [content, setContent] = useState("");
   const [status, setStatus] = useState<"idle" | "success" | "error">("idle");
   const [showAdvanced, setShowAdvanced] = useState(false);
+  const [contentSource, setContentSource] = useState("plain-prompt");
 
   useEffect(() => {
     const handleKeyPress = (e: KeyboardEvent) => {
@@ -50,27 +46,17 @@ const ContentCreationTools: React.FC = () => {
 
       <div className="space-y-6">
         <Card className="border-none bg-white/95 backdrop-blur-xl">
-          <CardHeader className="relative pb-0 px-6 pt-6">
-            <div className="space-y-6">
-              <div className="flex justify-between items-start gap-8">
-                <PostTypeSelector
-                  activeTab={activeTab}
-                  setActiveTab={setActiveTab}
-                  selectedTemplate={selectedTemplate}
-                  setSelectedTemplate={setSelectedTemplate}
-                  carouselTemplates={carouselTemplates}
-                />
-
-                <ContentSourceSelector
-                  contentSource={contentSource}
-                  setContentSource={setContentSource}
-                  contentSources={contentSources}
-                />
-              </div>
+          <CardHeader className="pb-0 px-6 pt-6">
+            <div className="">
+              <ContentSourceSelector
+                contentSource={contentSource}
+                setContentSource={setContentSource}
+                contentSources={contentSources}
+              />
             </div>
           </CardHeader>
 
-          <CardContent className="pt-3 px-6">
+          <CardContent className="px-6 py-6">
             <ContentInput
               contentSource={contentSource}
               isGenerating={isGenerating}
@@ -93,7 +79,6 @@ const ContentCreationTools: React.FC = () => {
         {/* Preview Section */}
         <AnimatePresence mode="wait">
           <motion.div
-            key={`${activeTab}-${contentSource}`}
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
@@ -107,13 +92,11 @@ const ContentCreationTools: React.FC = () => {
                       Preview
                     </h3>
                     <p className="text-sm text-gray-500 mt-1">
-                      {activeTab === "text"
-                        ? "See how your post will look"
-                        : "Preview your carousel slides"}
+                      See how your post will look
                     </p>
                   </div>
                   <div className="text-sm text-gray-500 bg-gray-50 px-3 py-1 rounded-full">
-                    {activeTab === "text" ? "Single Post" : "Carousel Post"}
+                    Single Post
                   </div>
                 </div>
               </CardHeader>

@@ -6,7 +6,7 @@ export const Header = () => {
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="text-center mb-10 space-y-3 relative"
+      className="text-center  space-y-3 relative"
     >
       <motion.span
         initial={{ scale: 0.9 }}
@@ -35,7 +35,7 @@ export const Header = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.3 }}
-          className="text-4xl font-semibold tracking-tight lg:text-5xl 
+          className="text-3xl font-semibold tracking-tight lg:text-4xl 
                    bg-[linear-gradient(to_right,#18181B,#52525B,#A1A1AA,#D4D4D8,#52525B,#18181B)]
                    bg-[length:200%_auto] animate-ai-gradient
                    inline-block text-transparent bg-clip-text 
