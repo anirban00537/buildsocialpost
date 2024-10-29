@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { motion, AnimatePresence } from "framer-motion";
 import { Header } from "../../../components/content-create/Header";
@@ -18,6 +18,20 @@ const ContentCreationTools: React.FC = () => {
   const [contentSource, setContentSource] = useState("text");
   const [selectedTemplate, setSelectedTemplate] = useState<number | null>(null);
   const [content, setContent] = useState("");
+  const [status, setStatus] = useState<"idle" | "success" | "error">("idle");
+  const [showAdvanced, setShowAdvanced] = useState(false);
+
+  useEffect(() => {
+    const handleKeyPress = (e: KeyboardEvent) => {
+      if (e.metaKey || e.ctrlKey) {
+        if (e.key === "Enter") handleGenerate();
+        if (e.key === "s") e.preventDefault(); // Prevent save
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyPress);
+    return () => window.removeEventListener("keydown", handleKeyPress);
+  }, []);
 
   const handleGenerate = () => {
     setIsGenerating(true);
@@ -46,6 +60,7 @@ const ContentCreationTools: React.FC = () => {
                   setSelectedTemplate={setSelectedTemplate}
                   carouselTemplates={carouselTemplates}
                 />
+
                 <ContentSourceSelector
                   contentSource={contentSource}
                   setContentSource={setContentSource}
@@ -62,6 +77,16 @@ const ContentCreationTools: React.FC = () => {
               handleGenerate={handleGenerate}
               handleTextChange={handleTextChange}
             />
+            {/* Add visual feedback for content length */}
+            <div className="text-xs mr-5 mt-3 text-gray-500 absolute right-2 bottom-2">
+              {characterCount > 0 && (
+                <span
+                  className={`${characterCount > 1000 ? "text-red-500" : ""}`}
+                >
+                  {characterCount}/1000
+                </span>
+              )}
+            </div>
           </CardContent>
         </Card>
 
@@ -93,14 +118,59 @@ const ContentCreationTools: React.FC = () => {
                 </div>
               </CardHeader>
               <CardContent className="px-6 pt-6">
-                <MultiPostPreview
-                  content={content}
-                  isGenerating={isGenerating}
-                />
+                {!content ? (
+                  <div className="text-center py-12 text-gray-500">
+                    <p className="text-sm">
+                      Your content preview will appear here
+                    </p>
+                    <p className="text-xs mt-1">
+                      Start by creating your content above
+                    </p>
+                  </div>
+                ) : (
+                  <MultiPostPreview
+                    content={content}
+                    isGenerating={isGenerating}
+                  />
+                )}
               </CardContent>
             </Card>
           </motion.div>
         </AnimatePresence>
+
+        <AnimatePresence>
+          {status === "success" && (
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0 }}
+              className="text-xs text-green-600 bg-green-50 px-2 py-1 rounded-full"
+            >
+              Content generated successfully!
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        <div className="mt-4">
+          <button
+            onClick={() => setShowAdvanced(!showAdvanced)}
+            className="text-xs text-gray-500 hover:text-gray-900"
+          >
+            {showAdvanced ? "Hide" : "Show"} advanced options
+          </button>
+
+          <AnimatePresence>
+            {showAdvanced && (
+              <motion.div
+                initial={{ height: 0, opacity: 0 }}
+                animate={{ height: "auto", opacity: 1 }}
+                exit={{ height: 0, opacity: 0 }}
+              >
+                {/* Advanced options */}
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
       </div>
     </div>
   );
