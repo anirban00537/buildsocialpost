@@ -33,7 +33,7 @@ const ContentCreationTools: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen max-h-screen overflow-hidden">
       <Header />
       <BackgroundEffect />
 

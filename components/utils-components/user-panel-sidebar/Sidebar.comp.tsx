@@ -67,8 +67,8 @@ const Sidebar = () => {
   };
 
   return (
-    <div className="w-72 h-full flex flex-col bg-white text-gray-500 border-r border-gray-100 shadow-sm">
-      {/* Logo Section - Simplified */}
+    <div className="w-72 h-screen flex flex-col bg-white text-gray-500 border-r border-gray-100 shadow-sm">
+      {/* Logo Section */}
       <div className="px-6 py-5 border-b border-gray-50">
         <Link href="/" className="block">
           <Image
@@ -81,16 +81,16 @@ const Sidebar = () => {
         </Link>
       </div>
 
-      {/* Workspace Selector - More Elegant */}
+      {/* Workspace Selector */}
       <div className="px-4 py-3">
         <Button
           variant="ghost"
           onClick={() => setIsManageModalOpen(true)}
-          className="w-full h-10 justify-between bg-gray-50/50 hover:bg-gray-50 text-gray-700 border-0 rounded-xl transition-all duration-200"
+          className="w-full h-10 justify-between bg-white hover:bg-gray-50 text-gray-600 hover:text-gray-700 ring-1 ring-gray-200 hover:ring-blue-200 rounded-lg transition-all duration-200"
         >
-          <div className="flex items-center">
-            <Users className="h-4 w-4 text-gray-400 mr-2" />
-            <span className="text-sm">
+          <div className="flex items-center gap-2">
+            <Users className="h-4 w-4 text-gray-400" />
+            <span className="text-sm font-medium">
               {currentWorkspace?.name || "Select workspace..."}
             </span>
           </div>
@@ -98,31 +98,35 @@ const Sidebar = () => {
         </Button>
       </div>
 
-      {/* Create Button - More Prominent */}
+      {/* Create Button */}
       <div className="px-4 py-2">
-        <Button className="w-full bg-gradient-to-r from-blue-600 to-blue-700 text-white hover:from-blue-700 hover:to-blue-800 transition-all duration-200 shadow-sm hover:shadow rounded-xl h-10">
+        <Button className="w-full bg-blue-50 hover:bg-blue-100 text-blue-700 ring-1 ring-blue-200 hover:ring-blue-300 transition-all duration-200 rounded-lg h-10 font-medium">
           <Plus className="h-4 w-4 mr-2" />
           Create New
         </Button>
       </div>
 
-      {/* Main Navigation - Refined */}
-      <nav className="flex-grow overflow-y-auto px-3 py-4 space-y-0.5">
+      {/* Main Navigation */}
+      <nav className="flex-grow overflow-y-auto px-3 py-4 space-y-2">
         {tools.map((tool) => (
           <Link key={tool.id} href={tool.href} passHref>
             <Button
               variant="ghost"
-              className={`w-full justify-start text-sm h-11 transition-all rounded-xl duration-200 ${
-                pathname === tool.href || pathname.startsWith(tool.href + "/")
-                  ? "bg-blue-50/50 text-blue-700 font-medium"
-                  : "text-gray-600 hover:bg-gray-50/50 hover:text-gray-800"
-              }`}
+              className={`group w-full justify-start text-sm h-10 transition-all rounded-lg duration-200
+                ${
+                  pathname === tool.href || pathname.startsWith(tool.href + "/")
+                    ? "bg-blue-50 text-blue-700 font-medium"
+                    : "bg-white hover:bg-gray-50 text-gray-600 hover:text-gray-700"
+                }
+                focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2
+                active:scale-95
+              `}
             >
               <tool.icon
-                className={`w-[18px] h-[18px] mr-3 ${
+                className={`w-4 h-4 mr-3 transition-transform group-hover:scale-110 ${
                   pathname === tool.href || pathname.startsWith(tool.href + "/")
-                    ? "text-blue-600"
-                    : "text-gray-400"
+                    ? "text-blue-500"
+                    : "text-gray-400 group-hover:text-gray-500"
                 }`}
               />
               <span className="flex-grow text-left">{tool.name}</span>
@@ -131,15 +135,15 @@ const Sidebar = () => {
         ))}
       </nav>
 
-      {/* Usage Stats - More Subtle */}
+      {/* Usage Stats */}
       <div className="px-4 py-3 border-t border-gray-50">
-        <div className="p-3 bg-gray-50/50 rounded-xl space-y-3">
+        <div className="p-3 bg-gray-50/50 rounded-lg ring-1 ring-gray-200 space-y-3">
           <div className="flex items-center justify-between text-sm">
-            <div className="flex items-center">
-              <Zap className="w-4 h-4 mr-2 text-blue-600" />
-              <span className="text-gray-700 text-sm">AI Token Usage</span>
+            <div className="flex items-center gap-2">
+              <Zap className="w-4 h-4 text-blue-600" />
+              <span className="text-gray-700 font-medium">AI Token Usage</span>
             </div>
-            <span className="text-xs bg-white px-2 py-1 rounded-md text-gray-500 font-medium">
+            <span className="text-xs bg-white px-2 py-1 rounded-md text-gray-500 font-medium ring-1 ring-gray-200">
               {formatTokens(usedTokens)} / {formatTokens(totalTokens)}
             </span>
           </div>
@@ -152,7 +156,7 @@ const Sidebar = () => {
         </div>
       </div>
 
-      {/* User Section - Cleaner */}
+      {/* User Section */}
       <div className="p-4 border-t border-gray-50 bg-gray-50/30">
         <div className="flex items-center gap-3">
           <UserMenu />

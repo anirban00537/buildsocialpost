@@ -105,7 +105,7 @@ const ManageWorkspacesModal: FC<ManageWorkspacesModalProps> = ({
   return (
     <>
       <Dialog open={isOpen} onOpenChange={onClose}>
-        <DialogContent className="bg-background backdrop-filter backdrop-blur-md border border-borderColor rounded-lg text-textColor sm:max-w-[600px]">
+        <DialogContent className="bg-background  backdrop-filter backdrop-blur-md border border-borderColor rounded-lg text-textColor sm:max-w-[600px]">
           <DialogHeader>
             <DialogTitle className="text-lg font-medium text-textColor">
               {isEditing
@@ -115,7 +115,7 @@ const ManageWorkspacesModal: FC<ManageWorkspacesModalProps> = ({
                 : "Manage Workspaces"}
             </DialogTitle>
           </DialogHeader>
-          <div className="flex flex-col h-[400px]">
+          <div className="flex flex-col h-[400px] ">
             {isEditing ? (
               <div className="flex-grow overflow-y-auto">
                 <WorkspaceForm
@@ -124,12 +124,11 @@ const ManageWorkspacesModal: FC<ManageWorkspacesModalProps> = ({
                 />
               </div>
             ) : (
-              <div className="flex flex-col gap-4 flex-grow overflow-y-auto">
+              <div className="flex flex-col gap-3 flex-grow overflow-y-auto">
                 <Button
-                  variant="outline"
-                  size="sm"
+                  variant="ghost"
                   onClick={() => setIsEditing(true)}
-                  className="self-end mb-2"
+                  className="self-end mb-2 bg-blue-50 mt-5 hover:bg-blue-100 text-blue-700 ring-1 ring-blue-200 hover:ring-blue-300 transition-all duration-200 rounded-lg h-9"
                 >
                   <Plus className="h-4 w-4 mr-2" />
                   Create New Workspace
@@ -140,22 +139,22 @@ const ManageWorkspacesModal: FC<ManageWorkspacesModalProps> = ({
                   workspaces.map((workspace: Workspace) => (
                     <div
                       key={workspace.id}
-                      className={`flex justify-between items-center p-2 bg-cardBackground hover:bg-opacity-70 rounded-lg transition-all duration-200 ${
+                      className={`flex justify-between mx-3 items-center p-3 bg-white rounded-lg transition-all duration-200 ${
                         currentWorkspace?.id === workspace.id
-                          ? "border-2 border-blue-500 bg-opacity-70"
-                          : ""
+                          ? "bg-blue-50 ring-1 ring-blue-200"
+                          : "hover:bg-gray-50 ring-1 ring-gray-200"
                       }`}
                     >
-                      <div className="flex flex-col ml-5">
-                        <span className="text-textColor font-medium">
+                      <div className="flex flex-col">
+                        <span className="text-sm font-medium text-gray-700">
                           {workspace.name}
                         </span>
-                        <div className="flex items-center text-sm text-gray-500 mt-1">
-                          <Calendar className="w-3 h-3 mr-1" />
+                        <div className="flex items-center text-xs text-gray-500 mt-1">
+                          <Calendar className="w-3.5 h-3.5 mr-1" />
                           <span className="mr-3">
                             {moment(workspace.createdAt).format("MMM D, YYYY")}
                           </span>
-                          <Layout className="w-3 h-3 mr-1" />
+                          <Layout className="w-3.5 h-3.5 mr-1" />
                           <span>
                             {workspace.description || "No description"}
                           </span>
@@ -163,30 +162,34 @@ const ManageWorkspacesModal: FC<ManageWorkspacesModalProps> = ({
                       </div>
                       <div className="flex gap-2">
                         <Button
-                          variant="default"
-                          size="xs"
-                          className="transition-all duration-200"
+                          variant="ghost"
+                          size="sm"
+                          className={`h-8 transition-all duration-200 ${
+                            currentWorkspace?.id === workspace.id
+                              ? "bg-blue-100 hover:bg-blue-200 text-blue-700"
+                              : "bg-white hover:bg-gray-50 text-gray-700 ring-1 ring-gray-200"
+                          }`}
                           onClick={() => handleSelectWorkspace(workspace)}
                         >
                           Select
                         </Button>
                         <Button
-                          variant="outline"
-                          size="xs"
-                          className="transition-all duration-200"
+                          variant="ghost"
+                          size="sm"
+                          className="h-8 bg-white hover:bg-gray-50 text-gray-700 ring-1 ring-gray-200 transition-all duration-200"
                           onClick={() => handleEditWorkspace(workspace)}
                         >
-                          <Pencil className="w-3 h-3 mr-1" />
+                          <Pencil className="w-3.5 h-3.5 mr-1" />
                           Edit
                         </Button>
                         <Button
-                          variant="outline"
-                          size="xs"
-                          className="transition-all duration-200"
+                          variant="ghost"
+                          size="sm"
+                          className="h-8 bg-white hover:bg-gray-50 text-gray-700 ring-1 ring-gray-200 transition-all duration-200"
                           onClick={() => handleDeleteWorkspace(workspace)}
                           disabled={workspace.id === currentWorkspace?.id}
                         >
-                          <Trash className="w-3 h-3 mr-1" />
+                          <Trash className="w-3.5 h-3.5 mr-1" />
                           Delete
                         </Button>
                       </div>
