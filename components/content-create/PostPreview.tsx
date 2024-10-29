@@ -1,13 +1,25 @@
 import { Avatar } from "@/components/ui/avatar";
 import { Star, ThumbsUp, MessageCircle, Repeat2 } from "lucide-react";
 import { motion } from "framer-motion";
+import { useState } from "react";
 
 interface PostPreviewProps {
+  title: string;
   content: string;
   isGenerating: boolean;
 }
 
-export const PostPreview = ({ content, isGenerating }: PostPreviewProps) => {
+export const PostPreview = ({
+  title,
+  content,
+  isGenerating,
+}: PostPreviewProps) => {
+  const [isExpanded, setIsExpanded] = useState(false);
+
+  const toggleExpand = () => {
+    setIsExpanded(!isExpanded);
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -19,8 +31,12 @@ export const PostPreview = ({ content, isGenerating }: PostPreviewProps) => {
         <div className="flex gap-2">
           <Avatar className="h-10 w-10 rounded-full border border-gray-200" />
           <div className="flex flex-col">
-            <span className="text-sm font-semibold text-gray-900">Anirban Roy</span>
-            <span className="text-xs text-gray-500">Helping companies and others build SaaS |</span>
+            <span className="text-sm font-semibold text-gray-900">
+              Anirban Roy
+            </span>
+            <span className="text-xs text-gray-500">
+              Helping companies and others build SaaS |
+            </span>
             <div className="flex items-center gap-1 text-xs text-gray-500 mt-0.5">
               <span>now</span>
               <span>•</span>
@@ -42,16 +58,24 @@ export const PostPreview = ({ content, isGenerating }: PostPreviewProps) => {
             <div className="h-4 bg-gray-200 rounded w-5/6" />
           </div>
         ) : (
-          <div className="line-clamp-3">
-            {content || "India hacking isn't easy.\n\nYou have to manage:\n\n- Product development..."}
-          </div>
+          <>
+            <div className={`${isExpanded ? "" : "line-clamp-3"}`}>
+              {content ||
+                "India hacking isn't easy.\n\nYou have to manage:\n\n- Product development..."}
+            </div>
+          </>
         )}
       </div>
 
-      {/* See more */}
-      <button className="text-sm text-gray-500 hover:text-gray-700 transition-colors">
-        ...see more
-      </button>
+      {/* See more/less button */}
+      {!isGenerating && content && (
+        <button
+          onClick={toggleExpand}
+          className="text-sm text-gray-500 hover:text-gray-700 transition-colors"
+        >
+          {isExpanded ? "...see less" : "...see more"}
+        </button>
+      )}
 
       {/* Engagement Stats */}
       <div className="pt-1.5 border-t border-gray-100">

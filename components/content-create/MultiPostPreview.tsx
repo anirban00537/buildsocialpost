@@ -2,34 +2,22 @@ import { PostPreview } from "./PostPreview";
 import { motion } from "framer-motion";
 import { Sparkles } from "lucide-react";
 
-interface MultiPostPreviewProps {
+interface Post {
+  title: string;
   content: string;
+}
+
+interface MultiPostPreviewProps {
   isGenerating: boolean;
+  generatedPosts?: Post[];
 }
 
 export const MultiPostPreview = ({
-  content,
   isGenerating,
+  generatedPosts,
 }: MultiPostPreviewProps) => {
-  // Simulate multiple posts with dummy data
-  const dummyPosts = [
-    {
-      id: 1,
-      content:
-        content ||
-        "Hustle is a dirty word. It's become synonymous with overwork, burnout, and being glued to your screen 24/7...",
-    },
-    {
-      id: 2,
-      content:
-        "Productivity hack for indie hackers: Treat every day like a launch 🚀 Work hard, but don't burn out....",
-    },
-    {
-      id: 3,
-      content:
-        "You're building a SaaS? That's not the hard part. Getting traction? That's the hard part....",
-    },
-  ];
+  const posts = generatedPosts;
+  console.log(generatedPosts, "generatedPosts from multi post preview");
 
   return (
     <div className="space-y-6">
@@ -45,20 +33,21 @@ export const MultiPostPreview = ({
       {/* Content Cards Container */}
       <div className="shadow-md rounded-2xl bg-gradient-to-br from-blue-100 via-indigo-50/50 to-blue-100 border border-gray-200/80 p-6">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {dummyPosts.map((post, index) => (
+          {posts?.map((post, index) => (
             <motion.div
-              key={post.id}
+              key={index}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ 
+              transition={{
                 delay: index * 0.1,
                 duration: 0.4,
-                ease: "easeOut"
+                ease: "easeOut",
               }}
               className="group"
             >
               <PostPreview
-                content={index === 0 ? content : post.content}
+                title={post.title}
+                content={post.content}
                 isGenerating={index === 0 ? isGenerating : false}
               />
             </motion.div>

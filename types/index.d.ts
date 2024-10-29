@@ -136,3 +136,9 @@ interface UserState {
   endDate: string | null;
   currentWorkspace: Workspace | null;
 }
+export interface GenerateLinkedInPostsDTO {
+  prompt: string;
+  numPosts: number;
+  language?: string;
+  tone?: string;
+}

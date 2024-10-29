@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { motion, AnimatePresence } from "framer-motion";
 import { Header } from "../../../components/content-create/Header";
@@ -8,35 +8,26 @@ import { ContentInput } from "../../../components/content-create/ContentInput";
 import { MultiPostPreview } from "../../../components/content-create/MultiPostPreview";
 import { ContentSourceSelector } from "../../../components/content-create/ContentSourceSelector";
 import { contentSources } from "@/lib/data";
+import { useGenerateLinkedInPosts } from "@/hooks/useGenerateLinkedInPosts";
 
 const ContentCreationTools: React.FC = () => {
-  const [isGenerating, setIsGenerating] = useState(false);
   const [characterCount, setCharacterCount] = useState(0);
-  const [content, setContent] = useState("");
-  const [status, setStatus] = useState<"idle" | "success" | "error">("idle");
   const [showAdvanced, setShowAdvanced] = useState(false);
   const [contentSource, setContentSource] = useState("plain-prompt");
 
-  useEffect(() => {
-    const handleKeyPress = (e: KeyboardEvent) => {
-      if (e.metaKey || e.ctrlKey) {
-        if (e.key === "Enter") handleGenerate();
-        if (e.key === "s") e.preventDefault(); // Prevent save
-      }
-    };
+  const {
+    content,
+    setContent,
+    generatedPosts,
+    isGeneratingLinkedinPosts,
 
-    window.addEventListener("keydown", handleKeyPress);
-    return () => window.removeEventListener("keydown", handleKeyPress);
-  }, []);
+    handleGenerateLinkedIn,
+    handleLinkedInTextChange,
+  } = useGenerateLinkedInPosts();
 
-  const handleGenerate = () => {
-    setIsGenerating(true);
-    setTimeout(() => setIsGenerating(false), 2000);
-  };
-
-  const handleTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+  const handleLocalTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setCharacterCount(e.target.value.length);
-    setContent(e.target.value);
+    handleLinkedInTextChange(e);
   };
 
   return (
@@ -59,11 +50,15 @@ const ContentCreationTools: React.FC = () => {
           <CardContent className="px-6 py-6">
             <ContentInput
               contentSource={contentSource}
-              isGenerating={isGenerating}
-              handleGenerate={handleGenerate}
-              handleTextChange={handleTextChange}
+              isGenerating={isGeneratingLinkedinPosts}
+              handleGenerate={handleGenerateLinkedIn}
+              handleTextChange={handleLocalTextChange}
+              setContent={setContent}
+              isGeneratingLinkedinPosts={isGeneratingLinkedinPosts}
+              handleGenerateLinkedIn={handleGenerateLinkedIn}
+              handleLinkedInTextChange={handleLinkedInTextChange}
+              content={content}
             />
-            {/* Add visual feedback for content length */}
             <div className="text-xs mr-5 mt-3 text-gray-500 absolute right-2 bottom-2">
               {characterCount > 0 && (
                 <span
@@ -76,7 +71,6 @@ const ContentCreationTools: React.FC = () => {
           </CardContent>
         </Card>
 
-        {/* Preview Section */}
         <AnimatePresence mode="wait">
           <motion.div
             initial={{ opacity: 0, y: 10 }}
@@ -101,7 +95,7 @@ const ContentCreationTools: React.FC = () => {
                 </div>
               </CardHeader>
               <CardContent className="px-6 pt-6">
-                {!content ? (
+                {!generatedPosts || generatedPosts.length === 0 ? (
                   <div className="text-center py-12 text-gray-500">
                     <p className="text-sm">
                       Your content preview will appear here
@@ -112,26 +106,13 @@ const ContentCreationTools: React.FC = () => {
                   </div>
                 ) : (
                   <MultiPostPreview
-                    content={content}
-                    isGenerating={isGenerating}
+                    isGenerating={isGeneratingLinkedinPosts}
+                    generatedPosts={generatedPosts}
                   />
                 )}
               </CardContent>
             </Card>
           </motion.div>
-        </AnimatePresence>
-
-        <AnimatePresence>
-          {status === "success" && (
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0 }}
-              className="text-xs text-green-600 bg-green-50 px-2 py-1 rounded-full"
-            >
-              Content generated successfully!
-            </motion.div>
-          )}
         </AnimatePresence>
 
         <div className="mt-4">
