@@ -14,7 +14,6 @@ const ContentCreationTools: React.FC = () => {
   const [characterCount, setCharacterCount] = useState(0);
   const [contentSource, setContentSource] = useState("plain-prompt");
 
-
   const {
     content,
     setContent,
