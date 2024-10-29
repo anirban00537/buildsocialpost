@@ -11,8 +11,9 @@ interface Post {
 
 export const useGenerateLinkedInPosts = () => {
   const [content, setContent] = useState("");
-  const [generatedPosts, setGeneratedPosts] = useState<Post[]>([]);
-
+  const [generatedPost, setGeneratedPost] = useState<string>("");
+  const [postTone, setPostTone] = useState("Professional");
+  const [writingStyle, setWritingStyle] = useState("Direct");
   const {
     mutateAsync: generateLinkedinPosts,
     isLoading: isGeneratingLinkedinPosts,
@@ -21,12 +22,12 @@ export const useGenerateLinkedInPosts = () => {
     {
       onSuccess: (response) => {
         if (response.success) {
-          const posts = response.data.posts || [];
-          console.log(posts, "generated posts from useGenerateLinkedInPosts");
-          setGeneratedPosts(posts);
+          const post = response.data.post;
+          console.log(post, "generated post from useGenerateLinkedInPosts");
+          setGeneratedPost(post);
           toast.success("Content generated successfully!");
         } else {
-          setGeneratedPosts([]);
+          setGeneratedPost("");
           toast.error(response.message || "Failed to generate content");
         }
       },
@@ -37,7 +38,9 @@ export const useGenerateLinkedInPosts = () => {
     }
   );
 
-  const handleLinkedInTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+  const handleLinkedInTextChange = (
+    e: React.ChangeEvent<HTMLTextAreaElement>
+  ) => {
     setContent(e.target.value);
   };
 
@@ -57,9 +60,9 @@ export const useGenerateLinkedInPosts = () => {
     try {
       await generateLinkedinPosts({
         prompt: content.trim(),
-        numPosts: 5,
         language: "en",
-        tone: "professional",
+        tone: postTone,
+        writingStyle: writingStyle,
       });
     } catch (error) {
       console.error("Error in handleGenerate:", error);
@@ -69,9 +72,13 @@ export const useGenerateLinkedInPosts = () => {
   return {
     content,
     setContent,
-    generatedPosts,
+    generatedPost,
     isGeneratingLinkedinPosts,
     handleGenerateLinkedIn,
     handleLinkedInTextChange,
+    postTone,
+    setPostTone,
+    writingStyle,
+    setWritingStyle,
   };
 };

@@ -138,7 +138,7 @@ interface UserState {
 }
 export interface GenerateLinkedInPostsDTO {
   prompt: string;
-  numPosts: number;
   language?: string;
   tone?: string;
+  writingStyle?: string;
 }

@@ -1,7 +1,8 @@
 import { Avatar } from "@/components/ui/avatar";
-import { Star, ThumbsUp, MessageCircle, Repeat2 } from "lucide-react";
+import { Star, ThumbsUp, MessageCircle, Repeat2, Copy, Check } from "lucide-react";
 import { motion } from "framer-motion";
 import { useState } from "react";
+import toast from "react-hot-toast";
 
 interface PostPreviewProps {
   title: string;
@@ -15,17 +16,46 @@ export const PostPreview = ({
   isGenerating,
 }: PostPreviewProps) => {
   const [isExpanded, setIsExpanded] = useState(false);
+  const [isCopied, setIsCopied] = useState(false);
 
   const toggleExpand = () => {
     setIsExpanded(!isExpanded);
+  };
+
+  const handleCopy = async () => {
+    try {
+      const textToCopy = title ? `${title}\n\n${content}` : content;
+      await navigator.clipboard.writeText(textToCopy);
+      setIsCopied(true);
+      toast.success("Content copied to clipboard!");
+      setTimeout(() => setIsCopied(false), 2000);
+    } catch (err) {
+      toast.error("Failed to copy content");
+      console.error("Copy failed:", err);
+    }
   };
 
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="rounded-lg border border-gray-200 bg-white p-3 space-y-2.5"
+      className="rounded-lg border border-gray-200 bg-white p-3 space-y-2.5 relative group"
     >
+      {/* Add copy button */}
+      {!isGenerating && content && (
+        <button
+          onClick={handleCopy}
+          className="absolute top-3 right-3 p-2 rounded-full bg-gray-50 hover:bg-gray-100 transition-colors opacity-0 group-hover:opacity-100"
+          title="Copy content"
+        >
+          {isCopied ? (
+            <Check className="h-4 w-4 text-green-500" />
+          ) : (
+            <Copy className="h-4 w-4 text-gray-400" />
+          )}
+        </button>
+      )}
+
       {/* Header */}
       <div className="flex items-start justify-between">
         <div className="flex gap-2">
@@ -59,9 +89,15 @@ export const PostPreview = ({
           </div>
         ) : (
           <>
-            <div className={`${isExpanded ? "" : "line-clamp-3"}`}>
+            {title && (
+              <div className="font-semibold mb-2 text-gray-900">{title}</div>
+            )}
+            <div 
+              className={`whitespace-pre-line ${isExpanded ? "" : "line-clamp-3"}`}
+              style={{ whiteSpace: 'pre-line' }}
+            >
               {content ||
-                "India hacking isn't easy.\n\nYou have to manage:\n\n- Product development..."}
+                ""}
             </div>
           </>
         )}
