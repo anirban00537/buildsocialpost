@@ -46,28 +46,28 @@ const BackgroundPatternsAndElements = () => {
     toggleOpen: () => void;
   }) => (
     <div
-      className="cursor-pointer bg-background/50 backdrop-blur-sm rounded-md p-3 transition-all duration-200 hover:bg-background/70"
+      className="cursor-pointer bg-white rounded-lg p-3 ring-1 ring-gray-200 hover:ring-blue-200 transition-all duration-200"
       onClick={toggleOpen}
     >
-      <h3 className="text-sm font-semibold flex items-center justify-between text-textColor">
+      <h3 className="text-sm font-medium flex items-center justify-between text-gray-700">
         <span className="flex items-center gap-2">
           {icon}
           {title}
         </span>
         {isOpen ? (
-          <ChevronUp size={16} className="text-textColor/60" />
+          <ChevronUp size={16} className="text-gray-500" />
         ) : (
-          <ChevronDown size={16} className="text-textColor/60" />
+          <ChevronDown size={16} className="text-gray-500" />
         )}
       </h3>
     </div>
   );
 
   return (
-    <div className="w-full h-full flex flex-col bg-background/50 backdrop-blur-sm">
-      <div className="p-6 border-b border-borderColor/20">
-        <h2 className="text-xl font-semibold text-textColor flex items-center gap-2">
-          <Palette className="w-6 h-6 text-primary" />
+    <div className="w-full h-full flex flex-col bg-white">
+      <div className="p-6 border-b border-gray-200">
+        <h2 className="text-lg font-medium text-gray-700 flex items-center gap-2">
+          <Palette className="w-5 h-5 text-blue-600" />
           Patterns & Elements
         </h2>
       </div>
@@ -76,7 +76,7 @@ const BackgroundPatternsAndElements = () => {
         <section className="space-y-4">
           <SectionHeader
             title="Pattern"
-            icon={<Grid size={18} className="text-primary" />}
+            icon={<Grid size={16} className="text-gray-500" />}
             isOpen={patternSectionOpen}
             toggleOpen={() => setPatternSectionOpen(!patternSectionOpen)}
           />
@@ -86,36 +86,36 @@ const BackgroundPatternsAndElements = () => {
                 initial={{ opacity: 0, height: 0 }}
                 animate={{ opacity: 1, height: "auto" }}
                 exit={{ opacity: 0, height: 0 }}
-                transition={{ duration: 0.3 }}
+                transition={{ duration: 0.2 }}
                 className="space-y-4 overflow-hidden"
               >
                 <div className="grid grid-cols-4 gap-3">
                   <motion.div
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    className={`flex justify-center items-center border p-2 rounded-md cursor-pointer transition-all duration-200 ${
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    className={`flex justify-center items-center h-12 rounded-lg cursor-pointer transition-all duration-200 ${
                       pattern === 0
-                        ? "bg-primary/20 border-primary shadow-inner"
-                        : "hover:bg-background/70"
+                        ? "bg-blue-50 ring-1 ring-blue-200"
+                        : "ring-1 ring-gray-200 hover:ring-blue-200 hover:bg-gray-50"
                     }`}
                     onClick={() => handlePatternChange(0)}
                   >
-                    <CircleOff size={18} className="text-textColor/60" />
+                    <CircleOff size={16} className="text-gray-500" />
                   </motion.div>
                   {backgroundPatterns.map((patternItem) => (
                     <motion.div
                       key={patternItem.id}
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                      className={`flex justify-center items-center border rounded-md cursor-pointer transition-all duration-200 overflow-hidden ${
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      className={`flex justify-center items-center rounded-lg cursor-pointer transition-all duration-200 overflow-hidden ${
                         pattern === patternItem.id
-                          ? "border-primary shadow-md"
-                          : "hover:border-primary/50"
+                          ? "ring-2 ring-blue-200"
+                          : "ring-1 ring-gray-200 hover:ring-blue-200"
                       }`}
                       onClick={() => handlePatternChange(patternItem.id)}
                     >
                       <div
-                        className="w-full h-12 rounded-md"
+                        className="w-full h-12 rounded-lg"
                         style={{
                           backgroundImage: `url("${getBackgroundPattern(
                             patternItem.id,
@@ -129,10 +129,10 @@ const BackgroundPatternsAndElements = () => {
                     </motion.div>
                   ))}
                 </div>
-                <div className="space-y-2 pt-2 pb-2">
-                  <label className="text-xs text-textColor/60 flex items-center justify-between">
+                <div className="space-y-2 pt-2">
+                  <label className="text-sm font-medium text-gray-700 flex items-center justify-between">
                     Background Opacity
-                    <span className="text-textColor font-medium">
+                    <span className="text-sm text-gray-600 bg-gray-50 px-2 py-1 rounded-md">
                       {Math.round(layout.backgroundOpacity * 100)}%
                     </span>
                   </label>
@@ -155,7 +155,7 @@ const BackgroundPatternsAndElements = () => {
         <section className="space-y-4">
           <SectionHeader
             title="Shared Elements"
-            icon={<Layers size={18} className="text-primary" />}
+            icon={<Layers size={16} className="text-gray-500" />}
             isOpen={elementsSectionOpen}
             toggleOpen={() => setElementsSectionOpen(!elementsSectionOpen)}
           />
@@ -165,34 +165,34 @@ const BackgroundPatternsAndElements = () => {
                 initial={{ opacity: 0, height: 0 }}
                 animate={{ opacity: 1, height: "auto" }}
                 exit={{ opacity: 0, height: 0 }}
-                transition={{ duration: 0.3 }}
+                transition={{ duration: 0.2 }}
                 className="space-y-4 overflow-hidden"
               >
                 <div className="grid grid-cols-4 gap-3">
                   <motion.div
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    className={`flex justify-center items-center p-2 border rounded-md cursor-pointer transition-all duration-200 ${
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    className={`flex justify-center items-center h-12 rounded-lg cursor-pointer transition-all duration-200 ${
                       sharedSelectedElement?.id === 0
-                        ? "bg-primary/20 border-primary shadow-inner"
-                        : "hover:bg-background/70"
+                        ? "bg-blue-50 ring-1 ring-blue-200"
+                        : "ring-1 ring-gray-200 hover:ring-blue-200 hover:bg-gray-50"
                     }`}
                     onClick={() => {
                       dispatch(setSharedSelectedElementId(0));
                       dispatch(setSharedSelectedElementOpacity(0.4));
                     }}
                   >
-                    <CircleOff size={18} className="text-textColor/60" />
+                    <CircleOff size={16} className="text-gray-500" />
                   </motion.div>
                   {sharedElements.map((element) => (
                     <motion.div
                       key={element?.id}
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                      className={`flex justify-center items-center p-2 rounded-md border cursor-pointer transition-all duration-200 ${
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      className={`flex justify-center items-center h-12 rounded-lg cursor-pointer transition-all duration-200 ${
                         sharedSelectedElement?.id === element?.id
-                          ? "bg-primary/20 border-primary shadow-inner"
-                          : "hover:bg-background/70"
+                          ? "bg-blue-50 ring-1 ring-blue-200"
+                          : "ring-1 ring-gray-200 hover:ring-blue-200 hover:bg-gray-50"
                       }`}
                       onClick={() => {
                         dispatch(setSharedSelectedElementId(element.id));
@@ -203,10 +203,10 @@ const BackgroundPatternsAndElements = () => {
                     </motion.div>
                   ))}
                 </div>
-                <div className="space-y-2 pt-2 pb-2">
-                  <label className="text-xs text-textColor/60 flex items-center justify-between">
+                <div className="space-y-2 pt-2">
+                  <label className="text-sm font-medium text-gray-700 flex items-center justify-between">
                     Opacity
-                    <span className="text-textColor font-medium">
+                    <span className="text-sm text-gray-600 bg-gray-50 px-2 py-1 rounded-md">
                       {Math.round((sharedSelectedElement?.opacity || 0) * 100)}%
                     </span>
                   </label>

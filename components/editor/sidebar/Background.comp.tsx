@@ -33,33 +33,33 @@ const BackgroundColorsSection = () => {
     dispatch(setBackground(preset));
 
   return (
-    <div className="w-full h-full flex flex-col bg-background/50 backdrop-blur-sm">
-      <div className="p-6 border-b border-borderColor/20">
-        <h2 className="text-xl font-semibold text-textColor flex items-center gap-2">
-          <Palette className="w-6 h-6 text-primary" />
+    <div className="w-full h-full flex flex-col bg-white ">
+      <div className="p-6 border-b border-gray-200">
+        <h2 className="text-lg font-medium text-gray-700 flex items-center gap-2">
+          <Palette className="w-5 h-5 text-blue-600" />
           Background Settings
         </h2>
       </div>
-      <div className="flex-grow overflow-y-auto p-6 space-y-8 pb-32">
+      <div className="flex-grow overflow-y-auto p-6 space-y-8 pb-44">
         {/* Gradient Section */}
         <section className="space-y-4">
           <div className="flex items-center justify-between">
-            <h3 className="text-sm font-semibold text-textColor/80 flex items-center gap-2">
-              <Droplet className="w-4 h-4" />
+            <h3 className="text-sm font-medium text-gray-700 flex items-center gap-2">
+              <Droplet className="w-4 h-4 text-gray-500" />
               Gradient
             </h3>
             <Switch
               checked={layout.gradient}
               onCheckedChange={(checked) => dispatch(setGradient(checked))}
-              className="data-[state=checked]:bg-primary"
+              className="data-[state=checked]:bg-blue-600"
             />
           </div>
         </section>
 
         {/* Custom Background Colors */}
         <section className="space-y-4">
-          <h3 className="text-sm font-semibold text-textColor/80 flex items-center gap-2">
-            <Palette className="w-4 h-4" />
+          <h3 className="text-sm font-medium text-gray-700 flex items-center gap-2">
+            <Palette className="w-4 h-4 text-gray-500" />
             Custom Background Color
           </h3>
           <div className="grid grid-cols-4 gap-4">
@@ -68,19 +68,17 @@ const BackgroundColorsSection = () => {
                 <Popover key={colorKey}>
                   <PopoverTrigger asChild>
                     <motion.div
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                      className="w-full h-12 border border-borderColor/50 cursor-pointer rounded-md shadow-sm overflow-hidden"
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      className="w-full h-12 ring-1 ring-gray-200 hover:ring-blue-200 cursor-pointer rounded-lg shadow-sm overflow-hidden transition-all duration-200"
                       style={{ backgroundColor: background[colorKey] }}
                     >
-                      <div className="w-full h-full flex items-center justify-center bg-black bg-opacity-0 hover:bg-opacity-10 transition-all duration-200">
-                        <Palette className="w-5 h-5 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
+                      <div className="w-full h-full flex items-center justify-center hover:bg-black/5 transition-colors duration-200">
+                        <Palette className="w-4 h-4 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
                       </div>
                     </motion.div>
                   </PopoverTrigger>
-                  <PopoverContent
-                    className="w-auto p-3 border-none rounded-lg shadow-lg"
-                  >
+                  <PopoverContent className="w-auto p-3 bg-white border-0 ring-1 ring-gray-200 rounded-lg shadow-lg">
                     <HexColorPicker
                       color={background[colorKey]}
                       onChange={(color) => handleColorChange(colorKey, color)}
@@ -94,8 +92,8 @@ const BackgroundColorsSection = () => {
 
         {/* Light Presets */}
         <section className="space-y-4">
-          <h3 className="text-sm font-semibold text-textColor/80 flex items-center gap-2">
-            <Sun className="w-4 h-4" />
+          <h3 className="text-sm font-medium text-gray-700 flex items-center gap-2">
+            <Sun className="w-4 h-4 text-gray-500" />
             Light Presets
           </h3>
           <div className="grid grid-cols-4 gap-3">
@@ -103,19 +101,16 @@ const BackgroundColorsSection = () => {
               (preset: BackgroundColors, index: number) => (
                 <motion.div
                   key={index}
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="w-full h-12 border border-borderColor/50 cursor-pointer rounded-md grid grid-cols-4 shadow-sm overflow-hidden relative"
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  className="w-full h-12 ring-1 ring-gray-200 hover:ring-blue-200 cursor-pointer rounded-lg grid grid-cols-4 shadow-sm overflow-hidden relative transition-all duration-200"
                   onClick={() => handlePresetSelect(preset)}
                 >
                   {Object.values(preset).map((color, colorIndex) => (
-                    <div
-                      key={colorIndex}
-                      style={{ backgroundColor: color }}
-                    />
+                    <div key={colorIndex} style={{ backgroundColor: color }} />
                   ))}
-                  <div className="absolute inset-0 bg-black bg-opacity-0 hover:bg-opacity-10 transition-all duration-200 flex items-center justify-center">
-                    <Check className="w-5 h-5 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
+                  <div className="absolute inset-0 hover:bg-black/5 transition-colors duration-200 flex items-center justify-center">
+                    <Check className="w-4 h-4 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
                   </div>
                 </motion.div>
               )
@@ -125,27 +120,24 @@ const BackgroundColorsSection = () => {
 
         {/* Dark Presets */}
         <section className="space-y-4">
-          <h3 className="text-sm font-semibold text-textColor/80 flex items-center gap-2">
-            <Moon className="w-4 h-4" />
+          <h3 className="text-sm font-medium text-gray-700 flex items-center gap-2">
+            <Moon className="w-4 h-4 text-gray-500" />
             Dark Presets
           </h3>
           <div className="grid grid-cols-4 gap-3">
             {darkColorPresets.map((preset: BackgroundColors, index: number) => (
               <motion.div
                 key={index}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="w-full h-12 border border-borderColor/50 cursor-pointer rounded-md grid grid-cols-4 shadow-sm overflow-hidden relative"
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                className="w-full h-12 ring-1 ring-gray-200 hover:ring-blue-200 cursor-pointer rounded-lg grid grid-cols-4 shadow-sm overflow-hidden relative transition-all duration-200"
                 onClick={() => handlePresetSelect(preset)}
               >
                 {Object.values(preset).map((color, colorIndex) => (
-                  <div
-                    key={colorIndex}
-                    style={{ backgroundColor: color }}
-                  />
+                  <div key={colorIndex} style={{ backgroundColor: color }} />
                 ))}
-                <div className="absolute inset-0 bg-black bg-opacity-0 hover:bg-opacity-10 transition-all duration-200 flex items-center justify-center">
-                  <Check className="w-5 h-5 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
+                <div className="absolute inset-0 hover:bg-black/5 transition-colors duration-200 flex items-center justify-center">
+                  <Check className="w-4 h-4 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
                 </div>
               </motion.div>
             ))}

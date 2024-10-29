@@ -21,13 +21,15 @@ const SubscriptionInfo = () => {
       <PricingModal
         buttonElement={
           <Button
-            variant="outline"
-            size="xs"
-            className="ml-auto flex items-center gap-2 px-4 py-4 text-sm font-medium text-white bg-gradient-to-r from-primary via-primary/90 to-blue-600 hover:from-blue-600 hover:to-blue-400 transition-all duration-300 border-none rounded-xl ease-in-out transform hover:scale-105  hover:shadow-lg"
+            variant="ghost"
+            size="sm"
+            className="h-9 flex items-center gap-2 bg-blue-50 hover:bg-blue-100 text-blue-700 ring-1 ring-blue-200 hover:ring-blue-300 rounded-lg transition-all duration-200"
           >
             <Sparkles className="w-4 h-4" />
-            <span className="hidden sm:inline">Upgrade to Pro</span>
-            <span className="sm:hidden">Upgrade</span>
+            <span className="hidden sm:inline text-sm font-medium">
+              Upgrade to Pro
+            </span>
+            <span className="sm:hidden text-sm font-medium">Upgrade</span>
           </Button>
         }
       />
@@ -41,10 +43,10 @@ const SubscriptionInfo = () => {
       <Tooltip>
         <TooltipTrigger asChild>
           <motion.div
-            className="ml-auto flex items-center justify-center w-8 h-8 text-sm bg-gradient-to-r from-blue-500 to-blue-300 rounded-full text-white transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 shadow-md hover:shadow-lg"
+            className="flex items-center justify-center w-9 h-9 bg-blue-50 hover:bg-blue-100 text-blue-700 ring-1 ring-blue-200 hover:ring-blue-300 rounded-lg transition-all duration-200"
             animate={{
-              scale: [1, 1.1, 1],
-              rotate: [0, 5, -5, 0],
+              scale: [1, 1.05, 1],
+              rotate: [0, 3, -3, 0],
             }}
             transition={{
               duration: 2,
@@ -53,10 +55,10 @@ const SubscriptionInfo = () => {
               repeat: Infinity,
             }}
           >
-            <DiamondSVG />
+            <DiamondSVG  />
           </motion.div>
         </TooltipTrigger>
-        <TooltipContent>
+        <TooltipContent className="bg-white text-gray-700 ring-1 ring-gray-200 rounded-lg">
           <p className="text-sm font-medium">Pro • Expires {endDateString}</p>
         </TooltipContent>
       </Tooltip>

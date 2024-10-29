@@ -40,10 +40,10 @@ const BackgroundImagesSection = () => {
   };
 
   return (
-    <div className="w-full h-full flex flex-col bg-background/50 backdrop-blur-sm">
-      <div className="p-6 border-b border-borderColor/20">
-        <h2 className="text-xl font-semibold text-textColor flex items-center gap-2">
-          <ImageIcon className="w-6 h-6 text-primary" />
+    <div className="w-full h-full flex flex-col bg-white">
+      <div className="p-6 border-b border-gray-200">
+        <h2 className="text-lg font-medium text-gray-700 flex items-center gap-2">
+          <ImageIcon className="w-5 h-5 text-blue-600" />
           Background Image
         </h2>
       </div>
@@ -53,9 +53,9 @@ const BackgroundImagesSection = () => {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="flex items-center bg-background/70 p-4 rounded-lg border border-borderColor/50 shadow-sm"
+            className="flex items-center bg-white p-4 rounded-lg ring-1 ring-gray-200 hover:ring-blue-200 transition-all duration-200"
           >
-            <div className="relative w-24 h-24 rounded-md overflow-hidden shadow-md mr-4">
+            <div className="relative w-24 h-24 rounded-lg overflow-hidden mr-4">
               <Image
                 src={globalBackground}
                 alt="Current Background"
@@ -64,16 +64,16 @@ const BackgroundImagesSection = () => {
               />
             </div>
             <div className="flex-grow">
-              <p className="text-sm font-medium text-textColor mb-2">
+              <p className="text-sm font-medium text-gray-700 mb-2">
                 Current background
               </p>
               <Button
                 size="sm"
-                variant="destructive"
-                className="w-full"
+                variant="ghost"
+                className="w-full h-9 text-sm font-medium text-red-600 bg-red-50 ring-1 ring-red-200 hover:bg-red-100 transition-all duration-200"
                 onClick={() => dispatch(setBackgroundImageToAllSlides(null))}
               >
-                <X size={14} className="mr-2" />
+                <X size={16} className="mr-2" />
                 Remove
               </Button>
             </div>
@@ -82,23 +82,23 @@ const BackgroundImagesSection = () => {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="flex items-center justify-center w-full h-24 bg-background/70 rounded-lg border border-dashed border-borderColor/50"
+            className="flex items-center justify-center w-full h-24 bg-gray-50 rounded-lg ring-1 ring-gray-200 ring-dashed"
           >
-            <p className="text-sm text-textColor/60">No background selected</p>
+            <p className="text-sm text-gray-500">No background selected</p>
           </motion.div>
         )}
 
         <div className="flex justify-between items-center">
-          <h3 className="text-sm font-semibold text-textColor">
+          <h3 className="text-sm font-medium text-gray-700">
             Choose an image
           </h3>
           <Button
             size="sm"
-            variant="outline"
+            variant="ghost"
             onClick={() => setIsModalOpen(true)}
-            className="flex items-center hover:bg-background/70 transition-colors"
+            className="h-9 text-sm font-medium text-gray-700 bg-white ring-1 ring-gray-200 hover:bg-gray-50 hover:text-gray-900 transition-all duration-200"
           >
-            <Upload size={14} className="mr-2" />
+            <Upload size={16} className="mr-2" />
             Upload
           </Button>
         </div>
@@ -107,9 +107,9 @@ const BackgroundImagesSection = () => {
           {backgroundImages.map((imageUrl, index) => (
             <motion.div
               key={index}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="relative aspect-square cursor-pointer rounded-md overflow-hidden shadow-sm hover:shadow-md transition-all duration-200"
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              className="relative aspect-square cursor-pointer rounded-lg overflow-hidden ring-1 ring-gray-200 hover:ring-blue-200 transition-all duration-200"
               onClick={() => handleBackgroundImageSelect(imageUrl)}
             >
               <Image
@@ -118,10 +118,10 @@ const BackgroundImagesSection = () => {
                 layout="fill"
                 objectFit="cover"
               />
-              <div className="absolute inset-0 bg-black bg-opacity-0 hover:bg-opacity-30 transition-opacity duration-200" />
+              <div className="absolute inset-0 bg-black/0 hover:bg-black/5 transition-colors duration-200" />
               {globalBackground === imageUrl && (
-                <div className="absolute inset-0 flex items-center justify-center bg-primary bg-opacity-20">
-                  <Check size={24} className="text-primary" />
+                <div className="absolute inset-0 flex items-center justify-center bg-blue-50">
+                  <Check size={20} className="text-blue-600" />
                 </div>
               )}
             </motion.div>

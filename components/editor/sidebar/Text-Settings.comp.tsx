@@ -131,30 +131,30 @@ const TextSettingsSection = () => {
   };
 
   return (
-    <div className="w-full h-full flex flex-col bg-background/50 backdrop-blur-sm">
-      <div className="p-6 border-b border-borderColor/20">
-        <h2 className="text-xl font-semibold text-textColor flex items-center gap-2">
-          <Type className="w-6 h-6 text-primary" />
+    <div className="w-full h-full flex flex-col bg-white">
+      <div className="p-6 border-b border-gray-200">
+        <h2 className="text-lg font-medium text-gray-700 flex items-center gap-2">
+          <Type className="w-5 h-5 text-blue-600" />
           Typography
         </h2>
       </div>
       <div className="flex-grow overflow-y-auto">
         <div className="p-6 space-y-6">
           <div className="space-y-2">
-            <label className="text-sm font-medium text-textColor/80">
+            <label className="text-sm font-medium text-gray-700">
               Text Element
             </label>
-            <div className="flex gap-2 p-1 bg-cardBackground/30 rounded-lg">
+            <div className="flex gap-2 p-1 bg-gray-50 rounded-lg">
               {["title", "description", "tagline"].map((section) => (
                 <Button
                   key={section}
                   type="button"
                   size="sm"
-                  variant={selectedSection === section ? "default" : "ghost"}
-                  className={`flex-1 text-xs capitalize ${
+                  variant="ghost"
+                  className={`flex-1 h-9 text-sm font-medium capitalize ${
                     selectedSection === section
-                      ? "bg-white text-primary shadow-sm"
-                      : "text-textColor hover:bg-white/50 hover:text-primary"
+                      ? "bg-white text-blue-700 ring-1 ring-blue-200 shadow-sm"
+                      : "text-gray-600 hover:bg-white hover:text-gray-700"
                   }`}
                   onClick={() => handleSectionChange(section as any)}
                 >
@@ -166,10 +166,10 @@ const TextSettingsSection = () => {
 
           <div className="space-y-4">
             <div className="flex items-center justify-between">
-              <label className="text-sm font-medium text-textColor/80">
+              <label className="text-sm font-medium text-gray-700">
                 Font Size
               </label>
-              <span className="text-xs font-medium text-textColor/60">
+              <span className="text-sm text-gray-600 bg-gray-50 px-2 py-1 rounded-md">
                 {fontSize}px
               </span>
             </div>
@@ -184,60 +184,66 @@ const TextSettingsSection = () => {
           </div>
 
           <div className="space-y-2">
-            <label className="text-sm font-medium text-textColor/80">
-              Style & Weight
+            <label className="text-sm font-medium text-gray-700">
+              Style
             </label>
             <div className="flex gap-2">
               <Button
                 size="sm"
-                variant={fontStyle === "normal" ? "default" : "outline"}
-                className="flex-1 text-xs"
+                variant="ghost"
+                className={`flex-1 h-9 text-sm font-medium ${
+                  fontStyle === "normal"
+                    ? "bg-blue-50 text-blue-700 ring-1 ring-blue-200"
+                    : "bg-white text-gray-700 ring-1 ring-gray-200 hover:bg-gray-50 hover:ring-blue-200"
+                }`}
                 onClick={() => handleFontStyleChange("normal")}
               >
                 Normal
               </Button>
               <Button
                 size="sm"
-                variant={fontStyle === "italic" ? "default" : "outline"}
-                className="flex-1 text-xs"
+                variant="ghost"
+                className={`flex-1 h-9 text-sm font-medium ${
+                  fontStyle === "italic"
+                    ? "bg-blue-50 text-blue-700 ring-1 ring-blue-200"
+                    : "bg-white text-gray-700 ring-1 ring-gray-200 hover:bg-gray-50 hover:ring-blue-200"
+                }`}
                 onClick={() => handleFontStyleChange("italic")}
               >
-                <ItalicIcon size={14} className="mr-2" />
+                <ItalicIcon size={16} className="mr-2" />
                 Italic
               </Button>
             </div>
           </div>
 
           <div className="space-y-2">
-            <label className="text-sm font-medium text-textColor/80">
+            <label className="text-sm font-medium text-gray-700">
               Alignment
             </label>
-            <div className="flex gap-2 p-1 bg-cardBackground/30 rounded-lg">
+            <div className="flex gap-2 p-1 bg-gray-50 rounded-lg">
               {[
                 {
                   alignment: "left" as "left",
-                  icon: <AlignLeftIcon size={14} />,
+                  icon: <AlignLeftIcon size={16} />,
                 },
                 {
                   alignment: "center" as "center",
-                  icon: <AlignCenterIcon size={14} />,
+                  icon: <AlignCenterIcon size={16} />,
                 },
                 {
                   alignment: "right" as "right",
-                  icon: <AlignRightIcon size={14} />,
+                  icon: <AlignRightIcon size={16} />,
                 },
               ].map(({ alignment, icon }) => (
                 <Button
                   key={alignment}
                   type="button"
                   size="sm"
-                  variant={
-                    textSettings.alignment === alignment ? "default" : "ghost"
-                  }
-                  className={`flex-1 ${
+                  variant="ghost"
+                  className={`flex-1 h-9 ${
                     textSettings.alignment === alignment
-                      ? "bg-white text-primary shadow-sm"
-                      : "text-textColor hover:bg-white/50 hover:text-primary"
+                      ? "bg-white text-blue-700 ring-1 ring-blue-200 shadow-sm"
+                      : "text-gray-600 hover:bg-white hover:text-gray-700"
                   }`}
                   onClick={() => handleAlignmentChange(alignment)}
                 >
@@ -248,18 +254,18 @@ const TextSettingsSection = () => {
           </div>
 
           <div className="space-y-2">
-            <label className="text-sm font-medium text-textColor/80">
+            <label className="text-sm font-medium text-gray-700">
               Font Family
             </label>
             <Select onValueChange={handleFontFamilyChange} value={fontFamily}>
-              <SelectTrigger className="w-full h-10 text-sm rounded-md border border-borderColor/50 text-textColor bg-cardBackground/50">
+              <SelectTrigger className="w-full h-9 text-sm rounded-lg border border-gray-200 text-gray-700 bg-white hover:bg-gray-50">
                 <SelectValue placeholder="Select a font" />
               </SelectTrigger>
-              <SelectContent className="bg-background text-textColor border border-borderColor/50">
+              <SelectContent className="bg-white border border-gray-200 rounded-lg shadow-lg">
                 {fontOptions.map((font) => (
                   <SelectItem
                     key={font.slug}
-                    className={`${font.font.className} text-textColor text-sm py-2`}
+                    className={`${font.font.className} text-gray-700 text-sm py-2 hover:bg-gray-50`}
                     value={font.slug || "default"}
                   >
                     {font.name}
@@ -270,25 +276,33 @@ const TextSettingsSection = () => {
           </div>
 
           <div className="space-y-2">
-            <label className="text-sm font-medium text-textColor/80">
-              Font Weight
+            <label className="text-sm font-medium text-gray-700">
+              Weight
             </label>
             <div className="flex gap-2">
               <Button
                 size="sm"
-                variant={fontWeight === "normal" ? "default" : "outline"}
-                className="flex-1 text-xs"
+                variant="ghost"
+                className={`flex-1 h-9 text-sm font-medium ${
+                  fontWeight === "normal"
+                    ? "bg-blue-50 text-blue-700 ring-1 ring-blue-200"
+                    : "bg-white text-gray-700 ring-1 ring-gray-200 hover:bg-gray-50 hover:ring-blue-200"
+                }`}
                 onClick={() => handleFontWeightChange("normal")}
               >
                 Normal
               </Button>
               <Button
                 size="sm"
-                variant={fontWeight === "bold" ? "default" : "outline"}
-                className="flex-1 text-xs"
+                variant="ghost"
+                className={`flex-1 h-9 text-sm font-medium ${
+                  fontWeight === "bold"
+                    ? "bg-blue-50 text-blue-700 ring-1 ring-blue-200"
+                    : "bg-white text-gray-700 ring-1 ring-gray-200 hover:bg-gray-50 hover:ring-blue-200"
+                }`}
                 onClick={() => handleFontWeightChange("bold")}
               >
-                <BoldIcon size={14} className="mr-2" />
+                <BoldIcon size={16} className="mr-2" />
                 Bold
               </Button>
             </div>

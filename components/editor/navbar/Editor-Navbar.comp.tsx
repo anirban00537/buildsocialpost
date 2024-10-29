@@ -88,7 +88,7 @@ const EditorNavbar: React.FC = () => {
   }
 
   return (
-    <header className="bg-background sticky top-0 z-40 border-b border-borderColor/50">
+    <header className="bg-background sticky top-0 z-40 border-b border-gray-200">
       <div className="mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-2 sm:space-y-0 sm:space-x-4 w-full">
@@ -105,32 +105,32 @@ const EditorNavbar: React.FC = () => {
               <div className="flex space-x-2 w-full sm:w-auto">
                 <Button
                   onClick={handleOpenCarouselModal}
-                  className="flex-1 sm:flex-initial h-8 justify-start text-textColor/85 bg-cardBackground hover:bg-primary/80 border  hover:text-white border-borderColor"
-                  variant="outline"
+                  className="flex-1 sm:flex-initial h-9 justify-start text-gray-700 bg-white hover:bg-gray-50 ring-1 ring-gray-200 hover:ring-blue-200 rounded-lg transition-all duration-200"
+                  variant="ghost"
                   size="sm"
                   disabled={isFetchingAll}
                 >
-                  <List className="w-4 h-4 mr-2 " />
+                  <List className="w-4 h-4 mr-2 text-gray-500" />
                   <span>{isFetchingAll ? "Loading..." : "All Carousels"}</span>
                 </Button>
 
                 <Button
                   onClick={handleAddNew}
-                  className="flex-1 sm:flex-initial h-8 justify-start text-textColor/85 bg-cardBackground  hover:bg-primary/80 border border-borderColor"
-                  variant="outline"
+                  className="flex-1 sm:flex-initial h-9 justify-start text-gray-700 bg-white hover:bg-gray-50 ring-1 ring-gray-200 hover:ring-blue-200 rounded-lg transition-all duration-200"
+                  variant="ghost"
                   size="sm"
                   disabled={isCreatingOrUpdating}
                 >
-                  <Plus className="w-4 h-4 mr-2" />
+                  <Plus className="w-4 h-4 mr-2 text-gray-500" />
                   <span>New</span>
                 </Button>
               </div>
-              <div className="flex items-center bg-cardBackground border border-borderColor/50 rounded-md h-8 w-full sm:w-auto">
-                <Edit className="w-4 h-4 mr-2 text-textColor/85 ml-2" />
+              <div className="flex items-center bg-white ring-1 ring-gray-200 rounded-lg h-9 w-full sm:w-auto transition-all duration-200 focus-within:ring-blue-200">
+                <Edit className="w-4 h-4 mr-2 text-gray-500 ml-3" />
                 <input
                   type="text"
                   placeholder="Carousel Name"
-                  className="w-full sm:w-auto  border-none bg-transparent text-textColor/85 px-2 focus:outline-none rounded-md text-sm"
+                  className="w-full sm:w-auto border-none bg-transparent text-gray-700 px-2 focus:outline-none rounded-lg text-sm"
                   value={name}
                   onChange={handleNameChange}
                   aria-label="Carousel name"
@@ -152,17 +152,15 @@ const EditorNavbar: React.FC = () => {
             <Button
               onClick={handleSaveCarousel}
               disabled={isCreatingOrUpdating || !isAuthenticated}
-              size="xs"
-              className="whitespace-nowrap h-8"
+              className="h-9 bg-blue-50 hover:bg-blue-100 text-blue-700 ring-1 ring-blue-200 hover:ring-blue-300 transition-all duration-200 rounded-lg"
             >
               {isCreatingOrUpdating ? "Saving..." : "Save Progress"}
             </Button>
             <SubscriptionInfo />
             {!user || !user.email ? (
               <Button
-                variant="outline"
-                size="xs"
-                className="bg-cardBackground hover:bg-primary/80 border border-borderColor text-textColor/85"
+                variant="ghost"
+                className="h-9 bg-white hover:bg-gray-50 text-gray-700 ring-1 ring-gray-200 hover:ring-blue-200 rounded-lg transition-all duration-200"
                 onClick={() => setIsLoginModalOpen(true)}
               >
                 Sign in
@@ -175,7 +173,7 @@ const EditorNavbar: React.FC = () => {
           <div className="lg:hidden">
             <Button
               variant="ghost"
-              className="text-textColor/85"
+              className="text-gray-700 hover:bg-gray-50 rounded-lg"
               size="sm"
               onClick={toggleMenu}
             >
@@ -187,30 +185,30 @@ const EditorNavbar: React.FC = () => {
 
       {/* Collapsible menu for mobile and tablet */}
       {isMenuOpen && (
-        <div className="lg:hidden bg-background border-t border-borderColor">
+        <div className="lg:hidden bg-background border-t border-gray-200">
           <div className="container mx-auto px-4 py-2 space-y-2">
-            <CarouselSizeDropdown className="w-full h-8" />
+            <CarouselSizeDropdown className="w-full h-9" />
             <DownloadDropdown
               onDownloadPDF={exportSlidesToPDF}
               onDownloadZip={exportSlidesToZip}
               pdfLoading={pdfLoading}
               zipLoading={zipLoading}
-              className="w-full h-8"
+              className="w-full h-9"
               isAuthenticated={isAuthenticated}
               onLoginRequired={handleLoginRequired}
             />
             <Button
               onClick={handleSaveCarousel}
               disabled={isCreatingOrUpdating}
-              className="w-full h-8"
+              className="w-full h-9 bg-blue-50 hover:bg-blue-100 text-blue-700 ring-1 ring-blue-200 hover:ring-blue-300 rounded-lg transition-all duration-200"
             >
               {isCreatingOrUpdating ? "Saving..." : "Save Carousel"}
             </Button>
             <SubscriptionInfo />
             {!user || !user.email ? (
               <Button
-                variant="outline"
-                className="w-full bg-cardBackground hover:bg-primary/80 border border-borderColor/50 text-textColor/85"
+                variant="ghost"
+                className="w-full h-9 bg-white hover:bg-gray-50 text-gray-700 ring-1 ring-gray-200 hover:ring-blue-200 rounded-lg transition-all duration-200"
                 onClick={() => {
                   setIsLoginModalOpen(true);
                   setIsMenuOpen(false);
@@ -224,10 +222,10 @@ const EditorNavbar: React.FC = () => {
                   handleLogout();
                   setIsMenuOpen(false);
                 }}
-                className="w-full justify-start text-textColor/85"
+                className="w-full h-9 justify-start text-gray-700 bg-white hover:bg-gray-50 ring-1 ring-gray-200 hover:ring-blue-200 rounded-lg transition-all duration-200"
                 variant="ghost"
               >
-                <LogOut className="w-4 h-4 mr-2" />
+                <LogOut className="w-4 h-4 mr-2 text-gray-500" />
                 Logout
               </Button>
             )}

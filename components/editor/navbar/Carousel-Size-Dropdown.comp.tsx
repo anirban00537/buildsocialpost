@@ -78,7 +78,7 @@ const CarouselSizeDropdown: React.FC<CarouselSizeDropdownProps> = ({
     return icons.map((Icon, index) => (
       <Icon 
         key={index} 
-        className="w-3 h-3 mr-1 transition-colors duration-200 text-black group-hover:text-white" 
+        className="w-3.5 h-3.5 mr-1 transition-colors duration-200 text-gray-500 group-hover:text-gray-700" 
       />
     ));
   };
@@ -89,48 +89,60 @@ const CarouselSizeDropdown: React.FC<CarouselSizeDropdownProps> = ({
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button
-          variant="outline"
+          variant="ghost"
           size="sm"
-          className={`h-8 px-2 bg-cardBackground text-textColor/85 hover:bg-primary/50 hover:text-white border border-borderColor group ${className}`}
+          className={`h-9 px-3 bg-white hover:bg-gray-50 text-gray-700 border border-gray-200 rounded-lg transition-all duration-200 group ${className}`}
         >
-          <div className="flex items-center space-x-1.5">
-            <div className="flex space-x-1">
+          <div className="flex items-center gap-2">
+            <div className="flex items-center">
               {renderIcons(selectedSize.icons)}
             </div>
-            <span className="text-xs font-medium">
+            <span className="text-sm font-medium">
               {selectedSize.name} ({selectedSize.ratio})
             </span>
-            <ChevronDown className="h-3 w-3 flex-shrink-0 opacity-50" />
+            <ChevronDown className="h-4 w-4 text-gray-400" />
           </div>
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-72 p-2 bg-cardBackground border border-borderColor">
-        <DropdownMenuLabel className="text-xs font-semibold bg-cardBackground text-textColor/85 mb-2">
+      <DropdownMenuContent className="w-72 p-2 bg-white rounded-lg shadow-lg">
+        <DropdownMenuLabel className="text-sm font-medium text-gray-700 px-2 py-1.5">
           Choose size
         </DropdownMenuLabel>
-        <div className="max-h-[300px] overflow-y-auto">
+        <div className="max-h-[300px] overflow-y-auto mt-1">
           {sizes.map((size) => (
             <DropdownMenuItem
               key={size.ratio}
               onClick={() => handleSizeChange(size.width, size.height)}
-              className={`flex items-center py-1.5 px-2 hover:bg-primary/10 rounded-md cursor-pointer transition-colors duration-200 group ${
-                size.width === width && size.height === height ? 'bg-primary/20' : ''
-              }`}
+              className={`flex items-center py-2 px-2 rounded-lg cursor-pointer transition-all duration-200 group
+                ${
+                  size.width === width && size.height === height
+                    ? 'bg-blue-50'
+                    : 'hover:bg-gray-50'
+                }
+              `}
             >
               <div className="flex-1 flex items-center">
-                <div className="w-16 flex space-x-1">
+                <div className="w-16 flex items-center">
                   {renderIcons(size.icons)}
                 </div>
                 <div className="flex flex-col ml-2">
-                  <span className="font-medium text-xs text-textColor group-hover:text-white transition-colors duration-200">
+                  <span className={`text-sm font-medium group-hover:text-gray-700 ${
+                    size.width === width && size.height === height
+                      ? 'text-blue-700'
+                      : 'text-gray-600'
+                  }`}>
                     {size.name}
                   </span>
-                  <span className="text-[10px] text-textColor/70 group-hover:text-white/70 transition-colors duration-200">
+                  <span className="text-xs text-gray-500">
                     {size.width} x {size.height}px
                   </span>
                 </div>
               </div>
-              <span className="text-xs font-semibold text-textColor/85 group-hover:text-white transition-colors duration-200 ml-auto">
+              <span className={`text-xs font-medium ml-auto group-hover:text-gray-700 ${
+                size.width === width && size.height === height
+                  ? 'text-blue-700'
+                  : 'text-gray-600'
+              }`}>
                 {size.ratio}
               </span>
             </DropdownMenuItem>

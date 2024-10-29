@@ -43,32 +43,32 @@ const AiSettingsComponent = () => {
   const { subscribed } = useSelector((state: RootState) => state.user);
 
   return (
-    <div className="w-full h-full flex flex-col bg-background/50 backdrop-blur-sm">
-      <div className="p-6 border-b border-borderColor/20">
-        <h2 className="text-xl font-semibold text-textColor flex items-center gap-2">
-          <Sparkles size={24} className="text-primary" />
+    <div className="w-full h-full flex flex-col bg-white">
+      <div className="p-6 border-b border-gray-200">
+        <h2 className="text-lg font-medium text-gray-700 flex items-center gap-2">
+          <Sparkles size={20} className="text-blue-600" />
           AI Content Generator
         </h2>
       </div>
       <form onSubmit={generateContent} className="flex flex-col h-full">
-        <div className="flex-grow overflow-y-auto p-6 space-y-8">
+        <div className="flex-grow overflow-y-auto p-6 space-y-6">
           {/* Topic Input */}
           <div className="space-y-2">
             <Label
               htmlFor="content"
-              className="text-sm font-medium text-textColor/80 flex items-center"
+              className="text-sm font-medium text-gray-700 flex items-center"
             >
               Topic
               <HelpCircle
                 data-tooltip-id="topic-tooltip"
                 data-tooltip-content="Main subject for AI content"
-                className="ml-2 h-4 w-4 text-textColor/60 hover:text-textColor cursor-help"
+                className="ml-2 h-4 w-4 text-gray-400 hover:text-gray-600 cursor-help"
               />
             </Label>
             <Textarea
               id="content"
               placeholder="Enter your topic..."
-              className="min-h-[6rem] text-sm rounded-md border border-borderColor/50 text-textColor bg-cardBackground/50 resize-none focus:ring-2 focus:ring-primary/50 transition-all duration-300"
+              className="min-h-[6rem] text-sm rounded-lg border border-gray-200 text-gray-700 bg-white resize-none focus:ring-2 focus:ring-blue-200 focus:border-blue-400 transition-all duration-200"
               value={topic}
               maxLength={100}
               onChange={(e) => setTopic(e.target.value)}
@@ -80,20 +80,20 @@ const AiSettingsComponent = () => {
             <div className="flex items-center justify-between">
               <Label
                 htmlFor="theme"
-                className="text-sm font-medium text-textColor/80 flex items-center"
+                className="text-sm font-medium text-gray-700 flex items-center"
               >
                 Theme
                 <HelpCircle
                   data-tooltip-id="theme-tooltip"
                   data-tooltip-content="Color theme for slides"
-                  className="ml-2 h-4 w-4 text-textColor/60 hover:text-textColor cursor-help"
+                  className="ml-2 h-4 w-4 text-gray-400 hover:text-gray-600 cursor-help"
                 />
               </Label>
               <Switch
                 id="theme"
                 checked={themeActive}
                 onCheckedChange={() => setThemeActive(!themeActive)}
-                className="data-[state=checked]:bg-primary"
+                className="data-[state=checked]:bg-blue-600"
               />
             </div>
 
@@ -102,21 +102,29 @@ const AiSettingsComponent = () => {
                 <Button
                   size="sm"
                   type="button"
-                  variant={theme === "light" ? "default" : "outline"}
-                  className="flex-1 text-xs"
+                  variant="ghost"
+                  className={`flex-1 h-9 text-sm font-medium ${
+                    theme === "light"
+                      ? "bg-blue-50 text-blue-700 ring-1 ring-blue-200"
+                      : "bg-white text-gray-700 ring-1 ring-gray-200 hover:bg-gray-50 hover:ring-blue-200"
+                  }`}
                   onClick={() => setTheme("light")}
                 >
-                  <Sun size={14} className="mr-2" />
+                  <Sun size={16} className="mr-2" />
                   Light
                 </Button>
                 <Button
                   size="sm"
                   type="button"
-                  variant={theme === "dark" ? "default" : "outline"}
-                  className="flex-1 text-xs"
+                  variant="ghost"
+                  className={`flex-1 h-9 text-sm font-medium ${
+                    theme === "dark"
+                      ? "bg-blue-50 text-blue-700 ring-1 ring-blue-200"
+                      : "bg-white text-gray-700 ring-1 ring-gray-200 hover:bg-gray-50 hover:ring-blue-200"
+                  }`}
                   onClick={() => setTheme("dark")}
                 >
-                  <Moon size={14} className="mr-2" />
+                  <Moon size={16} className="mr-2" />
                   Dark
                 </Button>
               </div>
@@ -127,13 +135,13 @@ const AiSettingsComponent = () => {
           <div className="space-y-4">
             <Label
               htmlFor="slides"
-              className="text-sm font-medium text-textColor/80 flex items-center"
+              className="text-sm font-medium text-gray-700 flex items-center"
             >
               Number of Slides
               <HelpCircle
                 data-tooltip-id="slides-tooltip"
                 data-tooltip-content="Select slide count"
-                className="ml-2 h-4 w-4 text-textColor/60 hover:text-textColor cursor-help"
+                className="ml-2 h-4 w-4 text-gray-400 hover:text-gray-600 cursor-help"
               />
             </Label>
             <div className="flex items-center gap-4">
@@ -144,14 +152,14 @@ const AiSettingsComponent = () => {
                 onValueChange={(value) => setNumSlides(value[0])}
                 className="flex-grow"
               />
-              <span className="text-sm text-textColor font-medium w-8 text-center bg-cardBackground/50 rounded-md py-1">
+              <span className="text-sm text-gray-700 font-medium w-8 text-center bg-gray-50 rounded-lg py-1 border border-gray-200">
                 {numSlides}
               </span>
             </div>
           </div>
 
           {/* Other Settings */}
-          <div className="space-y-6">
+          <div className="space-y-4">
             {[
               {
                 label: "Style",
@@ -198,27 +206,25 @@ const AiSettingsComponent = () => {
               <div key={index} className="space-y-2">
                 <Label
                   htmlFor={setting.label.toLowerCase()}
-                  className="text-sm font-medium text-textColor/80 flex items-center"
+                  className="text-sm font-medium text-gray-700 flex items-center"
                 >
                   {setting.label}
                   <HelpCircle
                     data-tooltip-id={`${setting.label.toLowerCase()}-tooltip`}
                     data-tooltip-content={setting.tooltip}
-                    className="ml-2 h-4 w-4 text-textColor/60 hover:text-textColor cursor-help"
+                    className="ml-2 h-4 w-4 text-gray-400 hover:text-gray-600 cursor-help"
                   />
                 </Label>
                 <Select value={setting.value} onValueChange={setting.onChange}>
-                  <SelectTrigger className="w-full h-10 text-sm rounded-md border border-borderColor/50 text-textColor bg-cardBackground/50 focus:ring-2 focus:ring-primary/50 transition-all duration-300">
+                  <SelectTrigger className="w-full h-9 text-sm rounded-lg border border-gray-200 text-gray-700 bg-white hover:bg-gray-50 focus:ring-2 focus:ring-blue-200 focus:border-blue-400 transition-all duration-200">
                     <SelectValue placeholder={setting.label} />
                   </SelectTrigger>
-                  <SelectContent className="bg-background/95 backdrop-blur-sm text-textColor border border-borderColor/50 rounded-md shadow-lg">
+                  <SelectContent className="bg-white text-gray-700 border border-gray-200 rounded-lg shadow-lg">
                     {setting.options.map((option) => (
                       <SelectItem
                         key={typeof option === "string" ? option : option.value}
-                        value={
-                          typeof option === "string" ? option : option.value
-                        }
-                        className="text-sm py-2 hover:bg-primary/10 transition-colors duration-150"
+                        value={typeof option === "string" ? option : option.value}
+                        className="text-sm py-2 hover:bg-gray-50 transition-colors duration-200"
                       >
                         {typeof option === "string" ? option : option.label}
                       </SelectItem>
@@ -230,13 +236,17 @@ const AiSettingsComponent = () => {
           </div>
         </div>
         
-        <div className="p-6 mb-32 bg-background/80 backdrop-blur-sm border-t border-borderColor/50 mt-auto">
+        <div className="p-6 mb-32 bg-white border-t border-gray-200 mt-auto">
           <Button
             type="submit"
-            variant="default"
+            variant="ghost"
             size="lg"
             disabled={loading || !subscribed}
-            className="w-full text-sm font-semibold"
+            className={`w-full h-10 text-sm font-medium ${
+              !subscribed
+                ? "bg-blue-50 text-blue-700 ring-1 ring-blue-200"
+                : "bg-blue-600 text-white hover:bg-blue-700"
+            }`}
           >
             {loading ? (
               <>
@@ -264,12 +274,7 @@ const AiSettingsComponent = () => {
               </>
             ) : !subscribed ? (
               <span className="flex items-center justify-center gap-2">
-                <Image
-                  src={"/premium.svg"}
-                  width={20}
-                  height={20}
-                  alt="Premium"
-                />
+                <Image src={"/premium.svg"} width={20} height={20} alt="Premium" />
                 Upgrade to Premium
               </span>
             ) : (
@@ -279,41 +284,41 @@ const AiSettingsComponent = () => {
         </div>
       </form>
 
-      {/* React-Tooltip components */}
+      {/* Tooltips with updated styling */}
       <Tooltip
         id="topic-tooltip"
         place="left"
-        className="z-50 text-xs bg-background/95 backdrop-blur-sm text-textColor border border-borderColor/50 rounded-md shadow-lg p-2"
+        className="z-50 text-xs bg-white text-gray-700 border border-gray-200 rounded-lg shadow-lg p-2"
       />
       <Tooltip
         id="theme-tooltip"
         place="left"
-        className="z-50 text-xs bg-background/95 backdrop-blur-sm text-textColor border border-borderColor/50 rounded-md shadow-lg p-2"
+        className="z-50 text-xs bg-white text-gray-700 border border-gray-200 rounded-lg shadow-lg p-2"
       />
       <Tooltip
         id="slides-tooltip"
         place="left"
-        className="z-50 text-xs bg-background/95 backdrop-blur-sm text-textColor border border-borderColor/50 rounded-md shadow-lg p-2"
+        className="z-50 text-xs bg-white text-gray-700 border border-gray-200 rounded-lg shadow-lg p-2"
       />
       <Tooltip
         id="style-tooltip"
         place="left"
-        className="z-50 text-xs bg-background/95 backdrop-blur-sm text-textColor border border-borderColor/50 rounded-md shadow-lg p-2"
+        className="z-50 text-xs bg-white text-gray-700 border border-gray-200 rounded-lg shadow-lg p-2"
       />
       <Tooltip
         id="audience-tooltip"
         place="left"
-        className="z-50 text-xs bg-background/95 backdrop-blur-sm text-textColor border border-borderColor/50 rounded-md shadow-lg p-2"
+        className="z-50 text-xs bg-white text-gray-700 border border-gray-200 rounded-lg shadow-lg p-2"
       />
       <Tooltip
         id="mood-tooltip"
         place="left"
-        className="z-50 text-xs bg-background/95 backdrop-blur-sm text-textColor border border-borderColor/50 rounded-md shadow-lg p-2"
+        className="z-50 text-xs bg-white text-gray-700 border border-gray-200 rounded-lg shadow-lg p-2"
       />
       <Tooltip
         id="language-tooltip"
         place="left"
-        className="z-50 text-xs bg-background/95 backdrop-blur-sm text-textColor border border-borderColor/50 rounded-md shadow-lg p-2"
+        className="z-50 text-xs bg-white text-gray-700 border border-gray-200 rounded-lg shadow-lg p-2"
       />
     </div>
   );
