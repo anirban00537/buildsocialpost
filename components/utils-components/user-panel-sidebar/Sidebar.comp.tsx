@@ -26,24 +26,30 @@ import ManageWorkspacesModal from "../../workspace/Manage-Workspaces-Modal.comp"
 
 const tools = [
   {
-    id: "schedule-post",
-    name: "Schedule Post",
-    icon: Calendar,
-    href: "/dashboard/schedule-post",
+    id: "ai-writer",
+    name: "AI Writer",
+    icon: FileText,
+    href: "/ai-writer",
   },
   {
     id: "carousel-editor",
     name: "Carousel Editor",
     icon: Layers,
-    href: "/dashboard/carousel-editor",
+    href: "/carousel-editor",
   },
+  {
+    id: "content-manager",
+    name: "Scheduled/Drafts",
+    icon: Calendar,
+    href: "/content-manager",
+  },
+
   {
     id: "carousel-templates",
     name: "Carousel Templates",
     icon: LayoutTemplate,
-    href: "/dashboard/carousel-templates",
+    href: "/carousel-templates",
   },
-  { id: "drafts", name: "Drafts", icon: FileEdit, href: "/dashboard/drafts" },
 ];
 
 const Sidebar = () => {
@@ -107,25 +113,25 @@ const Sidebar = () => {
       </div>
 
       {/* Main Navigation */}
-      <nav className="flex-grow overflow-y-auto px-3 py-4 space-y-2">
+      <nav className="flex-grow overflow-y-auto px-3 py-4 space-y-0.5">
         {tools.map((tool) => (
           <Link key={tool.id} href={tool.href} passHref>
             <Button
               variant="ghost"
-              className={`group w-full justify-start text-sm h-10 transition-all rounded-lg duration-200
+              className={`group w-full justify-start text-sm h-11 transition-all rounded-lg duration-200
                 ${
                   pathname === tool.href || pathname.startsWith(tool.href + "/")
-                    ? "bg-blue-50 text-blue-700 font-medium"
+                    ? "bg-blue-50 border border-blue-200 text-blue-700 font-medium hover:bg-blue-100"
                     : "bg-white hover:bg-gray-50 text-gray-600 hover:text-gray-700"
                 }
-                focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2
-                active:scale-95
+                focus:outline-none focus:ring-0
+                active:scale-[0.98]
               `}
             >
               <tool.icon
-                className={`w-4 h-4 mr-3 transition-transform group-hover:scale-110 ${
+                className={`w-4 h-4 mr-3 transition-transform group-hover:scale-105 ${
                   pathname === tool.href || pathname.startsWith(tool.href + "/")
-                    ? "text-blue-500"
+                    ? "text-blue-600"
                     : "text-gray-400 group-hover:text-gray-500"
                 }`}
               />

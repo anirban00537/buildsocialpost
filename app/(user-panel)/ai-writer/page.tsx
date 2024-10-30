@@ -33,14 +33,14 @@ const ContentCreationTools: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen max-h-screen overflow-hidden">
+    <div className="min-h-screen overflow-hidden">
       <Header />
       <BackgroundEffect />
 
-      <div className=" mx-auto px-6 py-8">
+      <div className="max-w-[1600px] mx-auto px-4 sm:px-6 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 relative">
           {/* Left Column - Input Section */}
-          <div className="space-y-6">
+          <div className="space-y-6 max-w-[800px] w-full mx-auto lg:mx-0">
             <Card className="border-none bg-white/95 backdrop-blur-xl">
               <CardHeader className="pb-0 px-6 pt-6">
                 <ContentSourceSelector
@@ -92,7 +92,7 @@ const ContentCreationTools: React.FC = () => {
           </div>
 
           {/* Right Column - Preview Section */}
-          <div className="lg:sticky lg:top-6 h-[calc(100vh-15rem)]">
+          <div className="lg:sticky lg:top-6 h-[calc(100vh-15rem)] max-w-[800px] w-full mx-auto lg:mx-0">
             <AnimatePresence mode="wait">
               <motion.div
                 initial={{ opacity: 0, y: 10 }}
@@ -117,7 +117,7 @@ const ContentCreationTools: React.FC = () => {
                       </div>
                     </div>
                   </CardHeader>
-                  <CardContent className="px-6 pt-6 flex-grow overflow-y-auto">
+                  <CardContent className="px-6 pt-6 flex-grow ">
                     {!generatedPost || generatedPost.length === 0 ? (
                       <div className="text-center py-12 text-gray-500">
                         <p className="text-sm">

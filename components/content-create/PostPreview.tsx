@@ -44,11 +44,11 @@ export const PostPreview = ({
   const getViewportClass = () => {
     switch (viewMode) {
       case 'mobile':
-        return 'w-[380px]';
+        return 'w-full max-w-[380px]';
       case 'tablet':
-        return 'w-[600px]';
+        return 'w-full max-w-[600px]';
       default:
-        return 'w-[680px]';
+        return 'w-full max-w-[680px]';
     }
   };
 
@@ -67,9 +67,9 @@ export const PostPreview = ({
   const isValidLength = charCount >= MIN_CHARS;
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 w-full">
       {/* View Mode Selector */}
-      <div className="flex items-center justify-end gap-1 px-2">
+      <div className="flex items-center justify-end gap-1 px-2 md:px-0">
         <div className="bg-gray-100 p-1 rounded-lg flex gap-1">
           <button
             onClick={() => setViewMode('mobile')}
@@ -108,23 +108,15 @@ export const PostPreview = ({
       </div>
 
       {/* Post Preview Container */}
-      <div className="flex justify-center">
-        <div 
-          className={`transition-all duration-300 ${
-            viewMode !== 'desktop' 
-              ? 'rounded-2xl bg-gray-800 shadow-xl'
-              : ''
-          }`}
-        >
+      <div className="flex justify-center w-full">
+        <div className="w-full transition-all duration-300">
           <div 
-            className={`${getViewportClass()} transition-all duration-300 ${
-              viewMode !== 'desktop' ? 'overflow-hidden rounded-xl' : ''
-            }`}
+            className={`${getViewportClass()} mx-auto transition-all duration-300`}
           >
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="rounded-lg border border-gray-200 bg-white p-3 space-y-2.5 relative group"
+              className="rounded-lg border border-gray-200 bg-white p-3 space-y-2.5 relative group w-full"
             >
               {/* Add copy button */}
               {!isGenerating && content && (

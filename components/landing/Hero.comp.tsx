@@ -200,7 +200,7 @@ const Hero = () => {
           {/* Updated CTA section */}
           <div className="z-10 flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-4">
             <Link
-              href="/create"
+              href="/ai-writer"
               aria-label="Start creating your LinkedIn carousel"
               className="w-full sm:w-auto"
             >
