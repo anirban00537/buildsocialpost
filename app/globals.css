@@ -73,6 +73,70 @@
   body {
     @apply bg-background text-foreground;
   }
+  .prose {
+    @apply text-gray-700;
+  }
+
+  .prose p {
+    @apply mb-4;
+  }
+
+  .prose blockquote {
+    @apply border-l-4 border-gray-200 pl-4 italic my-4;
+  }
+
+  .prose ul {
+    @apply list-disc list-inside mb-4;
+  }
+
+  .prose ol {
+    @apply list-decimal list-inside mb-4;
+  }
+
+  .ProseMirror {
+    @apply outline-none h-full;
+  }
+
+  .ProseMirror p.is-editor-empty:first-child::before {
+    @apply text-gray-400 float-left h-0 pointer-events-none;
+    content: attr(data-placeholder);
+  }
+
+  .ProseMirror strong {
+    @apply text-gray-900 font-bold;
+  }
+
+  .prose strong {
+    @apply text-gray-900 font-bold;
+  }
+
+  .prose * {
+    @apply text-gray-700;
+  }
+
+  .ProseMirror {
+    @apply outline-none h-full;
+  }
+
+  .ProseMirror p {
+    @apply text-gray-700;
+  }
+
+  .ProseMirror strong {
+    @apply text-gray-900 font-bold;
+  }
+
+  .ProseMirror em {
+    @apply text-gray-700 italic;
+  }
+
+  .ProseMirror code {
+    @apply text-gray-700 bg-gray-100 px-1 rounded;
+  }
+
+  .ProseMirror blockquote {
+    @apply text-gray-600;
+  }
 }
 /* Webkit (Chrome, Safari, newer versions of Opera) */
 ::-webkit-scrollbar {

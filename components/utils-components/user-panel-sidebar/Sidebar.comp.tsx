@@ -106,10 +106,12 @@ const Sidebar = () => {
 
       {/* Create Button */}
       <div className="px-4 py-2">
-        <Button className="w-full bg-blue-50 hover:bg-blue-100 text-blue-700 ring-1 ring-blue-200 hover:ring-blue-300 transition-all duration-200 rounded-lg h-10 font-medium">
-          <Plus className="h-4 w-4 mr-2" />
-          Create New
-        </Button>
+        <Link href="/compose">
+          <Button className="w-full bg-blue-50 hover:bg-blue-100 text-blue-700 ring-1 ring-blue-200 hover:ring-blue-300 transition-all duration-200 rounded-lg h-10 font-medium">
+            <Plus className="h-4 w-4 mr-2" />
+            Create New
+          </Button>
+        </Link>
       </div>
 
       {/* Main Navigation */}
