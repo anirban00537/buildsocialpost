@@ -164,3 +164,10 @@ export const backgroundPatterns = [
     svg: pattern10("black"),
   },
 ];
+
+export const POST_STATUS = {
+  DRAFT: 0,
+  SCHEDULED: 1,
+  PUBLISHED: 2,
+  FAILED: 3,
+};

@@ -4,11 +4,6 @@ import { GenerateLinkedInPostsDTO } from "@/types";
 import toast from "react-hot-toast";
 import { useState } from "react";
 
-interface Post {
-  title: string;
-  content: string;
-}
-
 export const useGenerateLinkedInPosts = () => {
   const [content, setContent] = useState("");
   const [generatedPost, setGeneratedPost] = useState<string>("");

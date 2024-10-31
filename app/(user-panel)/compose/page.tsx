@@ -2,13 +2,24 @@
 import React from "react";
 import { PostPreviewFullFeature } from "@/components/content-create/PostPreviewFullFeature";
 import { ComposeSection } from "@/components/content-create/ComposeSection";
+import { useContentPosting } from "@/hooks/useContent";
 
 const Compose = () => {
-  const [content, setContent] = React.useState("");
-  const [isGenerating, setIsGenerating] = React.useState(false);
+  const {
+    content,
+    setContent,
+    isGenerating,
+    setIsGenerating,
+    isCreatingDraft,
+    handleCreateDraft,
+    isScheduleModalOpen,
+    setIsScheduleModalOpen,
+    scheduledDate,
+    handleSchedule,
+  } = useContentPosting();
 
   return (
-    <div className="mx-auto p-6 space-y-8 ">
+    <div className="max-w-[1600px] mx-auto px-4 sm:px-6 py-8">
       {/* Title and Description */}
       <div className="space-y-3">
         <div className="flex items-center justify-between">
@@ -24,14 +35,20 @@ const Compose = () => {
       </div>
 
       {/* Main Content Area */}
-      <div className="grid grid-cols-2 gap-6">
-        <ComposeSection 
-          content={content} 
+      <div className="grid grid-cols-2 gap-6 mt-8">
+        <ComposeSection
+          content={content}
           setContent={setContent}
           isGenerating={isGenerating}
           setIsGenerating={setIsGenerating}
+          isCreatingDraft={isCreatingDraft}
+          onSaveDraft={handleCreateDraft}
+          isScheduleModalOpen={isScheduleModalOpen}
+          setIsScheduleModalOpen={setIsScheduleModalOpen}
+          scheduledDate={scheduledDate}
+          onSchedule={handleSchedule}
         />
-        <PostPreviewFullFeature 
+        <PostPreviewFullFeature
           isGenerating={isGenerating}
           generatedPost={content}
         />

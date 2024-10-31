@@ -6,9 +6,15 @@ import Placeholder from "@tiptap/extension-placeholder";
 import CharacterCount from "@tiptap/extension-character-count";
 import { Card } from "../ui/card";
 import { Button } from "../ui/button";
-import { 
-  Wand2, Send, Clock, Save, Sparkles, 
-  HelpCircle, FileText, ArrowRight 
+import {
+  Wand2,
+  Send,
+  Clock,
+  Save,
+  Sparkles,
+  HelpCircle,
+  FileText,
+  ArrowRight,
 } from "lucide-react";
 import { EditorToolbar } from "./EditorToolbar";
 import { ScheduleModal } from "./ScheduleModal";
@@ -24,6 +30,12 @@ interface ComposeSectionProps {
   setContent: (content: string) => void;
   isGenerating: boolean;
   setIsGenerating: (isGenerating: boolean) => void;
+  isCreatingDraft: boolean;
+  onSaveDraft: () => Promise<void>;
+  isScheduleModalOpen: boolean;
+  setIsScheduleModalOpen: (isOpen: boolean) => void;
+  scheduledDate: Date | null;
+  onSchedule: (date: Date) => void;
 }
 
 const CHAR_LIMIT = 3000;
@@ -33,15 +45,18 @@ export const ComposeSection = ({
   setContent,
   isGenerating,
   setIsGenerating,
+  isCreatingDraft,
+  onSaveDraft,
+  isScheduleModalOpen,
+  setIsScheduleModalOpen,
+  scheduledDate,
+  onSchedule,
 }: ComposeSectionProps) => {
-  const [isScheduleModalOpen, setIsScheduleModalOpen] = useState(false);
-  const [scheduledDate, setScheduledDate] = useState<Date | null>(null);
-
   const editor = useEditor({
     extensions: [
       StarterKit,
       Placeholder.configure({
-        placeholder: 'Write something amazing...',
+        placeholder: "Write something amazing...",
       }),
       CharacterCount.configure({
         limit: CHAR_LIMIT,
@@ -53,17 +68,13 @@ export const ComposeSection = ({
     },
     editorProps: {
       attributes: {
-        class: 'prose prose-sm max-w-none focus:outline-none h-full min-h-[calc(100vh-400px)] px-6 py-4',
+        class:
+          "prose prose-sm max-w-none focus:outline-none h-full min-h-[calc(100vh-400px)] px-6 py-4",
       },
     },
   });
 
   const characterCount = editor?.storage.characterCount.characters() ?? 0;
-
-  const handleSchedule = (date: Date) => {
-    setScheduledDate(date);
-    console.log("Post scheduled for:", format(date, "PPP 'at' HH:mm"));
-  };
 
   return (
     <Card className="flex flex-col h-[calc(100vh-200px)] bg-white border border-gray-100 ring-1 ring-gray-200 rounded-xl overflow-hidden">
@@ -87,13 +98,14 @@ export const ComposeSection = ({
           </Tooltip>
         </div>
         <div className="flex items-center gap-2">
-          <div 
+          <div
             className={`text-xs px-2 py-1 rounded-md transition-colors flex items-center gap-1
-              ${characterCount > CHAR_LIMIT 
-                ? 'text-red-600 bg-red-50' 
-                : characterCount > CHAR_LIMIT * 0.9
-                ? 'text-amber-600 bg-amber-50'
-                : 'text-gray-600 bg-gray-50'
+              ${
+                characterCount > CHAR_LIMIT
+                  ? "text-red-600 bg-red-50"
+                  : characterCount > CHAR_LIMIT * 0.9
+                  ? "text-amber-600 bg-amber-50"
+                  : "text-gray-600 bg-gray-50"
               }`}
           >
             <FileText className="h-3 w-3" />
@@ -118,76 +130,73 @@ export const ComposeSection = ({
       </div>
 
       {/* Action Buttons */}
-      <div className="flex items-center justify-between p-4 border-t border-gray-100 bg-white">
-        <div className="flex items-center gap-2">
-          <Button
-            variant="ghost"
-            size="sm"
-            className="text-gray-600 hover:text-blue-600 hover:bg-blue-50 
-                       transition-all duration-200 h-9 px-4 rounded-lg"
-          >
-            <Save className="w-4 h-4 mr-2" />
-            Save Draft
-          </Button>
-          <Button
-            variant="ghost"
-            size="sm"
-            className="text-gray-600 hover:text-blue-600 hover:bg-blue-50 
-                       transition-all duration-200 h-9 px-4 rounded-lg
-                       flex items-center gap-2"
-            onClick={() => setIsScheduleModalOpen(true)}
-          >
-            <Clock className="w-4 h-4" />
-            {scheduledDate 
-              ? format(scheduledDate, "MMM d 'at' HH:mm")
-              : "Schedule"}
-            {scheduledDate && (
-              <div className="text-[10px] bg-blue-50 text-blue-600 px-1.5 py-0.5 rounded-full">
-                Scheduled
-              </div>
-            )}
-          </Button>
-        </div>
-        <div className="flex items-center gap-2">
+      <div className="flex flex-col gap-3 p-4 border-t border-gray-100 bg-white">
+        <div className="flex flex-col sm:flex-row gap-2">
           <Button
             variant="outline"
             size="sm"
-            className={`transition-all duration-200 h-9 px-4 rounded-lg
-              ${isGenerating || characterCount > CHAR_LIMIT
-                ? 'text-gray-400 border-gray-200 bg-gray-50'
-                : 'text-blue-600 border-blue-200 hover:bg-blue-50'
-              }`}
-            onClick={() => setIsGenerating(true)}
-            disabled={isGenerating || characterCount > CHAR_LIMIT}
+            className="text-blue-600 border-blue-200 hover:bg-blue-600 hover:text-white
+                       transition-all duration-200 h-9 rounded-lg w-full"
+            onClick={onSaveDraft}
           >
-            <Wand2 className={`w-4 h-4 mr-2 ${isGenerating ? 'animate-spin' : ''}`} />
-            {isGenerating ? 'Generating...' : 'Generate'}
+            {isCreatingDraft ? (
+              <>
+                <span className="w-4 h-4 mr-2 border-2 border-current border-t-transparent rounded-full animate-spin" />
+                Saving...
+              </>
+            ) : (
+              <>
+                <Save className="w-4 h-4 mr-2" />
+                Save Draft
+              </>
+            )}
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            className="text-blue-600 border-blue-200 hover:bg-blue-600 hover:text-white
+                       transition-all duration-200 h-9 rounded-lg w-full"
+            onClick={() => setIsScheduleModalOpen(true)}
+          >
+            <Clock className="w-4 h-4 mr-2" />
+            Schedule
           </Button>
           <Button
             size="sm"
-            className={`transition-all duration-200 h-9 px-4 rounded-lg flex items-center gap-2
-              ${characterCount > CHAR_LIMIT
-                ? 'bg-gray-100 text-gray-400'
-                : 'bg-blue-600 hover:bg-blue-700 text-white'
+            className={`transition-all duration-200 h-9 rounded-lg w-full
+              ${
+                characterCount > CHAR_LIMIT
+                  ? "bg-gray-100 text-gray-400"
+                  : "bg-blue-600 hover:bg-blue-700 text-white"
               }`}
-            onClick={() => {}}
             disabled={characterCount > CHAR_LIMIT}
           >
-            <Send className="w-4 h-4" />
+            <Send className="w-4 h-4 mr-2" />
             Post Now
-            <div className="flex items-center gap-1 text-[10px] bg-white/10 px-1.5 py-0.5 rounded">
+            <div className="ml-2 flex items-center gap-1 text-[10px] bg-white/10 px-1.5 py-0.5 rounded">
               <span>{navigator.platform.includes("Mac") ? "⌘" : "Ctrl"}</span>
               <ArrowRight className="h-3 w-3" />
             </div>
           </Button>
+        </div>
+
+        {/* Keyboard shortcuts */}
+        <div className="flex justify-between items-center text-xs text-gray-500 mt-1">
+          <div className="flex items-center gap-4">
+            <span>⌘ + S to save</span>
+            <span>⌘ + Enter to post</span>
+          </div>
+          <div>
+            <span>⌘ + / for AI commands</span>
+          </div>
         </div>
       </div>
 
       <ScheduleModal
         isOpen={isScheduleModalOpen}
         onClose={() => setIsScheduleModalOpen(false)}
-        onSchedule={handleSchedule}
+        onSchedule={onSchedule}
       />
     </Card>
   );
-}; 
+};

@@ -4,110 +4,58 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { Calendar, FileText, CheckCircle2, XCircle } from "lucide-react";
 import PostSection from "@/components/post/Post-Section";
 import { Button } from "@/components/ui/button";
-import { PostType, PostSectionConfig } from "@/types/post";
-
-// Define posts data for each type
-const postsData = {
-  scheduled: [
-    {
-      date: "Tomorrow | May 15",
-      posts: [
-        {
-          time: "08:14 am",
-          content: "Self-improvement isn't about perfection. It's about progress...",
-          platform: "linkedin",
-        },
-        {
-          time: "01:02 pm",
-          content: "I've witnessed a lot of regular ol' Joe and Janes outperforming...",
-          platform: "linkedin",
-        },
-      ],
-    },
-  ],
-  draft: [
-    {
-      posts: [
-        {
-          lastEdited: "2 hours ago",
-          content: "The biggest mistake I see people make on LinkedIn is...",
-          platform: "linkedin",
-        },
-        {
-          lastEdited: "Yesterday",
-          content: "Here's what I learned after posting content for 30 days straight:",
-          platform: "linkedin",
-        },
-      ],
-    },
-  ],
-  published: [
-    {
-      date: "Today",
-      posts: [
-        {
-          publishedAt: "3 hours ago",
-          content: "Leadership isn't about being in charge. It's about taking care of those in your charge.",
-          platform: "linkedin",
-        },
-      ],
-    },
-  ],
-  failed: [
-    {
-      date: "Today",
-      posts: [
-        {
-          failedAt: "1 hour ago",
-          content: "The key to success in digital marketing is...",
-          platform: "linkedin",
-          errorMessage: "API Error: Connection timeout",
-        },
-      ],
-    },
-  ],
-} as Record<PostType, Array<{ date?: string; posts: Array<any> }>>;
+import { PostType, PostSectionConfig, PostTabId } from "@/types/post";
+import { useContentManagement } from "@/hooks/useContent";
+import { POST_STATUS } from "@/lib/core-constants";
+import { Pagination } from "@/components/ui/pagination";
 
 const postConfigs: PostSectionConfig[] = [
   {
     id: "scheduled",
+    status: POST_STATUS.SCHEDULED,
     title: "Scheduled Posts",
     icon: <Calendar className="w-7 h-7 mr-2 text-primary" />,
-    count: 12,
     badgeText: "AI Enhanced",
-    emptyStateMessage: "No scheduled posts"
+    emptyStateMessage: "No scheduled posts",
   },
   {
     id: "draft",
+    status: POST_STATUS.DRAFT,
     title: "Drafts",
     icon: <FileText className="w-7 h-7 mr-2 text-primary" />,
-    count: 4,
     badgeText: "AI Enhanced",
-    emptyStateMessage: "No draft posts"
+    emptyStateMessage: "No draft posts",
   },
   {
     id: "published",
+    status: POST_STATUS.PUBLISHED,
     title: "Published Posts",
     icon: <CheckCircle2 className="w-7 h-7 mr-2 text-green-500" />,
-    count: 24,
     badgeText: "Published",
-    emptyStateMessage: "No published posts"
+    emptyStateMessage: "No published posts",
   },
   {
     id: "failed",
+    status: POST_STATUS.FAILED,
     title: "Failed Posts",
     icon: <XCircle className="w-7 h-7 mr-2 text-red-500" />,
-    count: 1,
     badgeText: "Failed",
-    emptyStateMessage: "No failed posts"
-  }
+    emptyStateMessage: "No failed posts",
+  },
 ];
 
 const ContentManager = () => {
-  const [activeTab, setActiveTab] = useState("scheduled");
+  const {
+    activeTab,
+    postsData,
+    isLoadingPosts,
+    handleTabChange,
+    pagination,
+    handlePageChange,
+  } = useContentManagement();
 
   return (
-    <div className="mx-auto p-6 space-y-8 max-w-[1200px]">
+    <div className="max-w-[1600px] mx-auto px-4 sm:px-6 py-8">
       {/* Enhanced Title and Description Section */}
       <div className="space-y-3">
         <div className="flex items-center justify-between">
@@ -116,10 +64,11 @@ const ContentManager = () => {
               Content Manager
             </h1>
             <p className="text-sm text-gray-600 mt-1 leading-relaxed max-w-2xl">
-              Manage your scheduled posts and drafts for LinkedIn. Schedule, edit, and organize your content efficiently.
+              Manage your scheduled posts and drafts for LinkedIn. Schedule,
+              edit, and organize your content efficiently.
             </p>
           </div>
-          <Button 
+          <Button
             className="bg-primary hover:bg-primary/90 text-white px-4 py-2 rounded-lg
                      flex items-center gap-2 shadow-sm hover:shadow transition-all duration-200"
           >
@@ -131,27 +80,36 @@ const ContentManager = () => {
         {/* Quick Stats */}
         <div className="grid grid-cols-3 gap-4 mt-6">
           {[
-            { label: 'Scheduled Posts', value: '12', trend: '+2 this week' },
-            { label: 'Draft Posts', value: '4', trend: 'Last edited 2h ago' },
-            { label: 'Engagement Rate', value: '24%', trend: '+5% vs last week' }
+            { label: "Scheduled Posts", value: "12", trend: "+2 this week" },
+            { label: "Draft Posts", value: "4", trend: "Last edited 2h ago" },
+            {
+              label: "Engagement Rate",
+              value: "24%",
+              trend: "+5% vs last week",
+            },
           ].map((stat, index) => (
-            <div key={index} className="bg-white rounded-xl p-4 border border-gray-100 
-                                      hover:border-primary/20 transition-colors duration-200">
+            <div
+              key={index}
+              className="bg-white rounded-xl p-4 border border-gray-200 
+                                      hover:border-primary/20 transition-colors duration-200"
+            >
               <p className="text-sm text-gray-600">{stat.label}</p>
-              <p className="text-2xl font-semibold text-gray-900 mt-1">{stat.value}</p>
+              <p className="text-2xl font-semibold text-gray-900 mt-1">
+                {stat.value}
+              </p>
               <p className="text-xs text-gray-500 mt-1">{stat.trend}</p>
             </div>
           ))}
         </div>
       </div>
 
-      <div className="bg-white rounded-xl border border-gray-100 overflow-hidden">
+      <div className="bg-white rounded-xl border mt-8 border-gray-200">
         {/* Enhanced Tab List */}
         <div className="flex gap-2 px-6 pt-4">
           {postConfigs.map((config) => (
             <button
               key={config.id}
-              onClick={() => setActiveTab(config.id)}
+              onClick={() => handleTabChange(config.id)}
               className={`
                 px-4 py-2.5 -mb-px border-b-2 relative
                 ${
@@ -166,21 +124,29 @@ const ContentManager = () => {
               `}
             >
               <div className="flex items-center gap-2">
-                <span className={`
-                  ${activeTab === config.id ? 'text-primary' : 'text-gray-400'}
-                  group-hover:scale-110 transition-transform duration-200
-                `}>
+                <span
+                  className={
+                    activeTab === config.id ? "text-primary" : "text-gray-400"
+                  }
+                >
                   {config.icon}
                 </span>
                 {config.title}
-                {config.count && (
-                  <span className={`
+                {postsData[config.id] && (
+                  <span
+                    className={`
                     ml-1 px-2 py-0.5 rounded-full text-xs
-                    ${activeTab === config.id 
-                      ? 'bg-primary/10 text-primary' 
-                      : 'bg-gray-100 text-gray-600'}
-                  `}>
-                    {config.count}
+                    ${
+                      activeTab === config.id
+                        ? "bg-primary/10 text-primary"
+                        : "bg-gray-100 text-gray-600"
+                    }
+                  `}
+                  >
+                    {postsData[config.id].reduce(
+                      (acc, group) => acc + group.posts.length,
+                      0
+                    )}
                   </span>
                 )}
               </div>
@@ -192,14 +158,34 @@ const ContentManager = () => {
 
         {/* Tab Content */}
         <div className="p-6">
-          <PostSection
-            title={postConfigs.find(config => config.id === activeTab)?.title || ""}
-            icon={postConfigs.find(config => config.id === activeTab)?.icon}
-            posts={postsData[activeTab as PostType] || []}
-            type={activeTab as PostType}
-            badgeText={postConfigs.find(config => config.id === activeTab)?.badgeText}
-            emptyStateMessage={postConfigs.find(config => config.id === activeTab)?.emptyStateMessage}
-          />
+          {isLoadingPosts ? (
+            <div className="flex justify-center items-center h-40">
+              <span className="loading loading-spinner loading-lg" />
+            </div>
+          ) : (
+            <>
+              <PostSection
+                title={postConfigs.find((config) => config.id === activeTab)?.title || ""}
+                icon={postConfigs.find((config) => config.id === activeTab)?.icon}
+                posts={postsData[activeTab] || []}
+                type={activeTab as any}
+                badgeText={postConfigs.find((config) => config.id === activeTab)?.badgeText}
+                emptyStateMessage={
+                  postConfigs.find((config) => config.id === activeTab)?.emptyStateMessage
+                }
+              />
+              
+              {pagination.totalPages > 1 && (
+                <div className="mt-6 flex justify-center">
+                  <Pagination
+                    currentPage={pagination.currentPage}
+                    totalPages={pagination.totalPages}
+                    onPageChange={handlePageChange}
+                  />
+                </div>
+              )}
+            </>
+          )}
         </div>
       </div>
     </div>
