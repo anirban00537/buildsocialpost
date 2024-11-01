@@ -12,6 +12,7 @@ import {
   Users,
   ChevronDown,
   ImageIcon,
+  Linkedin,
 } from "lucide-react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
@@ -23,6 +24,7 @@ import Image from "next/image";
 import SubscriptionInfo from "@/components/subscription/Status.comp";
 import UserMenu from "./User-Menu.comp";
 import ManageWorkspacesModal from "../../workspace/Manage-Workspaces-Modal.comp";
+import ManageAccountsModal from "./ManageAccountsModal";
 
 const tools = [
   {
@@ -58,6 +60,7 @@ const Sidebar = () => {
     (state: RootState) => state.user
   );
   const [isManageModalOpen, setIsManageModalOpen] = useState(false);
+  const [isAccountsModalOpen, setIsAccountsModalOpen] = useState(false);
 
   const usedTokens = 150000; // Example: 150k tokens
   const totalTokens = 1000000; // Example: 1M tokens
@@ -70,6 +73,27 @@ const Sidebar = () => {
     } else {
       return tokens.toString();
     }
+  };
+
+  // Example accounts data - replace with your actual data
+  const accounts = [
+    {
+      id: 1,
+      name: "John Doe",
+      profileImage: "https://github.com/shadcn.png", // Replace with actual image
+      type: "linkedin" as const,
+      status: "connected" as const,
+    },
+  ];
+
+  const handleConnectLinkedIn = () => {
+    // Implement LinkedIn OAuth connection
+    console.log("Connecting LinkedIn account...");
+  };
+
+  const handleDisconnectAccount = (accountId: number) => {
+    // Implement account disconnection
+    console.log("Disconnecting account:", accountId);
   };
 
   return (
@@ -172,6 +196,31 @@ const Sidebar = () => {
           <SubscriptionInfo />
         </div>
       </div>
+
+      {/* Add Accounts Section */}
+      <div className="px-4 py-3 border-t border-gray-50">
+        <Button
+          variant="outline"
+          onClick={() => setIsAccountsModalOpen(true)}
+          className="w-full justify-between text-gray-600 hover:text-gray-700"
+        >
+          <div className="flex items-center gap-2">
+            <Linkedin className="h-4 w-4 text-[#0A66C2]" />
+            <span className="text-sm font-medium">
+              Connected Accounts ({accounts.length})
+            </span>
+          </div>
+          <ChevronDown className="h-4 w-4 text-gray-400" />
+        </Button>
+      </div>
+
+      <ManageAccountsModal
+        isOpen={isAccountsModalOpen}
+        onClose={() => setIsAccountsModalOpen(false)}
+        accounts={accounts}
+        onConnect={handleConnectLinkedIn}
+        onDisconnect={handleDisconnectAccount}
+      />
 
       <ManageWorkspacesModal
         isOpen={isManageModalOpen}

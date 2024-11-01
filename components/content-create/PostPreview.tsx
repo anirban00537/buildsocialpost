@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Avatar } from "@/components/ui/avatar";
 import {
   MoreHorizontal,
@@ -20,10 +21,11 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-interface DropdownItem {
+export interface DropdownItem {
   label: string;
   icon: React.ReactNode;
-  onClick: () => void;
+  href?: string;
+  onClick?: () => void;
   className?: string;
 }
 
@@ -214,14 +216,27 @@ export const PostPreview = ({
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end" className="w-[160px]">
                       {dropdownItems.map((item, index) => (
-                        <DropdownMenuItem
-                          key={index}
-                          onClick={item.onClick}
-                          className={`flex items-center gap-2 cursor-pointer ${item.className || ''}`}
-                        >
-                          {item.icon}
-                          <span>{item.label}</span>
-                        </DropdownMenuItem>
+                        item.href ? (
+                          // Use Link for navigation items
+                          <Link key={index} href={item.href} passHref>
+                            <DropdownMenuItem
+                              className={`flex items-center gap-2 cursor-pointer ${item.className || ''}`}
+                            >
+                              {item.icon}
+                              <span>{item.label}</span>
+                            </DropdownMenuItem>
+                          </Link>
+                        ) : (
+                          // Use button for action items
+                          <DropdownMenuItem
+                            key={index}
+                            onClick={item.onClick}
+                            className={`flex items-center gap-2 cursor-pointer ${item.className || ''}`}
+                          >
+                            {item.icon}
+                            <span>{item.label}</span>
+                          </DropdownMenuItem>
+                        )
                       ))}
                     </DropdownMenuContent>
                   </DropdownMenu>

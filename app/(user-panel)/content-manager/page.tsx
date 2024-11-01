@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Calendar, FileText, CheckCircle2, XCircle, Pencil, Trash2 } from "lucide-react";
-import { PostPreview } from "@/components/content-create/PostPreview";
+import { PostPreview, DropdownItem } from "@/components/content-create/PostPreview";
 import { Button } from "@/components/ui/button";
 import { PostType, PostSectionConfig, PostTabId } from "@/types/post";
 import { useContentManagement } from "@/hooks/useContent";
@@ -70,15 +70,15 @@ const ContentManager = () => {
     }
   };
 
-  const getDropdownItems = (post: any) => {
-    const items = [];
+  const getDropdownItems = (post: any): DropdownItem[] => {
+    const items: DropdownItem[] = [];
     
     // Add edit option only for draft posts
     if (activeTab === 'draft') {
       items.push({
         label: 'Edit',
         icon: <Pencil className="h-4 w-4" />,
-        onClick: () => handleEdit(post.id)
+        href: `/compose?draft_id=${post.id}`
       });
     }
     
