@@ -1,26 +1,62 @@
 import { useMutation, useQuery } from "react-query";
-import { createDraft, getPosts } from "@/services/content-posting";
+import {
+  createDraft,
+  getPosts,
+  getDraftPostDetails,
+} from "@/services/content-posting";
 import { useSelector } from "react-redux";
 import { RootState } from "@/state/store";
-import { Post, PostGroup, PostType } from "@/types/post";
+import {
+  Post,
+  PostGroup,
+  PostType,
+  PostTabId,
+  CreateDraftParams,
+  PaginationState,
+  PostsResponse,
+} from "@/types/post";
 import { toast } from "react-hot-toast";
 import { useState, useCallback, useEffect } from "react";
 import { POST_STATUS } from "@/lib/core-constants";
-import { PostTabId } from "@/types/post";
+import { useRouter, useSearchParams } from "next/navigation";
+import { processApiResponse } from "@/lib/functions";
 
 export const useContentPosting = () => {
-  const { currentWorkspace } = useSelector((state: RootState) => state.user);
-  const { mutateAsync: createDraftMutation, isLoading: isCreatingDraft } =
-    useMutation({
-      mutationFn: createDraft,
-    });
+  const searchParams = useSearchParams();
+  const draftId = searchParams.get("draft_id");
+  const router = useRouter();
 
+  const { currentWorkspace } = useSelector((state: RootState) => state.user);
   const [content, setContent] = useState("");
   const [isGenerating, setIsGenerating] = useState(false);
   const [isScheduleModalOpen, setIsScheduleModalOpen] = useState(false);
   const [scheduledDate, setScheduledDate] = useState<Date | null>(null);
+  const [postDetails, setPostDetails] = useState<Post | null>(null);
 
-  const handleCreateDraft = useCallback(async () => {
+  const { isLoading: isLoadingDraft } = useQuery(
+    ["draftDetails", draftId],
+    () => getDraftPostDetails(Number(draftId)),
+    {
+      enabled: !!draftId,
+      onSuccess: (response) => {
+        if (response.success) {
+          setContent(response.data.post.content);
+          setPostDetails(response.data.post);
+        }
+      },
+      onError: (error) => {
+        toast.error("Failed to fetch draft details");
+        console.error("Error fetching draft:", error);
+      },
+    }
+  );
+
+  const { mutateAsync: createUpdateDraftMutation, isLoading: isCreatingDraft } =
+    useMutation({
+      mutationFn: createDraft,
+    });
+
+  const handleCreateUpdateDraft = useCallback(async () => {
     if (!currentWorkspace?.id) {
       toast.error("Please select a workspace first");
       return;
@@ -33,26 +69,48 @@ export const useContentPosting = () => {
 
     try {
       console.log("Creating draft");
-      await createDraftMutation({
-        content: content,
-        postType: "text",
-        workspaceId: currentWorkspace.id,
-        linkedInProfileId: 1,
-        imageUrls: [],
-        videoUrl: "",
-        documentUrl: "",
-        hashtags: [],
-        mentions: [],
-      });
+      const response = await createUpdateDraftMutation(
+        draftId
+          ? {
+              id: Number(draftId),
+              content: content,
+              postType: "text",
+              workspaceId: currentWorkspace.id,
+              linkedInProfileId: 1,
+              imageUrls: [],
+              videoUrl: "",
+              documentUrl: "",
+              hashtags: [],
+              mentions: [],
+            }
+          : {
+              content: content,
+              postType: "text",
+              workspaceId: currentWorkspace.id,
+              linkedInProfileId: 1,
+              imageUrls: [],
+              videoUrl: "",
+              documentUrl: "",
+              hashtags: [],
+              mentions: [],
+            }
+      );
 
-      toast.success("Draft saved successfully");
-      // Optionally clear content
-      // setContent("");
+      processApiResponse(response);
+      if (response.success) {
+      }
+
+      // If it's a new draft, silently update the URL with the new draft_id
+      if (!draftId && response.data?.post?.id) {
+        const newUrl = new URL(window.location.href);
+        newUrl.searchParams.set("draft_id", response.data.post.id.toString());
+        window.history.replaceState({}, "", newUrl.toString());
+      }
     } catch (error) {
       toast.error("Failed to save draft");
       console.error("Draft save error:", error);
     }
-  }, [content, currentWorkspace?.id, createDraftMutation]);
+  }, [content, currentWorkspace?.id, createUpdateDraftMutation, draftId]);
 
   const handleSchedule = useCallback((date: Date) => {
     setScheduledDate(date);
@@ -65,13 +123,60 @@ export const useContentPosting = () => {
     const handleKeyboard = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key === "s") {
         e.preventDefault();
-        handleCreateDraft();
+        handleCreateUpdateDraft();
       }
     };
 
     window.addEventListener("keydown", handleKeyboard);
     return () => window.removeEventListener("keydown", handleKeyboard);
-  }, [handleCreateDraft]);
+  }, [handleCreateUpdateDraft]);
+
+  const handleCreateDraftFromGenerated = useCallback(
+    async ({
+      content,
+      postType = "text",
+      workspaceId = currentWorkspace?.id,
+      linkedInProfileId = 1,
+      imageUrls = [],
+      videoUrl = "",
+      documentUrl = "",
+      hashtags = [],
+      mentions = [],
+    }: CreateDraftParams) => {
+      if (!workspaceId) {
+        toast.error("Please select a workspace first");
+        return null;
+      }
+
+      if (!content.trim()) {
+        toast.error("Please add some content first");
+        return null;
+      }
+
+      try {
+        const response = await createUpdateDraftMutation({
+          content,
+          postType: "text",
+          workspaceId,
+          linkedInProfileId,
+          imageUrls,
+          videoUrl,
+          documentUrl,
+          hashtags,
+          mentions,
+        });
+
+        toast.success("Draft saved successfully");
+
+        return response.data?.post?.id;
+      } catch (error) {
+        toast.error("Failed to save draft");
+        console.error("Draft save error:", error);
+        return null;
+      }
+    },
+    [currentWorkspace?.id, createUpdateDraftMutation]
+  );
 
   return {
     // State
@@ -83,28 +188,16 @@ export const useContentPosting = () => {
     setIsScheduleModalOpen,
     scheduledDate,
     isCreatingDraft,
+    isLoadingDraft,
+    isEditing: !!draftId,
 
     // Actions
-    handleCreateDraft,
+    handleCreateUpdateDraft,
     handleSchedule,
+    postDetails,
+    handleCreateDraftFromGenerated,
   };
 };
-
-interface PaginationState {
-  currentPage: number;
-  pageSize: number;
-  totalCount: number;
-  totalPages: number;
-}
-
-interface PostsResponse {
-  success: boolean;
-  message: string;
-  data: {
-    posts: Post[];
-    pagination: PaginationState;
-  };
-}
 
 export const useContentManagement = () => {
   const { currentWorkspace } = useSelector((state: RootState) => state.user);
@@ -174,10 +267,10 @@ export const useContentManagement = () => {
       }
       acc[date].push({
         ...post,
-        time: post.scheduledTime || post.createdAt,
+        time: post.time,
         content: post.content,
         platform: "linkedin",
-        status: post.statusLabel,
+        status: post.status,
       });
       return acc;
     }, {});
@@ -202,7 +295,7 @@ export const useContentManagement = () => {
   }, []);
 
   const handlePageChange = useCallback((newPage: number) => {
-    setPagination(prev => ({
+    setPagination((prev) => ({
       ...prev,
       currentPage: newPage,
     }));
@@ -218,4 +311,3 @@ export const useContentManagement = () => {
     handlePageChange,
   };
 };
-

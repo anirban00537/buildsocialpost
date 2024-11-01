@@ -11,11 +11,14 @@ const Compose = () => {
     isGenerating,
     setIsGenerating,
     isCreatingDraft,
-    handleCreateDraft,
+    isLoadingDraft,
+    handleCreateUpdateDraft,
     isScheduleModalOpen,
     setIsScheduleModalOpen,
     scheduledDate,
     handleSchedule,
+    postDetails,
+    isEditing,
   } = useContentPosting();
 
   return (
@@ -25,10 +28,12 @@ const Compose = () => {
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-2xl font-semibold text-gray-900 tracking-tight">
-              Create Content
+              {isEditing ? "Edit Content" : "Create Content"}
             </h1>
             <p className="text-sm text-gray-600 mt-1 leading-relaxed max-w-2xl">
-              Write and generate engaging content for your social media platforms.
+              {isEditing
+                ? "Edit your draft content and prepare it for publishing."
+                : "Write and generate engaging content for your social media platforms."}
             </p>
           </div>
         </div>
@@ -36,22 +41,37 @@ const Compose = () => {
 
       {/* Main Content Area */}
       <div className="grid grid-cols-2 gap-6 mt-8">
-        <ComposeSection
-          content={content}
-          setContent={setContent}
-          isGenerating={isGenerating}
-          setIsGenerating={setIsGenerating}
-          isCreatingDraft={isCreatingDraft}
-          onSaveDraft={handleCreateDraft}
-          isScheduleModalOpen={isScheduleModalOpen}
-          setIsScheduleModalOpen={setIsScheduleModalOpen}
-          scheduledDate={scheduledDate}
-          onSchedule={handleSchedule}
-        />
-        <PostPreviewFullFeature
-          isGenerating={isGenerating}
-          generatedPost={content}
-        />
+        {isLoadingDraft ? (
+          <div className="col-span-2 flex justify-center items-center h-64">
+            <div className="flex flex-col items-center gap-4">
+              <span className="loading loading-spinner loading-lg" />
+              <p className="text-gray-600">Loading draft content...</p>
+            </div>
+          </div>
+        ) : (
+          <>
+            <ComposeSection
+              content={content}
+              setContent={setContent}
+              isGenerating={isGenerating}
+              setIsGenerating={setIsGenerating}
+              isCreatingDraft={isCreatingDraft}
+              onSaveDraft={handleCreateUpdateDraft}
+              isScheduleModalOpen={isScheduleModalOpen}
+              setIsScheduleModalOpen={setIsScheduleModalOpen}
+              scheduledDate={scheduledDate}
+              onSchedule={handleSchedule}
+              isEditing={isEditing}
+              postDetails={postDetails}
+            />
+            <PostPreviewFullFeature
+              isGenerating={isGenerating}
+              generatedPost={content}
+              showActions={false}
+              title="Content Preview"
+            />
+          </>
+        )}
       </div>
     </div>
   );

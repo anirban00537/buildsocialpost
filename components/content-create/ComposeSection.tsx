@@ -1,13 +1,8 @@
 "use client";
-import React, { useState } from "react";
-import { useEditor, EditorContent } from "@tiptap/react";
-import StarterKit from "@tiptap/starter-kit";
-import Placeholder from "@tiptap/extension-placeholder";
-import CharacterCount from "@tiptap/extension-character-count";
+import React, { useState, useEffect, useRef } from "react";
 import { Card } from "../ui/card";
 import { Button } from "../ui/button";
 import {
-  Wand2,
   Send,
   Clock,
   Save,
@@ -16,14 +11,13 @@ import {
   FileText,
   ArrowRight,
 } from "lucide-react";
-import { EditorToolbar } from "./EditorToolbar";
 import { ScheduleModal } from "./ScheduleModal";
-import { format } from "date-fns";
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { Post } from "@/types/post";
 
 interface ComposeSectionProps {
   content: string;
@@ -31,11 +25,13 @@ interface ComposeSectionProps {
   isGenerating: boolean;
   setIsGenerating: (isGenerating: boolean) => void;
   isCreatingDraft: boolean;
-  onSaveDraft: () => Promise<void>;
+  onSaveDraft: () => void;
   isScheduleModalOpen: boolean;
   setIsScheduleModalOpen: (isOpen: boolean) => void;
   scheduledDate: Date | null;
   onSchedule: (date: Date) => void;
+  isEditing?: boolean;
+  postDetails?: Post | null;
 }
 
 const CHAR_LIMIT = 3000;
@@ -51,30 +47,34 @@ export const ComposeSection = ({
   setIsScheduleModalOpen,
   scheduledDate,
   onSchedule,
+  isEditing,
+  postDetails,
 }: ComposeSectionProps) => {
-  const editor = useEditor({
-    extensions: [
-      StarterKit,
-      Placeholder.configure({
-        placeholder: "Write something amazing...",
-      }),
-      CharacterCount.configure({
-        limit: CHAR_LIMIT,
-      }),
-    ],
-    content: content,
-    onUpdate: ({ editor }) => {
-      setContent(editor.getText());
-    },
-    editorProps: {
-      attributes: {
-        class:
-          "prose prose-sm max-w-none focus:outline-none h-full min-h-[calc(100vh-400px)] px-6 py-4",
-      },
-    },
-  });
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const characterCount = content.length;
 
-  const characterCount = editor?.storage.characterCount.characters() ?? 0;
+  // Auto-resize textarea
+  useEffect(() => {
+    const textarea = textareaRef.current;
+    if (textarea) {
+      textarea.style.height = 'auto';
+      textarea.style.height = `${textarea.scrollHeight}px`;
+    }
+  }, [content]);
+
+  // Handle keyboard shortcuts
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    // Save Draft: Cmd/Ctrl + S
+    if ((e.metaKey || e.ctrlKey) && e.key === 's') {
+      e.preventDefault();
+      onSaveDraft();
+    }
+    // Post Now: Cmd/Ctrl + Enter
+    if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') {
+      e.preventDefault();
+      // Add your post now logic here
+    }
+  };
 
   return (
     <Card className="flex flex-col h-[calc(100vh-200px)] bg-white border border-gray-100 ring-1 ring-gray-200 rounded-xl overflow-hidden">
@@ -119,14 +119,21 @@ export const ComposeSection = ({
         </div>
       </div>
 
-      {/* Editor Toolbar */}
-      <div className="px-4 py-2 border-b border-gray-100 bg-gray-50/80">
-        <EditorToolbar editor={editor} />
-      </div>
-
       {/* Editor Content */}
-      <div className="flex-grow overflow-y-auto bg-white/80">
-        <EditorContent editor={editor} />
+      <div className="flex-grow overflow-y-auto bg-white/80 relative">
+        <textarea
+          ref={textareaRef}
+          value={content}
+          onChange={(e) => setContent(e.target.value)}
+          onKeyDown={handleKeyDown}
+          placeholder="Write something amazing..."
+          className="w-full h-full min-h-[calc(100vh-400px)] px-6 py-4 resize-none focus:outline-none
+                     text-gray-700 placeholder-gray-400 bg-transparent"
+          style={{
+            lineHeight: '1.5',
+            fontFamily: 'inherit',
+          }}
+        />
       </div>
 
       {/* Action Buttons */}

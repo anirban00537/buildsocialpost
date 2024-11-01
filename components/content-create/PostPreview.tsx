@@ -1,8 +1,7 @@
 import { Avatar } from "@/components/ui/avatar";
-import { Star, ThumbsUp, MessageCircle, Repeat2, Copy, Check, Smartphone, Tablet, Monitor } from "lucide-react";
+import { MoreHorizontal, ThumbsUp, MessageCircle, Repeat2, Smartphone, Tablet, Monitor } from "lucide-react";
 import { motion } from "framer-motion";
-import { useState, useEffect } from "react";
-import toast from "react-hot-toast";
+import { useState, useRef, useEffect } from "react";
 
 interface PostPreviewProps {
   title: string;
@@ -10,7 +9,7 @@ interface PostPreviewProps {
   isGenerating: boolean;
 }
 
-type ViewMode = 'mobile' | 'tablet' | 'desktop';
+type ViewMode = "mobile" | "tablet" | "desktop";
 
 const MIN_CHARS = 10;
 const MAX_CHARS = 500;
@@ -21,47 +20,44 @@ export const PostPreview = ({
   isGenerating,
 }: PostPreviewProps) => {
   const [isExpanded, setIsExpanded] = useState(false);
-  const [isCopied, setIsCopied] = useState(false);
-  const [viewMode, setViewMode] = useState<ViewMode>('desktop');
+  const [viewMode, setViewMode] = useState<ViewMode>("desktop");
+  const [hasMoreContent, setHasMoreContent] = useState(false);
+  const contentRef = useRef<HTMLDivElement>(null);
+
+  // Check if content needs "show more" button
+  useEffect(() => {
+    const checkLineCount = () => {
+      const element = contentRef.current;
+      if (!element) return;
+
+      // Get line height and total height
+      const lineHeight = parseInt(window.getComputedStyle(element).lineHeight);
+      const totalHeight = element.scrollHeight;
+      const lines = Math.floor(totalHeight / lineHeight);
+
+      setHasMoreContent(lines > 3);
+    };
+
+    checkLineCount();
+    // Add resize listener for responsive behavior
+    window.addEventListener("resize", checkLineCount);
+    return () => window.removeEventListener("resize", checkLineCount);
+  }, [content]);
 
   const toggleExpand = () => {
     setIsExpanded(!isExpanded);
   };
 
-  const handleCopy = async () => {
-    try {
-      const textToCopy = title ? `${title}\n\n${content}` : content;
-      await navigator.clipboard.writeText(textToCopy);
-      setIsCopied(true);
-      toast.success("Content copied to clipboard!");
-      setTimeout(() => setIsCopied(false), 2000);
-    } catch (err) {
-      toast.error("Failed to copy content");
-      console.error("Copy failed:", err);
-    }
-  };
-
   const getViewportClass = () => {
     switch (viewMode) {
-      case 'mobile':
-        return 'w-full max-w-[380px]';
-      case 'tablet':
-        return 'w-full max-w-[600px]';
+      case "mobile":
+        return "w-full max-w-[380px]";
+      case "tablet":
+        return "w-full max-w-[600px]";
       default:
-        return 'w-full max-w-[680px]';
+        return "w-full max-w-[680px]";
     }
   };
-
-  useEffect(() => {
-    const handleKeyPress = (e: KeyboardEvent) => {
-      if ((e.metaKey || e.ctrlKey) && e.key === 'Enter' && content.length >= MIN_CHARS) {
-        handleCopy();
-      }
-    };
-
-    window.addEventListener('keydown', handleKeyPress);
-    return () => window.removeEventListener('keydown', handleKeyPress);
-  }, [content]);
 
   const charCount = content.length;
   const isValidLength = charCount >= MIN_CHARS;
@@ -83,22 +79,22 @@ export const PostPreview = ({
             <Smartphone className="h-4 w-4" />
           </button>
           <button
-            onClick={() => setViewMode('tablet')}
+            onClick={() => setViewMode("tablet")}
             className={`p-1.5 rounded transition-all ${
-              viewMode === 'tablet'
-                ? 'bg-white shadow-sm text-blue-600'
-                : 'text-gray-500 hover:text-gray-700'
+              viewMode === "tablet"
+                ? "bg-white shadow-sm text-blue-600"
+                : "text-gray-500 hover:text-gray-700"
             }`}
             title="Tablet view"
           >
             <Tablet className="h-4 w-4" />
           </button>
           <button
-            onClick={() => setViewMode('desktop')}
+            onClick={() => setViewMode("desktop")}
             className={`p-1.5 rounded transition-all ${
-              viewMode === 'desktop'
-                ? 'bg-white shadow-sm text-blue-600'
-                : 'text-gray-500 hover:text-gray-700'
+              viewMode === "desktop"
+                ? "bg-white shadow-sm text-blue-600"
+                : "text-gray-500 hover:text-gray-700"
             }`}
             title="Desktop view"
           >
@@ -107,125 +103,118 @@ export const PostPreview = ({
         </div>
       </div>
 
-      {/* Post Preview Container */}
+      {/* Post Container */}
       <div className="flex justify-center w-full">
-        <div className="w-full transition-all duration-300">
-          <div 
-            className={`${getViewportClass()} mx-auto transition-all duration-300`}
+        <div className={`${getViewportClass()} mx-auto`}>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="rounded-lg border border-gray-200 bg-white p-4 space-y-3"
           >
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="rounded-lg border border-gray-200 bg-white p-3 space-y-2.5 relative group w-full"
-            >
-              {/* Add copy button */}
-              {!isGenerating && content && (
-                <button
-                  onClick={handleCopy}
-                  className="absolute top-3 right-3 p-2 rounded-full bg-gray-50 hover:bg-gray-100 transition-colors opacity-0 group-hover:opacity-100"
-                  title="Copy content"
-                >
-                  {isCopied ? (
-                    <Check className="h-4 w-4 text-green-500" />
-                  ) : (
-                    <Copy className="h-4 w-4 text-gray-400" />
-                  )}
-                </button>
-              )}
-
-              {/* Header */}
-              <div className="flex items-start justify-between">
-                <div className="flex gap-2">
-                  <Avatar className="h-10 w-10 rounded-full border border-gray-200" />
-                  <div className="flex flex-col">
-                    <span className="text-sm font-semibold text-gray-900">
+            {/* Header */}
+            <div className="flex items-start justify-between">
+              <div className="flex gap-2">
+                <Avatar className="h-12 w-12 rounded-full" />
+                <div className="flex flex-col">
+                  <div className="flex items-center gap-1">
+                    <span className="text-sm font-semibold text-gray-900 hover:text-blue-600 hover:underline cursor-pointer">
                       Anirban Roy
                     </span>
-                    <span className="text-xs text-gray-500">
-                      Helping companies and others build SaaS |
-                    </span>
-                    <div className="flex items-center gap-1 text-xs text-gray-500 mt-0.5">
-                      <span>now</span>
-                      <span>•</span>
-                      <span>🌐</span>
-                    </div>
+                    <span className="text-sm text-gray-500">• You</span>
                   </div>
-                </div>
-                <button className="p-1.5 hover:bg-gray-50 rounded-full transition-colors">
-                  <Star className="h-4 w-4 text-gray-400" />
-                </button>
-              </div>
-
-              {/* Content */}
-              <div className="text-sm text-gray-600">
-                {isGenerating ? (
-                  <div className="space-y-2 animate-pulse">
-                    <div className="h-4 bg-gray-200 rounded w-3/4" />
-                    <div className="h-4 bg-gray-200 rounded w-1/2" />
-                    <div className="h-4 bg-gray-200 rounded w-5/6" />
-                  </div>
-                ) : (
-                  <>
-                    {title && (
-                      <div className="font-semibold mb-2 text-gray-900">{title}</div>
-                    )}
-                    <div 
-                      className={`whitespace-pre-line ${isExpanded ? "" : "line-clamp-3"}`}
-                      style={{ whiteSpace: 'pre-line' }}
-                    >
-                      {content ||
-                        ""}
-                    </div>
-                  </>
-                )}
-              </div>
-
-              {/* See more/less button */}
-              {!isGenerating && content && (
-                <button
-                  onClick={toggleExpand}
-                  className="text-sm text-gray-500 hover:text-gray-700 transition-colors"
-                >
-                  {isExpanded ? "...see less" : "...see more"}
-                </button>
-              )}
-
-              {/* Engagement Stats */}
-              <div className="pt-1.5 border-t border-gray-100">
-                <div className="flex items-center justify-between text-xs text-gray-500">
-                  <div className="flex items-center gap-1">
-                    <div className="flex -space-x-1">
-                      <div className="h-4 w-4 rounded-full bg-blue-500 ring-1 ring-white" />
-                      <div className="h-4 w-4 rounded-full bg-red-500 ring-1 ring-white" />
-                      <div className="h-4 w-4 rounded-full bg-yellow-500 ring-1 ring-white" />
-                    </div>
-                    <span>234 reactions</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <span>12 comments</span>
+                  <span className="text-xs text-gray-500 leading-tight">
+                    Helping companies and others build SaaS | Currently building BuildSocialPost...
+                  </span>
+                  <div className="flex items-center gap-1 text-xs text-gray-500 mt-0.5">
+                    <span>2d</span>
                     <span>•</span>
-                    <span>59 reposts</span>
+                    <span>🌐</span>
                   </div>
                 </div>
               </div>
+              <button className="p-1 hover:bg-gray-100 rounded-full transition-colors">
+                <MoreHorizontal className="h-5 w-5 text-gray-600" />
+              </button>
+            </div>
 
-              {/* Action Buttons */}
-              <div className="flex items-center justify-between pt-1 border-t border-gray-100">
-                <button className="flex items-center gap-2 p-2 hover:bg-gray-50 rounded-md transition-colors text-gray-600">
-                  <ThumbsUp className="h-4 w-4" />
-                  <span className="text-xs">Like</span>
-                </button>
-                <button className="flex items-center gap-2 p-2 hover:bg-gray-50 rounded-md transition-colors text-gray-600">
-                  <MessageCircle className="h-4 w-4" />
-                  <span className="text-xs">Comment</span>
-                </button>
-                <button className="flex items-center gap-2 p-2 hover:bg-gray-50 rounded-md transition-colors text-gray-600">
-                  <Repeat2 className="h-4 w-4" />
-                  <span className="text-xs">Repost</span>
-                </button>
+            {/* Content */}
+            <div className="text-sm text-gray-900">
+              {isGenerating ? (
+                <div className="space-y-2 animate-pulse">
+                  <div className="h-4 bg-gray-200 rounded w-3/4" />
+                  <div className="h-4 bg-gray-200 rounded w-1/2" />
+                  <div className="h-4 bg-gray-200 rounded w-5/6" />
+                </div>
+              ) : (
+                <div className="relative">
+                  <div
+                    ref={contentRef}
+                    className={`whitespace-pre-wrap break-words relative ${
+                      !isExpanded && hasMoreContent ? "line-clamp-3" : ""
+                    }`}
+                    style={{ 
+                      wordBreak: 'break-word',
+                      overflowWrap: 'break-word',
+                      lineHeight: '1.5'
+                    }}
+                  >
+                    {content}
+                  </div>
+                  
+                  {/* Show more/less button */}
+                  {hasMoreContent && (
+                    <button
+                      onClick={() => setIsExpanded(!isExpanded)}
+                      className="text-blue-600 hover:text-blue-700 hover:underline text-sm font-medium mt-1"
+                    >
+                      {isExpanded ? "...see less" : "...see more"}
+                    </button>
+                  )}
+                </div>
+              )}
+            </div>
+
+            {/* Engagement Stats */}
+            <div className="pt-1">
+              <div className="flex items-center justify-between text-xs text-gray-500">
+                <div className="flex items-center gap-1">
+                  <div className="flex -space-x-1">
+                    <div className="h-4 w-4 rounded-full bg-blue-500 ring-1 ring-white" />
+                    <div className="h-4 w-4 rounded-full bg-red-500 ring-1 ring-white" />
+                    <div className="h-4 w-4 rounded-full bg-yellow-500 ring-1 ring-white" />
+                  </div>
+                  <span className="hover:text-blue-600 hover:underline cursor-pointer">
+                    234 reactions
+                  </span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="hover:text-blue-600 hover:underline cursor-pointer">
+                    12 comments
+                  </span>
+                  <span>•</span>
+                  <span className="hover:text-blue-600 hover:underline cursor-pointer">
+                    59 reposts
+                  </span>
+                </div>
               </div>
-            </motion.div>
-          </div>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="flex items-center justify-between pt-1 border-t border-gray-200">
+              <button className="flex items-center gap-2 p-3 hover:bg-gray-100 rounded-lg transition-colors text-gray-600 flex-1">
+                <ThumbsUp className="h-5 w-5" />
+                <span className="text-sm">Like</span>
+              </button>
+              <button className="flex items-center gap-2 p-3 hover:bg-gray-100 rounded-lg transition-colors text-gray-600 flex-1">
+                <MessageCircle className="h-5 w-5" />
+                <span className="text-sm">Comment</span>
+              </button>
+              <button className="flex items-center gap-2 p-3 hover:bg-gray-100 rounded-lg transition-colors text-gray-600 flex-1">
+                <Repeat2 className="h-5 w-5" />
+                <span className="text-sm">Repost</span>
+              </button>
+            </div>
+          </motion.div>
         </div>
       </div>
     </div>

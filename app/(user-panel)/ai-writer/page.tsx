@@ -33,7 +33,7 @@ const ContentCreationTools: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen overflow-hidden">
+    <div className=" overflow-hidden">
       <Header />
       <BackgroundEffect />
 
@@ -92,7 +92,7 @@ const ContentCreationTools: React.FC = () => {
           </div>
 
           {/* Right Column - Preview Section */}
-          <div className="lg:sticky lg:top-6 h-[calc(100vh-15rem)] max-w-[800px] w-full mx-auto lg:mx-0">
+          <div className="lg:sticky lg:top-6 h-fit max-w-[800px] w-full mx-auto lg:mx-0">
             <AnimatePresence mode="wait">
               <motion.div
                 initial={{ opacity: 0, y: 10 }}
@@ -101,8 +101,8 @@ const ContentCreationTools: React.FC = () => {
                 transition={{ duration: 0.2 }}
                 className="h-full"
               >
-                <Card className="border-none bg-white/95 border border-gray-500 rounded-lg h-full flex flex-col">
-                  <CardHeader className="pb-0 px-6 pt-6 flex-shrink-0">
+                <Card className="border-none bg-white/95 border border-gray-500 rounded-lg">
+                  <CardHeader className="pb-0 px-6 pt-6">
                     <div className="flex items-center justify-between">
                       <div>
                         <h3 className="text-lg font-semibold text-gray-900">
@@ -117,7 +117,7 @@ const ContentCreationTools: React.FC = () => {
                       </div>
                     </div>
                   </CardHeader>
-                  <CardContent className="px-6 pt-6 flex-grow ">
+                  <CardContent className="px-6 pt-6 pb-6">
                     {!generatedPost || generatedPost.length === 0 ? (
                       <div className="text-center py-12 text-gray-500">
                         <p className="text-sm">
