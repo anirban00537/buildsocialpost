@@ -57,15 +57,7 @@ export const useContentPosting = () => {
     });
 
   const handleCreateUpdateDraft = useCallback(async () => {
-    if (!currentWorkspace?.id) {
-      toast.error("Please select a workspace first");
-      return;
-    }
-
-    if (!content.trim()) {
-      toast.error("Please add some content first");
-      return;
-    }
+    if (isCreatingDraft) return;
 
     try {
       console.log("Creating draft");
@@ -75,7 +67,7 @@ export const useContentPosting = () => {
               id: Number(draftId),
               content: content,
               postType: "text",
-              workspaceId: currentWorkspace.id,
+              workspaceId: currentWorkspace?.id || 0,
               linkedInProfileId: 1,
               imageUrls: [],
               videoUrl: "",
@@ -86,7 +78,7 @@ export const useContentPosting = () => {
           : {
               content: content,
               postType: "text",
-              workspaceId: currentWorkspace.id,
+              workspaceId: currentWorkspace?.id || 0,
               linkedInProfileId: 1,
               imageUrls: [],
               videoUrl: "",
@@ -97,8 +89,6 @@ export const useContentPosting = () => {
       );
 
       processApiResponse(response);
-      if (response.success) {
-      }
 
       // If it's a new draft, silently update the URL with the new draft_id
       if (!draftId && response.data?.post?.id) {
@@ -110,26 +100,19 @@ export const useContentPosting = () => {
       toast.error("Failed to save draft");
       console.error("Draft save error:", error);
     }
-  }, [content, currentWorkspace?.id, createUpdateDraftMutation, draftId]);
+  }, [
+    content,
+    currentWorkspace?.id,
+    createUpdateDraftMutation,
+    draftId,
+    isCreatingDraft,
+  ]);
 
   const handleSchedule = useCallback((date: Date) => {
     setScheduledDate(date);
     setIsScheduleModalOpen(false);
     console.log("Post scheduled for:", date);
   }, []);
-
-  // Keyboard shortcuts
-  useEffect(() => {
-    const handleKeyboard = (e: KeyboardEvent) => {
-      if ((e.metaKey || e.ctrlKey) && e.key === "s") {
-        e.preventDefault();
-        handleCreateUpdateDraft();
-      }
-    };
-
-    window.addEventListener("keydown", handleKeyboard);
-    return () => window.removeEventListener("keydown", handleKeyboard);
-  }, [handleCreateUpdateDraft]);
 
   const handleCreateDraftFromGenerated = useCallback(
     async ({
@@ -165,8 +148,8 @@ export const useContentPosting = () => {
           hashtags,
           mentions,
         });
+        processApiResponse(response);
 
-        toast.success("Draft saved successfully");
 
         return response.data?.post?.id;
       } catch (error) {

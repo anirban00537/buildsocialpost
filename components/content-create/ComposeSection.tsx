@@ -18,6 +18,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { Post } from "@/types/post";
+import { useToast } from "@/components/ui/use-toast";
 
 interface ComposeSectionProps {
   content: string;
@@ -52,6 +53,12 @@ export const ComposeSection = ({
 }: ComposeSectionProps) => {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const characterCount = content.length;
+  const { toast } = useToast();
+
+  // Add validation function
+  const canSaveDraft = () => {
+    return content.trim().length > 0;
+  };
 
   // Auto-resize textarea
   useEffect(() => {
@@ -62,13 +69,36 @@ export const ComposeSection = ({
     }
   }, [content]);
 
-  // Handle keyboard shortcuts
+  // Add useEffect for global keyboard shortcut
+  useEffect(() => {
+    const handleGlobalKeyDown = (e: KeyboardEvent) => {
+      // Save Draft: Cmd/Ctrl + S
+      if ((e.metaKey || e.ctrlKey) && e.key === 's') {
+        e.preventDefault(); // Prevent browser's save dialog
+        
+        // Check if we can save
+        if (!canSaveDraft()) {
+          toast({
+            title: "Validation Error",
+            description: "Please add some content first",
+            variant: "destructive",
+          });
+          return;
+        }
+
+        // Only trigger if not already saving
+        if (!isCreatingDraft) {
+          onSaveDraft();
+        }
+      }
+    };
+
+    document.addEventListener('keydown', handleGlobalKeyDown);
+    return () => document.removeEventListener('keydown', handleGlobalKeyDown);
+  }, [isCreatingDraft, onSaveDraft, content]);
+
+  // Local keyboard handler for other shortcuts
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    // Save Draft: Cmd/Ctrl + S
-    if ((e.metaKey || e.ctrlKey) && e.key === 's') {
-      e.preventDefault();
-      onSaveDraft();
-    }
     // Post Now: Cmd/Ctrl + Enter
     if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') {
       e.preventDefault();
@@ -136,25 +166,42 @@ export const ComposeSection = ({
         />
       </div>
 
-      {/* Action Buttons */}
+      {/* Updated Action Buttons */}
       <div className="flex flex-col gap-3 p-4 border-t border-gray-100 bg-white">
         <div className="flex flex-col sm:flex-row gap-2">
           <Button
-            variant="outline"
             size="sm"
-            className="text-blue-600 border-blue-200 hover:bg-blue-600 hover:text-white
-                       transition-all duration-200 h-9 rounded-lg w-full"
-            onClick={onSaveDraft}
+            className={`transition-all duration-200 h-9 rounded-lg w-full
+              ${isCreatingDraft || !canSaveDraft()
+                ? "bg-gray-100 text-gray-400"
+                : "bg-blue-600 hover:bg-blue-700 text-white"
+              }`}
+            onClick={() => {
+              if (!canSaveDraft()) {
+                toast({
+                  title: "Validation Error",
+                  description: "Please add some content first",
+                  variant: "destructive",
+                });
+                return;
+              }
+              onSaveDraft();
+            }}
+            disabled={isCreatingDraft || !canSaveDraft()}
           >
             {isCreatingDraft ? (
               <>
                 <span className="w-4 h-4 mr-2 border-2 border-current border-t-transparent rounded-full animate-spin" />
-                Saving...
+                Saving Draft...
               </>
             ) : (
               <>
                 <Save className="w-4 h-4 mr-2" />
                 Save Draft
+                <div className="ml-2 flex items-center gap-1 text-[10px] bg-white/10 px-1.5 py-0.5 rounded">
+                  <span>{navigator.platform.includes("Mac") ? "⌘" : "Ctrl"}</span>
+                  <span>S</span>
+                </div>
               </>
             )}
           </Button>
@@ -190,7 +237,7 @@ export const ComposeSection = ({
         {/* Keyboard shortcuts */}
         <div className="flex justify-between items-center text-xs text-gray-500 mt-1">
           <div className="flex items-center gap-4">
-            <span>⌘ + S to save</span>
+            <span>⌘ + S to save draft</span>
             <span>⌘ + Enter to post</span>
           </div>
           <div>

@@ -1,8 +1,8 @@
 "use client";
 import React, { useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
-import { Calendar, FileText, CheckCircle2, XCircle } from "lucide-react";
-import PostSection from "@/components/post/Post-Section";
+import { useRouter } from "next/navigation";
+import { Calendar, FileText, CheckCircle2, XCircle, Pencil, Trash2 } from "lucide-react";
+import { PostPreview } from "@/components/content-create/PostPreview";
 import { Button } from "@/components/ui/button";
 import { PostType, PostSectionConfig, PostTabId } from "@/types/post";
 import { useContentManagement } from "@/hooks/useContent";
@@ -45,6 +45,7 @@ const postConfigs: PostSectionConfig[] = [
 ];
 
 const ContentManager = () => {
+  const router = useRouter();
   const {
     activeTab,
     postsData,
@@ -53,6 +54,44 @@ const ContentManager = () => {
     pagination,
     handlePageChange,
   } = useContentManagement();
+
+  const handleCreatePost = () => {
+    router.push('/compose');
+  };
+
+  const handleEdit = (postId: string) => {
+    router.push(`/compose?draft_id=${postId}`);
+  };
+
+  const handleDelete = async (postId: string) => {
+    const confirmed = window.confirm('Are you sure you want to delete this post?');
+    if (confirmed) {
+      console.log('Deleting post:', postId);
+    }
+  };
+
+  const getDropdownItems = (post: any) => {
+    const items = [];
+    
+    // Add edit option only for draft posts
+    if (activeTab === 'draft') {
+      items.push({
+        label: 'Edit',
+        icon: <Pencil className="h-4 w-4" />,
+        onClick: () => handleEdit(post.id)
+      });
+    }
+    
+    // Add delete option for all posts
+    items.push({
+      label: 'Delete',
+      icon: <Trash2 className="h-4 w-4" />,
+      onClick: () => handleDelete(post.id),
+      className: 'text-red-600'
+    });
+
+    return items;
+  };
 
   return (
     <div className="max-w-[1600px] mx-auto px-4 sm:px-6 py-8">
@@ -69,37 +108,13 @@ const ContentManager = () => {
             </p>
           </div>
           <Button
+            onClick={handleCreatePost}
             className="bg-primary hover:bg-primary/90 text-white px-4 py-2 rounded-lg
                      flex items-center gap-2 shadow-sm hover:shadow transition-all duration-200"
           >
             <Calendar className="w-4 h-4" />
             Schedule New Post
           </Button>
-        </div>
-
-        {/* Quick Stats */}
-        <div className="grid grid-cols-3 gap-4 mt-6">
-          {[
-            { label: "Scheduled Posts", value: "12", trend: "+2 this week" },
-            { label: "Draft Posts", value: "4", trend: "Last edited 2h ago" },
-            {
-              label: "Engagement Rate",
-              value: "24%",
-              trend: "+5% vs last week",
-            },
-          ].map((stat, index) => (
-            <div
-              key={index}
-              className="bg-white rounded-xl p-4 border border-gray-200 
-                                      hover:border-primary/20 transition-colors duration-200"
-            >
-              <p className="text-sm text-gray-600">{stat.label}</p>
-              <p className="text-2xl font-semibold text-gray-900 mt-1">
-                {stat.value}
-              </p>
-              <p className="text-xs text-gray-500 mt-1">{stat.trend}</p>
-            </div>
-          ))}
         </div>
       </div>
 
@@ -132,23 +147,6 @@ const ContentManager = () => {
                   {config.icon}
                 </span>
                 {config.title}
-                {postsData[config.id] && (
-                  <span
-                    className={`
-                    ml-1 px-2 py-0.5 rounded-full text-xs
-                    ${
-                      activeTab === config.id
-                        ? "bg-primary/10 text-primary"
-                        : "bg-gray-100 text-gray-600"
-                    }
-                  `}
-                  >
-                    {postsData[config.id].reduce(
-                      (acc, group) => acc + group.posts.length,
-                      0
-                    )}
-                  </span>
-                )}
               </div>
             </button>
           ))}
@@ -156,25 +154,65 @@ const ContentManager = () => {
 
         <div className="border-b border-gray-200" />
 
-        {/* Tab Content */}
+        {/* Updated Tab Content with Grid Layout */}
         <div className="p-6">
           {isLoadingPosts ? (
             <div className="flex justify-center items-center h-40">
               <span className="loading loading-spinner loading-lg" />
             </div>
           ) : (
-            <>
-              <PostSection
-                title={postConfigs.find((config) => config.id === activeTab)?.title || ""}
-                icon={postConfigs.find((config) => config.id === activeTab)?.icon}
-                posts={postsData[activeTab] || []}
-                type={activeTab as any}
-                badgeText={postConfigs.find((config) => config.id === activeTab)?.badgeText}
-                emptyStateMessage={
-                  postConfigs.find((config) => config.id === activeTab)?.emptyStateMessage
-                }
-              />
-              
+            <div className="space-y-6">
+              {postsData[activeTab]?.map((group, groupIndex) => (
+                <div key={groupIndex}>
+                  {group.date && (
+                    <h3 className="text-sm font-medium text-gray-600 bg-gray-50/80 p-2 rounded-md mb-3">
+                      {group.date}
+                    </h3>
+                  )}
+                  {/* Grid Container */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {group.posts.map((post, postIndex) => (
+                      <div key={postIndex} className="flex">
+                        <PostPreview
+                          title=""
+                          content={post.content}
+                          isGenerating={false}
+                          hideViewModeSelector
+                          status={activeTab as 'scheduled' | 'draft' | 'failed'}
+                          dropdownItems={getDropdownItems(post)}
+                        />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ))}
+
+              {(!postsData[activeTab] || postsData[activeTab].length === 0) && (
+                <div className="flex flex-col items-center justify-center py-16 px-4">
+                  <div className="w-16 h-16 mb-4">
+                    {postConfigs.find((config) => config.id === activeTab)?.icon}
+                  </div>
+                  <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                    {activeTab === 'published' 
+                      ? "Ready to share your story?" 
+                      : postConfigs.find((config) => config.id === activeTab)?.title}
+                  </h3>
+                  <p className="text-gray-500 text-center max-w-md mb-6">
+                    {activeTab === 'published'
+                      ? "Start sharing your content with your network. Your published posts will appear here."
+                      : postConfigs.find((config) => config.id === activeTab)?.emptyStateMessage}
+                  </p>
+                  <Button 
+                    onClick={handleCreatePost}
+                    className="bg-primary hover:bg-primary/90 text-white px-6 py-2 rounded-lg
+                              flex items-center gap-2 shadow-sm hover:shadow transition-all duration-200"
+                  >
+                    <Calendar className="w-4 h-4" />
+                    Create New Post
+                  </Button>
+                </div>
+              )}
+
               {pagination.totalPages > 1 && (
                 <div className="mt-6 flex justify-center">
                   <Pagination
@@ -184,7 +222,7 @@ const ContentManager = () => {
                   />
                 </div>
               )}
-            </>
+            </div>
           )}
         </div>
       </div>

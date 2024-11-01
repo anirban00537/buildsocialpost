@@ -1,12 +1,39 @@
 import { Avatar } from "@/components/ui/avatar";
-import { MoreHorizontal, ThumbsUp, MessageCircle, Repeat2, Smartphone, Tablet, Monitor } from "lucide-react";
+import {
+  MoreHorizontal,
+  Calendar,
+  FileText,
+  CheckCircle2,
+  XCircle,
+  Tablet,
+  Smartphone,
+  Monitor,
+  Pencil,
+  Trash2,
+} from "lucide-react";
 import { motion } from "framer-motion";
 import { useState, useRef, useEffect } from "react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+
+interface DropdownItem {
+  label: string;
+  icon: React.ReactNode;
+  onClick: () => void;
+  className?: string;
+}
 
 interface PostPreviewProps {
   title: string;
   content: string;
   isGenerating: boolean;
+  hideViewModeSelector?: boolean;
+  status?: 'scheduled' | 'draft' | 'published' | 'failed';
+  dropdownItems?: DropdownItem[];
 }
 
 type ViewMode = "mobile" | "tablet" | "desktop";
@@ -18,6 +45,9 @@ export const PostPreview = ({
   title,
   content,
   isGenerating,
+  hideViewModeSelector = false,
+  status,
+  dropdownItems,
 }: PostPreviewProps) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [viewMode, setViewMode] = useState<ViewMode>("desktop");
@@ -62,56 +92,85 @@ export const PostPreview = ({
   const charCount = content.length;
   const isValidLength = charCount >= MIN_CHARS;
 
+  const getStatusConfig = (status: string | undefined) => {
+    switch (status) {
+      case 'scheduled':
+        return {
+          icon: <Calendar className="h-3.5 w-3.5" />,
+          text: 'Scheduled',
+          className: 'text-blue-600 bg-blue-50'
+        };
+      case 'draft':
+        return {
+          icon: <FileText className="h-3.5 w-3.5" />,
+          text: 'Draft',
+          className: 'text-gray-600 bg-gray-50'
+        };
+      case 'failed':
+        return {
+          icon: <XCircle className="h-3.5 w-3.5" />,
+          text: 'Failed',
+          className: 'text-red-600 bg-red-50'
+        };
+      default:
+        return null;
+    }
+  };
+
+  const statusConfig = getStatusConfig(status);
+
   return (
     <div className="space-y-4 w-full">
-      {/* View Mode Selector */}
-      <div className="flex items-center justify-end gap-1 px-2 md:px-0">
-        <div className="bg-gray-100 p-1 rounded-lg flex gap-1">
-          <button
-            onClick={() => setViewMode('mobile')}
-            className={`p-1.5 rounded transition-all ${
-              viewMode === 'mobile'
-                ? 'bg-white shadow-sm text-blue-600'
-                : 'text-gray-500 hover:text-gray-700'
-            }`}
-            title="Mobile view"
-          >
-            <Smartphone className="h-4 w-4" />
-          </button>
-          <button
-            onClick={() => setViewMode("tablet")}
-            className={`p-1.5 rounded transition-all ${
-              viewMode === "tablet"
-                ? "bg-white shadow-sm text-blue-600"
-                : "text-gray-500 hover:text-gray-700"
-            }`}
-            title="Tablet view"
-          >
-            <Tablet className="h-4 w-4" />
-          </button>
-          <button
-            onClick={() => setViewMode("desktop")}
-            className={`p-1.5 rounded transition-all ${
-              viewMode === "desktop"
-                ? "bg-white shadow-sm text-blue-600"
-                : "text-gray-500 hover:text-gray-700"
-            }`}
-            title="Desktop view"
-          >
-            <Monitor className="h-4 w-4" />
-          </button>
+      {/* View Mode Selector - Now conditional */}
+      {!hideViewModeSelector && (
+        <div className="flex items-center justify-end gap-1 px-2 md:px-0">
+          <div className="bg-gray-100 p-1 rounded-lg flex gap-1">
+            <button
+              onClick={() => setViewMode("mobile")}
+              className={`p-1.5 rounded transition-all ${
+                viewMode === "mobile"
+                  ? "bg-white shadow-sm text-blue-600"
+                  : "text-gray-500 hover:text-gray-700"
+              }`}
+              title="Mobile view"
+            >
+              <Smartphone className="h-4 w-4" />
+            </button>
+            <button
+              onClick={() => setViewMode("tablet")}
+              className={`p-1.5 rounded transition-all ${
+                viewMode === "tablet"
+                  ? "bg-white shadow-sm text-blue-600"
+                  : "text-gray-500 hover:text-gray-700"
+              }`}
+              title="Tablet view"
+            >
+              <Tablet className="h-4 w-4" />
+            </button>
+            <button
+              onClick={() => setViewMode("desktop")}
+              className={`p-1.5 rounded transition-all ${
+                viewMode === "desktop"
+                  ? "bg-white shadow-sm text-blue-600"
+                  : "text-gray-500 hover:text-gray-700"
+              }`}
+              title="Desktop view"
+            >
+              <Monitor className="h-4 w-4" />
+            </button>
+          </div>
         </div>
-      </div>
+      )}
 
-      {/* Post Container */}
-      <div className="flex justify-center w-full">
-        <div className={`${getViewportClass()} mx-auto`}>
+      {/* Post Container - Updated for grid view */}
+      <div className="flex justify-center w-full h-full">
+        <div className="w-full">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="rounded-lg border border-gray-200 bg-white p-4 space-y-3"
+            className="rounded-lg border border-gray-200 bg-white p-4 space-y-3 h-full"
           >
-            {/* Header */}
+            {/* Header with Status and Options */}
             <div className="flex items-start justify-between">
               <div className="flex gap-2">
                 <Avatar className="h-12 w-12 rounded-full" />
@@ -123,7 +182,8 @@ export const PostPreview = ({
                     <span className="text-sm text-gray-500">• You</span>
                   </div>
                   <span className="text-xs text-gray-500 leading-tight">
-                    Helping companies and others build SaaS | Currently building BuildSocialPost...
+                    Helping companies and others build SaaS | Currently building
+                    BuildSocialPost...
                   </span>
                   <div className="flex items-center gap-1 text-xs text-gray-500 mt-0.5">
                     <span>2d</span>
@@ -132,9 +192,41 @@ export const PostPreview = ({
                   </div>
                 </div>
               </div>
-              <button className="p-1 hover:bg-gray-100 rounded-full transition-colors">
-                <MoreHorizontal className="h-5 w-5 text-gray-600" />
-              </button>
+
+              <div className="flex items-center gap-2">
+                {/* Status Badge */}
+                {status && statusConfig && (
+                  <div 
+                    className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium ${statusConfig.className}`}
+                  >
+                    {statusConfig.icon}
+                    <span>{statusConfig.text}</span>
+                  </div>
+                )}
+
+                {/* Dropdown Menu - Only show if there are items */}
+                {dropdownItems && dropdownItems.length > 0 && (
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <button className="p-1 hover:bg-gray-100 rounded-full transition-colors">
+                        <MoreHorizontal className="h-5 w-5 text-gray-600" />
+                      </button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end" className="w-[160px]">
+                      {dropdownItems.map((item, index) => (
+                        <DropdownMenuItem
+                          key={index}
+                          onClick={item.onClick}
+                          className={`flex items-center gap-2 cursor-pointer ${item.className || ''}`}
+                        >
+                          {item.icon}
+                          <span>{item.label}</span>
+                        </DropdownMenuItem>
+                      ))}
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                )}
+              </div>
             </div>
 
             {/* Content */}
@@ -172,47 +264,6 @@ export const PostPreview = ({
                   )}
                 </div>
               )}
-            </div>
-
-            {/* Engagement Stats */}
-            <div className="pt-1">
-              <div className="flex items-center justify-between text-xs text-gray-500">
-                <div className="flex items-center gap-1">
-                  <div className="flex -space-x-1">
-                    <div className="h-4 w-4 rounded-full bg-blue-500 ring-1 ring-white" />
-                    <div className="h-4 w-4 rounded-full bg-red-500 ring-1 ring-white" />
-                    <div className="h-4 w-4 rounded-full bg-yellow-500 ring-1 ring-white" />
-                  </div>
-                  <span className="hover:text-blue-600 hover:underline cursor-pointer">
-                    234 reactions
-                  </span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <span className="hover:text-blue-600 hover:underline cursor-pointer">
-                    12 comments
-                  </span>
-                  <span>•</span>
-                  <span className="hover:text-blue-600 hover:underline cursor-pointer">
-                    59 reposts
-                  </span>
-                </div>
-              </div>
-            </div>
-
-            {/* Action Buttons */}
-            <div className="flex items-center justify-between pt-1 border-t border-gray-200">
-              <button className="flex items-center gap-2 p-3 hover:bg-gray-100 rounded-lg transition-colors text-gray-600 flex-1">
-                <ThumbsUp className="h-5 w-5" />
-                <span className="text-sm">Like</span>
-              </button>
-              <button className="flex items-center gap-2 p-3 hover:bg-gray-100 rounded-lg transition-colors text-gray-600 flex-1">
-                <MessageCircle className="h-5 w-5" />
-                <span className="text-sm">Comment</span>
-              </button>
-              <button className="flex items-center gap-2 p-3 hover:bg-gray-100 rounded-lg transition-colors text-gray-600 flex-1">
-                <Repeat2 className="h-5 w-5" />
-                <span className="text-sm">Repost</span>
-              </button>
             </div>
           </motion.div>
         </div>
