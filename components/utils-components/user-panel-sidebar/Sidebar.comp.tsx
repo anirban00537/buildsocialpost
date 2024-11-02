@@ -1,11 +1,9 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
-  Home,
   FileText,
   Layers,
   Calendar,
-  FileEdit,
   LayoutTemplate,
   Zap,
   Plus,
@@ -14,7 +12,7 @@ import {
   ImageIcon,
   Linkedin,
 } from "lucide-react";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { useSelector } from "react-redux";
@@ -56,6 +54,7 @@ const tools = [
 
 const Sidebar = () => {
   const pathname = usePathname();
+  const router = useRouter();
   const { userinfo, currentWorkspace } = useSelector(
     (state: RootState) => state.user
   );
@@ -130,10 +129,18 @@ const Sidebar = () => {
 
       {/* Create Button */}
       <div className="px-4 py-2">
-        <Link href="/compose">
-          <Button className="w-full bg-blue-50 hover:bg-blue-100 text-blue-700 ring-1 ring-blue-200 hover:ring-blue-300 transition-all duration-200 rounded-lg h-10 font-medium">
-            <Plus className="h-4 w-4 mr-2" />
+        <Link href="/compose" className="w-full">
+          <Button
+            variant="gradient"
+            className="w-full py-3 rounded-lg font-medium"
+          >
+            <Plus className="h-4 w-4" />
             Create New
+            <div className="flex items-center gap-1 text-[10px] opacity-70 bg-white/10 px-1.5 py-0.5 rounded ml-auto">
+              <span>{navigator.platform.includes("Mac") ? "⌘" : "Ctrl"}</span>
+              <span>⌥</span>
+              <span>N</span>
+            </div>
           </Button>
         </Link>
       </div>

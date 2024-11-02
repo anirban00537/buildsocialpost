@@ -72,8 +72,8 @@ export const ComposeSection = ({
   // Add useEffect for global keyboard shortcut
   useEffect(() => {
     const handleGlobalKeyDown = (e: KeyboardEvent) => {
-      // Save Draft: Cmd/Ctrl + S
-      if ((e.metaKey || e.ctrlKey) && e.key === 's') {
+      // Save Draft: Cmd/Ctrl + Shift + S
+      if ((e.metaKey || e.ctrlKey) && e.shiftKey && e.key.toLowerCase() === 's') {
         e.preventDefault(); // Prevent browser's save dialog
         
         // Check if we can save
@@ -200,6 +200,7 @@ export const ComposeSection = ({
                 Save Draft
                 <div className="ml-2 flex items-center gap-1 text-[10px] bg-white/10 px-1.5 py-0.5 rounded">
                   <span>{navigator.platform.includes("Mac") ? "⌘" : "Ctrl"}</span>
+                  <span>⇧</span>
                   <span>S</span>
                 </div>
               </>
@@ -237,7 +238,7 @@ export const ComposeSection = ({
         {/* Keyboard shortcuts */}
         <div className="flex justify-between items-center text-xs text-gray-500 mt-1">
           <div className="flex items-center gap-4">
-            <span>⌘ + S to save draft</span>
+            <span>⌘ + ⇧ + S to save draft</span>
             <span>⌘ + Enter to post</span>
           </div>
           <div>
