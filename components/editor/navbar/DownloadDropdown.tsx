@@ -30,11 +30,6 @@ const DownloadDropdown: React.FC<DownloadDropdownProps> = React.memo(
     onLoginRequired,
   }) => {
     const isDownloading = pdfLoading || zipLoading;
-    const { toast } = useToast();
-
-    const handleDownload = (action: () => void) => {
-      action();
-    };
 
     return (
       <DropdownMenu>
@@ -50,14 +45,16 @@ const DownloadDropdown: React.FC<DownloadDropdownProps> = React.memo(
         </DropdownMenuTrigger>
         <DropdownMenuContent className="bg-cardBackground text-textColor/85 hover:bg-primary/50 border border-borderColor">
           <DropdownMenuItem
-            onClick={() => handleDownload(onDownloadPDF)}
+            onClick={onDownloadPDF}
             disabled={pdfLoading}
+            data-umami-event="download_pdf"
           >
             {pdfLoading ? "Downloading PDF..." : "Download PDF"}
           </DropdownMenuItem>
           <DropdownMenuItem
-            onClick={() => handleDownload(onDownloadZip)}
+            onClick={onDownloadZip}
             disabled={zipLoading}
+            data-umami-event="download_zip"
           >
             {zipLoading ? "Downloading Zip..." : "Download Zip"}
           </DropdownMenuItem>
