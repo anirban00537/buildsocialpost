@@ -33,16 +33,7 @@ const DownloadDropdown: React.FC<DownloadDropdownProps> = React.memo(
     const { toast } = useToast();
 
     const handleDownload = (action: () => void) => {
-      if (!isAuthenticated) {
-        toast({
-          title: "Login Required",
-          description: "Please log in to download your carousel.",
-          variant: "destructive",
-        });
-        onLoginRequired();
-      } else {
-        action();
-      }
+      action();
     };
 
     return (
