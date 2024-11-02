@@ -217,9 +217,6 @@ const Sidebar = () => {
       <ManageAccountsModal
         isOpen={isAccountsModalOpen}
         onClose={() => setIsAccountsModalOpen(false)}
-        accounts={accounts}
-        onConnect={handleConnectLinkedIn}
-        onDisconnect={handleDisconnectAccount}
       />
 
       <ManageWorkspacesModal
