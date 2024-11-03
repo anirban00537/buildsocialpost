@@ -15,7 +15,7 @@ import { useRouter } from "next/navigation";
 interface LinkedInProfile {
   id: number;
   name: string;
-  profileImage: string;
+  avatarUrl: string;
   type: 'linkedin';
   status: 'connected' | 'disconnected';
 }

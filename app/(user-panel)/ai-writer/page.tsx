@@ -41,7 +41,7 @@ const ContentCreationTools: React.FC = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 relative">
           {/* Left Column - Input Section */}
           <div className=" max-w-[800px] w-full mx-auto lg:mx-0">
-            <Card className="border border-gray-200 shadow-md bg-white/95 backdrop-blur-xl rounded-xl h-full">
+            <Card className="border border-gray-200 shadow-md bg-cardBackground backdrop-blur-xl rounded-xl h-full">
               <CardHeader className="pb-0 px-8 pt-6">
                 <div className="mb-4">
                   <h2 className="text-lg font-semibold text-gray-900 mb-1">
@@ -122,7 +122,7 @@ const ContentCreationTools: React.FC = () => {
                 transition={{ duration: 0.3, ease: "easeOut" }}
                 className="h-full"
               >
-                <Card className="border border-gray-200 shadow-md bg-white/95 rounded-xl h-full">
+                <Card className="border border-gray-200 shadow-md bg-cardBackground backdrop-blur-xl rounded-xl h-full">
                   <CardHeader className="pb-0 px-8 pt-6">
                     <div className="flex items-center justify-between">
                       <div>
@@ -138,9 +138,9 @@ const ContentCreationTools: React.FC = () => {
                       </div>
                     </div>
                   </CardHeader>
-                  <CardContent className="px-8 pt-6 pb-6 ">
+                  <CardContent className="h-4/6 px-8 pt-6 pb-6 ">
                     {!generatedPost || generatedPost.length === 0 ? (
-                      <div className="h-full flex flex-col items-center justify-center text-center border border-dashed border-gray-200 rounded-xl p-8">
+                      <div className="h-full flex flex-col items-center justify-center text-center border-2 border-dashed bg-white border-gray-200 rounded-xl p-8">
                         <div className="w-12 h-12 mb-3 rounded-full bg-blue-50 flex items-center justify-center">
                           <svg
                             className="w-6 h-6 text-blue-500"

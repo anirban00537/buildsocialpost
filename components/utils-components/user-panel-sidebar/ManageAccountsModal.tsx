@@ -53,7 +53,7 @@ const ManageAccountsModal = ({
                     >
                       <div className="flex items-center gap-3">
                         <Image
-                          src={account.profileImage || "/default-avatar.png"}
+                          src={account.avatarUrl || "/default-avatar.png"}
                           alt={account.name}
                           width={32}
                           height={32}
@@ -65,7 +65,9 @@ const ManageAccountsModal = ({
                           </h4>
                           <div className="flex items-center gap-1.5">
                             <Linkedin className="w-3.5 h-3.5 text-[#0A66C2]" />
-                            <span className="text-xs text-gray-500">LinkedIn</span>
+                            <span className="text-xs text-gray-500">
+                              LinkedIn
+                            </span>
                           </div>
                         </div>
                       </div>

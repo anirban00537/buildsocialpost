@@ -118,7 +118,7 @@ const ContentManager = () => {
         </div>
       </div>
 
-      <div className="bg-white rounded-xl border mt-8 border-gray-200">
+      <div className="bg-cardBackground rounded-xl border mt-8 border-gray-200">
         {/* Enhanced Tab List */}
         <div className="flex gap-2 px-6 pt-4">
           {postConfigs.map((config) => (

@@ -71,15 +71,6 @@ const Sidebar = () => {
   };
 
   // Example accounts data - replace with your actual data
-  const accounts = [
-    {
-      id: 1,
-      name: "John Doe",
-      profileImage: "https://github.com/shadcn.png", // Replace with actual image
-      type: "linkedin" as const,
-      status: "connected" as const,
-    },
-  ];
 
   const handleConnectLinkedIn = () => {
     // Implement LinkedIn OAuth connection
@@ -92,7 +83,7 @@ const Sidebar = () => {
   };
 
   return (
-    <div className="w-72 h-screen flex flex-col bg-white text-gray-500 border-r border-gray-100 shadow-sm">
+    <div className="w-72 h-screen flex flex-col bg-gradient-to-br from-blue-100 via-indigo-50/50 to-blue-100  text-gray-500 border-r border-gray-100 shadow-sm">
       {/* Logo Section */}
       <div className="px-6 py-5 border-b border-gray-50">
         <Link href="/" className="block">
@@ -111,7 +102,7 @@ const Sidebar = () => {
         <Button
           variant="ghost"
           onClick={() => setIsManageModalOpen(true)}
-          className="w-full h-10 justify-between bg-white hover:bg-gray-50 text-gray-600 hover:text-gray-700 ring-1 ring-gray-200 hover:ring-blue-200 rounded-lg transition-all duration-200"
+          className="w-full h-10 justify-between bg-cardBackground hover:bg-gray-50 text-gray-600 hover:text-gray-700 ring-1 ring-gray-200 hover:ring-blue-200 rounded-lg transition-all duration-200"
         >
           <div className="flex items-center gap-2">
             <Users className="h-4 w-4 text-gray-400" />
@@ -142,32 +133,34 @@ const Sidebar = () => {
       </div>
 
       {/* Main Navigation */}
-      <nav className="flex-grow overflow-y-auto px-3 py-4 space-y-0.5">
-        {tools.map((tool) => (
-          <Link key={tool.id} href={tool.href} passHref>
-            <Button
-              variant="ghost"
-              className={`group w-full justify-start text-sm h-11 transition-all rounded-lg duration-200
+      <nav className="flex-grow overflow-y-auto px-3 py-4  space-y-0.5">
+        <div className="space-y-0.5">
+          {tools.map((tool) => (
+            <Link key={tool.id} href={tool.href} passHref>
+              <span
+                className={`group w-full flex items-center px-3 my-2 justify-start text-sm h-8 transition-all rounded-lg duration-200
                 ${
                   pathname === tool.href || pathname.startsWith(tool.href + "/")
-                    ? "bg-blue-50 border border-blue-200 text-blue-700 font-medium hover:bg-blue-100"
-                    : "bg-white hover:bg-gray-50 text-gray-600 hover:text-gray-700"
+                    ? "bg-blue-50 border border-blue-200 text-blue-700 font-medium hover:bg-blue-100 ring-1 ring-blue-200"
+                    : "bg-transparent hover:bg-gray-50 text-gray-600 hover:text-gray-700 ring-1 ring-gray-200 hover:ring-blue-200"
                 }
                 focus:outline-none focus:ring-0
                 active:scale-[0.98]
               `}
-            >
-              <tool.icon
-                className={`w-4 h-4 mr-3 transition-transform group-hover:scale-105 ${
-                  pathname === tool.href || pathname.startsWith(tool.href + "/")
-                    ? "text-blue-600"
-                    : "text-gray-400 group-hover:text-gray-500"
-                }`}
-              />
-              <span className="flex-grow text-left">{tool.name}</span>
-            </Button>
-          </Link>
-        ))}
+              >
+                <tool.icon
+                  className={`w-4 h-4 mr-3 transition-transform group-hover:scale-105 ${
+                    pathname === tool.href ||
+                    pathname.startsWith(tool.href + "/")
+                      ? "text-blue-600"
+                      : "text-gray-400 group-hover:text-gray-500"
+                  }`}
+                />
+                <span className="flex-grow text-left">{tool.name}</span>
+              </span>
+            </Link>
+          ))}
+        </div>
       </nav>
 
       {/* Usage Stats */}
@@ -186,11 +179,26 @@ const Sidebar = () => {
           <div className="w-full bg-gray-200/50 rounded-full h-1">
             <div
               className="bg-blue-600 h-1 rounded-full transition-all duration-300"
-              style={{ 
-                width: `${wordUsage?.percentage.used || 0}%` 
+              style={{
+                width: `${wordUsage?.percentage.used || 0}%`,
               }}
             ></div>
           </div>
+        </div>
+      </div>
+      {/* Add Accounts Section */}
+      <div className="px-4 py-3 border-t cursor-pointer border-gray-50">
+        <div
+          onClick={() => setIsAccountsModalOpen(true)}
+          className="w-full flex items-center bg-cardBackground px-3 py-2 hover:bg-gray-50 text-gray-600 hover:text-gray-700 ring-1 ring-gray-200 hover:ring-blue-200 rounded-lg transition-all duration-200"
+        >
+          <div className="flex items-center gap-2">
+            <Linkedin className="h-4 w-4 text-[#0A66C2]" />
+            <span className="text-xs font-medium">
+              Manage Linkedin Accounts
+            </span>
+          </div>
+          <ChevronDown className="h-4 w-4 text-gray-400" />
         </div>
       </div>
 
@@ -201,23 +209,6 @@ const Sidebar = () => {
           <div className="h-8 w-[1px] bg-gray-200" />
           <SubscriptionInfo />
         </div>
-      </div>
-
-      {/* Add Accounts Section */}
-      <div className="px-4 py-3 border-t border-gray-50">
-        <Button
-          variant="outline"
-          onClick={() => setIsAccountsModalOpen(true)}
-          className="w-full justify-between text-gray-600 hover:text-gray-700"
-        >
-          <div className="flex items-center gap-2">
-            <Linkedin className="h-4 w-4 text-[#0A66C2]" />
-            <span className="text-sm font-medium">
-              Connected Accounts ({accounts.length})
-            </span>
-          </div>
-          <ChevronDown className="h-4 w-4 text-gray-400" />
-        </Button>
       </div>
 
       <ManageAccountsModal

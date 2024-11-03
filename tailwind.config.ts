@@ -60,7 +60,7 @@ const config: Config = {
           foreground: "#F8FAFC",
         },
         cardBackground: {
-          DEFAULT: "#F1F5F9",
+          DEFAULT: "#f8fafc",
           foreground: "#E2E8F0",
         },
         textColor: {
