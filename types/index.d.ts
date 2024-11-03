@@ -11,7 +11,19 @@ export interface BackgroundColors {
   color3: string; // Tint Color
   color4: string; // Accent Color
 }
-
+export interface WordUsage {
+  usage: {
+    used: number;
+    remaining: number;
+    total: number;
+    isActive: boolean;
+    expirationDate: string | null;
+  };
+  percentage: {
+    used: number;
+    remaining: number;
+  };
+}
 export interface Subscription {
   userId: string;
   orderId: string;
@@ -46,7 +58,7 @@ export interface TextSettings {
   fontWeight: "normal" | "bold" | number;
 }
 
-interface ApiResponse {
+export interface ApiResponse {
   success: boolean;
   message: string;
   data?: {
@@ -54,7 +66,7 @@ interface ApiResponse {
   };
 }
 
-interface ApiError {
+export interface ApiError {
   response?: {
     data?: {
       statusCode?: number;
@@ -64,6 +76,7 @@ interface ApiError {
   };
   message?: string;
 }
+
 export interface LayoutSettings {
   height: number;
   width: number;
@@ -93,11 +106,13 @@ export interface CarouselState {
 export interface FirestoreCarouselState extends CarouselState {
   userId: string;
 }
+
 export interface ResponseData {
   data: any;
   message: string;
   success: boolean;
 }
+
 export interface UserInfo {
   id: number;
   email: string;
@@ -119,7 +134,8 @@ export interface UserInfo {
   updatedAt: string;
   login_provider: string;
 }
-interface Workspace {
+
+export interface Workspace {
   createdAt: string;
   description: string | null;
   id: number;
@@ -127,7 +143,8 @@ interface Workspace {
   name: string;
   updatedAt: string;
 }
-interface UserState {
+
+export interface UserState {
   userinfo: UserInfo | null;
   loggedin: boolean;
   loading: boolean;
@@ -135,7 +152,9 @@ interface UserState {
   subscribed: boolean;
   endDate: string | null;
   currentWorkspace: Workspace | null;
+  wordUsage: WordUsage | null;
 }
+
 export interface GenerateLinkedInPostsDTO {
   prompt: string;
   language?: string;

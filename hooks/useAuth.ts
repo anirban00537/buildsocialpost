@@ -9,6 +9,7 @@ import {
   setEndDate,
   setLoading,
   setCurrentWorkspace,
+  setWordUsage,
 } from "@/state/slice/user.slice";
 import { useCallback, useEffect } from "react";
 import { CredentialResponse } from "@react-oauth/google";
@@ -51,12 +52,13 @@ export const useAuth = () => {
     staleTime: 1000 * 60 * 5,
     cacheTime: 1000 * 60 * 30,
     onSuccess: (data: ResponseData) => {
-      dispatch(setSubscribed(data.data.isSubscribed));
-      if (data.data.subscription) {
-        dispatch(setEndDate(data.data.subscription.endDate));
+      dispatch(setSubscribed(data.data.subscription.isSubscribed));
+      if (data.data.subscription.subscription) {
+        dispatch(setEndDate(data.data.subscription.subscription.endDate));
       } else {
         dispatch(setEndDate(null));
       }
+      dispatch(setWordUsage(data.data.wordUsage));
     },
     onError: (error: Error) => {
       toast.error(`Failed to fetch subscription: ${error.message}`);

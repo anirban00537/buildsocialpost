@@ -17,7 +17,6 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { useSelector } from "react-redux";
 import { RootState } from "@/state/store";
-import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import Image from "next/image";
 import SubscriptionInfo from "@/components/subscription/Status.comp";
 import UserMenu from "./User-Menu.comp";
@@ -55,14 +54,11 @@ const tools = [
 const Sidebar = () => {
   const pathname = usePathname();
   const router = useRouter();
-  const { userinfo, currentWorkspace } = useSelector(
+  const { userinfo, currentWorkspace, wordUsage } = useSelector(
     (state: RootState) => state.user
   );
   const [isManageModalOpen, setIsManageModalOpen] = useState(false);
   const [isAccountsModalOpen, setIsAccountsModalOpen] = useState(false);
-
-  const usedTokens = 150000; // Example: 150k tokens
-  const totalTokens = 1000000; // Example: 1M tokens
 
   const formatTokens = (tokens: number) => {
     if (tokens >= 1000000) {
@@ -183,13 +179,16 @@ const Sidebar = () => {
               <span className="text-gray-700 font-medium">AI Token Usage</span>
             </div>
             <span className="text-xs bg-white px-2 py-1 rounded-md text-gray-500 font-medium ring-1 ring-gray-200">
-              {formatTokens(usedTokens)} / {formatTokens(totalTokens)}
+              {formatTokens(wordUsage?.usage.used || 0)} /{" "}
+              {formatTokens(wordUsage?.usage.total || 0)}
             </span>
           </div>
           <div className="w-full bg-gray-200/50 rounded-full h-1">
             <div
               className="bg-blue-600 h-1 rounded-full transition-all duration-300"
-              style={{ width: `${(usedTokens / totalTokens) * 100}%` }}
+              style={{ 
+                width: `${wordUsage?.percentage.used || 0}%` 
+              }}
             ></div>
           </div>
         </div>

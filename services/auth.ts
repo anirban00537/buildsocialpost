@@ -10,6 +10,11 @@ export const profile = async () => {
   return response.data;
 };
 
+export const wordUsage = async () => {
+  const response = await request.get("/user/word-usage");
+  return response.data;
+};
+
 export const signOut = async (refreshToken: string) => {
   const response = await request.post("/auth/logout", { refreshToken });
   return response.data;

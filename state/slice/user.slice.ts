@@ -1,4 +1,4 @@
-import { UserInfo, UserState, Workspace } from "@/types";
+import { UserInfo, UserState, Workspace, WordUsage } from "@/types";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 const initialState: UserState = {
@@ -9,6 +9,19 @@ const initialState: UserState = {
   subscribed: false,
   endDate: null,
   currentWorkspace: null,
+  wordUsage: {
+    usage: {
+      used: 0,
+      remaining: 2000,
+      total: 2000,
+      isActive: true,
+      expirationDate: null,
+    },
+    percentage: {
+      used: 0,
+      remaining: 100,
+    },
+  },
 };
 
 const userSlice = createSlice({
@@ -40,6 +53,9 @@ const userSlice = createSlice({
     setCurrentWorkspace: (state, action: PayloadAction<any>) => {
       state.currentWorkspace = action.payload;
     },
+    setWordUsage: (state, action: PayloadAction<WordUsage>) => {
+      state.wordUsage = action.payload;
+    },
   },
 });
 
@@ -52,5 +68,6 @@ export const {
   setEndDate,
   setCarouselDownloading,
   setCurrentWorkspace,
+  setWordUsage,
 } = userSlice.actions;
 export default userSlice.reducer;
