@@ -40,12 +40,16 @@ const ContentCreationTools: React.FC = () => {
       <div className="max-w-[1600px] mx-auto px-4 sm:px-6 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 relative">
           {/* Left Column - Input Section */}
-          <div className="h-[calc(100vh-6rem)] max-w-[800px] w-full mx-auto lg:mx-0">
+          <div className=" max-w-[800px] w-full mx-auto lg:mx-0">
             <Card className="border border-gray-200 shadow-md bg-white/95 backdrop-blur-xl rounded-xl h-full">
               <CardHeader className="pb-0 px-8 pt-6">
                 <div className="mb-4">
-                  <h2 className="text-lg font-semibold text-gray-900 mb-1">Create Content</h2>
-                  <p className="text-sm text-gray-500">Generate engaging posts with AI assistance</p>
+                  <h2 className="text-lg font-semibold text-gray-900 mb-1">
+                    Create Content
+                  </h2>
+                  <p className="text-sm text-gray-500">
+                    Generate engaging posts with AI assistance
+                  </p>
                 </div>
                 <ContentSourceSelector
                   contentSource={contentSource}
@@ -74,8 +78,8 @@ const ContentCreationTools: React.FC = () => {
                   {characterCount > 0 && (
                     <span
                       className={`px-3 py-1 rounded-full ${
-                        characterCount > 1000 
-                          ? "bg-red-50 text-red-600" 
+                        characterCount > 1000
+                          ? "bg-red-50 text-red-600"
                           : "bg-gray-50"
                       }`}
                     >
@@ -109,7 +113,7 @@ const ContentCreationTools: React.FC = () => {
           </div>
 
           {/* Right Column - Preview Section */}
-          <div className="h-[calc(100vh-6rem)] max-w-[800px] w-full mx-auto lg:mx-0">
+          <div className="max-w-[800px] w-full mx-auto lg:mx-0">
             <AnimatePresence mode="wait">
               <motion.div
                 initial={{ opacity: 0, y: 10 }}
@@ -134,7 +138,7 @@ const ContentCreationTools: React.FC = () => {
                       </div>
                     </div>
                   </CardHeader>
-                  <CardContent className="px-8 pt-6 pb-6 h-[calc(100%-7rem)] overflow-auto">
+                  <CardContent className="px-8 pt-6 pb-6 ">
                     {!generatedPost || generatedPost.length === 0 ? (
                       <div className="h-full flex flex-col items-center justify-center text-center border border-dashed border-gray-200 rounded-xl p-8">
                         <div className="w-12 h-12 mb-3 rounded-full bg-blue-50 flex items-center justify-center">

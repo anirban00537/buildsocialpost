@@ -2,7 +2,7 @@ import { useMutation } from "react-query";
 import { generateLinkedInPosts } from "@/services/ai-content";
 import { GenerateLinkedInPostsDTO } from "@/types";
 import toast from "react-hot-toast";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export const useGenerateLinkedInPosts = () => {
   const [content, setContent] = useState("");
@@ -32,6 +32,20 @@ export const useGenerateLinkedInPosts = () => {
       },
     }
   );
+
+  useEffect(() => {
+    const handleKeyPress = (event: KeyboardEvent) => {
+      if ((event.ctrlKey || event.metaKey) && event.key === 'Enter') {
+        event.preventDefault();
+        if (!isGeneratingLinkedinPosts) {
+          handleGenerateLinkedIn();
+        }
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyPress);
+    return () => window.removeEventListener('keydown', handleKeyPress);
+  }, [content, isGeneratingLinkedinPosts]);
 
   const handleLinkedInTextChange = (
     e: React.ChangeEvent<HTMLTextAreaElement>
