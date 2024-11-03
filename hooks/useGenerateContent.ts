@@ -19,17 +19,6 @@ export const useGenerateContent = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      const dto = {
-        topic,
-        numSlides,
-        language,
-        mood,
-        theme,
-        contentStyle,
-        targetAudience,
-        themeActive,
-      };
-
       const result = await generateCarouselContent(
         topic,
         numSlides,

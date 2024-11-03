@@ -11,6 +11,8 @@ import {
 import { processApiResponse } from "@/lib/functions";
 import { toast } from "react-hot-toast";
 import { useRouter } from "next/navigation";
+import { useDispatch } from "react-redux";
+import { setLinkedInProfiles, setCurrentLinkedInProfile } from "@/state/slice/user.slice";
 
 interface LinkedInProfile {
   id: number;
@@ -70,17 +72,18 @@ export const useLinkedInCallback = (
 };
 
 const useLinkedIn = () => {
-  const { loggedin } = useSelector((state: RootState) => state.user);
+  const dispatch = useDispatch();
+  const { loggedin, linkedinProfiles, currentLinkedInProfile } = useSelector((state: RootState) => state.user);
   const [isConnecting, setIsConnecting] = useState(false);
 
   const { 
-    data: profiles,
     isLoading: isLoadingProfiles,
     refetch: refetchProfiles
   } = useQuery<LinkedInProfile[]>(
     "linkedinProfiles",
     async () => {
       const response = await getLinkedInProfiles();
+      dispatch(setLinkedInProfiles(response.data.profiles));
       return response.data.profiles;
     },
     {
@@ -91,6 +94,10 @@ const useLinkedIn = () => {
       }
     }
   );
+
+  const selectProfile = (profile: LinkedInProfile | null) => {
+    dispatch(setCurrentLinkedInProfile(profile));
+  };
 
   const connectLinkedIn = async () => {
     if (!loggedin) {
@@ -134,11 +141,13 @@ const useLinkedIn = () => {
   );
 
   return {
-    profiles: profiles || [],
+    profiles: linkedinProfiles,
+    currentProfile: currentLinkedInProfile,
     isLoadingProfiles,
     isConnecting,
     connectLinkedIn,
     disconnectProfile,
+    selectProfile,
     isAuthenticated: loggedin,
   };
 };

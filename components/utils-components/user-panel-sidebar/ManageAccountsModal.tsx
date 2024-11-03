@@ -20,10 +20,12 @@ const ManageAccountsModal = ({
 }) => {
   const {
     profiles,
+    currentProfile,
     isLoadingProfiles,
     isConnecting,
     connectLinkedIn,
     disconnectProfile,
+    selectProfile,
   } = useLinkedIn();
 
   return (
@@ -43,15 +45,21 @@ const ManageAccountsModal = ({
             </div>
           ) : (
             <div className="space-y-4">
-              {/* Connected Accounts List */}
               {profiles && profiles.length > 0 ? (
                 <div className="space-y-3">
                   {profiles.map((account) => (
                     <div
                       key={account.id}
-                      className="flex items-center justify-between p-3 bg-gray-50 rounded-lg border border-gray-100"
+                      className={`flex items-center justify-between p-3 rounded-lg border ${
+                        currentProfile?.id === account.id
+                          ? 'bg-blue-50 border-blue-200'
+                          : 'bg-gray-50 border-gray-100'
+                      }`}
                     >
-                      <div className="flex items-center gap-3">
+                      <div 
+                        className="flex items-center gap-3 flex-1 cursor-pointer"
+                        onClick={() => selectProfile(account)}
+                      >
                         <Image
                           src={account.avatarUrl || "/default-avatar.png"}
                           alt={account.name}
@@ -62,12 +70,13 @@ const ManageAccountsModal = ({
                         <div>
                           <h4 className="text-sm font-medium text-gray-900">
                             {account.name}
+                            {currentProfile?.id === account.id && (
+                              <span className="ml-2 text-xs text-blue-600">(Current)</span>
+                            )}
                           </h4>
                           <div className="flex items-center gap-1.5">
                             <Linkedin className="w-3.5 h-3.5 text-[#0A66C2]" />
-                            <span className="text-xs text-gray-500">
-                              LinkedIn
-                            </span>
+                            <span className="text-xs text-gray-500">LinkedIn</span>
                           </div>
                         </div>
                       </div>
@@ -88,7 +97,6 @@ const ManageAccountsModal = ({
                 </div>
               )}
 
-              {/* Add Account Button */}
               <Button
                 onClick={connectLinkedIn}
                 disabled={isConnecting}

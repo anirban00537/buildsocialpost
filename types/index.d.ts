@@ -144,6 +144,14 @@ export interface Workspace {
   updatedAt: string;
 }
 
+export interface LinkedInProfile {
+  id: number;
+  name: string;
+  avatarUrl: string;
+  type: 'linkedin';
+  status: 'connected' | 'disconnected';
+}
+
 export interface UserState {
   userinfo: UserInfo | null;
   loggedin: boolean;
@@ -153,6 +161,8 @@ export interface UserState {
   endDate: string | null;
   currentWorkspace: Workspace | null;
   wordUsage: WordUsage | null;
+  linkedinProfiles: LinkedInProfile[];
+  currentLinkedInProfile: LinkedInProfile | null;
 }
 
 export interface GenerateLinkedInPostsDTO {

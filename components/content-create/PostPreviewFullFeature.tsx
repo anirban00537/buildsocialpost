@@ -5,6 +5,8 @@ import { useState } from "react";
 import toast from "react-hot-toast";
 import { useContentPosting } from "@/hooks/useContent";
 import { useRouter } from "next/navigation";
+import { RootState } from "@/state/store";
+import { useSelector } from "react-redux";
 
 interface PostPreviewFullFeatureProps {
   isGenerating: boolean;
@@ -23,7 +25,9 @@ export const PostPreviewFullFeature = ({
   const [isCopied, setIsCopied] = useState(false);
   const post: string = generatedPost || "";
   const router = useRouter();
-
+  const { currentLinkedInProfile } = useSelector(
+    (state: RootState) => state.user
+  );
   const { handleCreateDraftFromGenerated, isCreatingDraft } =
     useContentPosting();
 
@@ -33,6 +37,7 @@ export const PostPreviewFullFeature = ({
 
       const draftId = await handleCreateDraftFromGenerated({
         content: post,
+        linkedInProfileId: currentLinkedInProfile?.id,
         postType: "text",
         imageUrls: [],
         videoUrl: "",

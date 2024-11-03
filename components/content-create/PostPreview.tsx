@@ -20,6 +20,8 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useSelector } from "react-redux";
+import { RootState } from "@/state/store";
 
 export interface DropdownItem {
   label: string;
@@ -55,6 +57,9 @@ export const PostPreview = ({
   const [viewMode, setViewMode] = useState<ViewMode>("desktop");
   const [hasMoreContent, setHasMoreContent] = useState(false);
   const contentRef = useRef<HTMLDivElement>(null);
+
+  // Add selector for LinkedIn profile
+  const { currentLinkedInProfile } = useSelector((state: RootState) => state.user);
 
   // Check if content needs "show more" button
   useEffect(() => {
@@ -175,24 +180,51 @@ export const PostPreview = ({
             {/* Header with Status and Options */}
             <div className="flex items-start justify-between">
               <div className="flex gap-2">
-                <Avatar className="h-12 w-12 rounded-full" />
-                <div className="flex flex-col">
-                  <div className="flex items-center gap-1">
-                    <span className="text-sm font-semibold text-gray-900 hover:text-blue-600 hover:underline cursor-pointer">
-                      Anirban Roy
-                    </span>
-                    <span className="text-sm text-gray-500">• You</span>
+                {currentLinkedInProfile ? (
+                  <>
+                    <Avatar className="h-12 w-12 rounded-full">
+                      <img 
+                        src={currentLinkedInProfile.avatarUrl} 
+                        alt={currentLinkedInProfile.name}
+                        className="h-full w-full object-cover rounded-full"
+                      />
+                    </Avatar>
+                    <div className="flex flex-col">
+                      <div className="flex items-center gap-1">
+                        <span className="text-sm font-semibold text-gray-900 hover:text-blue-600 hover:underline cursor-pointer">
+                          {currentLinkedInProfile.name}
+                        </span>
+                        <span className="text-sm text-gray-500">• You</span>
+                      </div>
+                      {/* <span className="text-xs text-gray-500 leading-tight">
+                        {currentLinkedInProfile. || "LinkedIn Professional"}
+                      </span> */}
+                      <div className="flex items-center gap-1 text-xs text-gray-500 mt-0.5">
+                        <span>Draft</span>
+                        <span>•</span>
+                        <span>
+                          <svg className="w-3 h-3 text-[#0A66C2] inline-block" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M20.47,2H3.53A1.45,1.45,0,0,0,2.06,3.43V20.57A1.45,1.45,0,0,0,3.53,22H20.47a1.45,1.45,0,0,0,1.47-1.43V3.43A1.45,1.45,0,0,0,20.47,2ZM8.09,18.74h-3v-9h3ZM6.59,8.48A1.56,1.56,0,1,1,8.15,6.92,1.57,1.57,0,0,1,6.59,8.48ZM18.91,18.74h-3V13.91c0-1.21-.43-2-1.52-2A1.65,1.65,0,0,0,12.85,13a2,2,0,0,0-.1.73v5h-3s0-8.18,0-9h3V11A3,3,0,0,1,15.46,9.5c2,0,3.45,1.29,3.45,4.06Z" />
+                          </svg>
+                        </span>
+                      </div>
+                    </div>
+                  </>
+                ) : (
+                  <div className="flex gap-2">
+                    <Avatar className="h-12 w-12 rounded-full" />
+                    <div className="flex flex-col">
+                      <div className="flex items-center gap-1">
+                        <span className="text-sm font-semibold text-gray-900">
+                          No LinkedIn Account Connected
+                        </span>
+                      </div>
+                      <span className="text-xs text-gray-500">
+                        Please connect your LinkedIn account to post
+                      </span>
+                    </div>
                   </div>
-                  <span className="text-xs text-gray-500 leading-tight">
-                    Helping companies and others build SaaS | Currently building
-                    BuildSocialPost...
-                  </span>
-                  <div className="flex items-center gap-1 text-xs text-gray-500 mt-0.5">
-                    <span>2d</span>
-                    <span>•</span>
-                    <span>🌐</span>
-                  </div>
-                </div>
+                )}
               </div>
 
               <div className="flex items-center gap-2">

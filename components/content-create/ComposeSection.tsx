@@ -64,7 +64,7 @@ export const ComposeSection = ({
   useEffect(() => {
     const textarea = textareaRef.current;
     if (textarea) {
-      textarea.style.height = 'auto';
+      textarea.style.height = "auto";
       textarea.style.height = `${textarea.scrollHeight}px`;
     }
   }, [content]);
@@ -73,9 +73,13 @@ export const ComposeSection = ({
   useEffect(() => {
     const handleGlobalKeyDown = (e: KeyboardEvent) => {
       // Save Draft: Cmd/Ctrl + Shift + S
-      if ((e.metaKey || e.ctrlKey) && e.shiftKey && e.key.toLowerCase() === 's') {
+      if (
+        (e.metaKey || e.ctrlKey) &&
+        e.shiftKey &&
+        e.key.toLowerCase() === "s"
+      ) {
         e.preventDefault(); // Prevent browser's save dialog
-        
+
         // Check if we can save
         if (!canSaveDraft()) {
           toast({
@@ -93,14 +97,14 @@ export const ComposeSection = ({
       }
     };
 
-    document.addEventListener('keydown', handleGlobalKeyDown);
-    return () => document.removeEventListener('keydown', handleGlobalKeyDown);
+    document.addEventListener("keydown", handleGlobalKeyDown);
+    return () => document.removeEventListener("keydown", handleGlobalKeyDown);
   }, [isCreatingDraft, onSaveDraft, content]);
 
   // Local keyboard handler for other shortcuts
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     // Post Now: Cmd/Ctrl + Enter
-    if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') {
+    if ((e.metaKey || e.ctrlKey) && e.key === "Enter") {
       e.preventDefault();
       // Add your post now logic here
     }
@@ -112,7 +116,9 @@ export const ComposeSection = ({
       <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100/50 bg-gradient-to-r from-white to-blue-50/30">
         <div className="flex items-center gap-3">
           <div className="flex items-center gap-2">
-            <span className="text-sm font-semibold text-gray-700">AI Editor</span>
+            <span className="text-sm font-semibold text-gray-700">
+              AI Editor
+            </span>
             <div className="flex items-center gap-1 text-[10px] text-blue-600 bg-blue-50/80 px-2 py-0.5 rounded-full border border-blue-100/50">
               <Sparkles className="h-3 w-3" />
               AI Enhanced
@@ -123,7 +129,9 @@ export const ComposeSection = ({
               <HelpCircle className="h-3.5 w-3.5 text-blue-400 hover:text-blue-500 transition-colors" />
             </TooltipTrigger>
             <TooltipContent>
-              <p className="text-xs">Enhanced with AI-powered writing assistance</p>
+              <p className="text-xs">
+                Enhanced with AI-powered writing assistance
+              </p>
             </TooltipContent>
           </Tooltip>
         </div>
@@ -160,13 +168,10 @@ export const ComposeSection = ({
           className="w-full h-full min-h-[calc(100vh-400px)] px-6 py-4 resize-none focus:outline-none
                      text-gray-700 placeholder-gray-400/80 bg-transparent"
           style={{
-            lineHeight: '1.6',
-            fontFamily: 'inherit',
+            lineHeight: "1.6",
+            fontFamily: "inherit",
           }}
         />
-        <div className="absolute bottom-4 right-4 text-xs text-gray-400/80">
-          AI-powered editor
-        </div>
       </div>
 
       {/* Updated Action Buttons */}
@@ -176,10 +181,7 @@ export const ComposeSection = ({
             variant="gradient"
             size="sm"
             className={`transition-all duration-200 h-9 rounded-lg w-full
-              ${isCreatingDraft || !canSaveDraft()
-                ? "opacity-50"
-                : ""
-              }`}
+              ${isCreatingDraft || !canSaveDraft() ? "opacity-50" : ""}`}
             onClick={() => {
               if (!canSaveDraft()) {
                 toast({
@@ -203,7 +205,9 @@ export const ComposeSection = ({
                 <Save className="w-4 h-4 mr-2" />
                 Save Draft
                 <div className="ml-2 flex items-center gap-1 text-[10px] bg-white/20 px-1.5 py-0.5 rounded">
-                  <span>{navigator.platform.includes("Mac") ? "⌘" : "Ctrl"}</span>
+                  <span>
+                    {navigator.platform.includes("Mac") ? "⌘" : "Ctrl"}
+                  </span>
                   <span>⇧</span>
                   <span>S</span>
                 </div>

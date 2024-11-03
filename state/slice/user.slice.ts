@@ -1,4 +1,4 @@
-import { UserInfo, UserState, Workspace, WordUsage } from "@/types";
+import { UserInfo, UserState, Workspace, WordUsage, LinkedInProfile } from "@/types";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 const initialState: UserState = {
@@ -22,6 +22,8 @@ const initialState: UserState = {
       remaining: 100,
     },
   },
+  linkedinProfiles: [],
+  currentLinkedInProfile: null,
 };
 
 const userSlice = createSlice({
@@ -37,6 +39,8 @@ const userSlice = createSlice({
       state.loggedin = false;
       state.subscribed = false;
       state.endDate = null;
+      state.linkedinProfiles = [];
+      state.currentLinkedInProfile = null;
     },
     setLoading: (state, action: PayloadAction<boolean>) => {
       state.loading = action.payload;
@@ -56,6 +60,15 @@ const userSlice = createSlice({
     setWordUsage: (state, action: PayloadAction<WordUsage>) => {
       state.wordUsage = action.payload;
     },
+    setLinkedInProfiles: (state, action: PayloadAction<LinkedInProfile[]>) => {
+      state.linkedinProfiles = action.payload;
+      if (!state.currentLinkedInProfile && action.payload.length > 0) {
+        state.currentLinkedInProfile = action.payload[0];
+      }
+    },
+    setCurrentLinkedInProfile: (state, action: PayloadAction<LinkedInProfile | null>) => {
+      state.currentLinkedInProfile = action.payload;
+    },
   },
 });
 
@@ -69,5 +82,7 @@ export const {
   setCarouselDownloading,
   setCurrentWorkspace,
   setWordUsage,
+  setLinkedInProfiles,
+  setCurrentLinkedInProfile,
 } = userSlice.actions;
 export default userSlice.reducer;

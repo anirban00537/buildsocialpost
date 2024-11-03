@@ -32,7 +32,9 @@ export const useContentPosting = () => {
   const [isScheduleModalOpen, setIsScheduleModalOpen] = useState(false);
   const [scheduledDate, setScheduledDate] = useState<Date | null>(null);
   const [postDetails, setPostDetails] = useState<Post | null>(null);
-
+  const { loggedin, linkedinProfiles, currentLinkedInProfile } = useSelector(
+    (state: RootState) => state.user
+  );
   const { isLoading: isLoadingDraft } = useQuery(
     ["draftDetails", draftId],
     () => getDraftPostDetails(Number(draftId)),
@@ -60,37 +62,38 @@ export const useContentPosting = () => {
     if (isCreatingDraft) return;
 
     try {
-      console.log("Creating draft");
-      const response = await createUpdateDraftMutation(
-        draftId
-          ? {
-              id: Number(draftId),
-              content: content,
-              postType: "text",
-              workspaceId: currentWorkspace?.id || 0,
-              linkedInProfileId: 1,
-              imageUrls: [],
-              videoUrl: "",
-              documentUrl: "",
-              hashtags: [],
-              mentions: [],
-            }
-          : {
-              content: content,
-              postType: "text",
-              workspaceId: currentWorkspace?.id || 0,
-              linkedInProfileId: 1,
-              imageUrls: [],
-              videoUrl: "",
-              documentUrl: "",
-              hashtags: [],
-              mentions: [],
-            }
-      );
+      if (!currentLinkedInProfile) {
+        toast.error("Please connect a LinkedIn account first");
+        return;
+      }
+
+      if (!currentWorkspace?.id) {
+        toast.error("Please select a workspace first");
+        return;
+      }
+
+      if (!content.trim()) {
+        toast.error("Content cannot be empty");
+        return;
+      }
+
+      const draftData = {
+        ...(draftId && { id: Number(draftId) }),
+        content: content.trim(),
+        postType: "text" as const,
+        workspaceId: currentWorkspace.id,
+        linkedInProfileId: currentLinkedInProfile.id,
+        imageUrls: [] as string[],
+        videoUrl: "",
+        documentUrl: "",
+        hashtags: [] as string[],
+        mentions: [] as string[],
+      };
+
+      const response = await createUpdateDraftMutation(draftData);
 
       processApiResponse(response);
 
-      // If it's a new draft, silently update the URL with the new draft_id
       if (!draftId && response.data?.post?.id) {
         const newUrl = new URL(window.location.href);
         newUrl.searchParams.set("draft_id", response.data.post.id.toString());
@@ -103,6 +106,7 @@ export const useContentPosting = () => {
   }, [
     content,
     currentWorkspace?.id,
+    currentLinkedInProfile?.id,
     createUpdateDraftMutation,
     draftId,
     isCreatingDraft,
@@ -119,7 +123,7 @@ export const useContentPosting = () => {
       content,
       postType = "text",
       workspaceId = currentWorkspace?.id,
-      linkedInProfileId = 1,
+      linkedInProfileId = currentLinkedInProfile?.id,
       imageUrls = [],
       videoUrl = "",
       documentUrl = "",
@@ -137,9 +141,13 @@ export const useContentPosting = () => {
       }
 
       try {
+        if (!linkedInProfileId) {
+          toast.error("Please connect a LinkedIn account first");
+          return null;
+        }
         const response = await createUpdateDraftMutation({
           content,
-          postType: "text",
+          postType,
           workspaceId,
           linkedInProfileId,
           imageUrls,
@@ -149,7 +157,6 @@ export const useContentPosting = () => {
           mentions,
         });
         processApiResponse(response);
-
 
         return response.data?.post?.id;
       } catch (error) {
