@@ -52,13 +52,28 @@ export const useAuth = () => {
     staleTime: 1000 * 60 * 5,
     cacheTime: 1000 * 60 * 30,
     onSuccess: (data: ResponseData) => {
-      dispatch(setSubscribed(data.data.subscription.isSubscribed));
-      if (data.data.subscription.subscription) {
-        dispatch(setEndDate(data.data.subscription.subscription.endDate));
-      } else {
-        dispatch(setEndDate(null));
+      try {
+        // Check if data and required properties exist
+        if (data?.data) {
+          // Handle subscription data
+          const subscriptionData = data.data.subscription || {};
+          dispatch(setSubscribed(!!subscriptionData.isSubscribed));
+          
+          if (subscriptionData.subscription?.endDate) {
+            dispatch(setEndDate(subscriptionData.subscription.endDate));
+          } else {
+            dispatch(setEndDate(null));
+          }
+
+          // Handle word usage data
+          if (data.data.wordUsage) {
+            dispatch(setWordUsage(data.data.wordUsage));
+          }
+        }
+      } catch (error) {
+        console.error('Error processing subscription data:', error);
+        toast.error('Error processing subscription data');
       }
-      dispatch(setWordUsage(data.data.wordUsage));
     },
     onError: (error: Error) => {
       toast.error(`Failed to fetch subscription: ${error.message}`);
