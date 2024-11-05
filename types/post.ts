@@ -2,15 +2,35 @@ import { POST_STATUS } from "@/lib/core-constants";
 
 // Base Post Types
 export interface Post {
-  time?: string;
-  lastEdited?: string;
-  publishedAt?: string;
-  failedAt?: string;
-  content: string;
-  platform: string;
-  status: PostType;
-  errorMessage?: string;
   id: number;
+  content: string;
+  visibility: string;
+  postType: PostContentType;
+  imageUrls: string[];
+  videoUrl: string;
+  documentUrl: string;
+  hashtags: string[];
+  scheduledTime: string | null;
+  status: number;
+  createdAt: string;
+  updatedAt: string;
+  publishedAt: string | null;
+  publishedId: string | null;
+  linkedInApiResponse: any | null;
+  mentions: string[];
+  fileUrl: string | null;
+  publishingError: string | null;
+  carouselTitle: string | null;
+  videoTitle: string | null;
+  publishingErrorCode: string | null;
+  userId: number;
+  workspaceId: number;
+  linkedInProfileId: number;
+  statusLabel: string;
+  linkedInProfile: LinkedInProfile;
+  user: PostUser;
+  postLogs: PostLog[];
+  workspace: Workspace;
 }
 
 export interface PostGroup<T extends Post = Post> {
@@ -86,4 +106,49 @@ export interface PostsResponse {
     posts: Post[];
     pagination: PaginationState;
   };
+}
+
+export interface LinkedInProfile {
+  id: number;
+  name: string;
+  email: string;
+  avatarUrl: string;
+  linkedInProfileUrl?: string | null;
+  profileId: string;
+  accessToken: string;
+  clientId: string;
+  creatorId: string;
+  tokenExpiringAt: string;
+  isDefault: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface PostUser {
+  id: number;
+  email: string;
+  first_name: string;
+  last_name: string;
+  user_name: string;
+  photo: string | null;
+}
+
+export interface PostLog {
+  id: number;
+  linkedInPostId?: number;
+  status: string;
+  message: string;
+  timestamp: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface Workspace {
+  id: number;
+  name: string;
+  description: string | null;
+  isDefault: boolean;
+  createdAt: string;
+  updatedAt: string;
+  userId: number;
 }

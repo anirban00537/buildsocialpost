@@ -1,13 +1,14 @@
 "use client";
-import React, { useState } from "react";
-import { useRouter } from "next/navigation";
+import React, { useEffect } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Calendar, FileText, CheckCircle2, XCircle, Pencil, Trash2 } from "lucide-react";
 import { PostPreview, DropdownItem } from "@/components/content-create/PostPreview";
 import { Button } from "@/components/ui/button";
-import { PostType, PostSectionConfig, PostTabId } from "@/types/post";
+import { PostType, PostSectionConfig, PostTabId, Post } from "@/types/post";
 import { useContentManagement } from "@/hooks/useContent";
 import { POST_STATUS } from "@/lib/core-constants";
 import { Pagination } from "@/components/ui/pagination";
+import { PostPreviewNotRedux } from "@/components/content-create/PostPreviewNotRedux";
 
 const postConfigs: PostSectionConfig[] = [
   {
@@ -46,6 +47,7 @@ const postConfigs: PostSectionConfig[] = [
 
 const ContentManager = () => {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const {
     activeTab,
     postsData,
@@ -54,6 +56,30 @@ const ContentManager = () => {
     pagination,
     handlePageChange,
   } = useContentManagement();
+
+  // Handle URL query params for active tab
+  useEffect(() => {
+    const tab = searchParams.get('tab') as PostTabId;
+    if (tab && postConfigs.some(config => config.id === tab)) {
+      handleTabChange(tab);
+    } else if (!searchParams.get('tab')) {
+      // Set default tab in URL if none exists
+      updateQueryParams('scheduled');
+    }
+  }, [searchParams, handleTabChange]);
+
+  // Update URL when tab changes
+  const updateQueryParams = (tab: PostTabId) => {
+    const newUrl = new URL(window.location.href);
+    newUrl.searchParams.set('tab', tab);
+    window.history.pushState({}, '', newUrl.toString());
+    handleTabChange(tab);
+  };
+
+  // Update tab click handler
+  const handleTabClick = (tabId: PostTabId) => {
+    updateQueryParams(tabId);
+  };
 
   const handleCreatePost = () => {
     router.push('/compose');
@@ -124,7 +150,7 @@ const ContentManager = () => {
           {postConfigs.map((config) => (
             <button
               key={config.id}
-              onClick={() => handleTabChange(config.id)}
+              onClick={() => handleTabClick(config.id as PostTabId)}
               className={`
                 px-4 py-2.5 -mb-px border-b-2 relative
                 ${
@@ -171,15 +197,19 @@ const ContentManager = () => {
                   )}
                   {/* Grid Container */}
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    {group.posts.map((post, postIndex) => (
+                    {group.posts.map((post: Post, postIndex) => (
                       <div key={postIndex} className="flex">
-                        <PostPreview
-                          title=""
+                        <PostPreviewNotRedux
                           content={post.content}
                           isGenerating={false}
                           hideViewModeSelector
-                          status={activeTab as 'scheduled' | 'draft' | 'failed'}
+                          status={activeTab as 'scheduled' | 'draft' | 'published' | 'failed'}
                           dropdownItems={getDropdownItems(post)}
+                          linkedInProfile={post.linkedInProfile}
+                          user={post.user}
+                          postLogs={post.postLogs}
+                          publishedAt={post.publishedAt}
+                          scheduledTime={post.scheduledTime}
                         />
                       </div>
                     ))}
