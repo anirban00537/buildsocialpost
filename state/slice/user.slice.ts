@@ -1,4 +1,5 @@
-import { UserInfo, UserState, Workspace, WordUsage, LinkedInProfile, SubscriptionState } from "@/types";
+import { UserInfo, UserState, WordUsage, SubscriptionState } from "@/types";
+import { LinkedInProfileUI } from "@/types/post";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 const initialState: UserState = {
@@ -20,8 +21,7 @@ const initialState: UserState = {
       remaining: 100,
     },
   },
-  linkedinProfiles: [],
-  currentLinkedInProfile: null,
+  linkedinProfiles: [] as LinkedInProfileUI[],
   subscription: {
     isSubscribed: false,
     plan: null,
@@ -50,7 +50,6 @@ const userSlice = createSlice({
       state.userinfo = null;
       state.loggedin = false;
       state.linkedinProfiles = [];
-      state.currentLinkedInProfile = null;
       state.subscription = initialState.subscription;
     },
     setLoading: (state, action: PayloadAction<boolean>) => {
@@ -65,14 +64,11 @@ const userSlice = createSlice({
     setWordUsage: (state, action: PayloadAction<WordUsage>) => {
       state.wordUsage = action.payload;
     },
-    setLinkedInProfiles: (state, action: PayloadAction<LinkedInProfile[]>) => {
+    setLinkedInProfiles: (
+      state,
+      action: PayloadAction<LinkedInProfileUI[]>
+    ) => {
       state.linkedinProfiles = action.payload;
-      if (!state.currentLinkedInProfile && action.payload.length > 0) {
-        state.currentLinkedInProfile = action.payload[0];
-      }
-    },
-    setCurrentLinkedInProfile: (state, action: PayloadAction<LinkedInProfile | null>) => {
-      state.currentLinkedInProfile = action.payload;
     },
     setSubscriptionData: (state, action: PayloadAction<SubscriptionState>) => {
       state.subscription = action.payload;
@@ -89,7 +85,6 @@ export const {
   setCurrentWorkspace,
   setWordUsage,
   setLinkedInProfiles,
-  setCurrentLinkedInProfile,
   setSubscriptionData,
 } = userSlice.actions;
 export default userSlice.reducer;

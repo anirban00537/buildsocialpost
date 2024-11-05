@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { motion, AnimatePresence } from "framer-motion";
 import { Header } from "../../../components/content-create/Header";
 import { ContentInput } from "../../../components/content-create/ContentInput";
-import { PostPreviewFullFeature } from "../../../components/content-create/PostPreviewFullFeature";
+import { AIWritingPreview } from "@/components/content-create/AIWritingPreview";
 import { ContentSourceSelector } from "../../../components/content-create/ContentSourceSelector";
 import { contentSources } from "@/lib/data";
 import { useGenerateLinkedInPosts } from "@/hooks/useGenerateLinkedInPosts";
@@ -121,52 +121,12 @@ const ContentCreationTools: React.FC = () => {
                 className="h-full"
               >
                 <Card className="border border-gray-200 shadow-md bg-cardBackground backdrop-blur-xl rounded-xl h-full">
-                  <CardHeader className="pb-0 px-8 pt-6">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <h3 className="text-lg font-semibold text-gray-900">
-                          Preview
-                        </h3>
-                        <p className="text-sm text-gray-500 mt-1">
-                          See how your post will look
-                        </p>
-                      </div>
-                      <div className="px-3 py-1.5 bg-blue-50 text-blue-600 rounded-full text-xs font-medium">
-                        Single Post
-                      </div>
-                    </div>
-                  </CardHeader>
-                  <CardContent className="h-4/6 px-8 pt-6 pb-6 ">
-                    {!generatedPost || generatedPost.length === 0 ? (
-                      <div className="h-full flex flex-col items-center justify-center text-center border-2 border-dashed bg-white border-gray-200 rounded-xl p-8">
-                        <div className="w-12 h-12 mb-3 rounded-full bg-blue-50 flex items-center justify-center">
-                          <svg
-                            className="w-6 h-6 text-blue-500"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M12 6v6m0 0v6m0-6h6m-6 0H6"
-                            />
-                          </svg>
-                        </div>
-                        <p className="text-base font-medium text-gray-900">
-                          Your content preview will appear here
-                        </p>
-                        <p className="text-sm text-gray-500 mt-1">
-                          Start by creating your content above
-                        </p>
-                      </div>
-                    ) : (
-                      <PostPreviewFullFeature
-                        isGenerating={isGeneratingLinkedinPosts}
-                        generatedPost={generatedPost}
-                      />
-                    )}
+                  <CardContent className="h-4/6 px-8 pt-6 pb-6">
+                    <AIWritingPreview
+                      isGenerating={isGeneratingLinkedinPosts}
+                      generatedPost={generatedPost}
+                      title="AI Generated LinkedIn Post"
+                    />
                   </CardContent>
                 </Card>
               </motion.div>

@@ -46,9 +46,7 @@ export const useContentPosting = () => {
   const [isScheduleModalOpen, setIsScheduleModalOpen] = useState(false);
   const [scheduledDate, setScheduledDate] = useState<Date | null>(null);
   const [postDetails, setPostDetails] = useState<Post | null>(null);
-  const { loggedin, linkedinProfiles, currentLinkedInProfile } = useSelector(
-    (state: RootState) => state.user
-  );
+
   const { isLoading: isLoadingDraft } = useQuery(
     ["draftDetails", draftId],
     () => getDraftPostDetails(Number(draftId)),
@@ -76,73 +74,70 @@ export const useContentPosting = () => {
     mutationFn: postNow,
     onSuccess: (response) => {
       if (response.success) {
-        toast.success('Post published successfully!');
-        router.push('/content-manager');
+        toast.success("Post published successfully!");
+        router.push("/content-manager");
       } else {
-        toast.error(response.message || 'Failed to publish post');
+        toast.error(response.message || "Failed to publish post");
       }
     },
     onError: (error: Error) => {
       toast.error(`Error publishing post: ${error.message}`);
-      console.error('Posting error:', error);
+      console.error("Posting error:", error);
     },
   });
 
-  const handleCreateUpdateDraft = useCallback(async () => {
-    if (isCreatingDraft) return;
+  const handleCreateUpdateDraft = useCallback(
+    async (linkedinProfileId: number) => {
+      if (isCreatingDraft) return;
 
-    try {
-      if (!currentLinkedInProfile) {
-        toast.error("Please connect a LinkedIn account first");
+      try {
+        if (!currentWorkspace?.id) {
+          toast.error("Please select a workspace first");
+          return null;
+        }
+
+        if (!content.trim()) {
+          toast.error("Content cannot be empty");
+          return null;
+        }
+
+        const draftData = {
+          ...(draftId && { id: Number(draftId) }),
+          content: content.trim(),
+          postType: "text" as const,
+          workspaceId: currentWorkspace.id,
+          linkedInProfileId: linkedinProfileId,
+          imageUrls: [] as string[],
+          videoUrl: "",
+          documentUrl: "",
+          hashtags: [] as string[],
+          mentions: [] as string[],
+        };
+
+        const response = await createUpdateDraftMutation(draftData);
+        processApiResponse(response);
+
+        if (!draftId && response.data?.post?.id) {
+          const newUrl = new URL(window.location.href);
+          newUrl.searchParams.set("draft_id", response.data.post.id.toString());
+          window.history.replaceState({}, "", newUrl.toString());
+        }
+
+        return response;
+      } catch (error) {
+        toast.error("Failed to save draft");
+        console.error("Draft save error:", error);
         return null;
       }
-
-      if (!currentWorkspace?.id) {
-        toast.error("Please select a workspace first");
-        return null;
-      }
-
-      if (!content.trim()) {
-        toast.error("Content cannot be empty");
-        return null;
-      }
-
-      const draftData = {
-        ...(draftId && { id: Number(draftId) }),
-        content: content.trim(),
-        postType: "text" as const,
-        workspaceId: currentWorkspace.id,
-        linkedInProfileId: currentLinkedInProfile.id,
-        imageUrls: [] as string[],
-        videoUrl: "",
-        documentUrl: "",
-        hashtags: [] as string[],
-        mentions: [] as string[],
-      };
-
-      const response = await createUpdateDraftMutation(draftData);
-      processApiResponse(response);
-
-      if (!draftId && response.data?.post?.id) {
-        const newUrl = new URL(window.location.href);
-        newUrl.searchParams.set("draft_id", response.data.post.id.toString());
-        window.history.replaceState({}, "", newUrl.toString());
-      }
-
-      return response;
-    } catch (error) {
-      toast.error("Failed to save draft");
-      console.error("Draft save error:", error);
-      return null;
-    }
-  }, [
-    content,
-    currentWorkspace?.id,
-    currentLinkedInProfile?.id,
-    createUpdateDraftMutation,
-    draftId,
-    isCreatingDraft,
-  ]);
+    },
+    [
+      content,
+      currentWorkspace?.id,
+      createUpdateDraftMutation,
+      draftId,
+      isCreatingDraft,
+    ]
+  );
 
   const handleSchedule = useCallback((date: Date) => {
     setScheduledDate(date);
@@ -155,7 +150,7 @@ export const useContentPosting = () => {
       content,
       postType = "text",
       workspaceId = currentWorkspace?.id,
-      linkedInProfileId = currentLinkedInProfile?.id,
+      linkedInProfileId,
       imageUrls = [],
       videoUrl = "",
       documentUrl = "",
@@ -200,26 +195,31 @@ export const useContentPosting = () => {
     [currentWorkspace?.id, createUpdateDraftMutation]
   );
 
-  const handlePostNow = useCallback(async () => {
-    if (!draftId) {
-      // Save draft first if it's a new post
-      try {
-        const draftResponse = await handleCreateUpdateDraft();
-        if (draftResponse?.data?.post?.id) {
-          await postNowMutation(draftResponse.data.post.id);
+  const handlePostNow = useCallback(
+    async (linkedinProfileId: number) => {
+      if (!draftId) {
+        // Save draft first if it's a new post
+        try {
+          const draftResponse = await handleCreateUpdateDraft(
+            linkedinProfileId
+          );
+          if (draftResponse?.data?.post?.id) {
+            await postNowMutation(draftResponse.data.post.id);
+          }
+        } catch (error) {
+          console.error("Error in handlePostNow:", error);
         }
-      } catch (error) {
-        console.error('Error in handlePostNow:', error);
+      } else {
+        // Post existing draft
+        try {
+          await postNowMutation(Number(draftId));
+        } catch (error) {
+          console.error("Error in handlePostNow:", error);
+        }
       }
-    } else {
-      // Post existing draft
-      try {
-        await postNowMutation(Number(draftId));
-      } catch (error) {
-        console.error('Error in handlePostNow:', error);
-      }
-    }
-  }, [draftId, handleCreateUpdateDraft, postNowMutation]);
+    },
+    [draftId, handleCreateUpdateDraft, postNowMutation]
+  );
 
   return {
     // State
@@ -312,9 +312,8 @@ export const useContentManagement = () => {
       }
       acc[date].push({
         ...post,
-        time: post.time,
+        scheduledTime: post.scheduledTime,
         content: post.content,
-        platform: "linkedin",
         status: post.status,
       });
       return acc;
@@ -330,8 +329,8 @@ export const useContentManagement = () => {
   const getPostDate = (post: Post): string => {
     if (post.publishedAt)
       return new Date(post.publishedAt).toLocaleDateString();
-    if (post.failedAt) return new Date(post.failedAt).toLocaleDateString();
-    if (post.time) return new Date(post.time).toLocaleDateString();
+    if (post.scheduledTime)
+      return new Date(post.scheduledTime).toLocaleDateString();
     return "No Date";
   };
 

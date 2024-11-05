@@ -108,12 +108,18 @@ export interface PostsResponse {
   };
 }
 
-export interface LinkedInProfile {
+// Define a simplified LinkedInProfile for UI purposes
+export interface LinkedInProfileUI {
   id: number;
   name: string;
-  email: string;
   avatarUrl: string;
-  linkedInProfileUrl?: string | null;
+  type: 'linkedin';
+  status: 'connected' | 'disconnected';
+}
+
+// Full LinkedIn Profile for API/backend interactions
+export interface LinkedInProfile extends LinkedInProfileUI {
+  email: string;
   profileId: string;
   accessToken: string;
   clientId: string;

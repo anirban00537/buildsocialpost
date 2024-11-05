@@ -148,8 +148,8 @@ export interface LinkedInProfile {
   id: number;
   name: string;
   avatarUrl: string;
-  type: 'linkedin';
-  status: 'connected' | 'disconnected';
+  type: "linkedin";
+  status: "connected" | "disconnected";
 }
 
 export interface SubscriptionLimits {
@@ -162,14 +162,14 @@ export interface SubscriptionLimits {
 }
 
 export interface SubscriptionDetails {
-  status: 'active' | 'inactive' | 'cancelled';
+  status: "active" | "inactive" | "cancelled";
   productName: string;
   variantName: string;
 }
 
 export interface SubscriptionState {
   isSubscribed: boolean;
-  plan: 'starter' | 'pro' | null;
+  plan: "starter" | "pro" | null;
   expiresAt: string | null;
   subscription: SubscriptionDetails | null;
   limits: SubscriptionLimits;
@@ -183,7 +183,6 @@ export interface UserState {
   currentWorkspace: Workspace | null;
   wordUsage: WordUsage;
   linkedinProfiles: LinkedInProfile[];
-  currentLinkedInProfile: LinkedInProfile | null;
   subscription: SubscriptionState;
 }
 

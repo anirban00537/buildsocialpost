@@ -17,8 +17,19 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { Post } from "@/types/post";
+import { LinkedInProfile, Post } from "@/types/post";
 import { useToast } from "@/components/ui/use-toast";
+import { useSelector } from "react-redux";
+import { RootState } from "@/state/store";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+  DropdownMenuItem,
+} from "@/components/ui/dropdown-menu";
+import { ChevronDown, Linkedin } from "lucide-react";
+import Image from "next/image";
+import { LinkedInProfileUI } from "@/types/post";
 
 interface ComposeSectionProps {
   content: string;
@@ -26,15 +37,17 @@ interface ComposeSectionProps {
   isGenerating: boolean;
   setIsGenerating: (isGenerating: boolean) => void;
   isCreatingDraft: boolean;
-  onSaveDraft: () => void;
+  onSaveDraft: (linkedinProfileId: number) => void;
   isScheduleModalOpen: boolean;
   setIsScheduleModalOpen: (isOpen: boolean) => void;
   scheduledDate: Date | null;
   onSchedule: (date: Date) => void;
   isEditing?: boolean;
   postDetails?: Post | null;
-  onPostNow: () => void;
+  onPostNow: (linkedinProfileId: number) => void;
   isPosting: boolean;
+  selectedLinkedInProfile: LinkedInProfileUI | null;
+  onProfileSelect: (profile: LinkedInProfileUI) => void;
 }
 
 const CHAR_LIMIT = 3000;
@@ -54,10 +67,18 @@ export const ComposeSection = ({
   postDetails,
   onPostNow,
   isPosting,
+  selectedLinkedInProfile,
+  onProfileSelect,
 }: ComposeSectionProps) => {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const characterCount = content.length;
   const { toast } = useToast();
+  const { linkedinProfiles } = useSelector<
+    RootState,
+    { linkedinProfiles: LinkedInProfileUI[] }
+  >((state) => ({
+    linkedinProfiles: state.user.linkedinProfiles,
+  }));
 
   // Add validation function
   const canSaveDraft = () => {
@@ -95,8 +116,8 @@ export const ComposeSection = ({
         }
 
         // Only trigger if not already saving
-        if (!isCreatingDraft) {
-          onSaveDraft();
+        if (!isCreatingDraft && selectedLinkedInProfile?.id) {
+          onSaveDraft(selectedLinkedInProfile.id);
         }
       }
     };
@@ -110,8 +131,13 @@ export const ComposeSection = ({
     // Post Now: Cmd/Ctrl + Enter
     if ((e.metaKey || e.ctrlKey) && e.key === "Enter") {
       e.preventDefault();
-      if (!isPosting && canSaveDraft() && characterCount <= CHAR_LIMIT) {
-        onPostNow();
+      if (
+        !isPosting &&
+        canSaveDraft() &&
+        characterCount <= CHAR_LIMIT &&
+        selectedLinkedInProfile?.id
+      ) {
+        onPostNow(selectedLinkedInProfile.id);
       }
     }
   };
@@ -140,26 +166,6 @@ export const ComposeSection = ({
               </p>
             </TooltipContent>
           </Tooltip>
-        </div>
-        <div className="flex items-center gap-2">
-          <div
-            className={`text-xs px-3 py-1.5 rounded-full transition-colors flex items-center gap-1.5 border
-              ${
-                characterCount > CHAR_LIMIT
-                  ? "text-red-600 bg-red-50/50 border-red-100"
-                  : characterCount > CHAR_LIMIT * 0.9
-                  ? "text-amber-600 bg-amber-50/50 border-amber-100"
-                  : "text-blue-600 bg-blue-50/50 border-blue-100"
-              }`}
-          >
-            <FileText className="h-3 w-3" />
-            {characterCount}/{CHAR_LIMIT}
-          </div>
-          {characterCount > CHAR_LIMIT && (
-            <span className="text-[10px] text-red-600 bg-red-50/50 px-2 py-1 rounded-full border border-red-100">
-              Limit exceeded
-            </span>
-          )}
         </div>
       </div>
 
@@ -197,7 +203,9 @@ export const ComposeSection = ({
                 });
                 return;
               }
-              onSaveDraft();
+              if (selectedLinkedInProfile?.id) {
+                onSaveDraft(selectedLinkedInProfile.id);
+              }
             }}
             disabled={isCreatingDraft || !canSaveDraft()}
           >
@@ -234,9 +242,19 @@ export const ComposeSection = ({
             variant="gradient"
             size="sm"
             className={`transition-all duration-200 h-9 rounded-lg w-full
-              ${(characterCount > CHAR_LIMIT || !canSaveDraft() || isPosting) ? "opacity-50" : ""}`}
-            // disabled={characterCount > CHAR_LIMIT || !canSaveDraft() || isPosting}
-            onClick={onPostNow}
+              ${
+                characterCount > CHAR_LIMIT || !canSaveDraft() || isPosting
+                  ? "opacity-50"
+                  : ""
+              }`}
+            disabled={
+              characterCount > CHAR_LIMIT || !canSaveDraft() || isPosting
+            }
+            onClick={() => {
+              if (selectedLinkedInProfile?.id) {
+                onPostNow(selectedLinkedInProfile.id);
+              }
+            }}
           >
             {isPosting ? (
               <>
@@ -248,7 +266,9 @@ export const ComposeSection = ({
                 <Send className="w-4 h-4 mr-2" />
                 Post Now
                 <div className="ml-2 flex items-center gap-1 text-[10px] bg-white/20 px-1.5 py-0.5 rounded">
-                  <span>{navigator.platform.includes("Mac") ? "⌘" : "Ctrl"}</span>
+                  <span>
+                    {navigator.platform.includes("Mac") ? "⌘" : "Ctrl"}
+                  </span>
                   <ArrowRight className="h-3 w-3" />
                 </div>
               </>

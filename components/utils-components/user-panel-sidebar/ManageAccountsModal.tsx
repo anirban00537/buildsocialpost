@@ -20,12 +20,10 @@ const ManageAccountsModal = ({
 }) => {
   const {
     profiles,
-    currentProfile,
     isLoadingProfiles,
     isConnecting,
     connectLinkedIn,
     disconnectProfile,
-    selectProfile,
   } = useLinkedIn();
 
   return (
@@ -50,16 +48,9 @@ const ManageAccountsModal = ({
                   {profiles.map((account) => (
                     <div
                       key={account.id}
-                      className={`flex items-center justify-between p-3 rounded-lg border ${
-                        currentProfile?.id === account.id
-                          ? 'bg-blue-50 border-blue-200'
-                          : 'bg-gray-50 border-gray-100'
-                      }`}
+                      className="flex items-center justify-between p-3 rounded-lg border bg-gray-50 border-gray-100"
                     >
-                      <div 
-                        className="flex items-center gap-3 flex-1 cursor-pointer"
-                        onClick={() => selectProfile(account)}
-                      >
+                      <div className="flex items-center gap-3 flex-1">
                         <Image
                           src={account.avatarUrl || "/default-avatar.png"}
                           alt={account.name}
@@ -70,9 +61,6 @@ const ManageAccountsModal = ({
                         <div>
                           <h4 className="text-sm font-medium text-gray-900">
                             {account.name}
-                            {currentProfile?.id === account.id && (
-                              <span className="ml-2 text-xs text-blue-600">(Current)</span>
-                            )}
                           </h4>
                           <div className="flex items-center gap-1.5">
                             <Linkedin className="w-3.5 h-3.5 text-[#0A66C2]" />

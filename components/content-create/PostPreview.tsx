@@ -22,6 +22,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useSelector } from "react-redux";
 import { RootState } from "@/state/store";
+import { LinkedInProfileUI } from "@/types/post";
 
 export interface DropdownItem {
   label: string;
@@ -38,12 +39,12 @@ interface PostPreviewProps {
   hideViewModeSelector?: boolean;
   status?: 'scheduled' | 'draft' | 'published' | 'failed';
   dropdownItems?: DropdownItem[];
+  selectedProfile: LinkedInProfileUI | null;
 }
 
 type ViewMode = "mobile" | "tablet" | "desktop";
 
 const MIN_CHARS = 10;
-const MAX_CHARS = 500;
 
 export const PostPreview = ({
   title,
@@ -52,14 +53,12 @@ export const PostPreview = ({
   hideViewModeSelector = false,
   status,
   dropdownItems,
+  selectedProfile,
 }: PostPreviewProps) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [viewMode, setViewMode] = useState<ViewMode>("desktop");
   const [hasMoreContent, setHasMoreContent] = useState(false);
   const contentRef = useRef<HTMLDivElement>(null);
-
-  // Add selector for LinkedIn profile
-  const { currentLinkedInProfile } = useSelector((state: RootState) => state.user);
 
   // Check if content needs "show more" button
   useEffect(() => {
@@ -180,25 +179,22 @@ export const PostPreview = ({
             {/* Header with Status and Options */}
             <div className="flex items-start justify-between">
               <div className="flex gap-2">
-                {currentLinkedInProfile ? (
+                {selectedProfile ? (
                   <>
                     <Avatar className="h-12 w-12 rounded-full">
                       <img 
-                        src={currentLinkedInProfile.avatarUrl} 
-                        alt={currentLinkedInProfile.name}
+                        src={selectedProfile.avatarUrl} 
+                        alt={selectedProfile.name}
                         className="h-full w-full object-cover rounded-full"
                       />
                     </Avatar>
                     <div className="flex flex-col">
                       <div className="flex items-center gap-1">
                         <span className="text-sm font-semibold text-gray-900 hover:text-blue-600 hover:underline cursor-pointer">
-                          {currentLinkedInProfile.name}
+                          {selectedProfile.name}
                         </span>
                         <span className="text-sm text-gray-500">• You</span>
                       </div>
-                      {/* <span className="text-xs text-gray-500 leading-tight">
-                        {currentLinkedInProfile. || "LinkedIn Professional"}
-                      </span> */}
                       <div className="flex items-center gap-1 text-xs text-gray-500 mt-0.5">
                         <span>Draft</span>
                         <span>•</span>
