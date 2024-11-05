@@ -54,11 +54,19 @@ const tools = [
 const Sidebar = () => {
   const pathname = usePathname();
   const router = useRouter();
-  const { userinfo, currentWorkspace, wordUsage } = useSelector(
+  const { userinfo, currentWorkspace, wordUsage, subscription } = useSelector(
     (state: RootState) => state.user
   );
   const [isManageModalOpen, setIsManageModalOpen] = useState(false);
   const [isAccountsModalOpen, setIsAccountsModalOpen] = useState(false);
+
+  const aiUsage = {
+    used: wordUsage?.usage?.used || 0,
+    remaining: wordUsage?.usage?.remaining || 0,
+    total: wordUsage?.usage?.total || 0,
+    percentage: wordUsage?.percentage?.used || 0,
+    isActive: wordUsage?.usage?.isActive || false
+  };
 
   const formatTokens = (tokens: number) => {
     if (tokens >= 1000000) {
@@ -164,28 +172,37 @@ const Sidebar = () => {
       </nav>
 
       {/* Usage Stats */}
-      <div className="px-4 py-3 border-t border-gray-50">
-        <div className="p-3 bg-gray-50/50 rounded-lg ring-1 ring-gray-200 space-y-3">
-          <div className="flex items-center justify-between text-sm">
-            <div className="flex items-center gap-2">
-              <Zap className="w-4 h-4 text-blue-600" />
-              <span className="text-gray-700 font-medium">AI Token Usage</span>
+      {subscription?.limits?.aiWordsPerMonth && (
+        <div className="px-4 py-3 border-t border-gray-50">
+          <div className="p-3 bg-gray-50/50 rounded-lg ring-1 ring-gray-200 space-y-3">
+            <div className="flex items-center justify-between text-sm">
+              <div className="flex items-center gap-2">
+                <Zap className="w-4 h-4 text-blue-600" />
+                <span className="text-gray-700 font-medium">AI Token Usage</span>
+              </div>
+              <span className="text-xs bg-white px-2 py-1 rounded-md text-gray-500 font-medium ring-1 ring-gray-200">
+                {formatTokens(aiUsage.used)} / {formatTokens(aiUsage.total)}
+              </span>
             </div>
-            <span className="text-xs bg-white px-2 py-1 rounded-md text-gray-500 font-medium ring-1 ring-gray-200">
-              {formatTokens(wordUsage?.usage.used || 0)} /{" "}
-              {formatTokens(wordUsage?.usage.total || 0)}
-            </span>
-          </div>
-          <div className="w-full bg-gray-200/50 rounded-full h-1">
-            <div
-              className="bg-blue-600 h-1 rounded-full transition-all duration-300"
-              style={{
-                width: `${wordUsage?.percentage.used || 0}%`,
-              }}
-            ></div>
+            <div className="space-y-1">
+              <div className="w-full bg-gray-200/50 rounded-full h-1">
+                <div
+                  className={`h-1 rounded-full transition-all duration-300 ${
+                    aiUsage.percentage > 90 ? 'bg-red-500' : 'bg-blue-600'
+                  }`}
+                  style={{
+                    width: `${aiUsage.percentage}%`,
+                  }}
+                ></div>
+              </div>
+              <div className="flex justify-between items-center text-xs text-gray-500">
+                <span>{formatTokens(aiUsage.remaining)} remaining</span>
+                <span>{aiUsage.percentage}% used</span>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
+      )}
       {/* Add Accounts Section */}
       <div className="px-4 py-3 border-t cursor-pointer border-gray-50">
         <div

@@ -3,7 +3,6 @@ import React, { useState } from "react";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { motion, AnimatePresence } from "framer-motion";
 import { Header } from "../../../components/content-create/Header";
-import { BackgroundEffect } from "../../../components/content-create/BackgroundEffect";
 import { ContentInput } from "../../../components/content-create/ContentInput";
 import { PostPreviewFullFeature } from "../../../components/content-create/PostPreviewFullFeature";
 import { ContentSourceSelector } from "../../../components/content-create/ContentSourceSelector";
@@ -35,7 +34,6 @@ const ContentCreationTools: React.FC = () => {
   return (
     <div className="min-h-screen bg-white overflow-hidden">
       <Header />
-      <BackgroundEffect />
 
       <div className="max-w-[1600px] mx-auto px-4 sm:px-6 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 relative">

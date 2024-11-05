@@ -5,11 +5,10 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   setUser,
   logout,
-  setSubscribed,
-  setEndDate,
   setLoading,
   setCurrentWorkspace,
   setWordUsage,
+  setSubscriptionData,
 } from "@/state/slice/user.slice";
 import { useCallback, useEffect } from "react";
 import { CredentialResponse } from "@react-oauth/google";
@@ -53,21 +52,20 @@ export const useAuth = () => {
     cacheTime: 1000 * 60 * 30,
     onSuccess: (data: ResponseData) => {
       try {
-        // Check if data and required properties exist
         if (data?.data) {
-          // Handle subscription data
-          const subscriptionData = data.data.subscription || {};
-          dispatch(setSubscribed(!!subscriptionData.isSubscribed));
-          
-          if (subscriptionData.subscription?.endDate) {
-            dispatch(setEndDate(subscriptionData.subscription.endDate));
-          } else {
-            dispatch(setEndDate(null));
-          }
+          dispatch(setSubscriptionData({
+            isSubscribed: data.data.isSubscribed,
+            plan: data.data.plan,
+            expiresAt: data.data.expiresAt,
+            subscription: data.data.subscription,
+            limits: data.data.limits
+          }));
 
-          // Handle word usage data
-          if (data.data.wordUsage) {
-            dispatch(setWordUsage(data.data.wordUsage));
+          if (data.data.userWordUsage) {
+            dispatch(setWordUsage({
+              usage: data.data.userWordUsage.usage,
+              percentage: data.data.userWordUsage.percentage
+            }));
           }
         }
       } catch (error) {

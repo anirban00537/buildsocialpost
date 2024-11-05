@@ -1,10 +1,11 @@
-import { useMutation } from "react-query";
+import { useMutation, useQueryClient } from "react-query";
 import { generateLinkedInPosts } from "@/services/ai-content";
 import { GenerateLinkedInPostsDTO } from "@/types";
 import toast from "react-hot-toast";
 import { useState, useEffect } from "react";
 
 export const useGenerateLinkedInPosts = () => {
+  const queryClient = useQueryClient();
   const [content, setContent] = useState("");
   const [generatedPost, setGeneratedPost] = useState<string>("");
   const [postTone, setPostTone] = useState("Professional");
@@ -15,12 +16,15 @@ export const useGenerateLinkedInPosts = () => {
   } = useMutation(
     (dto: GenerateLinkedInPostsDTO) => generateLinkedInPosts(dto),
     {
-      onSuccess: (response) => {
+      onSuccess: async (response) => {
         if (response.success) {
           const post = response.data.post;
           console.log(post, "generated post from useGenerateLinkedInPosts");
           setGeneratedPost(post);
           toast.success("Content generated successfully!");
+          
+          // Refetch subscription data to update usage
+          await queryClient.refetchQueries(["subscription"]);
         } else {
           setGeneratedPost("");
           toast.error(response.message || "Failed to generate content");
@@ -75,6 +79,8 @@ export const useGenerateLinkedInPosts = () => {
       });
     } catch (error) {
       console.error("Error in handleGenerate:", error);
+      // Refetch subscription data even on error to ensure usage is up to date
+      await queryClient.refetchQueries(["subscription"]);
     }
   };
 

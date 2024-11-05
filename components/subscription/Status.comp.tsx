@@ -14,9 +14,11 @@ import { Sparkles } from "lucide-react";
 import { motion } from "framer-motion";
 
 const SubscriptionInfo = () => {
-  const { subscribed, endDate } = useSelector((state: RootState) => state.user);
+  const { subscription } = useSelector((state: RootState) => state.user);
+  const isActive = subscription.isSubscribed && 
+    subscription.subscription?.status === 'active';
 
-  if (!subscribed || !endDate) {
+  if (!isActive) {
     return (
       <PricingModal
         buttonElement={
@@ -36,7 +38,9 @@ const SubscriptionInfo = () => {
     );
   }
 
-  const endDateString = new Date(endDate).toLocaleDateString();
+  const endDateString = subscription.expiresAt 
+    ? new Date(subscription.expiresAt).toLocaleDateString() 
+    : 'N/A';
 
   return (
     <TooltipProvider>
@@ -55,11 +59,13 @@ const SubscriptionInfo = () => {
               repeat: Infinity,
             }}
           >
-            <DiamondSVG  />
+            <DiamondSVG />
           </motion.div>
         </TooltipTrigger>
         <TooltipContent className="bg-white text-gray-700 ring-1 ring-gray-200 rounded-lg">
-          <p className="text-sm font-medium">Pro • Expires {endDateString}</p>
+          <p className="text-sm font-medium">
+            {subscription.subscription?.productName} • Expires {endDateString}
+          </p>
         </TooltipContent>
       </Tooltip>
     </TooltipProvider>

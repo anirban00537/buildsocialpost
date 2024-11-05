@@ -11,8 +11,10 @@ export default function PricingModal({
   return (
     <Dialog>
       <DialogTrigger asChild>{buttonElement}</DialogTrigger>
-      <DialogContent className="border border-borderColor text-textColor p-0 overflow-hidden">
-        <Pricing />
+      <DialogContent className="border border-borderColor text-textColor p-0 overflow-hidden max-w-[800px] w-[90vw] max-h-[95vh]">
+        <div className="overflow-y-auto">
+          <Pricing />
+        </div>
       </DialogContent>
     </Dialog>
   );

@@ -1,4 +1,4 @@
-import { UserInfo, UserState, Workspace, WordUsage, LinkedInProfile } from "@/types";
+import { UserInfo, UserState, Workspace, WordUsage, LinkedInProfile, SubscriptionState } from "@/types";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 const initialState: UserState = {
@@ -6,8 +6,6 @@ const initialState: UserState = {
   loggedin: false,
   loading: true,
   carouselDownloading: false,
-  subscribed: false,
-  endDate: null,
   currentWorkspace: null,
   wordUsage: {
     usage: {
@@ -24,6 +22,20 @@ const initialState: UserState = {
   },
   linkedinProfiles: [],
   currentLinkedInProfile: null,
+  subscription: {
+    isSubscribed: false,
+    plan: null,
+    expiresAt: null,
+    subscription: null,
+    limits: {
+      aiWordsPerMonth: 0,
+      postsPerMonth: 0,
+      imageUploads: 0,
+      workspaces: 0,
+      linkedInProfiles: 0,
+      carousels: 0,
+    },
+  },
 };
 
 const userSlice = createSlice({
@@ -37,22 +49,15 @@ const userSlice = createSlice({
     logout: (state) => {
       state.userinfo = null;
       state.loggedin = false;
-      state.subscribed = false;
-      state.endDate = null;
       state.linkedinProfiles = [];
       state.currentLinkedInProfile = null;
+      state.subscription = initialState.subscription;
     },
     setLoading: (state, action: PayloadAction<boolean>) => {
       state.loading = action.payload;
     },
     setCarouselDownloading: (state, action: PayloadAction<boolean>) => {
       state.carouselDownloading = action.payload;
-    },
-    setSubscribed: (state, action: PayloadAction<boolean>) => {
-      state.subscribed = action.payload;
-    },
-    setEndDate: (state, action: PayloadAction<string | null>) => {
-      state.endDate = action.payload;
     },
     setCurrentWorkspace: (state, action: PayloadAction<any>) => {
       state.currentWorkspace = action.payload;
@@ -69,6 +74,9 @@ const userSlice = createSlice({
     setCurrentLinkedInProfile: (state, action: PayloadAction<LinkedInProfile | null>) => {
       state.currentLinkedInProfile = action.payload;
     },
+    setSubscriptionData: (state, action: PayloadAction<SubscriptionState>) => {
+      state.subscription = action.payload;
+    },
   },
 });
 
@@ -77,12 +85,11 @@ export const {
   setUser,
   logout,
   setLoading,
-  setSubscribed,
-  setEndDate,
   setCarouselDownloading,
   setCurrentWorkspace,
   setWordUsage,
   setLinkedInProfiles,
   setCurrentLinkedInProfile,
+  setSubscriptionData,
 } = userSlice.actions;
 export default userSlice.reducer;

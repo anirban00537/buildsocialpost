@@ -4,16 +4,16 @@ export const checkSubscription = async () => {
   const response = await request.get("/subscription/check-subscription");
   return response.data;
 };
-// create-checkout
+
 export const createCheckout = async ({
-  productId,
+  variantId,
   redirectUrl,
 }: {
-  productId: string;
+  variantId: string;
   redirectUrl: string;
 }) => {
   const response = await request.post("/subscription/create-checkout", {
-    productId,
+    variantId,
     redirectUrl,
   });
   return response.data;

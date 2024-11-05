@@ -152,17 +152,39 @@ export interface LinkedInProfile {
   status: 'connected' | 'disconnected';
 }
 
+export interface SubscriptionLimits {
+  aiWordsPerMonth: number;
+  postsPerMonth: number;
+  imageUploads: number;
+  workspaces: number;
+  linkedInProfiles: number;
+  carousels: number;
+}
+
+export interface SubscriptionDetails {
+  status: 'active' | 'inactive' | 'cancelled';
+  productName: string;
+  variantName: string;
+}
+
+export interface SubscriptionState {
+  isSubscribed: boolean;
+  plan: 'starter' | 'pro' | null;
+  expiresAt: string | null;
+  subscription: SubscriptionDetails | null;
+  limits: SubscriptionLimits;
+}
+
 export interface UserState {
   userinfo: UserInfo | null;
   loggedin: boolean;
   loading: boolean;
   carouselDownloading: boolean;
-  subscribed: boolean;
-  endDate: string | null;
   currentWorkspace: Workspace | null;
-  wordUsage: WordUsage | null;
+  wordUsage: WordUsage;
   linkedinProfiles: LinkedInProfile[];
   currentLinkedInProfile: LinkedInProfile | null;
+  subscription: SubscriptionState;
 }
 
 export interface GenerateLinkedInPostsDTO {

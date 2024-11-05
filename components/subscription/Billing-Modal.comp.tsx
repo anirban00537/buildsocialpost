@@ -14,7 +14,9 @@ import { CreditCard, Diamond } from "lucide-react";
 import { DiamondSVG } from "../editor/shared-components/Svg-Icons.comp";
 
 const BillingModal: React.FC = () => {
-  const { subscribed, endDate } = useSelector((state: RootState) => state.user);
+  const { subscription } = useSelector((state: RootState) => state.user);
+  const isActive = subscription.isSubscribed && 
+    subscription.subscription?.status === 'active';
 
   const formatDate = (date: string) => {
     return new Date(date).toLocaleDateString("en-US", {
@@ -23,6 +25,26 @@ const BillingModal: React.FC = () => {
       day: "numeric",
     });
   };
+
+  const getSubscriptionDetails = () => {
+    if (!isActive) {
+      return {
+        status: "inactive",
+        message: "No Active Subscription",
+        description: "Subscribe now to access premium features and remove watermarks.",
+        className: "bg-yellow-50 text-yellow-700",
+      };
+    }
+
+    return {
+      status: "active",
+      message: `Active ${subscription.subscription?.productName} Plan`,
+      description: `${subscription.subscription?.variantName} subscription`,
+      className: "border-borderColor text-green-700",
+    };
+  };
+
+  const details = getSubscriptionDetails();
 
   return (
     <Dialog>
@@ -41,43 +63,44 @@ const BillingModal: React.FC = () => {
             Billing Information
           </DialogTitle>
         </DialogHeader>
-        <div className="mt-6 text-center">
-          {subscribed && endDate ? (
-            <div className="space-y-4">
-              <div className="p-4 border border-borderColor rounded-lg">
-                <p className="text-green-700 font-medium">
-                  Active Subscription
-                </p>
-              </div>
-              <p className="text-textColor">
-                Your subscription is active until:
-              </p>
-              <p className="text-2xl font-bold text-primary">
-                {formatDate(endDate)}
-              </p>
+        <div className="mt-6 text-center w-full">
+          <div className="space-y-4">
+            <div className={`p-4 rounded-lg border ${details.className}`}>
+              <p className="font-medium">{details.message}</p>
+              {isActive && (
+                <p className="text-sm text-gray-600 mt-1">{details.description}</p>
+              )}
             </div>
-          ) : (
-            <div className="space-y-4">
-              <div className="p-4 bg-yellow-50 rounded-lg">
-                <p className="text-yellow-700 font-medium">
-                  No Active Subscription
+
+            {isActive ? (
+              <>
+                <p className="text-textColor">Your subscription is active until:</p>
+                <p className="text-2xl font-bold text-primary">
+                  {formatDate(subscription.expiresAt || '')}
                 </p>
-              </div>
-              <p className="text-gray-600">
-                You don't have an active subscription.
-              </p>
-              <p className="text-sm text-gray-500">
-                Subscribe now to access premium features and remove watermarks.
-              </p>
-              <PricingModal
-                buttonElement={
-                  <Button className="mt-4 w-full" size="lg">
-                    View Pricing Plans
-                  </Button>
-                }
-              />
-            </div>
-          )}
+                <div className="mt-4 space-y-2 text-sm text-gray-600">
+                  <p>Plan Limits:</p>
+                  <ul className="space-y-1">
+                    <li>AI Words: {subscription.limits.aiWordsPerMonth.toLocaleString()} per month</li>
+                    <li>Posts: {subscription.limits.postsPerMonth} per month</li>
+                    <li>Workspaces: {subscription.limits.workspaces}</li>
+                    <li>LinkedIn Profiles: {subscription.limits.linkedInProfiles}</li>
+                  </ul>
+                </div>
+              </>
+            ) : (
+              <>
+                <p className="text-gray-600">{details.description}</p>
+                <PricingModal
+                  buttonElement={
+                    <Button className="mt-4 w-full" size="lg">
+                      View Pricing Plans
+                    </Button>
+                  }
+                />
+              </>
+            )}
+          </div>
         </div>
       </DialogContent>
     </Dialog>
