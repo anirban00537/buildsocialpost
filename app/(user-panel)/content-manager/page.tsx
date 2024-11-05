@@ -1,7 +1,7 @@
 "use client";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Calendar, FileText, CheckCircle2, XCircle, Pencil, Trash2 } from "lucide-react";
+import { Calendar, FileText, CheckCircle, XCircle, Pencil, Trash2, Filter, Plus, AlertCircle } from "lucide-react";
 import { PostPreview, DropdownItem } from "@/components/content-create/PostPreview";
 import { Button } from "@/components/ui/button";
 import { PostType, PostSectionConfig, PostTabId, Post } from "@/types/post";
@@ -10,40 +10,127 @@ import { POST_STATUS } from "@/lib/core-constants";
 import { Pagination } from "@/components/ui/pagination";
 import { PostPreviewNotRedux } from "@/components/content-create/PostPreviewNotRedux";
 
-const postConfigs: PostSectionConfig[] = [
-  {
-    id: "scheduled",
-    status: POST_STATUS.SCHEDULED,
-    title: "Scheduled Posts",
-    icon: <Calendar className="w-7 h-7 mr-2 text-primary" />,
-    badgeText: "AI Enhanced",
-    emptyStateMessage: "No scheduled posts",
-  },
+interface PostConfig {
+  id: PostTabId;
+  title: string;
+  icon: React.ReactNode;
+  emptyStateMessage: string;
+}
+
+const postConfigs: PostConfig[] = [
   {
     id: "draft",
-    status: POST_STATUS.DRAFT,
     title: "Drafts",
-    icon: <FileText className="w-7 h-7 mr-2 text-primary" />,
-    badgeText: "AI Enhanced",
-    emptyStateMessage: "No draft posts",
+    icon: <FileText className="w-4 h-4" />,
+    emptyStateMessage: "Create drafts to save your content ideas and work on them later."
+  },
+  {
+    id: "scheduled",
+    title: "Scheduled",
+    icon: <Calendar className="w-4 h-4" />,
+    emptyStateMessage: "Schedule your posts to be published at the perfect time for your audience."
   },
   {
     id: "published",
-    status: POST_STATUS.PUBLISHED,
-    title: "Published Posts",
-    icon: <CheckCircle2 className="w-7 h-7 mr-2 text-green-500" />,
-    badgeText: "Published",
-    emptyStateMessage: "No published posts",
+    title: "Published",
+    icon: <CheckCircle className="w-4 h-4" />,
+    emptyStateMessage: "Start sharing your content with your network. Your published posts will appear here."
   },
   {
     id: "failed",
-    status: POST_STATUS.FAILED,
-    title: "Failed Posts",
-    icon: <XCircle className="w-7 h-7 mr-2 text-red-500" />,
-    badgeText: "Failed",
-    emptyStateMessage: "No failed posts",
-  },
+    title: "Failed",
+    icon: <AlertCircle className="w-4 h-4" />,
+    emptyStateMessage: "Posts that failed to publish will appear here. You can retry or edit them."
+  }
 ];
+
+interface TabHeaderProps {
+  activeTab: PostTabId;
+  onTabChange: (tabId: PostTabId) => void;
+}
+
+const TabHeader: React.FC<TabHeaderProps> = ({ activeTab, onTabChange }) => {
+  return (
+    <div className="border-b border-gray-200 bg-white sticky top-0 z-10">
+      <div className="px-6 pt-6 pb-0">
+        <div className="flex items-center justify-between mb-4">
+          <div>
+            <h1 className="text-2xl font-semibold text-gray-900">Content Manager</h1>
+            <p className="text-sm text-gray-500 mt-1">Manage your drafts and scheduled posts</p>
+          </div>
+          
+          <div className="flex items-center gap-3">
+            <Button
+              variant="outline"
+              size="sm"
+              className="gap-2 text-gray-600 hover:text-gray-900"
+            >
+              <Filter className="w-4 h-4" />
+              Filter
+            </Button>
+            <Button
+              size="sm"
+              className="gap-2 bg-blue-50 text-blue-600 hover:bg-blue-100 border-blue-200"
+            >
+              <Plus className="w-4 h-4" />
+              Create New
+            </Button>
+          </div>
+        </div>
+
+        <div className="flex gap-1">
+          {postConfigs.map((config) => (
+            <button
+              key={config.id}
+              onClick={() => onTabChange(config.id)}
+              className={`
+                group relative px-4 py-3 first:ml-0
+                font-medium text-sm
+                transition-all duration-200
+                focus:outline-none
+                ${
+                  activeTab === config.id
+                    ? config.id === "failed"
+                      ? "text-red-600"
+                      : "text-blue-600"
+                    : "text-gray-600 hover:text-gray-900"
+                }
+              `}
+            >
+              <div className="flex items-center gap-2">
+                <span
+                  className={`
+                    ${activeTab === config.id 
+                      ? config.id === "failed"
+                        ? "text-red-600"
+                        : "text-blue-600"
+                      : "text-gray-400 group-hover:text-gray-500"
+                    }
+                  `}
+                >
+                  {config.icon}
+                </span>
+                {config.title}
+              </div>
+              
+              {/* Active Tab Indicator */}
+              <div className={`
+                absolute bottom-0 left-0 right-0 h-0.5
+                transition-all duration-200
+                ${activeTab === config.id
+                  ? config.id === "failed"
+                    ? "bg-red-600"
+                    : "bg-blue-600"
+                  : "bg-transparent group-hover:bg-gray-200"
+                }
+              `} />
+            </button>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+};
 
 const ContentManager = () => {
   const router = useRouter();
@@ -120,66 +207,12 @@ const ContentManager = () => {
   };
 
   return (
-    <div className="max-w-[1600px] mx-auto px-4 sm:px-6 py-8">
-      {/* Enhanced Title and Description Section */}
-      <div className="space-y-3">
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-2xl font-semibold text-gray-900 tracking-tight">
-              Content Manager
-            </h1>
-            <p className="text-sm text-gray-600 mt-1 leading-relaxed max-w-2xl">
-              Manage your scheduled posts and drafts for LinkedIn. Schedule,
-              edit, and organize your content efficiently.
-            </p>
-          </div>
-          <Button
-            onClick={handleCreatePost}
-            className="bg-primary hover:bg-primary/90 text-white px-4 py-2 rounded-lg
-                     flex items-center gap-2 shadow-sm hover:shadow transition-all duration-200"
-          >
-            <Calendar className="w-4 h-4" />
-            Schedule New Post
-          </Button>
-        </div>
-      </div>
-
-      <div className="bg-cardBackground rounded-xl border mt-8 border-gray-200">
-        {/* Enhanced Tab List */}
-        <div className="flex gap-2 px-6 pt-4">
-          {postConfigs.map((config) => (
-            <button
-              key={config.id}
-              onClick={() => handleTabClick(config.id as PostTabId)}
-              className={`
-                px-4 py-2.5 -mb-px border-b-2 relative
-                ${
-                  activeTab === config.id
-                    ? "border-primary text-primary"
-                    : "border-transparent text-gray-600 hover:text-gray-900"
-                }
-                font-medium text-sm
-                transition-all duration-200
-                focus:outline-none
-                group
-              `}
-            >
-              <div className="flex items-center gap-2">
-                <span
-                  className={
-                    activeTab === config.id ? "text-primary" : "text-gray-400"
-                  }
-                >
-                  {config.icon}
-                </span>
-                {config.title}
-              </div>
-            </button>
-          ))}
-        </div>
-
-        <div className="border-b border-gray-200" />
-
+    <div className="min-h-screen bg-gray-50">
+      <TabHeader 
+        activeTab={activeTab} 
+        onTabChange={handleTabClick}
+      />
+      <div className="max-w-[1600px] mx-auto px-4 sm:px-6 py-8">
         {/* Updated Tab Content with Grid Layout */}
         <div className="p-6">
           {isLoadingPosts ? (
@@ -228,9 +261,7 @@ const ContentManager = () => {
                       : postConfigs.find((config) => config.id === activeTab)?.title}
                   </h3>
                   <p className="text-gray-500 text-center max-w-md mb-6">
-                    {activeTab === 'published'
-                      ? "Start sharing your content with your network. Your published posts will appear here."
-                      : postConfigs.find((config) => config.id === activeTab)?.emptyStateMessage}
+                    {postConfigs.find((config) => config.id === activeTab)?.emptyStateMessage}
                   </p>
                   <Button 
                     onClick={handleCreatePost}

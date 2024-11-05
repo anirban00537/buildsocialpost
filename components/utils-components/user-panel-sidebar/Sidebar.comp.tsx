@@ -11,6 +11,9 @@ import {
   ChevronDown,
   ImageIcon,
   Linkedin,
+  Pen,
+  Wand2,
+  Settings,
 } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
@@ -22,34 +25,193 @@ import SubscriptionInfo from "@/components/subscription/Status.comp";
 import UserMenu from "./User-Menu.comp";
 import ManageWorkspacesModal from "../../workspace/Manage-Workspaces-Modal.comp";
 import ManageAccountsModal from "./ManageAccountsModal";
+import { LucideIcon } from 'lucide-react';
 
-const tools = [
+// Define base interface for navigation items
+interface BaseNavigationItem {
+  id: string;
+  name: string;
+  icon: LucideIcon;
+  href: string;
+  badge?: string;
+  badgeColor?: string;
+  counter?: number;
+  shortcut?: string;
+}
+
+// Define specific types for each section
+type ToolItem = BaseNavigationItem & {
+  shortcut: string; // Required for tools
+};
+
+type FeatureItem = BaseNavigationItem & {
+  badge?: string;
+  badgeColor?: string;
+};
+
+type ManagementItem = BaseNavigationItem & {
+  counter?: number;
+};
+
+// Define the arrays with their specific types
+const tools: ToolItem[] = [
+  {
+    id: "compose",
+    name: "Compose",
+    icon: Pen,
+    href: "/compose",
+    shortcut: "⌘N",
+  },
+];
+
+const features: FeatureItem[] = [
   {
     id: "ai-writer",
     name: "AI Writer",
-    icon: FileText,
+    icon: Wand2,
     href: "/ai-writer",
+    badge: "Pro",
+    badgeColor: "bg-gradient-to-r from-indigo-500 to-blue-500",
   },
   {
     id: "carousel-editor",
     name: "Carousel Editor",
     icon: Layers,
     href: "/carousel-editor",
+    badge: "New",
+    badgeColor: "bg-gradient-to-r from-green-500 to-emerald-500",
   },
   {
     id: "content-manager",
-    name: "Scheduled/Drafts",
+    name: "Content Manager",
     icon: Calendar,
     href: "/content-manager",
-  },
-
-  {
-    id: "carousel-templates",
-    name: "Carousel Templates",
-    icon: LayoutTemplate,
-    href: "/carousel-templates",
+    counter: 5,
   },
 ];
+
+const management: ManagementItem[] = [
+  {
+    id: "linkedin-accounts",
+    name: "LinkedIn Accounts",
+    icon: Linkedin,
+    href: "/linkedin-accounts",
+    counter: 2,
+  },
+  {
+    id: "settings",
+    name: "Settings",
+    icon: Settings,
+    href: "/settings",
+  },
+];
+
+// Navigation Section Component
+const NavigationSection = ({ title, children }: { title: string, children: React.ReactNode }) => (
+  <div className="space-y-1">
+    <h3 className="px-3 mb-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
+      {title}
+    </h3>
+    {children}
+  </div>
+);
+
+// Navigation Item Component
+interface NavigationItemProps {
+  item: BaseNavigationItem;
+  isActive: boolean;
+}
+
+const NavigationItem: React.FC<NavigationItemProps> = ({ item, isActive }) => (
+  <Link href={item.href} passHref>
+    <span
+      className={`
+        group relative w-full flex items-center px-2 h-9 rounded-lg transition-all duration-200
+        ${isActive 
+          ? "bg-gradient-to-r from-blue-50 to-indigo-50 text-blue-700 font-medium ring-1 ring-blue-200" 
+          : "hover:bg-gray-50 text-gray-600 hover:text-gray-900"
+        }
+        focus:outline-none
+        active:scale-[0.98]
+      `}
+    >
+      <div className="flex items-center gap-3 flex-1">
+        <div className={`
+          flex items-center justify-center w-8 h-8 rounded-lg transition-all duration-200
+          ${isActive 
+            ? "text-blue-600" 
+            : "text-gray-400 group-hover:text-gray-600"
+          }
+        `}>
+          <item.icon className="w-4 h-4" />
+        </div>
+        
+        <div className="flex items-center justify-between flex-1">
+          <span className="text-sm font-medium">{item.name}</span>
+          <div className="flex items-center gap-2">
+            {item.badge && (
+              <span className={`
+                px-1.5 py-0.5 text-[10px] font-medium text-white rounded-full
+                ${item.badgeColor || "bg-blue-500"}
+              `}>
+                {item.badge}
+              </span>
+            )}
+            {item.counter !== undefined && (
+              <span className="px-1.5 py-0.5 text-xs font-medium text-gray-600 bg-gray-100 rounded-full">
+                {item.counter}
+              </span>
+            )}
+            {item.shortcut && (
+              <kbd className="hidden sm:inline-flex items-center gap-1 px-1.5 py-0.5 text-[10px] font-medium text-gray-500 bg-gray-100 rounded">
+                {item.shortcut}
+              </kbd>
+            )}
+          </div>
+        </div>
+      </div>
+    </span>
+  </Link>
+);
+
+// Main Navigation Component
+const Navigation = () => {
+  const pathname = usePathname();
+  
+  return (
+    <nav className="flex-grow overflow-y-auto px-3 py-4 space-y-6">
+      <NavigationSection title="Create">
+        {tools.map((tool) => (
+          <NavigationItem
+            key={tool.id}
+            item={tool}
+            isActive={pathname === tool.href || pathname.startsWith(tool.href + "/")}
+          />
+        ))}
+      </NavigationSection>
+
+      <NavigationSection title="Tools">
+        {features.map((feature) => (
+          <NavigationItem
+            key={feature.id}
+            item={feature}
+            isActive={pathname === feature.href || pathname.startsWith(feature.href + "/")}
+          />
+        ))}
+      </NavigationSection>
+
+      <NavigationSection title="Management">
+        {management.map((item) => (
+          <NavigationItem
+            key={item.id}
+            item={item}
+            isActive={pathname === item.href || pathname.startsWith(item.href + "/")}
+          />
+        ))}
+      </NavigationSection>
+    </nav>
+  );
+};
 
 const Sidebar = () => {
   const pathname = usePathname();
@@ -93,7 +255,7 @@ const Sidebar = () => {
   return (
     <div className="w-72 h-screen flex flex-col bg-gradient-to-br from-blue-100 via-indigo-50/50 to-blue-100  text-gray-500 border-r border-gray-100 shadow-sm">
       {/* Logo Section */}
-      <div className="px-6 py-5 border-b border-gray-50">
+      <div className="px-6 py-1 border-b border-gray-50">
         <Link href="/" className="block">
           <Image
             src="/logo.svg"
@@ -141,35 +303,7 @@ const Sidebar = () => {
       </div>
 
       {/* Main Navigation */}
-      <nav className="flex-grow overflow-y-auto px-3 py-4  space-y-0.5">
-        <div className="space-y-0.5">
-          {tools.map((tool) => (
-            <Link key={tool.id} href={tool.href} passHref>
-              <span
-                className={`group w-full flex items-center px-3 my-2 justify-start text-sm h-8 transition-all rounded-lg duration-200
-                ${
-                  pathname === tool.href || pathname.startsWith(tool.href + "/")
-                    ? "bg-blue-50 border border-blue-200 text-blue-700 font-medium hover:bg-blue-100 ring-1 ring-blue-200"
-                    : "bg-transparent hover:bg-gray-50 text-gray-600 hover:text-gray-700  hover:ring-blue-200"
-                }
-                focus:outline-none focus:ring-0
-                active:scale-[0.98]
-              `}
-              >
-                <tool.icon
-                  className={`w-4 h-4 mr-3 transition-transform group-hover:scale-105 ${
-                    pathname === tool.href ||
-                    pathname.startsWith(tool.href + "/")
-                      ? "text-blue-600"
-                      : "text-gray-400 group-hover:text-gray-500"
-                  }`}
-                />
-                <span className="flex-grow text-left">{tool.name}</span>
-              </span>
-            </Link>
-          ))}
-        </div>
-      </nav>
+      <Navigation />
 
       {/* Usage Stats */}
       {subscription?.limits?.aiWordsPerMonth && (
