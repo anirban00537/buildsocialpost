@@ -143,34 +143,55 @@ export const ComposeSection = ({
   };
 
   return (
-    <Card className="flex flex-col h-[calc(100vh-200px)] bg-white/90 backdrop-blur-sm border border-gray-100/50 ring-1 ring-blue-100/50 rounded-xl overflow-hidden shadow-lg">
-      {/* Editor Header */}
-      <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100/50 bg-gradient-to-r from-white to-blue-50/30">
-        <div className="flex items-center gap-3">
-          <div className="flex items-center gap-2">
-            <span className="text-sm font-semibold text-gray-700">
-              AI Editor
-            </span>
-            <div className="flex items-center gap-1 text-[10px] text-blue-600 bg-blue-50/80 px-2 py-0.5 rounded-full border border-blue-100/50">
-              <Sparkles className="h-3 w-3" />
-              AI Enhanced
+    <Card className="flex flex-col h-[calc(100vh-200px)] bg-white border-0 shadow-xl rounded-2xl overflow-hidden">
+      {/* Enhanced Editor Header */}
+      <div className="px-6 py-4 border-b border-gray-100 bg-gradient-to-r from-white to-blue-50">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2">
+              <div className="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center">
+                <FileText className="w-4 h-4 text-blue-600" />
+              </div>
+              <div>
+                <span className="text-sm font-semibold text-gray-900">
+                  AI Editor
+                </span>
+                <div className="flex items-center gap-2 mt-0.5">
+                  <div className="flex items-center gap-1 text-[10px] text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full">
+                    <Sparkles className="h-3 w-3" />
+                    AI Enhanced
+                  </div>
+                  <span className="text-[10px] text-gray-500">
+                    {characterCount}/{CHAR_LIMIT} characters
+                  </span>
+                </div>
+              </div>
             </div>
+
+            <Tooltip>
+              <TooltipTrigger className="group">
+                <div className="p-2 rounded-full hover:bg-gray-50 transition-colors">
+                  <HelpCircle className="h-4 w-4 text-gray-400 group-hover:text-blue-500" />
+                </div>
+              </TooltipTrigger>
+              <TooltipContent className="bg-white p-3 shadow-lg border border-gray-100">
+                <div className="space-y-2">
+                  <p className="text-sm font-medium text-gray-900">
+                    AI-Powered Editor
+                  </p>
+                  <p className="text-xs text-gray-600 max-w-xs">
+                    Enhanced with AI writing assistance. Use commands to
+                    generate and improve your content.
+                  </p>
+                </div>
+              </TooltipContent>
+            </Tooltip>
           </div>
-          <Tooltip>
-            <TooltipTrigger>
-              <HelpCircle className="h-3.5 w-3.5 text-blue-400 hover:text-blue-500 transition-colors" />
-            </TooltipTrigger>
-            <TooltipContent>
-              <p className="text-xs">
-                Enhanced with AI-powered writing assistance
-              </p>
-            </TooltipContent>
-          </Tooltip>
         </div>
       </div>
 
-      {/* Editor Content */}
-      <div className="flex-grow overflow-y-auto bg-gradient-to-b from-white to-blue-50/10 relative">
+      {/* Enhanced Editor Content */}
+      <div className="flex-grow overflow-y-auto bg-gradient-to-b from-white to-blue-50/5 relative">
         <textarea
           ref={textareaRef}
           value={content}
@@ -178,112 +199,149 @@ export const ComposeSection = ({
           onKeyDown={handleKeyDown}
           placeholder="Start writing or use AI commands (⌘ + /) to enhance your content..."
           className="w-full h-full min-h-[calc(100vh-400px)] px-6 py-4 resize-none focus:outline-none
-                     text-gray-700 placeholder-gray-400/80 bg-transparent"
+                   text-gray-700 placeholder-gray-400/80 bg-transparent text-base leading-relaxed"
           style={{
-            lineHeight: "1.6",
+            lineHeight: "1.8",
             fontFamily: "inherit",
           }}
         />
+
+        {/* Character limit warning */}
+        {characterCount > CHAR_LIMIT * 0.9 && (
+          <div
+            className={`
+            absolute bottom-4 right-4 px-3 py-2 rounded-lg shadow-lg
+            flex items-center gap-2 text-sm
+            ${
+              characterCount > CHAR_LIMIT
+                ? "bg-red-50 text-red-600"
+                : "bg-yellow-50 text-yellow-600"
+            }
+          `}
+          >
+            <span className="font-medium">
+              {characterCount > CHAR_LIMIT
+                ? "Character limit exceeded"
+                : "Approaching character limit"}
+            </span>
+            <span className="text-xs opacity-75">
+              {CHAR_LIMIT - characterCount} remaining
+            </span>
+          </div>
+        )}
       </div>
 
-      {/* Updated Action Buttons */}
-      <div className="flex flex-col gap-3 p-4 border-t border-gray-100/50 bg-gradient-to-b from-white to-blue-50/20">
-        <div className="flex flex-col sm:flex-row gap-2">
-          <Button
-            variant="gradient"
-            size="sm"
-            className={`transition-all duration-200 h-9 rounded-lg w-full
-              ${isCreatingDraft || !canSaveDraft() ? "opacity-50" : ""}`}
-            onClick={() => {
-              if (!canSaveDraft()) {
-                toast({
-                  title: "Validation Error",
-                  description: "Please add some content first",
-                  variant: "destructive",
-                });
-                return;
-              }
-              if (selectedLinkedInProfile?.id) {
-                onSaveDraft(selectedLinkedInProfile.id);
-              }
-            }}
-            disabled={isCreatingDraft || !canSaveDraft()}
-          >
-            {isCreatingDraft ? (
-              <>
-                <span className="w-4 h-4 mr-2 border-2 border-current border-t-transparent rounded-full animate-spin" />
-                Saving Draft...
-              </>
-            ) : (
-              <>
-                <Save className="w-4 h-4 mr-2" />
-                Save Draft
-                <div className="ml-2 flex items-center gap-1 text-[10px] bg-white/20 px-1.5 py-0.5 rounded">
-                  <span>
-                    {navigator.platform.includes("Mac") ? "⌘" : "Ctrl"}
-                  </span>
-                  <span>⇧</span>
-                  <span>S</span>
-                </div>
-              </>
-            )}
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            className="text-blue-600 border-blue-200 hover:bg-blue-600 hover:text-white
-                       transition-all duration-200 h-9 rounded-lg w-full backdrop-blur-sm"
-            onClick={() => setIsScheduleModalOpen(true)}
-          >
-            <Clock className="w-4 h-4 mr-2" />
-            Schedule
-          </Button>
-          <Button
-            variant="gradient"
-            size="sm"
-            className={`transition-all duration-200 h-9 rounded-lg w-full
-              ${
-                characterCount > CHAR_LIMIT || !canSaveDraft() || isPosting
-                  ? "opacity-50"
-                  : ""
-              }`}
-            disabled={
-              characterCount > CHAR_LIMIT || !canSaveDraft() || isPosting
-            }
-            onClick={() => {
-              if (selectedLinkedInProfile?.id) {
-                onPostNow(selectedLinkedInProfile.id);
-              }
-            }}
-          >
-            {isPosting ? (
-              <>
-                <span className="w-4 h-4 mr-2 border-2 border-current border-t-transparent rounded-full animate-spin" />
-                Publishing...
-              </>
-            ) : (
-              <>
-                <Send className="w-4 h-4 mr-2" />
-                Post Now
-                <div className="ml-2 flex items-center gap-1 text-[10px] bg-white/20 px-1.5 py-0.5 rounded">
-                  <span>
-                    {navigator.platform.includes("Mac") ? "⌘" : "Ctrl"}
-                  </span>
-                  <ArrowRight className="h-3 w-3" />
-                </div>
-              </>
-            )}
-          </Button>
-        </div>
+      {/* Enhanced Action Buttons */}
+      <div className="p-4 border-t border-gray-100 bg-white">
+        <div className="flex flex-col gap-3">
+          <div className="flex gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              className={`
+                flex-1 h-10 gap-2 transition-all duration-200
+                ${
+                  isCreatingDraft || !canSaveDraft()
+                    ? "opacity-50"
+                    : "hover:border-blue-300 hover:bg-blue-50"
+                }
+              `}
+              onClick={() => {
+                if (canSaveDraft() && selectedLinkedInProfile?.id) {
+                  onSaveDraft(selectedLinkedInProfile.id);
+                }
+              }}
+              disabled={isCreatingDraft || !canSaveDraft()}
+            >
+              {isCreatingDraft ? (
+                <>
+                  <span className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
+                  Saving...
+                </>
+              ) : (
+                <>
+                  <Save className="w-4 h-4" />
+                  Save Draft
+                  <kbd className="ml-auto text-[10px] px-1.5 py-0.5 bg-gray-100 rounded">
+                    ⌘⇧S
+                  </kbd>
+                </>
+              )}
+            </Button>
 
-        {/* Keyboard shortcuts */}
-        <div className="flex justify-between items-center text-xs text-gray-500 mt-1 px-1">
-          <div className="flex items-center gap-4">
-            <span className="text-blue-600/70">⌘ + ⇧ + S to save draft</span>
-            <span className="text-blue-600/70">⌘ + Enter to post</span>
+            <Button
+              variant="outline"
+              size="sm"
+              className="flex-1 h-10 gap-2 hover:border-primary hover:bg-primary/10 text-primary"
+              onClick={() => setIsScheduleModalOpen(true)}
+            >
+              <Clock className="w-4 h-4" />
+              Schedule Post
+            </Button>
+
+            <Button
+              variant="default"
+              size="sm"
+              className={`
+                flex-1 h-10 gap-2 bg-blue-600 hover:bg-blue-700
+                ${
+                  characterCount > CHAR_LIMIT || !canSaveDraft() || isPosting
+                    ? "opacity-50 cursor-not-allowed"
+                    : ""
+                }
+              `}
+              disabled={
+                characterCount > CHAR_LIMIT || !canSaveDraft() || isPosting
+              }
+              onClick={() => {
+                if (selectedLinkedInProfile?.id) {
+                  onPostNow(selectedLinkedInProfile.id);
+                }
+              }}
+            >
+              {isPosting ? (
+                <>
+                  <span className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
+                  Publishing...
+                </>
+              ) : (
+                <>
+                  <Send className="w-4 h-4" />
+                  Publish Now
+                  <kbd className="ml-auto text-[10px] px-1.5 py-0.5 bg-blue-500 rounded">
+                    ⌘↵
+                  </kbd>
+                </>
+              )}
+            </Button>
           </div>
-          <div>
-            <span className="text-blue-600/70">⌘ + / for AI commands</span>
+
+          {/* Enhanced Keyboard Shortcuts */}
+          <div className="flex items-center justify-between px-1 pt-2 border-t border-gray-100">
+            <div className="flex items-center gap-4">
+              <div className="flex items-center gap-2">
+                <kbd className="px-1.5 py-0.5 text-[10px] bg-gray-100 rounded">
+                  ⌘/
+                </kbd>
+                <span className="text-xs text-gray-500">AI Commands</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <kbd className="px-1.5 py-0.5 text-[10px] bg-gray-100 rounded">
+                  Tab
+                </kbd>
+                <span className="text-xs text-gray-500">Navigate</span>
+              </div>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="text-xs text-gray-500">Need help?</span>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="h-6 px-2 text-blue-600"
+              >
+                View Shortcuts
+              </Button>
+            </div>
           </div>
         </div>
       </div>
