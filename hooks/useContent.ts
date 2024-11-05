@@ -16,6 +16,7 @@ import {
   PaginationState,
   PostsResponse,
   CreateDraftPostType,
+  LinkedInProfileUI,
 } from "@/types/post";
 import { toast } from "react-hot-toast";
 import { useState, useCallback, useEffect } from "react";
@@ -46,6 +47,24 @@ export const useContentPosting = () => {
   const [isScheduleModalOpen, setIsScheduleModalOpen] = useState(false);
   const [scheduledDate, setScheduledDate] = useState<Date | null>(null);
   const [postDetails, setPostDetails] = useState<Post | null>(null);
+  const { linkedinProfiles } = useSelector((state: RootState) => state.user);
+  const [selectedProfile, setSelectedProfile] =
+    useState<LinkedInProfileUI | null>(null);
+
+  useEffect(() => {
+    if (postDetails?.linkedInProfile?.id) {
+      // If post has a linked profile, find and set it
+      const linkedProfile = linkedinProfiles.find(
+        (profile) => profile.id === postDetails.linkedInProfile.id
+      );
+      if (linkedProfile) {
+        setSelectedProfile(linkedProfile);
+      }
+    } else if (linkedinProfiles.length > 0 && !selectedProfile) {
+      // Only set first profile if no profile is selected
+      setSelectedProfile(linkedinProfiles[0]);
+    }
+  }, [linkedinProfiles, postDetails]);
 
   const { isLoading: isLoadingDraft } = useQuery(
     ["draftDetails", draftId],
@@ -56,6 +75,15 @@ export const useContentPosting = () => {
         if (response.success) {
           setContent(response.data.post.content);
           setPostDetails(response.data.post);
+          
+          if (response.data.post.linkedInProfile?.id) {
+            const linkedProfile = linkedinProfiles.find(
+              (profile) => profile.id === response.data.post.linkedInProfile.id
+            );
+            if (linkedProfile) {
+              setSelectedProfile(linkedProfile);
+            }
+          }
         }
       },
       onError: (error) => {
@@ -75,7 +103,7 @@ export const useContentPosting = () => {
     onSuccess: (response) => {
       if (response.success) {
         toast.success("Post published successfully!");
-        router.push("/content-manager");
+        router.push("/content-manager?tab=published");
       } else {
         toast.error(response.message || "Failed to publish post");
       }
@@ -168,15 +196,11 @@ export const useContentPosting = () => {
       }
 
       try {
-        if (!linkedInProfileId) {
-          toast.error("Please connect a LinkedIn account first");
-          return null;
-        }
         const response = await createUpdateDraftMutation({
           content,
           postType,
           workspaceId,
-          linkedInProfileId,
+          linkedInProfileId: linkedInProfileId || null,
           imageUrls,
           videoUrl,
           documentUrl,
@@ -221,6 +245,10 @@ export const useContentPosting = () => {
     [draftId, handleCreateUpdateDraft, postNowMutation]
   );
 
+  const clearSelectedProfile = useCallback(() => {
+    setSelectedProfile(null);
+  }, []);
+
   return {
     // State
     content,
@@ -233,7 +261,8 @@ export const useContentPosting = () => {
     isCreatingDraft,
     isLoadingDraft,
     isEditing: !!draftId,
-
+    selectedProfile,
+    linkedinProfiles,
     // Actions
     handleCreateUpdateDraft,
     handleSchedule,
@@ -241,6 +270,8 @@ export const useContentPosting = () => {
     handleCreateDraftFromGenerated,
     handlePostNow,
     isPosting,
+    setSelectedProfile,
+    clearSelectedProfile,
   };
 };
 

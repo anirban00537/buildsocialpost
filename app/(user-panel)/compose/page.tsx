@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { PostPreviewFullFeature } from "@/components/content-create/PostPreviewFullFeature";
 import { ComposeSection } from "@/components/content-create/ComposeSection";
 import { useContentPosting } from "@/hooks/useContent";
@@ -33,16 +33,15 @@ const ComposePage = () => {
     isEditing,
     handlePostNow,
     isPosting,
+    selectedProfile,
+    setSelectedProfile,
+    linkedinProfiles,
   } = useContentPosting();
 
-  const { linkedinProfiles } = useSelector((state: RootState) => state.user);
-  const [selectedProfile, setSelectedProfile] = useState<LinkedInProfileUI | null>(null);
-
-  useEffect(() => {
-    if (linkedinProfiles.length > 0 && !selectedProfile) {
-      setSelectedProfile(linkedinProfiles[0]);
-    }
-  }, [linkedinProfiles, selectedProfile]);
+  const handleProfileSelect = useCallback((profile: LinkedInProfileUI) => {
+    console.log('Selecting profile:', profile);
+    setSelectedProfile(profile);
+  }, [setSelectedProfile]);
 
   return (
     <div className="max-w-[1600px] mx-auto px-4 sm:px-6 py-8">
@@ -95,7 +94,7 @@ const ComposePage = () => {
                   linkedinProfiles.map((profile) => (
                     <DropdownMenuItem
                       key={profile.id}
-                      onClick={() => setSelectedProfile(profile)}
+                      onClick={() => handleProfileSelect(profile)}
                       className="flex items-center gap-2 cursor-pointer p-2"
                     >
                       <Image

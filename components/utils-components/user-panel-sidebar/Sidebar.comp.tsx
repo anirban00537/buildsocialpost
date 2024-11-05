@@ -150,7 +150,7 @@ const Sidebar = () => {
                 ${
                   pathname === tool.href || pathname.startsWith(tool.href + "/")
                     ? "bg-blue-50 border border-blue-200 text-blue-700 font-medium hover:bg-blue-100 ring-1 ring-blue-200"
-                    : "bg-transparent hover:bg-gray-50 text-gray-600 hover:text-gray-700 ring-1 ring-gray-200 hover:ring-blue-200"
+                    : "bg-transparent hover:bg-gray-50 text-gray-600 hover:text-gray-700  hover:ring-blue-200"
                 }
                 focus:outline-none focus:ring-0
                 active:scale-[0.98]

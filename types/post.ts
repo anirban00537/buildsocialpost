@@ -76,12 +76,12 @@ export interface CreateDraftParams {
   content: string;
   postType?: PostContentType;
   workspaceId?: number;
-  linkedInProfileId?: number;
-  imageUrls?: string[];
-  videoUrl?: string;
-  documentUrl?: string;
-  hashtags?: string[];
-  mentions?: string[];
+  linkedInProfileId?: number | null;
+  imageUrls?: string[] | null;
+  videoUrl?: string | null;
+  documentUrl?: string | null;
+  hashtags?: string[] | null;
+  mentions?: string[] | null;
 }
 
 export interface CreateDraftPostType extends Required<Omit<CreateDraftParams, 'postType'>> {

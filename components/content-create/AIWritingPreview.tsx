@@ -1,8 +1,10 @@
 import { motion } from "framer-motion";
-import { Sparkles, Copy, Check, Wand2 } from "lucide-react";
+import { Sparkles, Copy, Check, Wand2, Edit } from "lucide-react";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { Button } from "../ui/button";
+import { useContentPosting } from "@/hooks/useContent";
+import { useRouter } from "next/navigation";
 
 interface AIWritingPreviewProps {
   isGenerating: boolean;
@@ -17,6 +19,10 @@ export const AIWritingPreview = ({
 }: AIWritingPreviewProps) => {
   const [isCopied, setIsCopied] = useState(false);
   const content = generatedPost || "";
+  const router = useRouter();
+
+  const { handleCreateDraftFromGenerated, isCreatingDraft } =
+    useContentPosting();
 
   const handleCopy = async () => {
     try {
@@ -30,6 +36,27 @@ export const AIWritingPreview = ({
     }
   };
 
+  const handleSaveAndEdit = async () => {
+    if (!content.trim()) {
+      toast.error("Please generate content first");
+      return;
+    }
+
+    try {
+      const draftId = await handleCreateDraftFromGenerated({
+        content: content.trim(),
+      });
+
+      if (draftId) {
+        toast.success("Draft saved! Redirecting to editor...");
+        router.push(`/compose?draft_id=${draftId}`);
+      }
+    } catch (error) {
+      toast.error("Failed to save draft");
+      console.error("Save draft error:", error);
+    }
+  };
+
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -40,28 +67,51 @@ export const AIWritingPreview = ({
           </div>
           <div>
             <h3 className="text-sm font-semibold text-gray-900">{title}</h3>
-            <p className="text-xs text-gray-500">AI-powered content generation</p>
+            <p className="text-xs text-gray-500">
+              AI-powered content generation
+            </p>
           </div>
         </div>
         {content && !isGenerating && (
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={handleCopy}
-            className="gap-2 text-xs"
-          >
-            {isCopied ? (
-              <>
-                <Check className="h-3.5 w-3.5" />
-                Copied!
-              </>
-            ) : (
-              <>
-                <Copy className="h-3.5 w-3.5" />
-                Copy
-              </>
-            )}
-          </Button>
+          <div className="flex gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleCopy}
+              className="gap-2 text-xs"
+            >
+              {isCopied ? (
+                <>
+                  <Check className="h-3.5 w-3.5" />
+                  Copied!
+                </>
+              ) : (
+                <>
+                  <Copy className="h-3.5 w-3.5" />
+                  Copy
+                </>
+              )}
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleSaveAndEdit}
+              disabled={isCreatingDraft}
+              className="gap-2 text-xs bg-blue-50 text-blue-600 border-blue-200 hover:bg-blue-100"
+            >
+              {isCreatingDraft ? (
+                <>
+                  <div className="h-3.5 w-3.5 border-2 border-current border-t-transparent rounded-full animate-spin" />
+                  Saving...
+                </>
+              ) : (
+                <>
+                  <Edit className="h-3.5 w-3.5" />
+                  Save & Edit
+                </>
+              )}
+            </Button>
+          </div>
         )}
       </div>
 
@@ -128,4 +178,4 @@ export const AIWritingPreview = ({
       )}
     </div>
   );
-}; 
+};
