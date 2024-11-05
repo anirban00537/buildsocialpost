@@ -37,22 +37,35 @@ const ContentCreationTools: React.FC = () => {
       <Header />
 
       <div className="max-w-[1600px] mx-auto px-4 sm:px-6 py-8">
-        {/* Page Header */}
+        {/* Enhanced Page Header with refined gradients */}
         <div className="mb-8">
           <div className="flex items-center justify-between">
             <div className="space-y-1">
-              <h1 className="text-2xl font-semibold text-gray-900">
-                AI Writer
-              </h1>
-              <p className="text-sm text-gray-600">
-                Transform your ideas into engaging LinkedIn content
-              </p>
+              <div className="flex items-center gap-3">
+                <div
+                  className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 via-blue-600 to-indigo-700 
+                              flex items-center justify-center shadow-lg shadow-blue-500/20"
+                >
+                  <Sparkles className="h-6 w-6 text-white" />
+                </div>
+                <div>
+                  <h1 className="text-2xl font-semibold text-gray-900">
+                    AI Writer
+                  </h1>
+                  <p className="text-sm text-gray-600">
+                    Transform your ideas into engaging LinkedIn content
+                  </p>
+                </div>
+              </div>
             </div>
 
             <div className="flex items-center gap-3">
-              <div className="flex items-center gap-2 px-3 py-1.5 bg-blue-50 rounded-full border border-blue-100">
-                <Sparkles className="w-4 h-4 text-blue-500" />
-                <span className="text-sm font-medium text-blue-700">
+              <div
+                className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-50 via-indigo-50 to-blue-50 
+                            rounded-full border border-blue-100/80 shadow-sm"
+              >
+                <Sparkles className="w-4 h-4 text-blue-600" />
+                <span className="text-sm font-medium bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
                   AI Powered
                 </span>
               </div>
@@ -63,33 +76,30 @@ const ContentCreationTools: React.FC = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 relative">
           {/* Left Column - Enhanced Input Section */}
           <div className="max-w-[800px] w-full mx-auto lg:mx-0">
-            <Card className="border-0 shadow-xl bg-white/80 backdrop-blur-xl rounded-2xl overflow-hidden">
-              <CardHeader className="pb-0 px-8 pt-6 border-b border-gray-100">
+            <Card
+              className="border border-gray-200 shadow-xl overflow-hidden rounded-2xl relative backdrop-blur-sm
+                              bg-gradient-to-r from-white to-blue-50 hover:border-blue-200/30 transition-colors"
+            >
+              {/* Refined Gradient Background */}
+              <div className="absolute inset-0 bg-gradient-to-br from-white via-blue-50/50 to-indigo-100/30" />
+              <div className="absolute inset-0 bg-white/50 backdrop-blur-[2px]" />
+
+              <CardHeader className="relative pb-0 px-8 pt-6 border-b border-gray-100/80">
                 <div className="flex items-center justify-between mb-6">
-                  <div className="space-y-1">
-                    <h2 className="text-lg font-semibold text-gray-900">
-                      Create Content
-                    </h2>
-                    <p className="text-sm text-gray-500">
-                      Generate engaging posts with AI assistance
-                    </p>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    {characterCount > 0 && (
-                      <span
-                        className={`
-                        px-3 py-1 rounded-full text-xs font-medium
-                        ${
-                          characterCount > 1000
-                            ? "bg-red-50 text-red-600"
-                            : "bg-gray-50 text-gray-600"
-                        }
-                      `}
-                      >
-                        {characterCount}/1000
-                      </span>
-                    )}
-                  </div>
+                  {characterCount > 0 && (
+                    <span
+                      className={`
+                      px-4 py-1.5 rounded-full text-xs font-medium shadow-sm
+                      ${
+                        characterCount > 1000
+                          ? "bg-gradient-to-r from-red-50 to-red-100 text-red-600 border border-red-200"
+                          : "bg-gradient-to-r from-blue-50 to-indigo-50 text-blue-600 border border-blue-200"
+                      }
+                    `}
+                    >
+                      {characterCount}/1000
+                    </span>
+                  )}
                 </div>
 
                 <ContentSourceSelector
@@ -99,35 +109,41 @@ const ContentCreationTools: React.FC = () => {
                 />
               </CardHeader>
 
-              <CardContent className="px-8 py-6 relative h-[calc(100%-7rem)] overflow-auto">
+              <CardContent className="relative px-8 py-6 h-[calc(100%-7rem)] overflow-auto">
                 <ContentInput
-                  contentSource={contentSource}
-                  isGenerating={isGeneratingLinkedinPosts}
-                  handleGenerate={handleGenerateLinkedIn}
-                  handleTextChange={handleLocalTextChange}
-                  setContent={setContent}
-                  isGeneratingLinkedinPosts={isGeneratingLinkedinPosts}
-                  handleGenerateLinkedIn={handleGenerateLinkedIn}
-                  handleLinkedInTextChange={handleLinkedInTextChange}
-                  content={content}
-                  postTone={postTone}
-                  setPostTone={setPostTone}
-                  writingStyle={writingStyle}
-                  setWritingStyle={setWritingStyle}
+                  {...{
+                    contentSource,
+                    isGenerating: isGeneratingLinkedinPosts,
+                    handleGenerate: handleGenerateLinkedIn,
+                    handleTextChange: handleLocalTextChange,
+                    setContent,
+                    isGeneratingLinkedinPosts,
+                    handleGenerateLinkedIn,
+                    handleLinkedInTextChange,
+                    content,
+                    postTone,
+                    setPostTone,
+                    writingStyle,
+                    setWritingStyle,
+                  }}
                 />
               </CardContent>
             </Card>
           </div>
 
-          {/* Enhanced Section Separator */}
+          {/* Enhanced Section Separator with refined gradients */}
           <div className="hidden lg:block absolute right-1/2 top-1/2 -translate-y-1/2 z-10">
             <motion.div
-              className="w-12 h-12 rounded-full bg-white shadow-lg flex items-center justify-center transform -translate-x-1/2"
+              className="w-14 h-14 rounded-full bg-gradient-to-br from-white to-blue-50 shadow-lg 
+                       flex items-center justify-center transform -translate-x-1/2 backdrop-blur-sm"
               animate={{ rotate: 360 }}
               transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
             >
-              <div className="w-8 h-8 rounded-full bg-gradient-to-r from-blue-500 to-indigo-500 flex items-center justify-center">
-                <Sparkles className="w-4 h-4 text-white" />
+              <div
+                className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 via-blue-600 to-indigo-700 
+                            flex items-center justify-center shadow-md"
+              >
+                <Sparkles className="w-5 h-5 text-white" />
               </div>
             </motion.div>
           </div>
@@ -142,11 +158,21 @@ const ContentCreationTools: React.FC = () => {
                 transition={{ duration: 0.3, ease: "easeOut" }}
                 className="h-full"
               >
-                <Card className="border-0 shadow-xl bg-white/80 backdrop-blur-xl rounded-2xl overflow-hidden">
-                  <CardHeader className="px-8 pt-6 pb-4 border-b border-gray-100">
+                <Card
+                  className="border border-gray-200 shadow-xl overflow-hidden rounded-2xl relative backdrop-blur-sm
+                                  bg-gradient-to-br from-white via-transparent to-white/50 hover:border-blue-200/30 transition-colors"
+                >
+                  {/* Refined Gradient Background */}
+                  <div className="absolute inset-0 bg-gradient-to-br from-white via-blue-50/50 to-indigo-100/30" />
+                  <div className="absolute inset-0 bg-white/50 backdrop-blur-[2px]" />
+
+                  <CardHeader className="relative px-8 pt-6 pb-4 border-b border-gray-100/80">
                     <div className="flex items-center justify-between">
                       {isGeneratingLinkedinPosts && (
-                        <div className="flex items-center gap-2 px-3 py-1.5 bg-blue-50 rounded-full">
+                        <div
+                          className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-50 to-indigo-50 
+                                      rounded-full border border-blue-100 shadow-sm"
+                        >
                           <div className="w-4 h-4 border-2 border-blue-500 border-t-transparent rounded-full animate-spin" />
                           <span className="text-sm font-medium text-blue-700">
                             Generating...
@@ -156,7 +182,7 @@ const ContentCreationTools: React.FC = () => {
                     </div>
                   </CardHeader>
 
-                  <CardContent className="px-8 py-6">
+                  <CardContent className="relative px-8 py-6">
                     <AIWritingPreview
                       isGenerating={isGeneratingLinkedinPosts}
                       generatedPost={generatedPost}

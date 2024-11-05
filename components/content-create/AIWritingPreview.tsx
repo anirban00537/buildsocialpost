@@ -12,6 +12,110 @@ interface AIWritingPreviewProps {
   title?: string;
 }
 
+// Add this loading animation component
+const LoadingAnimation = () => (
+  <div className="relative space-y-4 p-6 bg-gradient-to-br from-white to-blue-50/30">
+    <div className="space-y-4">
+      {[...Array(4)].map((_, i) => (
+        <motion.div
+          key={i}
+          className="relative"
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: i * 0.2 }}
+        >
+          <div className="h-4 bg-gradient-to-r from-blue-100/80 to-indigo-50 rounded-lg">
+            <motion.div
+              className="absolute inset-0 bg-gradient-to-r from-transparent via-white/80 to-transparent"
+              animate={{
+                x: ["-100%", "100%"],
+              }}
+              transition={{
+                duration: 1.5,
+                repeat: Infinity,
+                ease: "linear",
+                delay: i * 0.2,
+              }}
+            />
+          </div>
+        </motion.div>
+      ))}
+    </div>
+
+    {/* Floating Sparkles */}
+    <div className="absolute inset-0 overflow-hidden">
+      {[...Array(6)].map((_, i) => (
+        <motion.div
+          key={i}
+          className="absolute"
+          initial={{
+            opacity: 0,
+            scale: 0,
+            x: Math.random() * 100,
+            y: Math.random() * 100,
+          }}
+          animate={{
+            opacity: [0, 1, 0],
+            scale: [0, 1, 0],
+            x: Math.random() * 200,
+            y: Math.random() * 200,
+          }}
+          transition={{
+            duration: 2,
+            repeat: Infinity,
+            delay: i * 0.4,
+            ease: "easeInOut",
+          }}
+        >
+          <Sparkles className="w-3 h-3 text-blue-400" />
+        </motion.div>
+      ))}
+    </div>
+
+    {/* Central Loading Indicator */}
+    <div className="absolute inset-0 backdrop-blur-[1px] bg-white/30 flex items-center justify-center">
+      <motion.div
+        className="flex items-center gap-3 px-6 py-3 rounded-2xl bg-gradient-to-r from-blue-500/10 to-indigo-500/10 
+                   border border-blue-200 shadow-xl backdrop-blur-xl"
+        initial={{ scale: 0.9, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        transition={{ duration: 0.3 }}
+      >
+        <div className="relative w-5 h-5">
+          <motion.div
+            className="absolute inset-0 rounded-full border-2 border-blue-500 border-t-transparent"
+            animate={{ rotate: 360 }}
+            transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+          />
+          <motion.div
+            className="absolute inset-0 rounded-full border-2 border-indigo-500 border-b-transparent opacity-50"
+            animate={{ rotate: -180 }}
+            transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }}
+          />
+        </div>
+        <div className="flex flex-col items-start">
+          <span className="text-sm font-medium text-blue-700">AI is writing</span>
+          <motion.div 
+            className="flex gap-1"
+            animate={{ opacity: [1, 0.5, 1] }}
+            transition={{ duration: 1.5, repeat: Infinity }}
+          >
+            {[...Array(3)].map((_, i) => (
+              <motion.span
+                key={i}
+                className="w-1 h-1 rounded-full bg-blue-500"
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                transition={{ delay: i * 0.2, duration: 0.5, repeat: Infinity }}
+              />
+            ))}
+          </motion.div>
+        </div>
+      </motion.div>
+    </div>
+  </div>
+);
+
 export const AIWritingPreview = ({
   isGenerating,
   generatedPost,
@@ -129,30 +233,17 @@ export const AIWritingPreview = ({
       </div>
 
       {/* Enhanced Content Area */}
-      <div className="relative rounded-xl overflow-hidden">
+      <div className="relative rounded-xl overflow-hidden border border-gray-200 shadow-sm">
         {isGenerating ? (
-          <div className="relative space-y-4 p-6 bg-white border border-gray-100">
-            <div className="animate-pulse space-y-3">
-              <div className="h-4 bg-gray-100 rounded-full w-3/4" />
-              <div className="h-4 bg-gray-100 rounded-full w-1/2" />
-              <div className="h-4 bg-gray-100 rounded-full w-5/6" />
-              <div className="h-4 bg-gray-100 rounded-full w-2/3" />
-            </div>
-            <div className="absolute inset-0 backdrop-blur-sm bg-white/50 flex items-center justify-center">
-              <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-blue-50 border border-blue-100">
-                <div className="w-4 h-4 border-2 border-blue-500 border-t-transparent rounded-full animate-spin" />
-                <span className="text-sm font-medium text-blue-700">Generating content...</span>
-              </div>
-            </div>
-          </div>
+          <LoadingAnimation />
         ) : content ? (
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             className="relative"
           >
-            <div className="absolute -left-0.5 top-0 bottom-0 w-1 bg-gradient-to-b from-blue-500 to-blue-600 rounded-full" />
-            <div className="p-6 bg-white rounded-xl shadow-sm border border-gray-100">
+            <div className="absolute -left-0.5 top-0 bottom-0 w-1 bg-gradient-to-b from-blue-500 to-indigo-600 rounded-full" />
+            <div className="p-6 bg-gradient-to-br from-white to-blue-50/30 rounded-xl">
               <div className="prose prose-sm max-w-none">
                 <div className="whitespace-pre-wrap text-gray-700 leading-relaxed">
                   {content}
@@ -160,7 +251,8 @@ export const AIWritingPreview = ({
               </div>
             </div>
             <div className="absolute bottom-4 right-4">
-              <div className="flex items-center gap-1.5 text-[10px] font-medium text-blue-600 bg-blue-50 px-2 py-1 rounded-full border border-blue-100">
+              <div className="flex items-center gap-1.5 text-[10px] font-medium text-blue-600 bg-blue-50/80 
+                            px-2 py-1 rounded-full border border-blue-100 backdrop-blur-sm">
                 <Sparkles className="h-3 w-3" />
                 AI Enhanced
               </div>

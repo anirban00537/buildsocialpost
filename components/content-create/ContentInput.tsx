@@ -95,45 +95,41 @@ export const ContentInput = ({
 
   return (
     <div className="space-y-6">
-      {/* Content Input Section */}
-      <div className="space-y-2">
-        {/* Header */}
+      {/* Content Input Section with Enhanced Design */}
+      <div className="space-y-3">
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-1.5">
-            <span className="text-xs font-medium text-gray-600">
-              Your Content
-            </span>
-            <div className="flex items-center gap-0.5 text-[10px] text-blue-600 bg-blue-50 px-1.5 py-0.5 rounded-full">
-              <Sparkles className="h-3 w-3" />
-              AI Powered
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center">
+              <Pencil className="h-4 w-4 text-white" />
+            </div>
+            <div>
+              <h3 className="text-sm font-semibold text-gray-900">Your Content</h3>
+              <div className="flex items-center gap-2 mt-0.5">
+                <span className="text-xs text-gray-500">AI Assistant</span>
+                <div className="w-1 h-1 rounded-full bg-gray-300" />
+                <div className="flex items-center gap-1 text-[10px] font-medium text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full border border-blue-100">
+                  <Sparkles className="h-3 w-3" />
+                  <span>AI Powered</span>
+                </div>
+              </div>
             </div>
           </div>
-          <Tooltip>
-            <TooltipTrigger>
-              <HelpCircle className="h-3.5 w-3.5 text-gray-400" />
-            </TooltipTrigger>
-            <TooltipContent>
-              <p className="text-xs">
-                Describe what you want to write about. The more specific, the
-                better the results.
-              </p>
-            </TooltipContent>
-          </Tooltip>
         </div>
 
-        {/* Content Input */}
-        <div className="space-y-1">
-          <div
-            className="bg-white ring-1 ring-gray-200 rounded-lg p-2 transition-all duration-200
-            ${!isValidLength && charCount > 0 ? 'ring-red-200' : 'focus-within:ring-blue-200'}"
-          >
+        {/* Enhanced Content Input */}
+        <div className="space-y-2">
+          <div className={`
+            relative overflow-hidden rounded-xl bg-white border
+            ${!isValidLength && charCount > 0 ? 'border-red-200' : 'border-gray-200'}
+            transition-all duration-200 group
+          `}>
+            <div className="absolute inset-0 bg-gradient-to-br from-blue-50/50 via-white to-indigo-50/30 opacity-50" />
             <textarea
               value={contentSource === "plain-prompt" ? content : undefined}
               onChange={onTextChange}
-              className="w-full px-3 py-2 rounded-md h-[80px] max-h-[120px]
-                       resize-none outline-none bg-white
-                       placeholder:text-gray-400 text-gray-600 text-xs
-                       border-none
+              className="relative w-full px-4 py-3 h-[100px] max-h-[150px]
+                       resize-none outline-none bg-transparent
+                       placeholder:text-gray-400 text-gray-600 text-sm
                        transition-all duration-200
                        overflow-y-auto leading-relaxed"
               placeholder="What would you like to write about? Be specific to get better results..."
@@ -143,130 +139,132 @@ export const ContentInput = ({
           <div className="flex items-center justify-between px-1">
             <div className="flex items-center gap-2">
               {charCount > 0 && !isValidLength && (
-                <span className="text-[10px] text-red-500">
+                <span className="text-[10px] font-medium text-red-500">
                   Minimum {MIN_CHARS} characters required
                 </span>
               )}
             </div>
-            <span className="text-[10px] text-gray-400">
+            <span className="text-[10px] font-medium text-gray-500">
               {charCount}/{MAX_CHARS}
             </span>
           </div>
         </div>
       </div>
 
-      {/* Post Settings Section */}
-      <div className="space-y-5 rounded-xl p-4 border border-gray-100 ring-1 ring-gray-200">
-        <div className="flex items-center gap-2">
-          <span className="text-sm font-medium text-gray-700">
-            Content Style
-          </span>
-          <div className="h-px flex-1 bg-gray-100" />
-        </div>
-
-        {/* Settings Grid */}
-        <div className="grid gap-6">
-          {/* Tone Selection */}
-          <div className="space-y-3">
-            <div className="flex items-center gap-2">
-              <label className="text-xs font-medium text-gray-700">Tone</label>
-              <Tooltip>
-                <TooltipTrigger>
-                  <HelpCircle className="h-3.5 w-3.5 text-gray-400" />
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p className="text-xs">
-                    Select the tone that best matches your intended audience
-                  </p>
-                </TooltipContent>
-              </Tooltip>
+      {/* Enhanced Post Settings Section */}
+      <div className="space-y-5 rounded-xl border border-gray-200 overflow-hidden">
+        <div className="relative p-5 space-y-5">
+          <div className="absolute inset-0 bg-gradient-to-br from-gray-50 via-white to-blue-50/20" />
+          
+          {/* Section Header */}
+          <div className="relative flex items-center gap-3">
+            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-500 to-blue-600 flex items-center justify-center">
+              <Zap className="h-4 w-4 text-white" />
             </div>
-            <div className="flex flex-wrap gap-2">
-              {Object.keys(toneIcons).map((tone) => (
-                <button
-                  key={tone}
-                  onClick={() => setPostTone(tone)}
-                  className={`px-3 py-2 flex items-center gap-2 text-xs rounded-lg border transition-all duration-200
-                      ${
-                        tone === postTone
-                          ? "border-blue-200 bg-blue-50 text-blue-600 shadow-sm"
-                          : "border-gray-200 hover:border-gray-300 text-gray-600 hover:bg-white hover:shadow-sm"
-                      }`}
-                >
-                  {toneIcons[tone as keyof typeof toneIcons]}
-                  {tone}
-                </button>
-              ))}
+            <div>
+              <h3 className="text-sm font-semibold text-gray-900">Content Style</h3>
+              <p className="text-xs text-gray-500 mt-0.5">Customize your content's voice and style</p>
             </div>
           </div>
 
-          {/* Writing Style with similar improvements */}
-          <div className="space-y-3">
-            <div className="flex items-center gap-2">
-              <label className="text-xs font-medium text-gray-700">
-                Writing Style
-              </label>
-              <Tooltip>
-                <TooltipTrigger>
-                  <HelpCircle className="h-3.5 w-3.5 text-gray-400" />
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p className="text-xs">
-                    Choose how you want your content to be written
-                  </p>
-                </TooltipContent>
-              </Tooltip>
-            </div>
-            <div className="flex flex-wrap gap-2">
-              {Object.keys(styleIcons).map((style) => (
-                <button
-                  key={style}
-                  onClick={() => setWritingStyle(style)}
-                  className={`px-3 py-2 flex items-center gap-2 text-xs rounded-lg border transition-all
-                      ${
-                        style === writingStyle
-                          ? "border-blue-200 bg-blue-50 text-blue-600"
-                          : "border-gray-200 hover:border-gray-300 text-gray-600 hover:bg-gray-50"
-                      }`}
-                >
-                  {styleIcons[style as keyof typeof styleIcons]}
-                  {style}
-                </button>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        {/* Generate Button */}
-        <ShimmerButton
-          onClick={onGenerate}
-          disabled={isGeneratingContent || !isValidLength}
-          className={`w-full mt-4 py-3 text-sm font-medium rounded-lg transition-all duration-300
-            ${!isValidLength ? "opacity-50 cursor-not-allowed" : ""}
-            ${
-              isGeneratingContent
-                ? "bg-gray-100"
-                : "bg-blue-600 hover:bg-blue-700"
-            }
-            text-white flex items-center justify-center gap-2
-            hover:shadow-md active:shadow-sm`}
-          background="linear-gradient(to right, #3369e7, #2f5cc9)"
-        >
-          {isGeneratingContent ? (
-            <>
-              <Loader2 className="h-4 w-4 animate-spin" />
-              <span>Generating your content...</span>
-            </>
-          ) : (
-            <div className="flex items-center justify-center gap-2">
-              <span>Generate Content</span>
-              <div className="flex items-center gap-1 text-[10px] opacity-70 bg-white/10 px-1.5 py-0.5 rounded">
-                <span>{navigator.platform.includes("Mac") ? "⌘" : "Ctrl"}</span>
-                <span>↵</span>
+          {/* Settings Grid with Enhanced Design */}
+          <div className="relative grid gap-6">
+            {/* Tone Selection */}
+            <div className="space-y-3">
+              <div className="flex items-center gap-2">
+                <label className="text-xs font-medium text-gray-700">Tone of Voice</label>
+                <Tooltip>
+                  <TooltipTrigger>
+                    <HelpCircle className="h-3.5 w-3.5 text-gray-400" />
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p className="text-xs">Select the tone that best matches your intended audience</p>
+                  </TooltipContent>
+                </Tooltip>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                {Object.keys(toneIcons).map((tone) => (
+                  <button
+                    key={tone}
+                    onClick={() => setPostTone(tone)}
+                    className={`
+                      px-3 py-2 flex items-center gap-2 text-xs rounded-lg border transition-all duration-200
+                      ${tone === postTone
+                        ? "border-blue-200 bg-blue-50 text-blue-600 shadow-sm ring-1 ring-blue-200"
+                        : "border-gray-200 hover:border-blue-200 text-gray-600 hover:bg-blue-50/50"
+                      }
+                    `}
+                  >
+                    {toneIcons[tone as keyof typeof toneIcons]}
+                    {tone}
+                  </button>
+                ))}
               </div>
             </div>
-          )}
-        </ShimmerButton>
+
+            {/* Writing Style with Enhanced Design */}
+            <div className="space-y-3">
+              <div className="flex items-center gap-2">
+                <label className="text-xs font-medium text-gray-700">Writing Style</label>
+                <Tooltip>
+                  <TooltipTrigger>
+                    <HelpCircle className="h-3.5 w-3.5 text-gray-400" />
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p className="text-xs">Choose how you want your content to be written</p>
+                  </TooltipContent>
+                </Tooltip>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                {Object.keys(styleIcons).map((style) => (
+                  <button
+                    key={style}
+                    onClick={() => setWritingStyle(style)}
+                    className={`
+                      px-3 py-2 flex items-center gap-2 text-xs rounded-lg border transition-all duration-200
+                      ${style === writingStyle
+                        ? "border-blue-200 bg-blue-50 text-blue-600 shadow-sm ring-1 ring-blue-200"
+                        : "border-gray-200 hover:border-blue-200 text-gray-600 hover:bg-blue-50/50"
+                      }
+                    `}
+                  >
+                    {styleIcons[style as keyof typeof styleIcons]}
+                    {style}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Enhanced Generate Button */}
+          <ShimmerButton
+            onClick={onGenerate}
+            disabled={isGeneratingContent || !isValidLength}
+            className={`
+              w-full py-3 text-sm font-medium rounded-lg transition-all duration-300
+              ${!isValidLength ? "opacity-50 cursor-not-allowed" : ""}
+              ${isGeneratingContent ? "bg-gray-100" : ""}
+              text-white flex items-center justify-center gap-2
+              hover:shadow-lg active:shadow-md
+            `}
+            background="linear-gradient(to right, #3369e7, #2f5cc9)"
+          >
+            {isGeneratingContent ? (
+              <>
+                <Loader2 className="h-4 w-4 animate-spin" />
+                <span>Generating your content...</span>
+              </>
+            ) : (
+              <div className="flex items-center justify-center gap-2">
+                <span>Generate Content</span>
+                <div className="flex items-center gap-1 text-[10px] bg-white/20 px-1.5 py-0.5 rounded">
+                  <span>{navigator.platform.includes("Mac") ? "⌘" : "Ctrl"}</span>
+                  <ArrowRight className="h-3 w-3" />
+                </div>
+              </div>
+            )}
+          </ShimmerButton>
+        </div>
       </div>
     </div>
   );
