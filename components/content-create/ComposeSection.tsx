@@ -33,6 +33,8 @@ interface ComposeSectionProps {
   onSchedule: (date: Date) => void;
   isEditing?: boolean;
   postDetails?: Post | null;
+  onPostNow: () => void;
+  isPosting: boolean;
 }
 
 const CHAR_LIMIT = 3000;
@@ -50,6 +52,8 @@ export const ComposeSection = ({
   onSchedule,
   isEditing,
   postDetails,
+  onPostNow,
+  isPosting,
 }: ComposeSectionProps) => {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const characterCount = content.length;
@@ -106,7 +110,9 @@ export const ComposeSection = ({
     // Post Now: Cmd/Ctrl + Enter
     if ((e.metaKey || e.ctrlKey) && e.key === "Enter") {
       e.preventDefault();
-      // Add your post now logic here
+      if (!isPosting && canSaveDraft() && characterCount <= CHAR_LIMIT) {
+        onPostNow();
+      }
     }
   };
 
@@ -228,15 +234,25 @@ export const ComposeSection = ({
             variant="gradient"
             size="sm"
             className={`transition-all duration-200 h-9 rounded-lg w-full
-              ${characterCount > CHAR_LIMIT ? "opacity-50" : ""}`}
-            disabled={characterCount > CHAR_LIMIT}
+              ${(characterCount > CHAR_LIMIT || !canSaveDraft() || isPosting) ? "opacity-50" : ""}`}
+            // disabled={characterCount > CHAR_LIMIT || !canSaveDraft() || isPosting}
+            onClick={onPostNow}
           >
-            <Send className="w-4 h-4 mr-2" />
-            Post Now
-            <div className="ml-2 flex items-center gap-1 text-[10px] bg-white/20 px-1.5 py-0.5 rounded">
-              <span>{navigator.platform.includes("Mac") ? "⌘" : "Ctrl"}</span>
-              <ArrowRight className="h-3 w-3" />
-            </div>
+            {isPosting ? (
+              <>
+                <span className="w-4 h-4 mr-2 border-2 border-current border-t-transparent rounded-full animate-spin" />
+                Publishing...
+              </>
+            ) : (
+              <>
+                <Send className="w-4 h-4 mr-2" />
+                Post Now
+                <div className="ml-2 flex items-center gap-1 text-[10px] bg-white/20 px-1.5 py-0.5 rounded">
+                  <span>{navigator.platform.includes("Mac") ? "⌘" : "Ctrl"}</span>
+                  <ArrowRight className="h-3 w-3" />
+                </div>
+              </>
+            )}
           </Button>
         </div>
 

@@ -19,6 +19,8 @@ const Compose = () => {
     handleSchedule,
     postDetails,
     isEditing,
+    handlePostNow,
+    isPosting,
   } = useContentPosting();
 
   return (
@@ -63,6 +65,8 @@ const Compose = () => {
               onSchedule={handleSchedule}
               isEditing={isEditing}
               postDetails={postDetails}
+              onPostNow={handlePostNow}
+              isPosting={isPosting}
             />
             <PostPreviewFullFeature
               isGenerating={isGenerating}

@@ -20,3 +20,7 @@ export const getDraftPostDetails = async (id: number) => {
   );
   return response.data;
 };
+export const postNow = async (postId: number) => {
+  const response = await request.post(`/content-posting/post-now/${postId}`);
+  return response.data;
+};

@@ -3,6 +3,7 @@ import {
   createDraft,
   getPosts,
   getDraftPostDetails,
+  postNow,
 } from "@/services/content-posting";
 import { useSelector } from "react-redux";
 import { RootState } from "@/state/store";
@@ -14,12 +15,25 @@ import {
   CreateDraftParams,
   PaginationState,
   PostsResponse,
+  CreateDraftPostType,
 } from "@/types/post";
 import { toast } from "react-hot-toast";
 import { useState, useCallback, useEffect } from "react";
 import { POST_STATUS } from "@/lib/core-constants";
 import { useRouter, useSearchParams } from "next/navigation";
 import { processApiResponse } from "@/lib/functions";
+
+interface DraftResponse {
+  success: boolean;
+  message: string;
+  data: {
+    post: {
+      id: number;
+      content: string;
+      // ... other post properties
+    };
+  };
+}
 
 export const useContentPosting = () => {
   const searchParams = useSearchParams();
@@ -54,9 +68,25 @@ export const useContentPosting = () => {
   );
 
   const { mutateAsync: createUpdateDraftMutation, isLoading: isCreatingDraft } =
-    useMutation({
+    useMutation<DraftResponse, Error, CreateDraftPostType>({
       mutationFn: createDraft,
     });
+
+  const { mutateAsync: postNowMutation, isLoading: isPosting } = useMutation({
+    mutationFn: postNow,
+    onSuccess: (response) => {
+      if (response.success) {
+        toast.success('Post published successfully!');
+        router.push('/content-manager');
+      } else {
+        toast.error(response.message || 'Failed to publish post');
+      }
+    },
+    onError: (error: Error) => {
+      toast.error(`Error publishing post: ${error.message}`);
+      console.error('Posting error:', error);
+    },
+  });
 
   const handleCreateUpdateDraft = useCallback(async () => {
     if (isCreatingDraft) return;
@@ -64,17 +94,17 @@ export const useContentPosting = () => {
     try {
       if (!currentLinkedInProfile) {
         toast.error("Please connect a LinkedIn account first");
-        return;
+        return null;
       }
 
       if (!currentWorkspace?.id) {
         toast.error("Please select a workspace first");
-        return;
+        return null;
       }
 
       if (!content.trim()) {
         toast.error("Content cannot be empty");
-        return;
+        return null;
       }
 
       const draftData = {
@@ -91,7 +121,6 @@ export const useContentPosting = () => {
       };
 
       const response = await createUpdateDraftMutation(draftData);
-
       processApiResponse(response);
 
       if (!draftId && response.data?.post?.id) {
@@ -99,9 +128,12 @@ export const useContentPosting = () => {
         newUrl.searchParams.set("draft_id", response.data.post.id.toString());
         window.history.replaceState({}, "", newUrl.toString());
       }
+
+      return response;
     } catch (error) {
       toast.error("Failed to save draft");
       console.error("Draft save error:", error);
+      return null;
     }
   }, [
     content,
@@ -168,6 +200,27 @@ export const useContentPosting = () => {
     [currentWorkspace?.id, createUpdateDraftMutation]
   );
 
+  const handlePostNow = useCallback(async () => {
+    if (!draftId) {
+      // Save draft first if it's a new post
+      try {
+        const draftResponse = await handleCreateUpdateDraft();
+        if (draftResponse?.data?.post?.id) {
+          await postNowMutation(draftResponse.data.post.id);
+        }
+      } catch (error) {
+        console.error('Error in handlePostNow:', error);
+      }
+    } else {
+      // Post existing draft
+      try {
+        await postNowMutation(Number(draftId));
+      } catch (error) {
+        console.error('Error in handlePostNow:', error);
+      }
+    }
+  }, [draftId, handleCreateUpdateDraft, postNowMutation]);
+
   return {
     // State
     content,
@@ -186,6 +239,8 @@ export const useContentPosting = () => {
     handleSchedule,
     postDetails,
     handleCreateDraftFromGenerated,
+    handlePostNow,
+    isPosting,
   };
 };
 
