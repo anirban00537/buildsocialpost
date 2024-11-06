@@ -158,3 +158,8 @@ export interface Workspace {
   updatedAt: string;
   userId: number;
 }
+
+export interface SchedulePostType {
+  scheduledTime: string;
+  timezone: string;
+}

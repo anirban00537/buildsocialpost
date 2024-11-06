@@ -307,6 +307,7 @@ export const ComposeSection = ({
           isOpen={isScheduleModalOpen}
           onClose={() => setIsScheduleModalOpen(false)}
           onSchedule={onSchedule}
+          isScheduling={isPosting}
         />
       </div>
     </Card>

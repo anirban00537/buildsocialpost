@@ -4,6 +4,7 @@ import {
   getPosts,
   getDraftPostDetails,
   postNow,
+  schedulePost,
 } from "@/services/content-posting";
 import { useSelector } from "react-redux";
 import { RootState } from "@/state/store";
@@ -17,6 +18,7 @@ import {
   PostsResponse,
   CreateDraftPostType,
   LinkedInProfileUI,
+  SchedulePostType,
 } from "@/types/post";
 import { toast } from "react-hot-toast";
 import { useState, useCallback, useEffect } from "react";
@@ -113,6 +115,23 @@ export const useContentPosting = () => {
     onError: (error: Error) => {
       toast.error(`Error publishing post: ${error.message}`);
       console.error("Posting error:", error);
+    },
+  });
+
+  const { mutateAsync: schedulePostMutation, isLoading: isScheduling } = useMutation({
+    mutationFn: ({ postId, scheduleData }: { postId: number; scheduleData: SchedulePostType }) =>
+      schedulePost(postId, scheduleData),
+    onSuccess: (response) => {
+      if (response.success) {
+        toast.success("Post scheduled successfully!");
+        router.push("/content-manager?tab=scheduled");
+      } else {
+        toast.error(response.message || "Failed to schedule post");
+      }
+    },
+    onError: (error: Error) => {
+      toast.error(`Error scheduling post: ${error.message}`);
+      console.error("Scheduling error:", error);
     },
   });
 
@@ -226,11 +245,40 @@ export const useContentPosting = () => {
     };
   }, [debouncedSaveDraft]);
 
-  const handleSchedule = useCallback((date: Date) => {
-    setScheduledDate(date);
-    setIsScheduleModalOpen(false);
-    console.log("Post scheduled for:", date);
-  }, []);
+  const handleSchedule = useCallback(async (date: Date) => {
+    try {
+      if (!draftId) {
+        toast.error("No draft found to schedule");
+        return;
+      }
+
+      if (!selectedProfile?.id) {
+        toast.error("Please select a LinkedIn profile");
+        return;
+      }
+
+      // Show scheduling feedback
+      toast.loading("Scheduling post...", { id: "scheduling" });
+
+      const scheduleData = {
+        scheduledTime: date.toISOString(),
+        timezone: Intl.DateTimeFormat().resolvedOptions().timeZone
+      };
+
+      await schedulePostMutation({
+        postId: Number(draftId),
+        scheduleData
+      });
+
+      setScheduledDate(date);
+      setIsScheduleModalOpen(false);
+      toast.dismiss("scheduling");
+
+    } catch (error) {
+      console.error("Error in handleSchedule:", error);
+      toast.error("Failed to schedule post");
+    }
+  }, [draftId, selectedProfile?.id, schedulePostMutation]);
 
   const handleCreateDraftFromGenerated = useCallback(
     async ({
@@ -320,6 +368,7 @@ export const useContentPosting = () => {
     selectedProfile,
     linkedinProfiles,
     isAutoSaving,
+    isScheduling,
     // Actions
     handleSchedule,
     postDetails,

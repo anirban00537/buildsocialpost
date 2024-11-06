@@ -1,5 +1,5 @@
 import request from "@/lib/request";
-import { CreateDraftPostType, GetPostsType } from "@/types/post";
+import { CreateDraftPostType, GetPostsType, SchedulePostType } from "@/types/post";
 
 export const createDraft = async (data: CreateDraftPostType) => {
   const response = await request.post(
@@ -8,6 +8,7 @@ export const createDraft = async (data: CreateDraftPostType) => {
   );
   return response.data;
 };
+
 export const getPosts = async (data: GetPostsType) => {
   const response = await request.get(
     `/content-posting/get-posts?workspace_id=${data.workspace_id}&status=${data.status}&page=${data.page}&pageSize=${data.pageSize}`
@@ -22,5 +23,15 @@ export const getDraftPostDetails = async (id: number) => {
 };
 export const postNow = async (postId: number) => {
   const response = await request.post(`/content-posting/post-now/${postId}`);
+  return response.data;
+};
+
+  
+
+export const schedulePost = async (postId: number, scheduleData: SchedulePostType) => {
+  const response = await request.post(
+    `/content-posting/schedule/${postId}`,
+    scheduleData
+  );
   return response.data;
 };
