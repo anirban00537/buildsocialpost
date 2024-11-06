@@ -104,63 +104,65 @@ export const ComposeSection = ({
   };
 
   return (
-    <Card className="flex flex-col h-[calc(100vh-200px)] bg-white border-0 shadow-xl rounded-2xl overflow-hidden">
+    <Card className="flex flex-col h-[calc(100vh-200px)] bg-white shadow-md border border-gray-200/80 rounded-2xl backdrop-blur-sm overflow-hidden">
       {/* Enhanced Editor Header */}
-      <div className="px-6 py-4 border-b border-gray-100 bg-gradient-to-r from-white to-blue-50">
+      <div className="px-6 py-4 border-b border-gray-100">
         <div className="flex items-center justify-between">
+          {/* Status & Character Count */}
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center">
-                <FileText className="w-4 h-4 text-blue-600" />
-              </div>
-              <div>
-                <span className="text-sm font-semibold text-gray-900">
-                  AI Editor
-                </span>
-                <div className="flex items-center gap-2 mt-0.5">
-                  <div className="flex items-center gap-1 text-[10px] text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full">
-                    <Sparkles className="h-3 w-3" />
-                    AI Enhanced
-                  </div>
-                  <span className="text-[10px] text-gray-500">
-                    {characterCount}/{CHAR_LIMIT} characters
+              <div className="flex flex-col">
+                <div className="flex items-center gap-2">
+                  <span className="text-sm font-medium text-gray-900">
+                    Content Editor
                   </span>
-                  <div className="flex items-center gap-1 text-[10px] text-blue-600 min-w-[60px]">
-                    {isAutoSaving ? (
-                      <>
-                        <span className="w-2 h-2 border-2 border-blue-600 border-t-transparent rounded-full animate-spin" />
-                        <span>Saving...</span>
-                      </>
-                    ) : (
-                      <>
-                        <span className="w-2 h-2 bg-blue-600 rounded-full" />
-                        <span>Saved</span>
-                      </>
-                    )}
+                  {isAutoSaving ? (
+                    <span className="text-xs text-blue-600 flex items-center gap-1">
+                      <span className="w-2 h-2 border-2 border-current border-t-transparent rounded-full animate-spin" />
+                      Auto-saving...
+                    </span>
+                  ) : (
+                    <span className="text-xs text-green-600 flex items-center gap-1">
+                      <span className="w-2 h-2 bg-green-500 rounded-full" />
+                      All changes saved
+                    </span>
+                  )}
+                </div>
+                <div className="flex items-center gap-2 mt-1">
+                  <div
+                    className={`text-xs ${
+                      characterCount > CHAR_LIMIT
+                        ? "text-red-600"
+                        : "text-gray-500"
+                    }`}
+                  >
+                    {characterCount}/{CHAR_LIMIT} characters
                   </div>
+                  {characterCount > CHAR_LIMIT * 0.9 && (
+                    <span className="text-xs text-amber-600">
+                      {CHAR_LIMIT - characterCount} characters remaining
+                    </span>
+                  )}
                 </div>
               </div>
             </div>
-
-            <Tooltip>
-              <TooltipTrigger className="group">
-                <div className="p-2 rounded-full hover:bg-gray-50 transition-colors">
-                  <HelpCircle className="h-4 w-4 text-gray-400 group-hover:text-blue-500" />
-                </div>
-              </TooltipTrigger>
-              <TooltipContent className="bg-white p-3 shadow-lg border border-gray-100">
-                <div className="space-y-2">
-                  <p className="text-sm font-medium text-gray-900">
-                    AI-Powered Editor
-                  </p>
-                  <p className="text-xs text-gray-600 max-w-xs">
-                    Enhanced with AI writing assistance. Use commands to
-                    generate and improve your content.
-                  </p>
-                </div>
-              </TooltipContent>
-            </Tooltip>
           </div>
+
+          {/* AI Assistant Quick Access */}
+          <Button
+            variant="outline"
+            size="sm"
+            className="h-9 gap-2 border-blue-200 text-blue-600 hover:bg-blue-50"
+            onClick={() => {
+              /* Toggle AI Assistant */
+            }}
+          >
+            <Sparkles className="w-4 h-4" />
+            AI Assist
+            <kbd className="ml-2 text-[10px] px-1.5 py-0.5 bg-blue-50 rounded">
+              ⌘/
+            </kbd>
+          </Button>
         </div>
       </div>
 
@@ -184,7 +186,7 @@ export const ComposeSection = ({
         {characterCount > CHAR_LIMIT * 0.9 && (
           <div
             className={`
-            absolute bottom-4 right-4 px-3 py-2 rounded-lg shadow-lg
+            absolute bottom-4 right-4 px-3 py-2 rounded-lg shadow-md
             flex items-center gap-2 text-sm
             ${
               characterCount > CHAR_LIMIT
@@ -205,92 +207,108 @@ export const ComposeSection = ({
         )}
       </div>
 
-      {/* Simplified Action Buttons */}
+      {/* Enhanced Action Footer */}
       <div className="p-4 border-t border-gray-100 bg-white">
-        <div className="flex flex-col gap-3">
+        <div className="flex flex-col gap-4">
+          {/* Action Buttons */}
           <div className="flex gap-2">
-            <Button
-              variant="outline"
-              size="sm"
-              className="flex-1 h-10 gap-2 bg-primary/20 border-primary hover:bg-primary/30 text-primary"
-              onClick={() => setIsScheduleModalOpen(true)}
-            >
-              <Clock className="w-4 h-4" />
-              Schedule Post
-            </Button>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="flex-1 h-10 gap-2 border-blue-200 text-blue-600 hover:bg-blue-50 hover:border-blue-300 hover:text-blue-700 transition-colors duration-200"
+                  onClick={() => setIsScheduleModalOpen(true)}
+                  disabled={!selectedLinkedInProfile || !content.trim()}
+                >
+                  <Clock className="w-4 h-4" />
+                  Schedule Post
+                  <kbd className="ml-2 text-[10px] px-1.5 py-0.5 bg-blue-50 rounded">⌘S</kbd>
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p className="text-xs">Schedule your post for later</p>
+              </TooltipContent>
+            </Tooltip>
 
-            <Button
-              variant="default"
-              size="sm"
-              className={`
-                flex-1 h-10 gap-2 bg-blue-600 hover:bg-blue-700 text-white
-                ${
-                  characterCount > CHAR_LIMIT || !content.trim() || isPosting
-                    ? "opacity-50 cursor-not-allowed"
-                    : ""
-                }
-              `}
-              disabled={
-                characterCount > CHAR_LIMIT || !content.trim() || isPosting
-              }
-              onClick={() => {
-                if (selectedLinkedInProfile?.id) {
-                  onPostNow(selectedLinkedInProfile.id);
-                }
-              }}
-            >
-              {isPosting ? (
-                <>
-                  <span className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
-                  Publishing...
-                </>
-              ) : (
-                <>
-                  <Send className="w-4 h-4" />
-                  Publish Now
-                  <kbd className="ml-auto text-[10px] px-1.5 py-0.5 bg-blue-500/20 text-white rounded">
-                    ⌘↵
-                  </kbd>
-                </>
-              )}
-            </Button>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  variant="default"
+                  size="sm"
+                  className={`
+                    flex-1 h-10 gap-2 bg-blue-600 hover:bg-blue-700 text-white transition-all duration-200
+                    ${!selectedLinkedInProfile || characterCount > CHAR_LIMIT || !content.trim() || isPosting
+                      ? "opacity-50 cursor-not-allowed"
+                      : "shadow-sm hover:shadow-md"
+                    }
+                  `}
+                  disabled={!selectedLinkedInProfile || characterCount > CHAR_LIMIT || !content.trim() || isPosting}
+                  onClick={() => selectedLinkedInProfile?.id && onPostNow(selectedLinkedInProfile.id)}
+                >
+                  {isPosting ? (
+                    <>
+                      <span className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
+                      <span>Publishing...</span>
+                    </>
+                  ) : (
+                    <>
+                      <Send className="w-4 h-4" />
+                      <span>Publish Now</span>
+                      <kbd className="ml-2 text-[10px] px-1.5 py-0.5 bg-white/20 rounded">⌘↵</kbd>
+                    </>
+                  )}
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p className="text-xs">Publish your post immediately</p>
+              </TooltipContent>
+            </Tooltip>
           </div>
 
-          {/* Enhanced Keyboard Shortcuts */}
-          <div className="flex items-center justify-between px-1 pt-2 border-t border-gray-100">
+          {/* Enhanced Keyboard Shortcuts & Help */}
+          <div className="flex items-center justify-between pt-3 border-t border-gray-100">
+            {/* Left: Quick Actions */}
             <div className="flex items-center gap-4">
-              <div className="flex items-center gap-2">
-                <kbd className="px-1.5 py-0.5 text-[10px] bg-gray-100 rounded">
-                  ⌘/
-                </kbd>
-                <span className="text-xs text-gray-500">AI Commands</span>
+              <div className="flex items-center gap-1.5 px-2 py-1 bg-gray-50 hover:bg-gray-100 transition-colors duration-200 hover:shadow-sm hover:text-blue-700 rounded-md">
+                <kbd className="text-[10px] font-medium text-gray-500">⌘/</kbd>
+                <span className="text-xs text-gray-600 hover:text-blue-700 transition-colors duration-200">AI Assistant</span>
               </div>
-              <div className="flex items-center gap-2">
-                <kbd className="px-1.5 py-0.5 text-[10px] bg-gray-100 rounded">
-                  Tab
-                </kbd>
-                <span className="text-xs text-gray-500">Navigate</span>
+              <div className="flex items-center gap-1.5 px-2 py-1 bg-gray-50 rounded-md">
+                <kbd className="text-[10px] font-medium text-gray-500">⌘↵</kbd>
+                <span className="text-xs text-gray-600">Quick Publish</span>
+              </div>
+              <div className="flex items-center gap-1.5 px-2 py-1 bg-gray-50 rounded-md">
+                <kbd className="text-[10px] font-medium text-gray-500">Tab</kbd>
+                <span className="text-xs text-gray-600">Navigate</span>
               </div>
             </div>
-            <div className="flex items-center gap-2">
-              <span className="text-xs text-gray-500">Need help?</span>
-              <Button
-                variant="ghost"
-                size="sm"
-                className="h-6 px-2 text-blue-600"
-              >
-                View Shortcuts
-              </Button>
-            </div>
+
+            {/* Right: Help Link */}
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="h-8 px-3 text-blue-600 hover:bg-blue-50 transition-colors duration-200"
+                >
+                  <HelpCircle className="w-4 h-4 mr-2" />
+                  <span className="text-xs">View All Shortcuts</span>
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p className="text-xs">See all available keyboard shortcuts</p>
+              </TooltipContent>
+            </Tooltip>
           </div>
         </div>
-      </div>
 
-      <ScheduleModal
-        isOpen={isScheduleModalOpen}
-        onClose={() => setIsScheduleModalOpen(false)}
-        onSchedule={onSchedule}
-      />
+        <ScheduleModal
+          isOpen={isScheduleModalOpen}
+          onClose={() => setIsScheduleModalOpen(false)}
+          onSchedule={onSchedule}
+        />
+      </div>
     </Card>
   );
 };

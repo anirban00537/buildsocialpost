@@ -76,7 +76,7 @@ export const PostPreviewFullFeature = ({
       {/* Enhanced Preview Container */}
       <div className="relative">
         <div className="absolute inset-0 bg-gradient-to-br from-blue-100/50 via-white to-indigo-100/30 rounded-2xl" />
-        <div className="relative backdrop-blur-sm rounded-2xl border border-gray-200/80 shadow-lg overflow-hidden">
+        <div className="relative backdrop-blur-sm rounded-2xl border border-gray-200/80 shadow-md overflow-hidden">
           <div className="p-6">
             <PostPreview 
               title={""} 
