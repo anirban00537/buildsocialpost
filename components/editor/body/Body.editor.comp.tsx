@@ -16,7 +16,7 @@ import "swiper/css/scrollbar";
 import "swiper/css/a11y";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import useCarousel from "@/hooks/useCarousel";
-import SlideComponent from "../slide/Slide.comp";
+import SlideComponent from "../slide/slide.comp";
 import ImageUploadModal from "../Image_upload_modal/Image-Upload-Modal.comp";
 
 import SlideControls from "./Slide-Controls.comp";
@@ -55,8 +55,8 @@ const CarouselEditor: React.FC = () => {
             slidesPerView="auto"
             centeredSlides={true}
             navigation={{
-              nextEl: ".custom-next",
-              prevEl: ".custom-prev",
+              nextEl: ".swiper-button-next",
+              prevEl: ".swiper-button-prev",
             }}
             pagination={{ enabled: false }}
             scrollbar={{ hide: true, enabled: false }}
@@ -104,11 +104,23 @@ const CarouselEditor: React.FC = () => {
               </SwiperSlide>
             ))}
           </Swiper>
-          <button className="custom-prev absolute top-1/2 left-0 transform -translate-y-1/2 p-2 bg-primary text-textColor rounded-full hover:bg-primary hover:border-primary hover:text-white z-20">
-            <ChevronLeft size={24} />
+          <button 
+            className="swiper-button-prev absolute top-1/2 -left-4 transform -translate-y-1/2 
+                       w-10 h-10 flex items-center justify-center 
+                       bg-white shadow-lg border border-gray-200 
+                       rounded-full z-[60] hover:bg-gray-50 
+                       transition-all duration-200"
+          >
+            <ChevronLeft size={20} className="text-gray-600" />
           </button>
-          <button className="custom-next absolute top-1/2 right-0 transform -translate-y-1/2 p-2 bg-primary text-textColor rounded-full hover:bg-primary hover:border-primary hover:text-white z-20">
-            <ChevronRight size={24} />
+          <button 
+            className="swiper-button-next absolute top-1/2 -right-4 transform -translate-y-1/2 
+                       w-10 h-10 flex items-center justify-center 
+                       bg-white shadow-lg border border-gray-200 
+                       rounded-full z-[60] hover:bg-gray-50 
+                       transition-all duration-200"
+          >
+            <ChevronRight size={20} className="text-gray-600" />
           </button>
         </div>
       </div>

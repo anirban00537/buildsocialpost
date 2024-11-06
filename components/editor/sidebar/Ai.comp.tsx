@@ -102,14 +102,15 @@ const AiSettingsComponent = () => {
 
   return (
     <div className="w-full h-full flex flex-col bg-white">
-      <div className="p-6 border-b border-gray-200">
+      <div className="p-4 border-b border-gray-200">
         <h2 className="text-lg font-medium text-gray-700 flex items-center gap-2">
           <Sparkles size={20} className="text-blue-600" />
           AI Content Generator
         </h2>
       </div>
+      
       <form onSubmit={generateContent} className="flex flex-col h-full">
-        <div className="flex-grow overflow-y-auto p-6 space-y-6">
+        <div className="flex-grow overflow-y-auto p-4 space-y-4">
           {/* Topic Input */}
           <div className="space-y-2">
             <Label
@@ -294,22 +295,15 @@ const AiSettingsComponent = () => {
           </div>
         </div>
         
-        <div className="p-6 mb-32 bg-white border-t border-gray-200 mt-auto">
+        <div className="p-4 bg-white border-t border-gray-200 sticky bottom-0">
           <Button
             type="submit"
             variant="ghost"
-            size="lg"
             disabled={buttonState.disabled}
             className={`w-full h-10 text-sm font-medium ${buttonState.className}`}
           >
             {buttonState.content}
           </Button>
-
-          {!isSubscribed && (
-            <p className="text-xs text-gray-500 mt-2 text-center">
-              Subscribe to {subscription.subscription?.productName || 'Premium'} to access AI content generation
-            </p>
-          )}
         </div>
       </form>
 

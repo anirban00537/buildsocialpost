@@ -1,117 +1,97 @@
-import React, { useEffect, useState } from "react";
-import { Wand2, User, Type, Image, Shapes, Palette } from "lucide-react";
+import React from "react";
+import { Wand2, User, Type, Palette, Shapes, Image, X, ImageIcon } from "lucide-react";
 import AiSettingsComponent from "./Ai.comp";
 import BrandingSection from "./Branding.comp";
 import TextSettingsSection from "./Text-Settings.comp";
 import BackgroundColorsSection from "./Background.comp";
 import BackgroundPatternsAndElements from "./Background-Patterns-Elements.comp";
-import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import BackgroundImagesSection from "./Background-ImagesSection";
-import { FaPallet } from "react-icons/fa";
+
+export type TabName = "ai-settings" | "branding" | "text-settings" | "background" | "patterns-elements" | "background-images";
+
+export const EDITOR_TABS = [
+  { name: "ai-settings" as TabName, icon: <Wand2 size={20} />, label: "AI" },
+  { name: "branding" as TabName, icon: <User size={20} />, label: "Brand" },
+  { name: "text-settings" as TabName, icon: <Type size={20} />, label: "Text" },
+  { name: "background" as TabName, icon: <Palette size={20} />, label: "Color" },
+  { name: "patterns-elements" as TabName, icon: <Shapes size={20} />, label: "Elements" },
+  { name: "background-images" as TabName, icon: <Image size={20} />, label: "Images" },
+] as const;
 
 interface MainSidebarProps {
   isCollapsed: boolean;
-  setIsCollapsed: (isCollapsed: boolean) => void;
+  setIsCollapsed: (value: boolean) => void;
+  activeTab: TabName;
+  setActiveTab: (tab: TabName) => void;
 }
 
 const MainSidebar: React.FC<MainSidebarProps> = ({
   isCollapsed,
   setIsCollapsed,
+  activeTab,
+  setActiveTab,
 }) => {
-  const router = useRouter();
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
-  const [activeTab, setActiveTab] = useState("ai-settings");
-
-  useEffect(() => {
-    const handleResize = () => {
-      if (window.innerWidth < 768) {
-        setIsCollapsed(true);
-      }
-    };
-
-    handleResize();
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, [setIsCollapsed]);
-
-  useEffect(() => {
-    const tab = searchParams?.get("tab");
-    if (tab) {
-      setActiveTab(tab);
-      setIsCollapsed(false);
-    }
-  }, [searchParams, setIsCollapsed]);
-
-  const handleTabClick = (tab: string) => {
-    setActiveTab(tab);
+  const handleTabClick = (tabName: TabName) => {
+    setActiveTab(tabName);
     setIsCollapsed(false);
-
-    // Create a new URLSearchParams object with the current query parameters
-    const newSearchParams = new URLSearchParams(searchParams?.toString());
-
-    // Update or add the 'tab' parameter
-    newSearchParams?.set("tab", tab);
-
-    // Construct the new URL with updated query parameters
-    const newUrl = `${pathname}?${newSearchParams.toString()}`;
-
-    // Use router.push to navigate to the new URL
-    router.push(newUrl);
   };
 
   return (
-    <div
-      className={`flex flex-col md:flex-row h-screen transition-all duration-200 ${
-        isCollapsed ? "w-[80px]" : "w-full md:w-[420px]"
-      } bg-white border-r border-gray-200`}
-    >
-      <div className="sticky top-0 w-full md:w-[80px] order-first md:order-first border-r border-gray-200 bg-white">
-        <div className="flex flex-wrap md:flex-col w-full h-full justify-start items-center border-b md:border-b-0 border-gray-200">
-          {[
-            { name: "ai-settings", icon: <Wand2 size={18} />, label: "AI" },
-            { name: "branding", icon: <User size={18} />, label: "Brand" },
-            { name: "text-settings", icon: <Type size={18} />, label: "Text" },
-            { name: "background", icon: <Palette size={18} />, label: "Color" },
-            { name: "patterns-elements", icon: <Shapes size={18} />, label: "Elements" },
-            { name: "background-images", icon: <Image size={18} />, label: "Images" },
-          ].map((tab) => (
-            <button
-              key={tab.name}
-              className={`flex flex-col items-center justify-center m-1 transition-all rounded-lg w-[60px] h-[60px] ${
-                activeTab === tab.name
-                  ? "bg-blue-50 text-blue-700 ring-1 ring-blue-200"
-                  : "text-gray-500 hover:text-gray-700 hover:bg-gray-50 hover:ring-1 hover:ring-gray-200"
+    <div className="fixed left-[288px] z-50 top-0 h-screen flex">
+      {/* Tools Bar - Vertical */}
+      <div className="w-[60px] h-full bg-white border-r border-gray-100 flex flex-col items-center py-4">
+        {EDITOR_TABS.map((tab) => (
+          <button
+            key={tab.name}
+            onClick={() => handleTabClick(tab.name)}
+            className={`w-10 h-10 mb-2 rounded-lg flex items-center justify-center transition-all duration-200
+              ${activeTab === tab.name 
+                ? "bg-blue-50 text-blue-600" 
+                : "text-gray-500 hover:bg-gray-50 hover:text-gray-700"
               }`}
-              onClick={() => handleTabClick(tab.name)}
-            >
-              {tab.icon}
-              <span className={`text-xs mt-1.5 font-medium ${
-                activeTab === tab.name
-                  ? "text-blue-700"
-                  : "text-gray-500"
-              }`}>
-                {tab.label}
-              </span>
-            </button>
-          ))}
-        </div>
+          >
+            {tab.icon}
+          </button>
+        ))}
       </div>
 
-      <div
-        className={`flex-1 bg-white overflow-hidden transition-all transform ${
-          isCollapsed ? "hidden" : ""
-        }`}
-      >
-        {activeTab === "ai-settings" && <AiSettingsComponent />}
-        {activeTab === "branding" && <BrandingSection />}
-        {activeTab === "text-settings" && <TextSettingsSection />}
-        {activeTab === "background" && <BackgroundColorsSection />}
-        {activeTab === "patterns-elements" && (
-          <BackgroundPatternsAndElements />
-        )}
-        {activeTab === "background-images" && <BackgroundImagesSection />}
-      </div>
+      {/* Content Panel - Slides out */}
+      {!isCollapsed && activeTab && (
+        <div className="w-[380px] h-full bg-white border-r border-gray-100 flex flex-col">
+          {/* Header */}
+          <div className="flex items-center justify-between px-4 py-3 border-b border-gray-100">
+            <div className="flex items-center gap-2">
+              {EDITOR_TABS.find(tab => tab.name === activeTab)?.icon}
+              <span className="text-sm font-medium">
+                {activeTab.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}
+              </span>
+            </div>
+            <button 
+              onClick={() => setIsCollapsed(true)}
+              className="p-1.5 rounded-lg hover:bg-gray-100 text-gray-400"
+            >
+              <X size={16} />
+            </button>
+          </div>
+
+          {/* Scrollable Content */}
+          <div className="flex-1 overflow-y-auto scrollbar-thin">
+            <div className="p-4">
+              {activeTab === "ai-settings" && (
+                <div className="space-y-4">
+                  <h3 className="text-sm font-medium text-gray-700">AI Content Generator</h3>
+                  <AiSettingsComponent />
+                </div>
+              )}
+              {activeTab === "branding" && <BrandingSection />}
+              {activeTab === "text-settings" && <TextSettingsSection />}
+              {activeTab === "background" && <BackgroundColorsSection />}
+              {activeTab === "patterns-elements" && <BackgroundPatternsAndElements />}
+              {activeTab === "background-images" && <BackgroundImagesSection />}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

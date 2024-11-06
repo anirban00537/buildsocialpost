@@ -82,6 +82,13 @@ const features: FeatureItem[] = [
     badgeColor: "bg-gradient-to-r from-green-500 to-emerald-500",
   },
   {
+    id: "carousels",
+    name: "My Carousels",
+    icon: LayoutTemplate,
+    href: "/carousels",
+    counter: 0,
+  },
+  {
     id: "content-manager",
     name: "Content Manager",
     icon: Calendar,
