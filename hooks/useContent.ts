@@ -221,28 +221,39 @@ export const useContentPosting = () => {
 
   const handlePostNow = useCallback(
     async (linkedinProfileId: number) => {
-      if (!draftId) {
-        // Save draft first if it's a new post
-        try {
-          const draftResponse = await handleCreateUpdateDraft(
-            linkedinProfileId
-          );
-          if (draftResponse?.data?.post?.id) {
-            await postNowMutation(draftResponse.data.post.id);
-          }
-        } catch (error) {
-          console.error("Error in handlePostNow:", error);
+      try {
+        // Always save/update draft first
+        const draftResponse = await handleCreateUpdateDraft(linkedinProfileId);
+        
+        if (!draftResponse?.data?.post?.id) {
+          toast.error("Failed to save draft before posting");
+          return;
         }
-      } else {
-        // Post existing draft
-        try {
-          await postNowMutation(Number(draftId));
-        } catch (error) {
-          console.error("Error in handlePostNow:", error);
-        }
+
+        // Show saving feedback
+        toast.loading("Saving draft...", { id: "saving-draft" });
+        
+        // Short delay to ensure draft is processed
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        
+        // Update toast
+        toast.success("Draft saved successfully!", { id: "saving-draft" });
+        
+        // Show posting feedback
+        toast.loading("Publishing post...", { id: "posting" });
+
+        // Post the saved draft
+        await postNowMutation(draftResponse.data.post.id);
+        
+        // Success toast will be shown by postNowMutation's onSuccess handler
+        toast.dismiss("posting");
+
+      } catch (error) {
+        console.error("Error in handlePostNow:", error);
+        toast.error("Failed to publish post");
       }
     },
-    [draftId, handleCreateUpdateDraft, postNowMutation]
+    [handleCreateUpdateDraft, postNowMutation]
   );
 
   const clearSelectedProfile = useCallback(() => {

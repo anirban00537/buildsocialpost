@@ -38,13 +38,16 @@ const ComposePage = () => {
     linkedinProfiles,
   } = useContentPosting();
 
-  const handleProfileSelect = useCallback((profile: LinkedInProfileUI) => {
-    console.log('Selecting profile:', profile);
-    setSelectedProfile(profile);
-  }, [setSelectedProfile]);
+  const handleProfileSelect = useCallback(
+    (profile: LinkedInProfileUI) => {
+      console.log("Selecting profile:", profile);
+      setSelectedProfile(profile);
+    },
+    [setSelectedProfile]
+  );
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-blue-50">
+    <div className="min-h-screen">
       <div className="max-w-[1600px] mx-auto px-4 sm:px-6 py-8">
         {/* Enhanced Header Section */}
         <div className="mb-8">
@@ -69,7 +72,9 @@ const ComposePage = () => {
 
             {/* Enhanced Profile Selector */}
             <div className="flex items-center gap-3">
-              <span className="text-sm font-medium text-gray-600">Publishing as:</span>
+              <span className="text-sm font-medium text-gray-600">
+                Publishing as:
+              </span>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button
@@ -77,9 +82,10 @@ const ComposePage = () => {
                     size="sm"
                     className={`
                       h-14 px-4 gap-2 transition-all duration-200
-                      ${!selectedProfile 
-                        ? 'text-red-600 border-red-200 hover:border-red-300 hover:bg-red-50' 
-                        : 'border-blue-200 hover:border-blue-300 hover:bg-blue-50'
+                      ${
+                        !selectedProfile
+                          ? "text-red-600 border-red-200 hover:border-red-300 hover:bg-red-50"
+                          : "border-blue-200 hover:border-blue-300 hover:bg-blue-50"
                       }
                     `}
                   >
@@ -96,8 +102,12 @@ const ComposePage = () => {
                           <div className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 bg-green-500 rounded-full border-2 border-white" />
                         </div>
                         <div className="flex flex-col items-start">
-                          <span className="text-sm font-medium">{selectedProfile.name}</span>
-                          <span className="text-[8px] text-gray-500">LinkedIn Profile</span>
+                          <span className="text-sm font-medium">
+                            {selectedProfile.name}
+                          </span>
+                          <span className="text-[8px] text-gray-500">
+                            LinkedIn Profile
+                          </span>
                         </div>
                       </>
                     ) : (
@@ -111,8 +121,12 @@ const ComposePage = () => {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-[280px] p-2">
                   <div className="px-3 py-2 mb-2">
-                    <h4 className="text-sm font-medium text-gray-900">LinkedIn Profiles</h4>
-                    <p className="text-xs text-gray-500 mt-0.5">Select a profile to publish as</p>
+                    <h4 className="text-sm font-medium text-gray-900">
+                      LinkedIn Profiles
+                    </h4>
+                    <p className="text-xs text-gray-500 mt-0.5">
+                      Select a profile to publish as
+                    </p>
                   </div>
                   {linkedinProfiles.length > 0 ? (
                     linkedinProfiles.map((profile) => (
@@ -121,9 +135,10 @@ const ComposePage = () => {
                         onClick={() => handleProfileSelect(profile)}
                         className={`
                           flex items-center gap-3 p-2 rounded-lg cursor-pointer
-                          ${selectedProfile?.id === profile.id 
-                            ? 'bg-blue-50 text-blue-600' 
-                            : 'hover:bg-gray-50'
+                          ${
+                            selectedProfile?.id === profile.id
+                              ? "bg-blue-50 text-blue-600"
+                              : "hover:bg-gray-50"
                           }
                         `}
                       >
@@ -138,8 +153,12 @@ const ComposePage = () => {
                           <div className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 bg-green-500 rounded-full border-2 border-white" />
                         </div>
                         <div className="flex flex-col">
-                          <span className="text-sm font-medium">{profile.name}</span>
-                          <span className="text-xs text-gray-500">LinkedIn Profile</span>
+                          <span className="text-sm font-medium">
+                            {profile.name}
+                          </span>
+                          <span className="text-xs text-gray-500">
+                            LinkedIn Profile
+                          </span>
                         </div>
                       </DropdownMenuItem>
                     ))
@@ -148,13 +167,19 @@ const ComposePage = () => {
                       <div className="w-12 h-12 rounded-full bg-blue-50 flex items-center justify-center mx-auto mb-3">
                         <Linkedin className="h-6 w-6 text-blue-600" />
                       </div>
-                      <h3 className="text-sm font-medium text-gray-900 mb-1">No Profiles Connected</h3>
-                      <p className="text-xs text-gray-500 mb-3">Connect your LinkedIn profile to start posting</p>
+                      <h3 className="text-sm font-medium text-gray-900 mb-1">
+                        No Profiles Connected
+                      </h3>
+                      <p className="text-xs text-gray-500 mb-3">
+                        Connect your LinkedIn profile to start posting
+                      </p>
                       <Button
                         variant="outline"
                         size="sm"
                         className="w-full border-blue-200 text-blue-600 hover:bg-blue-50"
-                        onClick={() => {/* Add your LinkedIn connect logic */}}
+                        onClick={() => {
+                          /* Add your LinkedIn connect logic */
+                        }}
                       >
                         Connect LinkedIn Account
                       </Button>
@@ -175,8 +200,12 @@ const ComposePage = () => {
                   <FileText className="w-8 h-8 text-blue-600 opacity-50" />
                 </div>
                 <div className="space-y-1 text-center">
-                  <p className="text-sm font-medium text-gray-900">Loading Draft</p>
-                  <p className="text-xs text-gray-500">Please wait while we fetch your content</p>
+                  <p className="text-sm font-medium text-gray-900">
+                    Loading Draft
+                  </p>
+                  <p className="text-xs text-gray-500">
+                    Please wait while we fetch your content
+                  </p>
                 </div>
               </div>
             </div>

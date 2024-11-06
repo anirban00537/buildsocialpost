@@ -36,43 +36,7 @@ const ContentCreationTools: React.FC = () => {
     <div className="min-h-screen bg-gradient-to-br from-white via-blue-50/30 to-indigo-50/20">
       <Header />
 
-      <div className="max-w-[1600px] mx-auto px-4 sm:px-6 py-8">
-        {/* Enhanced Page Header with refined gradients */}
-        <div className="mb-8">
-          <div className="flex items-center justify-between">
-            <div className="space-y-1">
-              <div className="flex items-center gap-3">
-                <div
-                  className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 via-blue-600 to-indigo-700 
-                              flex items-center justify-center shadow-lg shadow-blue-500/20"
-                >
-                  <Sparkles className="h-6 w-6 text-white" />
-                </div>
-                <div>
-                  <h1 className="text-2xl font-semibold text-gray-900">
-                    AI Writer
-                  </h1>
-                  <p className="text-sm text-gray-600">
-                    Transform your ideas into engaging LinkedIn content
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-3">
-              <div
-                className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-50 via-indigo-50 to-blue-50 
-                            rounded-full border border-blue-100/80 shadow-sm"
-              >
-                <Sparkles className="w-4 h-4 text-blue-600" />
-                <span className="text-sm font-medium bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
-                  AI Powered
-                </span>
-              </div>
-            </div>
-          </div>
-        </div>
-
+      <div className="max-w-[1600px] mx-auto px-4 sm:px-6">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 relative">
           {/* Left Column - Enhanced Input Section */}
           <div className="max-w-[800px] w-full mx-auto lg:mx-0">
@@ -85,23 +49,6 @@ const ContentCreationTools: React.FC = () => {
               <div className="absolute inset-0 bg-white/50 backdrop-blur-[2px]" />
 
               <CardHeader className="relative pb-0 px-8 pt-6 border-b border-gray-100/80">
-                <div className="flex items-center justify-between mb-6">
-                  {characterCount > 0 && (
-                    <span
-                      className={`
-                      px-4 py-1.5 rounded-full text-xs font-medium shadow-sm
-                      ${
-                        characterCount > 1000
-                          ? "bg-gradient-to-r from-red-50 to-red-100 text-red-600 border border-red-200"
-                          : "bg-gradient-to-r from-blue-50 to-indigo-50 text-blue-600 border border-blue-200"
-                      }
-                    `}
-                    >
-                      {characterCount}/1000
-                    </span>
-                  )}
-                </div>
-
                 <ContentSourceSelector
                   contentSource={contentSource}
                   setContentSource={setContentSource}

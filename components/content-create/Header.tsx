@@ -1,27 +1,53 @@
 import { motion } from "framer-motion";
-import { Sparkles, Cpu } from "lucide-react";
+import { Wand2 } from "lucide-react";
 
 export const Header = () => {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      className="text-center mt-10 space-y-3 relative"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.5 }}
+      className="text-center pb-4 relative"
     >
-      <div className="relative">
-        <motion.h1
-          initial={{ opacity: 0, y: 20 }}
+      <div className="relative space-y-4">
+        {/* Icon Badge */}
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.3 }}
-          className="text-4xl font-semibold tracking-tight lg:text-5xl 
-                   bg-[linear-gradient(to_right,#18181B,#3F3F46,#71717A,#A1A1AA,#71717A,#3F3F46,#18181B)]
-                   animate-ai-gradient
-                   inline-block text-transparent bg-clip-text 
-                   [text-shadow:_0_2px_3px_rgb(0_0_0_/_25%)]
-                   relative z-10"
+          transition={{ duration: 0.6 }}
+          className="inline-flex items-center gap-2 px-4 py-2 rounded-full 
+                     bg-gradient-to-r from-blue-50 to-indigo-50
+                     border border-blue-100"
         >
-          What would you like to write about?
-        </motion.h1>
+          <Wand2 className="w-4 h-4 text-blue-600" />
+          <span className="text-sm font-medium text-blue-700">
+            AI-Powered Writing
+          </span>
+        </motion.div>
+
+        {/* Main Heading */}
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+        >
+          <h1 className="text-4xl font-bold tracking-tight lg:text-5xl 
+                        bg-gradient-to-r from-gray-900 via-blue-800 to-indigo-900
+                        inline-block text-transparent bg-clip-text"
+          >
+            What would you like to write about?
+          </h1>
+        </motion.div>
+
+        {/* Subtitle */}
+        <motion.p
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.3 }}
+          className="text-gray-500 max-w-2xl mx-auto text-lg"
+        >
+          Transform your ideas into engaging content with AI-powered assistance
+        </motion.p>
       </div>
     </motion.div>
   );

@@ -151,15 +151,15 @@ export const PostPreviewNotRedux = ({
           <div className="flex gap-2">
             <Avatar className="h-8 w-8 rounded-full">
               <img
-                src={linkedInProfile.avatarUrl}
-                alt={linkedInProfile.name}
+                src={linkedInProfile?.avatarUrl || "/linkedin-logo.webp"}
+                alt={linkedInProfile?.name || ""}
                 className="h-full w-full object-cover rounded-full"
               />
             </Avatar>
             <div className="flex flex-col">
               <div className="flex items-center gap-1.5">
                 <span className="text-sm font-semibold text-gray-900">
-                  {linkedInProfile.name}
+                  {linkedInProfile?.name || "LinkedIn Profile"}
                 </span>
               </div>
               <div className="flex items-center gap-1.5 text-xs text-gray-500">

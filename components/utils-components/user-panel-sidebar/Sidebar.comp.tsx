@@ -25,7 +25,7 @@ import SubscriptionInfo from "@/components/subscription/Status.comp";
 import UserMenu from "./User-Menu.comp";
 import ManageWorkspacesModal from "../../workspace/Manage-Workspaces-Modal.comp";
 import ManageAccountsModal from "./ManageAccountsModal";
-import { LucideIcon } from 'lucide-react';
+import { LucideIcon } from "lucide-react";
 
 // Define base interface for navigation items
 interface BaseNavigationItem {
@@ -107,7 +107,13 @@ const management: ManagementItem[] = [
 ];
 
 // Navigation Section Component
-const NavigationSection = ({ title, children }: { title: string, children: React.ReactNode }) => (
+const NavigationSection = ({
+  title,
+  children,
+}: {
+  title: string;
+  children: React.ReactNode;
+}) => (
   <div className="space-y-1">
     <h3 className="px-3 mb-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
       {title}
@@ -127,33 +133,39 @@ const NavigationItem: React.FC<NavigationItemProps> = ({ item, isActive }) => (
     <span
       className={`
         group relative w-full flex items-center px-2 h-9 rounded-lg transition-all duration-200
-        ${isActive 
-          ? "bg-gradient-to-r from-blue-50 to-indigo-50 text-blue-700 font-medium ring-1 ring-blue-200" 
-          : "hover:bg-gray-50 text-gray-600 hover:text-gray-900"
+        ${
+          isActive
+            ? "bg-gradient-to-r from-blue-50 to-indigo-50 text-blue-700 font-medium ring-1 ring-blue-200"
+            : "hover:bg-gray-50 text-gray-600 hover:text-gray-900"
         }
         focus:outline-none
         active:scale-[0.98]
       `}
     >
       <div className="flex items-center gap-3 flex-1">
-        <div className={`
+        <div
+          className={`
           flex items-center justify-center w-8 h-8 rounded-lg transition-all duration-200
-          ${isActive 
-            ? "text-blue-600" 
-            : "text-gray-400 group-hover:text-gray-600"
+          ${
+            isActive
+              ? "text-blue-600"
+              : "text-gray-400 group-hover:text-gray-600"
           }
-        `}>
+        `}
+        >
           <item.icon className="w-4 h-4" />
         </div>
-        
+
         <div className="flex items-center justify-between flex-1">
           <span className="text-sm font-medium">{item.name}</span>
           <div className="flex items-center gap-2">
             {item.badge && (
-              <span className={`
+              <span
+                className={`
                 px-1.5 py-0.5 text-[10px] font-medium text-white rounded-full
                 ${item.badgeColor || "bg-blue-500"}
-              `}>
+              `}
+              >
                 {item.badge}
               </span>
             )}
@@ -177,7 +189,7 @@ const NavigationItem: React.FC<NavigationItemProps> = ({ item, isActive }) => (
 // Main Navigation Component
 const Navigation = () => {
   const pathname = usePathname();
-  
+
   return (
     <nav className="flex-grow overflow-y-auto px-3 py-4 space-y-6">
       <NavigationSection title="Create">
@@ -185,7 +197,9 @@ const Navigation = () => {
           <NavigationItem
             key={tool.id}
             item={tool}
-            isActive={pathname === tool.href || pathname.startsWith(tool.href + "/")}
+            isActive={
+              pathname === tool.href || pathname.startsWith(tool.href + "/")
+            }
           />
         ))}
       </NavigationSection>
@@ -195,7 +209,10 @@ const Navigation = () => {
           <NavigationItem
             key={feature.id}
             item={feature}
-            isActive={pathname === feature.href || pathname.startsWith(feature.href + "/")}
+            isActive={
+              pathname === feature.href ||
+              pathname.startsWith(feature.href + "/")
+            }
           />
         ))}
       </NavigationSection>
@@ -205,7 +222,9 @@ const Navigation = () => {
           <NavigationItem
             key={item.id}
             item={item}
-            isActive={pathname === item.href || pathname.startsWith(item.href + "/")}
+            isActive={
+              pathname === item.href || pathname.startsWith(item.href + "/")
+            }
           />
         ))}
       </NavigationSection>
@@ -227,7 +246,7 @@ const Sidebar = () => {
     remaining: wordUsage?.usage?.remaining || 0,
     total: wordUsage?.usage?.total || 0,
     percentage: wordUsage?.percentage?.used || 0,
-    isActive: wordUsage?.usage?.isActive || false
+    isActive: wordUsage?.usage?.isActive || false,
   };
 
   const formatTokens = (tokens: number) => {
@@ -268,15 +287,15 @@ const Sidebar = () => {
       </div>
 
       {/* Workspace Selector */}
-      <div className="px-4 py-3">
+      <div className="px-4 ">
         <Button
           variant="ghost"
           onClick={() => setIsManageModalOpen(true)}
-          className="w-full h-10 justify-between bg-cardBackground hover:bg-gray-50 text-gray-600 hover:text-gray-700 ring-1 ring-gray-200 hover:ring-blue-200 rounded-lg transition-all duration-200"
+          className="w-full h-8 justify-between bg-cardBackground hover:bg-gray-50 text-gray-600 hover:text-gray-700 ring-1 ring-gray-200 hover:ring-blue-200 rounded-lg transition-all duration-200"
         >
           <div className="flex items-center gap-2">
             <Users className="h-4 w-4 text-gray-400" />
-            <span className="text-sm font-medium">
+            <span className="text-xs font-medium">
               {currentWorkspace?.name || "Select workspace..."}
             </span>
           </div>
@@ -312,7 +331,9 @@ const Sidebar = () => {
             <div className="flex items-center justify-between text-sm">
               <div className="flex items-center gap-2">
                 <Zap className="w-4 h-4 text-blue-600" />
-                <span className="text-gray-700 font-medium">AI Token Usage</span>
+                <span className="text-gray-700 font-medium">
+                  AI Token Usage
+                </span>
               </div>
               <span className="text-xs bg-white px-2 py-1 rounded-md text-gray-500 font-medium ring-1 ring-gray-200">
                 {formatTokens(aiUsage.used)} / {formatTokens(aiUsage.total)}
@@ -322,7 +343,7 @@ const Sidebar = () => {
               <div className="w-full bg-gray-200/50 rounded-full h-1">
                 <div
                   className={`h-1 rounded-full transition-all duration-300 ${
-                    aiUsage.percentage > 90 ? 'bg-red-500' : 'bg-blue-600'
+                    aiUsage.percentage > 90 ? "bg-red-500" : "bg-blue-600"
                   }`}
                   style={{
                     width: `${aiUsage.percentage}%`,
