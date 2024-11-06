@@ -24,7 +24,6 @@ const ComposePage = () => {
     setIsGenerating,
     isCreatingDraft,
     isLoadingDraft,
-    handleCreateUpdateDraft,
     isScheduleModalOpen,
     setIsScheduleModalOpen,
     scheduledDate,
@@ -36,6 +35,7 @@ const ComposePage = () => {
     selectedProfile,
     setSelectedProfile,
     linkedinProfiles,
+    isAutoSaving,
   } = useContentPosting();
 
   const handleProfileSelect = useCallback(
@@ -216,8 +216,6 @@ const ComposePage = () => {
                 setContent={setContent}
                 isGenerating={isGenerating}
                 setIsGenerating={setIsGenerating}
-                isCreatingDraft={isCreatingDraft}
-                onSaveDraft={handleCreateUpdateDraft}
                 isScheduleModalOpen={isScheduleModalOpen}
                 setIsScheduleModalOpen={setIsScheduleModalOpen}
                 scheduledDate={scheduledDate}
@@ -228,6 +226,7 @@ const ComposePage = () => {
                 isPosting={isPosting}
                 selectedLinkedInProfile={selectedProfile}
                 onProfileSelect={setSelectedProfile}
+                isAutoSaving={isAutoSaving}
               />
               <PostPreviewFullFeature
                 isGenerating={isGenerating}

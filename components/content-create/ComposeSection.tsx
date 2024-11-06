@@ -36,8 +36,6 @@ interface ComposeSectionProps {
   setContent: (content: string) => void;
   isGenerating: boolean;
   setIsGenerating: (isGenerating: boolean) => void;
-  isCreatingDraft: boolean;
-  onSaveDraft: (linkedinProfileId: number) => void;
   isScheduleModalOpen: boolean;
   setIsScheduleModalOpen: (isOpen: boolean) => void;
   scheduledDate: Date | null;
@@ -48,6 +46,7 @@ interface ComposeSectionProps {
   isPosting: boolean;
   selectedLinkedInProfile: LinkedInProfileUI | null;
   onProfileSelect: (profile: LinkedInProfileUI) => void;
+  isAutoSaving?: boolean;
 }
 
 const CHAR_LIMIT = 3000;
@@ -57,8 +56,6 @@ export const ComposeSection = ({
   setContent,
   isGenerating,
   setIsGenerating,
-  isCreatingDraft,
-  onSaveDraft,
   isScheduleModalOpen,
   setIsScheduleModalOpen,
   scheduledDate,
@@ -69,6 +66,7 @@ export const ComposeSection = ({
   isPosting,
   selectedLinkedInProfile,
   onProfileSelect,
+  isAutoSaving,
 }: ComposeSectionProps) => {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const characterCount = content.length;
@@ -80,11 +78,6 @@ export const ComposeSection = ({
     linkedinProfiles: state.user.linkedinProfiles,
   }));
 
-  // Add validation function
-  const canSaveDraft = () => {
-    return content.trim().length > 0;
-  };
-
   // Auto-resize textarea
   useEffect(() => {
     const textarea = textareaRef.current;
@@ -94,38 +87,6 @@ export const ComposeSection = ({
     }
   }, [content]);
 
-  // Add useEffect for global keyboard shortcut
-  useEffect(() => {
-    const handleGlobalKeyDown = (e: KeyboardEvent) => {
-      // Save Draft: Cmd/Ctrl + Shift + S
-      if (
-        (e.metaKey || e.ctrlKey) &&
-        e.shiftKey &&
-        e.key.toLowerCase() === "s"
-      ) {
-        e.preventDefault(); // Prevent browser's save dialog
-
-        // Check if we can save
-        if (!canSaveDraft()) {
-          toast({
-            title: "Validation Error",
-            description: "Please add some content first",
-            variant: "destructive",
-          });
-          return;
-        }
-
-        // Only trigger if not already saving
-        if (!isCreatingDraft && selectedLinkedInProfile?.id) {
-          onSaveDraft(selectedLinkedInProfile.id);
-        }
-      }
-    };
-
-    document.addEventListener("keydown", handleGlobalKeyDown);
-    return () => document.removeEventListener("keydown", handleGlobalKeyDown);
-  }, [isCreatingDraft, onSaveDraft, content]);
-
   // Local keyboard handler for other shortcuts
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     // Post Now: Cmd/Ctrl + Enter
@@ -133,7 +94,7 @@ export const ComposeSection = ({
       e.preventDefault();
       if (
         !isPosting &&
-        canSaveDraft() &&
+        content.trim().length > 0 &&
         characterCount <= CHAR_LIMIT &&
         selectedLinkedInProfile?.id
       ) {
@@ -164,6 +125,19 @@ export const ComposeSection = ({
                   <span className="text-[10px] text-gray-500">
                     {characterCount}/{CHAR_LIMIT} characters
                   </span>
+                  <div className="flex items-center gap-1 text-[10px] text-blue-600 min-w-[60px]">
+                    {isAutoSaving ? (
+                      <>
+                        <span className="w-2 h-2 border-2 border-blue-600 border-t-transparent rounded-full animate-spin" />
+                        <span>Saving...</span>
+                      </>
+                    ) : (
+                      <>
+                        <span className="w-2 h-2 bg-blue-600 rounded-full" />
+                        <span>Saved</span>
+                      </>
+                    )}
+                  </div>
                 </div>
               </div>
             </div>
@@ -231,48 +205,14 @@ export const ComposeSection = ({
         )}
       </div>
 
-      {/* Enhanced Action Buttons */}
+      {/* Simplified Action Buttons */}
       <div className="p-4 border-t border-gray-100 bg-white">
         <div className="flex flex-col gap-3">
           <div className="flex gap-2">
             <Button
               variant="outline"
               size="sm"
-              className={`
-                flex-1 h-10 gap-2 transition-all duration-200
-                ${
-                  isCreatingDraft || !canSaveDraft()
-                    ? "opacity-50"
-                    : "hover:border-blue-300 hover:bg-blue-50"
-                }
-              `}
-              onClick={() => {
-                if (canSaveDraft() && selectedLinkedInProfile?.id) {
-                  onSaveDraft(selectedLinkedInProfile.id);
-                }
-              }}
-              disabled={isCreatingDraft || !canSaveDraft()}
-            >
-              {isCreatingDraft ? (
-                <>
-                  <span className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
-                  Saving...
-                </>
-              ) : (
-                <>
-                  <Save className="w-4 h-4" />
-                  Save Draft
-                  <kbd className="ml-auto text-[10px] px-1.5 py-0.5 bg-gray-100 rounded">
-                    ⌘⇧S
-                  </kbd>
-                </>
-              )}
-            </Button>
-
-            <Button
-              variant="outline"
-              size="sm"
-              className="flex-1 h-10 gap-2 hover:border-primary hover:bg-primary/10 text-primary"
+              className="flex-1 h-10 gap-2 bg-primary/20 border-primary hover:bg-primary/30 text-primary"
               onClick={() => setIsScheduleModalOpen(true)}
             >
               <Clock className="w-4 h-4" />
@@ -283,15 +223,15 @@ export const ComposeSection = ({
               variant="default"
               size="sm"
               className={`
-                flex-1 h-10 gap-2 bg-blue-600 hover:bg-blue-700
+                flex-1 h-10 gap-2 bg-blue-600 hover:bg-blue-700 text-white
                 ${
-                  characterCount > CHAR_LIMIT || !canSaveDraft() || isPosting
+                  characterCount > CHAR_LIMIT || !content.trim() || isPosting
                     ? "opacity-50 cursor-not-allowed"
                     : ""
                 }
               `}
               disabled={
-                characterCount > CHAR_LIMIT || !canSaveDraft() || isPosting
+                characterCount > CHAR_LIMIT || !content.trim() || isPosting
               }
               onClick={() => {
                 if (selectedLinkedInProfile?.id) {
@@ -308,7 +248,7 @@ export const ComposeSection = ({
                 <>
                   <Send className="w-4 h-4" />
                   Publish Now
-                  <kbd className="ml-auto text-[10px] px-1.5 py-0.5 bg-blue-500 rounded">
+                  <kbd className="ml-auto text-[10px] px-1.5 py-0.5 bg-blue-500/20 text-white rounded">
                     ⌘↵
                   </kbd>
                 </>

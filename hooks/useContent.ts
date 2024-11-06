@@ -23,6 +23,7 @@ import { useState, useCallback, useEffect } from "react";
 import { POST_STATUS } from "@/lib/core-constants";
 import { useRouter, useSearchParams } from "next/navigation";
 import { processApiResponse } from "@/lib/functions";
+import debounce from "lodash/debounce";
 
 interface DraftResponse {
   success: boolean;
@@ -50,6 +51,7 @@ export const useContentPosting = () => {
   const { linkedinProfiles } = useSelector((state: RootState) => state.user);
   const [selectedProfile, setSelectedProfile] =
     useState<LinkedInProfileUI | null>(null);
+  const [isAutoSaving, setIsAutoSaving] = useState(false);
 
   useEffect(() => {
     if (postDetails?.linkedInProfile?.id) {
@@ -75,7 +77,7 @@ export const useContentPosting = () => {
         if (response.success) {
           setContent(response.data.post.content);
           setPostDetails(response.data.post);
-          
+
           if (response.data.post.linkedInProfile?.id) {
             const linkedProfile = linkedinProfiles.find(
               (profile) => profile.id === response.data.post.linkedInProfile.id
@@ -114,6 +116,7 @@ export const useContentPosting = () => {
     },
   });
 
+  // Keep the original handleCreateUpdateDraft
   const handleCreateUpdateDraft = useCallback(
     async (linkedinProfileId: number) => {
       if (isCreatingDraft) return;
@@ -166,6 +169,62 @@ export const useContentPosting = () => {
       isCreatingDraft,
     ]
   );
+
+  // Modify the debounced auto-save
+  const debouncedSaveDraft = useCallback(
+    debounce(async (content: string, linkedinProfileId: number) => {
+      if (!content.trim() || !currentWorkspace?.id || !linkedinProfileId)
+        return;
+
+      try {
+        setIsAutoSaving(true);
+        const draftData = {
+          ...(draftId && { id: Number(draftId) }),
+          content: content.trim(),
+          postType: "text" as const,
+          workspaceId: currentWorkspace.id,
+          linkedInProfileId: linkedinProfileId,
+          imageUrls: [] as string[],
+          videoUrl: "",
+          documentUrl: "",
+          hashtags: [] as string[],
+          mentions: [] as string[],
+        };
+
+        const response = await createUpdateDraftMutation(draftData);
+        // processApiResponse(response);
+
+        if (!draftId && response.data?.post?.id) {
+          const newUrl = new URL(window.location.href);
+          newUrl.searchParams.set("draft_id", response.data.post.id.toString());
+          window.history.replaceState({}, "", newUrl.toString());
+        }
+      } catch (error) {
+        console.error("Auto-save error:", error);
+      } finally {
+        setIsAutoSaving(false);
+      }
+    }, 1500),
+    [currentWorkspace?.id, createUpdateDraftMutation, draftId]
+  );
+
+  // Update content and trigger auto-save
+  const handleContentChange = useCallback(
+    (newContent: string) => {
+      setContent(newContent);
+      if (selectedProfile?.id) {
+        debouncedSaveDraft(newContent, selectedProfile.id);
+      }
+    },
+    [selectedProfile?.id, debouncedSaveDraft]
+  );
+
+  // Clean up debounced function on unmount
+  useEffect(() => {
+    return () => {
+      debouncedSaveDraft.cancel();
+    };
+  }, [debouncedSaveDraft]);
 
   const handleSchedule = useCallback((date: Date) => {
     setScheduledDate(date);
@@ -222,38 +281,24 @@ export const useContentPosting = () => {
   const handlePostNow = useCallback(
     async (linkedinProfileId: number) => {
       try {
-        // Always save/update draft first
-        const draftResponse = await handleCreateUpdateDraft(linkedinProfileId);
-        
-        if (!draftResponse?.data?.post?.id) {
-          toast.error("Failed to save draft before posting");
+        if (!draftId) {
+          toast.error("No draft found to publish");
           return;
         }
 
-        // Show saving feedback
-        toast.loading("Saving draft...", { id: "saving-draft" });
-        
-        // Short delay to ensure draft is processed
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        
-        // Update toast
-        toast.success("Draft saved successfully!", { id: "saving-draft" });
-        
         // Show posting feedback
         toast.loading("Publishing post...", { id: "posting" });
 
-        // Post the saved draft
-        await postNowMutation(draftResponse.data.post.id);
-        
+        await postNowMutation(Number(draftId));
+
         // Success toast will be shown by postNowMutation's onSuccess handler
         toast.dismiss("posting");
-
       } catch (error) {
         console.error("Error in handlePostNow:", error);
         toast.error("Failed to publish post");
       }
     },
-    [handleCreateUpdateDraft, postNowMutation]
+    [draftId, postNowMutation]
   );
 
   const clearSelectedProfile = useCallback(() => {
@@ -263,7 +308,7 @@ export const useContentPosting = () => {
   return {
     // State
     content,
-    setContent,
+    setContent: handleContentChange,
     isGenerating,
     setIsGenerating,
     isScheduleModalOpen,
@@ -274,8 +319,8 @@ export const useContentPosting = () => {
     isEditing: !!draftId,
     selectedProfile,
     linkedinProfiles,
+    isAutoSaving,
     // Actions
-    handleCreateUpdateDraft,
     handleSchedule,
     postDetails,
     handleCreateDraftFromGenerated,
@@ -283,6 +328,7 @@ export const useContentPosting = () => {
     isPosting,
     setSelectedProfile,
     clearSelectedProfile,
+    handleCreateUpdateDraft,
   };
 };
 
