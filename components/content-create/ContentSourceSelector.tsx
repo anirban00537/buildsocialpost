@@ -19,11 +19,11 @@ export const ContentSourceSelector = ({
 }: ContentSourceSelectorProps) => {
   return (
     <div className="space-y-4">
-      {/* Enhanced Header with Gradient Icon */}
+      {/* Header with Primary Color Icon */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center">
-            <Wand2 className="h-4 w-4 text-white" />
+          <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
+            <Wand2 className="h-4 w-4 text-primary" />
           </div>
           <div>
             <h3 className="text-sm font-semibold text-gray-900">
@@ -33,7 +33,7 @@ export const ContentSourceSelector = ({
               <span className="text-xs text-gray-500">
                 Choose your content type
               </span>
-              <div className="flex items-center gap-1 text-[10px] font-medium text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full border border-blue-100">
+              <div className="flex items-center gap-1 text-[10px] font-medium text-primary bg-primary/10 px-2 py-0.5 rounded-full">
                 <Sparkles className="h-3 w-3" />
                 <span>AI Optimized</span>
               </div>
@@ -42,7 +42,7 @@ export const ContentSourceSelector = ({
         </div>
       </div>
 
-      {/* Enhanced Source Selection with Gradient Cards */}
+      {/* Source Selection with AI Optimizer Style */}
       <div className="grid grid-cols-2 sm:flex sm:flex-wrap gap-2">
         {contentSources.map((source) => (
           <motion.button
@@ -52,10 +52,10 @@ export const ContentSourceSelector = ({
               group relative flex items-center gap-2 px-2 py-2 rounded-xl transition-all duration-200
               ${
                 contentSource === source.id
-                  ? "bg-gradient-to-br from-blue-50 to-indigo-50/30 ring-1 ring-blue-200"
-                  : "bg-white hover:bg-gradient-to-br hover:from-gray-50 hover:to-blue-50/10 ring-1 ring-gray-200 hover:ring-blue-200"
+                  ? "bg-primary/10 ring-1 ring-primary/20"
+                  : "bg-gray-50/80 hover:bg-primary/5 ring-1 ring-gray-200 hover:ring-primary/20"
               }
-              focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2
+              focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2
               w-full sm:w-auto
             `}
             whileHover={{ scale: 1.02 }}
@@ -66,8 +66,8 @@ export const ContentSourceSelector = ({
               w-8 h-8 rounded-lg flex items-center justify-center transition-all duration-200
               ${
                 contentSource === source.id
-                  ? "bg-gradient-to-br from-blue-500 to-indigo-600"
-                  : "bg-gray-100 group-hover:bg-gray-200"
+                  ? "bg-primary/10"
+                  : "bg-white group-hover:bg-primary/5"
               }
             `}
             >
@@ -76,8 +76,8 @@ export const ContentSourceSelector = ({
                   h-4 w-4 transition-all duration-200
                   ${
                     contentSource === source.id
-                      ? "text-white"
-                      : "text-gray-500 group-hover:text-gray-700"
+                      ? "text-primary"
+                      : "text-primary/60 group-hover:text-primary"
                   }
                 `}
               />
@@ -88,8 +88,8 @@ export const ContentSourceSelector = ({
               text-xs font-medium whitespace-nowrap transition-colors
               ${
                 contentSource === source.id
-                  ? "text-blue-700"
-                  : "text-gray-700 group-hover:text-gray-900"
+                  ? "text-primary"
+                  : "text-gray-700 group-hover:text-primary"
               }
             `}
             >
@@ -98,24 +98,23 @@ export const ContentSourceSelector = ({
 
             {contentSource === source.id && (
               <motion.div
-                className="absolute -right-1 -top-1 w-5 h-5 bg-gradient-to-br from-blue-500 to-indigo-600 
+                className="absolute -right-1 -top-1 w-5 h-5 bg-primary/10 
                          rounded-full flex items-center justify-center ring-2 ring-white"
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
                 transition={{ type: "spring", stiffness: 500, damping: 30 }}
               >
-                <Check className="w-3 h-3 text-white" />
+                <Check className="w-3 h-3 text-primary" />
               </motion.div>
             )}
           </motion.button>
         ))}
       </div>
 
-      {/* Optional: Helper Text */}
+      {/* Helper Text */}
       <div className="px-1">
         <p className="text-xs text-gray-500">
-          Select the most appropriate source type for your content generation
-          needs
+          Select the most appropriate source type for your content generation needs
         </p>
       </div>
     </div>

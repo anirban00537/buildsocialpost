@@ -95,19 +95,21 @@ export const ContentInput = ({
 
   return (
     <div className="space-y-6">
-      {/* Content Input Section with Enhanced Design */}
+      {/* Content Input Section with Clean Design */}
       <div className="space-y-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center">
-              <Pencil className="h-4 w-4 text-white" />
+            <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
+              <Pencil className="h-4 w-4 text-primary" />
             </div>
             <div>
-              <h3 className="text-sm font-semibold text-gray-900">Your Content</h3>
+              <h3 className="text-sm font-semibold text-gray-900">
+                Your Content
+              </h3>
               <div className="flex items-center gap-2 mt-0.5">
                 <span className="text-xs text-gray-500">AI Assistant</span>
                 <div className="w-1 h-1 rounded-full bg-gray-300" />
-                <div className="flex items-center gap-1 text-[10px] font-medium text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full border border-blue-100">
+                <div className="flex items-center gap-1 text-[10px] font-medium text-primary bg-primary/10 px-2 py-0.5 rounded-full">
                   <Sparkles className="h-3 w-3" />
                   <span>AI Powered</span>
                 </div>
@@ -118,12 +120,18 @@ export const ContentInput = ({
 
         {/* Enhanced Content Input */}
         <div className="space-y-2">
-          <div className={`
+          <div
+            className={`
             relative overflow-hidden rounded-xl bg-white border
-            ${!isValidLength && charCount > 0 ? 'border-red-200' : 'border-gray-200'}
+            ${
+              !isValidLength && charCount > 0
+                ? "border-red-200"
+                : "border-gray-200"
+            }
             transition-all duration-200 group
-          `}>
-            <div className="absolute inset-0 bg-gradient-to-br from-blue-50/50 via-white to-indigo-50/30 opacity-50" />
+          `}
+          >
+            <div className="absolute inset-0 bg-primary/5" />
             <textarea
               value={contentSource === "plain-prompt" ? content : undefined}
               onChange={onTextChange}
@@ -154,31 +162,39 @@ export const ContentInput = ({
       {/* Enhanced Post Settings Section */}
       <div className="space-y-5 rounded-xl border border-gray-200 overflow-hidden">
         <div className="relative p-5 space-y-5">
-          <div className="absolute inset-0 bg-gradient-to-br from-gray-50 via-white to-blue-50/20" />
-          
+          <div className="absolute inset-0 bg-primary/5" />
+
           {/* Section Header */}
           <div className="relative flex items-center gap-3">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-500 to-blue-600 flex items-center justify-center">
-              <Zap className="h-4 w-4 text-white" />
+            <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
+              <Zap className="h-4 w-4 text-primary" />
             </div>
             <div>
-              <h3 className="text-sm font-semibold text-gray-900">Content Style</h3>
-              <p className="text-xs text-gray-500 mt-0.5">Customize your content's voice and style</p>
+              <h3 className="text-sm font-semibold text-gray-900">
+                Content Style
+              </h3>
+              <p className="text-xs text-gray-500 mt-0.5">
+                Customize your content's voice and style
+              </p>
             </div>
           </div>
 
-          {/* Settings Grid with Enhanced Design */}
+          {/* Settings Grid with Clean Design */}
           <div className="relative grid gap-6">
             {/* Tone Selection */}
             <div className="space-y-3">
               <div className="flex items-center gap-2">
-                <label className="text-xs font-medium text-gray-700">Tone of Voice</label>
+                <label className="text-xs font-medium text-gray-700">
+                  Tone of Voice
+                </label>
                 <Tooltip>
                   <TooltipTrigger>
                     <HelpCircle className="h-3.5 w-3.5 text-gray-400" />
                   </TooltipTrigger>
                   <TooltipContent>
-                    <p className="text-xs">Select the tone that best matches your intended audience</p>
+                    <p className="text-xs">
+                      Select the tone that best matches your intended audience
+                    </p>
                   </TooltipContent>
                 </Tooltip>
               </div>
@@ -189,9 +205,10 @@ export const ContentInput = ({
                     onClick={() => setPostTone(tone)}
                     className={`
                       px-3 py-2 flex items-center gap-2 text-xs rounded-lg border transition-all duration-200
-                      ${tone === postTone
-                        ? "border-blue-200 bg-blue-50 text-blue-600 shadow-sm ring-1 ring-blue-200"
-                        : "border-gray-200 hover:border-blue-200 text-gray-600 hover:bg-blue-50/50"
+                      ${
+                        tone === postTone
+                          ? "border-primary/20 bg-primary/10 text-primary ring-1 ring-primary/20"
+                          : "border-gray-200 hover:border-primary/20 text-gray-600 hover:bg-primary/5"
                       }
                     `}
                   >
@@ -202,16 +219,20 @@ export const ContentInput = ({
               </div>
             </div>
 
-            {/* Writing Style with Enhanced Design */}
+            {/* Writing Style with Clean Design */}
             <div className="space-y-3">
               <div className="flex items-center gap-2">
-                <label className="text-xs font-medium text-gray-700">Writing Style</label>
+                <label className="text-xs font-medium text-gray-700">
+                  Writing Style
+                </label>
                 <Tooltip>
                   <TooltipTrigger>
                     <HelpCircle className="h-3.5 w-3.5 text-gray-400" />
                   </TooltipTrigger>
                   <TooltipContent>
-                    <p className="text-xs">Choose how you want your content to be written</p>
+                    <p className="text-xs">
+                      Choose how you want your content to be written
+                    </p>
                   </TooltipContent>
                 </Tooltip>
               </div>
@@ -222,9 +243,10 @@ export const ContentInput = ({
                     onClick={() => setWritingStyle(style)}
                     className={`
                       px-3 py-2 flex items-center gap-2 text-xs rounded-lg border transition-all duration-200
-                      ${style === writingStyle
-                        ? "border-blue-200 bg-blue-50 text-blue-600 shadow-sm ring-1 ring-blue-200"
-                        : "border-gray-200 hover:border-blue-200 text-gray-600 hover:bg-blue-50/50"
+                      ${
+                        style === writingStyle
+                          ? "border-primary/20 bg-primary/10 text-primary ring-1 ring-primary/20"
+                          : "border-gray-200 hover:border-primary/20 text-gray-600 hover:bg-primary/5"
                       }
                     `}
                   >
@@ -258,7 +280,9 @@ export const ContentInput = ({
               <div className="flex items-center justify-center gap-2">
                 <span>Generate Content</span>
                 <div className="flex items-center gap-1 text-[10px] bg-white/20 px-1.5 py-0.5 rounded">
-                  <span>{navigator.platform.includes("Mac") ? "⌘" : "Ctrl"}</span>
+                  <span>
+                    {navigator.platform.includes("Mac") ? "⌘" : "Ctrl"}
+                  </span>
                   <ArrowRight className="h-3 w-3" />
                 </div>
               </div>
