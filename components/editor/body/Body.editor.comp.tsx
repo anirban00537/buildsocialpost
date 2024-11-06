@@ -24,7 +24,9 @@ import DownloadLoading from "@/components/utils-components/loading/Download.load
 
 SwiperCore.use([Navigation, Pagination, Scrollbar, A11y, Autoplay]);
 
-const CarouselEditor: React.FC = () => {
+const CarouselEditor: React.FC<{ isCollapsed: boolean }> = ({
+  isCollapsed,
+}) => {
   const {
     swiperRef,
     slides,
@@ -55,8 +57,8 @@ const CarouselEditor: React.FC = () => {
             slidesPerView="auto"
             centeredSlides={true}
             navigation={{
-              nextEl: ".swiper-button-next",
-              prevEl: ".swiper-button-prev",
+              nextEl: ".custom-next",
+              prevEl: ".custom-prev",
             }}
             pagination={{ enabled: false }}
             scrollbar={{ hide: true, enabled: false }}
@@ -105,22 +107,19 @@ const CarouselEditor: React.FC = () => {
             ))}
           </Swiper>
           <button 
-            className="swiper-button-prev absolute top-1/2 -left-4 transform -translate-y-1/2 
-                       w-10 h-10 flex items-center justify-center 
-                       bg-white shadow-lg border border-gray-200 
-                       rounded-full z-[60] hover:bg-gray-50 
-                       transition-all duration-200"
+            className="custom-prev absolute top-1/2 -left-4 transform -translate-y-1/2 
+                     p-2 bg-primary text-white rounded-full hover:bg-primary/90 
+                     hover:scale-105 active:scale-95 transition-all duration-200 z-20"
           >
-            <ChevronLeft size={20} className="text-gray-600" />
+            <ChevronLeft size={24} />
           </button>
           <button 
-            className="swiper-button-next absolute top-1/2 -right-4 transform -translate-y-1/2 
-                       w-10 h-10 flex items-center justify-center 
-                       bg-white shadow-lg border border-gray-200 
-                       rounded-full z-[60] hover:bg-gray-50 
-                       transition-all duration-200"
+            className={`custom-next absolute top-1/2 transform -translate-y-1/2 
+                     p-2 bg-primary text-white rounded-full hover:bg-primary/90 
+                     hover:scale-105 active:scale-95 transition-all duration-200 z-20
+                     ${isCollapsed ? 'right-[-16px]' : 'right-[350px]'}`}
           >
-            <ChevronRight size={20} className="text-gray-600" />
+            <ChevronRight size={24} />
           </button>
         </div>
       </div>

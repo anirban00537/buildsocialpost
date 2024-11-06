@@ -1,7 +1,7 @@
+import { generateCarouselContent } from "@/services/ai-content";
 import { addAllSlides, setBackground } from "@/state/slice/carousel.slice";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { generateCarouselContent } from "@/services/carousels.service";
 
 export const useGenerateContent = () => {
   const [topic, setTopic] = useState("");

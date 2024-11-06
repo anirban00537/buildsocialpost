@@ -62,11 +62,10 @@ export const useCarouselManager = () => {
     isLoading: isFetchingAll,
     refetch: refetchCarousels,
   } = useQuery<CarouselResponse>(
-    ["carousels", currentPage, pageSize],
+    ["carousels", currentPage, pageSize, currentWorkspace?.id],
     () => getCarousels(currentPage, pageSize, currentWorkspace?.id || 0),
     {
       enabled: loggedin && !!currentWorkspace,
-      // enabled: false,
       onSuccess: (response) => {},
       onError: (error: any) => processApiResponse(error),
     }
@@ -99,7 +98,7 @@ export const useCarouselManager = () => {
             newId = response.data.items[0]?.id;
           }
           if (newId) {
-            const newUrl = `/editor?id=${newId}`;
+            const newUrl = `/carousel-editor?id=${newId}`;
             router.replace(newUrl);
           } else {
             console.error("No carousel ID found in the response");
@@ -135,8 +134,9 @@ export const useCarouselManager = () => {
     ["carouselDetails", carouselId],
     () => getCarouselDetails(carouselId!, currentWorkspace?.id || 0),
     {
-      enabled: !!carouselId,
+      enabled: !!carouselId && !!currentWorkspace,
       onSuccess: (data: any) => {
+        console.log("Carousel details:", data);
         dispatch(setAllData(data.data.data));
       },
       onError: (error: Error) => {
@@ -145,13 +145,10 @@ export const useCarouselManager = () => {
     }
   );
 
-  useEffect(() => {
-    if (!isLoadingCarouselDetails) dispatch(setLoading(false));
-  }, [isLoadingCarouselDetails]);
+ 
 
   const handlePageChange = (newPage: number) => {
     setCurrentPage(newPage);
-    refetchCarousels();
   };
 
   return {
@@ -167,5 +164,6 @@ export const useCarouselManager = () => {
     handlePageChange,
     currentPage,
     pageSize,
+    isLoadingCarouselDetails
   };
 };

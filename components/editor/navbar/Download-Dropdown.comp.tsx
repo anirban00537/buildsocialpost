@@ -1,5 +1,5 @@
 import React from "react";
-import { Download } from "lucide-react";
+import { Download, FileText, Archive } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -8,6 +8,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
+import { motion } from "framer-motion";
 
 interface DownloadDropdownProps {
   onDownloadPDF: () => void;
@@ -30,49 +31,42 @@ const DownloadDropdown: React.FC<DownloadDropdownProps> = React.memo(
     onLoginRequired,
   }) => {
     const isDownloading = pdfLoading || zipLoading;
-    const { toast } = useToast();
-
-    const handleDownload = (action: () => void) => {
-      if (!isAuthenticated) {
-        toast({
-          title: "Login Required",
-          description: "Please log in to download your carousel.",
-          variant: "destructive",
-        });
-        onLoginRequired();
-      } else {
-        action();
-      }
-    };
-
+    
     return (
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button
-            variant="ghost"
-            size="sm"
-            className={`h-9 bg-white hover:bg-gray-50 text-gray-700 ring-1 ring-gray-200 hover:ring-blue-200 rounded-lg transition-all duration-200 ${className}`}
+            className={`h-10 px-4 rounded-xl bg-gradient-to-br from-blue-500 via-blue-600 to-blue-800 text-white 
+              hover:from-blue-600 hover:via-blue-700 hover:to-blue-900 shadow-sm
+              flex items-center gap-2 justify-center transition-all duration-200 ${className}`}
+            variant="outline"
           >
-            <Download className="w-4 h-4 mr-2 text-gray-500" />
+            <Download className="h-4 w-4" />
             <span className="text-sm font-medium">
               {isDownloading ? "Downloading..." : "Download"}
             </span>
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent className="bg-white border-0 ring-1 ring-gray-200 rounded-lg p-1 shadow-lg">
+        <DropdownMenuContent className="w-[240px] p-2">
           <DropdownMenuItem
-            onClick={() => handleDownload(onDownloadPDF)}
+            onClick={() => onDownloadPDF()}
             disabled={pdfLoading}
-            className="flex items-center h-9 px-3 text-sm text-gray-700 rounded-md transition-colors hover:bg-gray-50 focus:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none"
+            className="flex items-center gap-2 px-3 py-2 text-sm rounded-lg hover:bg-gray-50"
           >
-            {pdfLoading ? "Downloading PDF..." : "Download PDF"}
+            <FileText className="h-4 w-4 text-gray-500" />
+            <div className="flex-1">
+              {pdfLoading ? "Downloading PDF..." : "Download PDF"}
+            </div>
           </DropdownMenuItem>
           <DropdownMenuItem
-            onClick={() => handleDownload(onDownloadZip)}
+            onClick={() => onDownloadZip()}
             disabled={zipLoading}
-            className="flex items-center h-9 px-3 text-sm text-gray-700 rounded-md transition-colors hover:bg-gray-50 focus:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none"
+            className="flex items-center gap-2 px-3 py-2 text-sm rounded-lg hover:bg-gray-50"
           >
-            {zipLoading ? "Downloading Zip..." : "Download Zip"}
+            <Archive className="h-4 w-4 text-gray-500" />
+            <div className="flex-1">
+              {zipLoading ? "Downloading Zip..." : "Download Zip"}
+            </div>
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>

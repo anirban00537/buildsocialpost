@@ -230,3 +230,15 @@ strong {
 .format-button:hover svg {
   @apply text-blue-600;
 }
+
+/* Add these styles at the end of your globals.css */
+.swiper-button-disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Hide default Swiper navigation buttons */
+.swiper-button-next::after,
+.swiper-button-prev::after {
+  display: none;
+}

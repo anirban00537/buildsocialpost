@@ -1,5 +1,12 @@
-import React from "react";
-import { Sun, Moon, Sparkles, HelpCircle, ChevronDown } from "lucide-react";
+import React, { useState } from "react";
+import {
+  Sun,
+  Moon,
+  Sparkles,
+  FileText,
+  Settings2,
+  ChevronRight,
+} from "lucide-react";
 import { Label } from "@/components/ui/label";
 import {
   Select,
@@ -11,13 +18,131 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { Slider } from "@/components/ui/slider";
 import { useGenerateContent } from "@/hooks/useGenerateContent";
-import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { useSelector } from "react-redux";
 import { RootState } from "@/state/store";
 import { Switch } from "@/components/ui/switch";
-import { Tooltip } from "react-tooltip";
-import "react-tooltip/dist/react-tooltip.css";
+import { motion } from "framer-motion";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+
+const AdvancedSettingsModal = ({
+  contentStyle,
+  setContentStyle,
+  targetAudience,
+  setTargetAudience,
+  mood,
+  setMood,
+  language,
+  setLanguage,
+}: {
+  contentStyle: string;
+  setContentStyle: (style: string) => void;
+  targetAudience: string;
+  setTargetAudience: (audience: string) => void;
+  mood: string;
+  setMood: (mood: string) => void;
+  language: string;
+  setLanguage: (language: string) => void;
+}) => (
+  <Dialog>
+    <DialogTrigger asChild>
+      <motion.button
+        className="w-full flex items-center justify-between px-4 py-2.5 rounded-xl transition-all duration-200
+          bg-white hover:bg-gray-50 border border-gray-200 hover:border-blue-200"
+        whileHover={{ scale: 1.01 }}
+        whileTap={{ scale: 0.99 }}
+      >
+        <div className="flex items-center gap-2">
+          <div className="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center">
+            <Settings2 className="h-4 w-4 text-blue-600" />
+          </div>
+          <div className="text-left">
+            <div className="text-sm font-medium text-gray-900">
+              Advanced Settings
+            </div>
+            <div className="text-xs text-gray-500">
+              Style, Audience, Mood & Language
+            </div>
+          </div>
+        </div>
+        <ChevronRight className="h-4 w-4 text-gray-500" />
+      </motion.button>
+    </DialogTrigger>
+
+    <DialogContent className="sm:max-w-[425px]">
+      <DialogHeader>
+        <DialogTitle>Advanced Settings</DialogTitle>
+      </DialogHeader>
+
+      <div className="grid gap-4 py-4">
+        {[
+          {
+            label: "Style",
+            value: contentStyle,
+            onChange: setContentStyle,
+            options: ["Professional", "Casual", "Academic", "Storytelling"],
+          },
+          {
+            label: "Audience",
+            value: targetAudience,
+            onChange: setTargetAudience,
+            options: ["General", "Experts", "Beginners", "Executives"],
+          },
+          {
+            label: "Mood",
+            value: mood,
+            onChange: setMood,
+            options: [
+              "Narrative",
+              "Creative",
+              "Happy",
+              "Curious",
+              "Fun",
+              "Neutral",
+            ],
+          },
+          {
+            label: "Language",
+            value: language,
+            onChange: setLanguage,
+            options: [
+              { value: "en", label: "English" },
+              { value: "es", label: "Spanish" },
+              { value: "fr", label: "French" },
+              { value: "de", label: "German" },
+              { value: "zh", label: "Chinese" },
+            ],
+          },
+        ].map((setting, index) => (
+          <div key={index} className="space-y-2">
+            <Label className="text-sm font-medium">{setting.label}</Label>
+            <Select value={setting.value} onValueChange={setting.onChange}>
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder={setting.label} />
+              </SelectTrigger>
+              <SelectContent>
+                {setting.options.map((option) => (
+                  <SelectItem
+                    key={typeof option === "string" ? option : option.value}
+                    value={typeof option === "string" ? option : option.value}
+                  >
+                    {typeof option === "string" ? option : option.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+        ))}
+      </div>
+    </DialogContent>
+  </Dialog>
+);
 
 const AiSettingsComponent = () => {
   const {
@@ -42,8 +167,8 @@ const AiSettingsComponent = () => {
   } = useGenerateContent();
 
   const { subscription } = useSelector((state: RootState) => state.user);
-  const isSubscribed = subscription.isSubscribed && 
-    subscription.subscription?.status === 'active';
+  const isSubscribed =
+    subscription.isSubscribed && subscription.subscription?.status === "active";
 
   const getButtonState = () => {
     if (loading) {
@@ -74,7 +199,7 @@ const AiSettingsComponent = () => {
             Generating Content...
           </>
         ),
-        className: "bg-blue-600 text-white hover:bg-blue-700"
+        className: "bg-blue-600 text-white hover:bg-blue-700",
       };
     }
 
@@ -84,265 +209,151 @@ const AiSettingsComponent = () => {
         content: (
           <span className="flex items-center justify-center gap-2">
             <Image src={"/premium.svg"} width={20} height={20} alt="Premium" />
-            Upgrade to {subscription.subscription?.productName || 'Premium'}
+            Upgrade to {subscription.subscription?.productName || "Premium"}
           </span>
         ),
-        className: "bg-blue-50 text-blue-700 ring-1 ring-blue-200"
+        className: "bg-blue-50 text-blue-700 ring-1 ring-blue-200",
       };
     }
 
     return {
       disabled: false,
       content: "Generate Content",
-      className: "bg-blue-600 text-white hover:bg-blue-700"
+      className: "bg-blue-600 text-white hover:bg-blue-700",
     };
   };
 
   const buttonState = getButtonState();
 
   return (
-    <div className="w-full h-full flex flex-col bg-white">
-      <div className="p-4 border-b border-gray-200">
-        <h2 className="text-lg font-medium text-gray-700 flex items-center gap-2">
-          <Sparkles size={20} className="text-blue-600" />
-          AI Content Generator
-        </h2>
+    <div className="space-y-6">
+      {/* AI Title Section */}
+      <div className="flex items-center justify-center gap-3 p-2 bg-gradient-to-r from-blue-50/80 to-blue-100/50 rounded-xl border border-blue-100">
+        <div className="flex items-center justify-center gap-2">
+          <Sparkles className="h-4 w-4 text-blue-600" />
+          <h2 className="text-md font-semibold bg-gradient-to-r from-blue-600 to-blue-500 bg-clip-text text-transparent">
+            AI Carousel Generator
+          </h2>
+        </div>
       </div>
-      
-      <form onSubmit={generateContent} className="flex flex-col h-full">
-        <div className="flex-grow overflow-y-auto p-4 space-y-4">
-          {/* Topic Input */}
-          <div className="space-y-2">
+
+      <form onSubmit={generateContent} className="space-y-6">
+        {/* Topic Input */}
+        <div className="space-y-2">
+          <div className="flex items-center gap-2">
+            <Sparkles className="h-4 w-4 text-blue-600" />
             <Label
               htmlFor="content"
-              className="text-sm font-medium text-gray-700 flex items-center"
+              className="text-sm font-medium text-gray-900"
             >
               Topic
-              <HelpCircle
-                data-tooltip-id="topic-tooltip"
-                data-tooltip-content="Main subject for AI content"
-                className="ml-2 h-4 w-4 text-gray-400 hover:text-gray-600 cursor-help"
-              />
             </Label>
-            <Textarea
-              id="content"
-              placeholder="Enter your topic..."
-              className="min-h-[6rem] text-sm rounded-lg border border-gray-200 text-gray-700 bg-white resize-none focus:ring-2 focus:ring-blue-200 focus:border-blue-400 transition-all duration-200"
-              value={topic}
-              maxLength={100}
-              onChange={(e) => setTopic(e.target.value)}
+          </div>
+          <Textarea
+            id="content"
+            placeholder="What would you like to create content about?"
+            className="min-h-[5rem] text-sm rounded-xl border-gray-200 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-400"
+            value={topic}
+            maxLength={100}
+            onChange={(e) => setTopic(e.target.value)}
+          />
+        </div>
+
+        {/* Theme Selection */}
+        <div className="space-y-2">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Sun className="h-4 w-4 text-blue-600" />
+              <Label className="text-sm font-medium text-gray-900">Theme</Label>
+            </div>
+            <Switch
+              checked={themeActive}
+              onCheckedChange={() => setThemeActive(!themeActive)}
+              className="data-[state=checked]:bg-blue-600"
             />
           </div>
 
-          {/* Theme Selection */}
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <Label
-                htmlFor="theme"
-                className="text-sm font-medium text-gray-700 flex items-center"
-              >
-                Theme
-                <HelpCircle
-                  data-tooltip-id="theme-tooltip"
-                  data-tooltip-content="Color theme for slides"
-                  className="ml-2 h-4 w-4 text-gray-400 hover:text-gray-600 cursor-help"
-                />
-              </Label>
-              <Switch
-                id="theme"
-                checked={themeActive}
-                onCheckedChange={() => setThemeActive(!themeActive)}
-                className="data-[state=checked]:bg-blue-600"
-              />
-            </div>
-
-            {themeActive && (
-              <div className="flex gap-2">
-                <Button
-                  size="sm"
-                  type="button"
-                  variant="ghost"
-                  className={`flex-1 h-9 text-sm font-medium ${
+          {themeActive && (
+            <div className="flex gap-2">
+              <motion.button
+                type="button"
+                className={`flex-1 flex items-center justify-center gap-2 px-3 py-2 rounded-xl transition-all duration-200
+                  ${
                     theme === "light"
                       ? "bg-blue-50 text-blue-700 ring-1 ring-blue-200"
-                      : "bg-white text-gray-700 ring-1 ring-gray-200 hover:bg-gray-50 hover:ring-blue-200"
+                      : "bg-white hover:bg-gray-50 text-gray-700 ring-1 ring-gray-200 hover:ring-blue-200"
                   }`}
-                  onClick={() => setTheme("light")}
-                >
-                  <Sun size={16} className="mr-2" />
-                  Light
-                </Button>
-                <Button
-                  size="sm"
-                  type="button"
-                  variant="ghost"
-                  className={`flex-1 h-9 text-sm font-medium ${
+                onClick={() => setTheme("light")}
+                whileHover={{ scale: 1.01 }}
+                whileTap={{ scale: 0.98 }}
+              >
+                <Sun className="h-4 w-4" />
+                <span className="text-sm font-medium">Light</span>
+              </motion.button>
+              <motion.button
+                type="button"
+                className={`flex-1 flex items-center justify-center gap-2 px-3 py-2 rounded-xl transition-all duration-200
+                  ${
                     theme === "dark"
                       ? "bg-blue-50 text-blue-700 ring-1 ring-blue-200"
-                      : "bg-white text-gray-700 ring-1 ring-gray-200 hover:bg-gray-50 hover:ring-blue-200"
+                      : "bg-white hover:bg-gray-50 text-gray-700 ring-1 ring-gray-200 hover:ring-blue-200"
                   }`}
-                  onClick={() => setTheme("dark")}
-                >
-                  <Moon size={16} className="mr-2" />
-                  Dark
-                </Button>
-              </div>
-            )}
-          </div>
-
-          {/* Number of Slides */}
-          <div className="space-y-4">
-            <Label
-              htmlFor="slides"
-              className="text-sm font-medium text-gray-700 flex items-center"
-            >
-              Number of Slides
-              <HelpCircle
-                data-tooltip-id="slides-tooltip"
-                data-tooltip-content="Select slide count"
-                className="ml-2 h-4 w-4 text-gray-400 hover:text-gray-600 cursor-help"
-              />
-            </Label>
-            <div className="flex items-center gap-4">
-              <Slider
-                max={10}
-                step={1}
-                value={[numSlides]}
-                onValueChange={(value) => setNumSlides(value[0])}
-                className="flex-grow"
-              />
-              <span className="text-sm text-gray-700 font-medium w-8 text-center bg-gray-50 rounded-lg py-1 border border-gray-200">
-                {numSlides}
-              </span>
+                onClick={() => setTheme("dark")}
+                whileHover={{ scale: 1.01 }}
+                whileTap={{ scale: 0.98 }}
+              >
+                <Moon className="h-4 w-4" />
+                <span className="text-sm font-medium">Dark</span>
+              </motion.button>
             </div>
-          </div>
+          )}
+        </div>
 
-          {/* Other Settings */}
-          <div className="space-y-4">
-            {[
-              {
-                label: "Style",
-                value: contentStyle,
-                onChange: setContentStyle,
-                options: ["Professional", "Casual", "Academic", "Storytelling"],
-                tooltip: "Choose writing style",
-              },
-              {
-                label: "Audience",
-                value: targetAudience,
-                onChange: setTargetAudience,
-                options: ["General", "Experts", "Beginners", "Executives"],
-                tooltip: "Select target audience",
-              },
-              {
-                label: "Mood",
-                value: mood,
-                onChange: setMood,
-                options: [
-                  "Narrative",
-                  "Creative",
-                  "Happy",
-                  "Curious",
-                  "Fun",
-                  "Neutral",
-                ],
-                tooltip: "Set content tone",
-              },
-              {
-                label: "Language",
-                value: language,
-                onChange: setLanguage,
-                options: [
-                  { value: "en", label: "English" },
-                  { value: "es", label: "Spanish" },
-                  { value: "fr", label: "French" },
-                  { value: "de", label: "German" },
-                  { value: "zh", label: "Chinese" },
-                ],
-                tooltip: "Choose content language",
-              },
-            ].map((setting, index) => (
-              <div key={index} className="space-y-2">
-                <Label
-                  htmlFor={setting.label.toLowerCase()}
-                  className="text-sm font-medium text-gray-700 flex items-center"
-                >
-                  {setting.label}
-                  <HelpCircle
-                    data-tooltip-id={`${setting.label.toLowerCase()}-tooltip`}
-                    data-tooltip-content={setting.tooltip}
-                    className="ml-2 h-4 w-4 text-gray-400 hover:text-gray-600 cursor-help"
-                  />
-                </Label>
-                <Select value={setting.value} onValueChange={setting.onChange}>
-                  <SelectTrigger className="w-full h-9 text-sm rounded-lg border border-gray-200 text-gray-700 bg-white hover:bg-gray-50 focus:ring-2 focus:ring-blue-200 focus:border-blue-400 transition-all duration-200">
-                    <SelectValue placeholder={setting.label} />
-                  </SelectTrigger>
-                  <SelectContent className="bg-white text-gray-700 border border-gray-200 rounded-lg shadow-lg">
-                    {setting.options.map((option) => (
-                      <SelectItem
-                        key={typeof option === "string" ? option : option.value}
-                        value={typeof option === "string" ? option : option.value}
-                        className="text-sm py-2 hover:bg-gray-50 transition-colors duration-200"
-                      >
-                        {typeof option === "string" ? option : option.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-            ))}
+        {/* Number of Slides */}
+        <div className="space-y-2">
+          <div className="flex items-center gap-2">
+            <FileText className="h-4 w-4 text-blue-600" />
+            <Label className="text-sm font-medium text-gray-900">
+              Number of Slides
+            </Label>
+          </div>
+          <div className="flex items-center gap-3">
+            <Slider
+              max={10}
+              step={1}
+              value={[numSlides]}
+              onValueChange={(value) => setNumSlides(value[0])}
+              className="flex-grow"
+            />
+            <span className="text-sm font-medium w-8 text-center bg-blue-50 text-blue-700 rounded-lg py-1 ring-1 ring-blue-200">
+              {numSlides}
+            </span>
           </div>
         </div>
-        
-        <div className="p-4 bg-white border-t border-gray-200 sticky bottom-0">
-          <Button
-            type="submit"
-            variant="ghost"
-            disabled={buttonState.disabled}
-            className={`w-full h-10 text-sm font-medium ${buttonState.className}`}
-          >
-            {buttonState.content}
-          </Button>
-        </div>
+
+        {/* Advanced Settings Modal */}
+        <AdvancedSettingsModal
+          contentStyle={contentStyle}
+          setContentStyle={setContentStyle}
+          targetAudience={targetAudience}
+          setTargetAudience={setTargetAudience}
+          mood={mood}
+          setMood={setMood}
+          language={language}
+          setLanguage={setLanguage}
+        />
+
+        {/* Generate Button */}
+        <motion.button
+          type="submit"
+          disabled={buttonState.disabled}
+          className={`w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl transition-all duration-200 ${buttonState.className}`}
+          whileHover={{ scale: 1.01 }}
+          whileTap={{ scale: 0.99 }}
+        >
+          {buttonState.content}
+        </motion.button>
       </form>
-
-      {/* Tooltips with updated styling */}
-      <Tooltip
-        id="topic-tooltip"
-        place="left"
-        className="z-50 text-xs bg-white text-gray-700 border border-gray-200 rounded-lg shadow-lg p-2"
-      />
-      <Tooltip
-        id="theme-tooltip"
-        place="left"
-        className="z-50 text-xs bg-white text-gray-700 border border-gray-200 rounded-lg shadow-lg p-2"
-      />
-      <Tooltip
-        id="slides-tooltip"
-        place="left"
-        className="z-50 text-xs bg-white text-gray-700 border border-gray-200 rounded-lg shadow-lg p-2"
-      />
-      <Tooltip
-        id="style-tooltip"
-        place="left"
-        className="z-50 text-xs bg-white text-gray-700 border border-gray-200 rounded-lg shadow-lg p-2"
-      />
-      <Tooltip
-        id="audience-tooltip"
-        place="left"
-        className="z-50 text-xs bg-white text-gray-700 border border-gray-200 rounded-lg shadow-lg p-2"
-      />
-      <Tooltip
-        id="mood-tooltip"
-        place="left"
-        className="z-50 text-xs bg-white text-gray-700 border border-gray-200 rounded-lg shadow-lg p-2"
-      />
-      <Tooltip
-        id="language-tooltip"
-        place="left"
-        className="z-50 text-xs bg-white text-gray-700 border border-gray-200 rounded-lg shadow-lg p-2"
-      />
     </div>
   );
 };
