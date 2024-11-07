@@ -13,6 +13,9 @@ const DefaultLayout = ({ children }: { children: React.ReactNode }) => {
         refetchOnWindowFocus: false,
         refetchOnReconnect: false,
         refetchOnMount: false,
+        cacheTime: 0,
+        staleTime: 0,
+        retry: false,
       },
     },
   });
