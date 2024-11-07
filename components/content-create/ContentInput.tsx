@@ -104,16 +104,8 @@ export const ContentInput = ({
             </div>
             <div>
               <h3 className="text-sm font-semibold text-gray-900">
-                Your Content
+                Topic that you want to write about
               </h3>
-              <div className="flex items-center gap-2 mt-0.5">
-                <span className="text-xs text-gray-500">AI Assistant</span>
-                <div className="w-1 h-1 rounded-full bg-gray-300" />
-                <div className="flex items-center gap-1 text-[10px] font-medium text-primary bg-primary/10 px-2 py-0.5 rounded-full">
-                  <Sparkles className="h-3 w-3" />
-                  <span>AI Powered</span>
-                </div>
-              </div>
             </div>
           </div>
         </div>

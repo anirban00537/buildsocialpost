@@ -4,16 +4,9 @@ import { setBackgroundImageToAllSlides } from "@/state/slice/carousel.slice";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { RootState } from "@/state/store";
-import { X, Upload, Check, Image as ImageIcon, ChevronRight } from "lucide-react";
+import { X, Upload, Check, Image as ImageIcon } from "lucide-react";
 import ImageUploadModal from "@/components/editor/Image_upload_modal/Image-Upload-Modal.comp";
 import { motion } from "framer-motion";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
 
 const backgroundImages = [
   "https://images.unsplash.com/photo-1589810264340-0ce27bfbf751?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
@@ -47,136 +40,99 @@ const BackgroundImagesSection = () => {
   };
 
   return (
-    <Dialog>
-      <DialogTrigger asChild>
-        <motion.button
-          className="w-full flex items-center justify-between px-4 py-2.5 rounded-xl transition-all duration-200
-            bg-white hover:bg-gray-50 border border-gray-200 hover:border-blue-200"
-          whileHover={{ scale: 1.01 }}
-          whileTap={{ scale: 0.99 }}
-        >
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center">
-              <ImageIcon className="h-4 w-4 text-blue-600" />
+    <div className="w-full h-full flex flex-col bg-white">
+      <div className="p-6 border-b border-gray-200">
+        <h2 className="text-lg font-medium text-gray-700 flex items-center gap-2">
+          <ImageIcon className="w-5 h-5 text-blue-600" />
+          Background Image
+        </h2>
+      </div>
+
+      <div className="flex-grow overflow-y-auto p-6 space-y-6">
+        {globalBackground ? (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="flex items-center bg-white p-4 rounded-lg ring-1 ring-gray-200 hover:ring-blue-200 transition-all duration-200"
+          >
+            <div className="relative w-24 h-24 rounded-lg overflow-hidden mr-4">
+              <Image
+                src={globalBackground}
+                alt="Current Background"
+                layout="fill"
+                objectFit="cover"
+              />
             </div>
-            <div className="text-left">
-              <div className="text-sm font-medium text-gray-900">Background Image</div>
-              {globalBackground ? (
-                <div className="relative w-16 h-6 mt-1 rounded overflow-hidden">
-                  <Image
-                    src={globalBackground}
-                    alt="Current Background"
-                    layout="fill"
-                    objectFit="cover"
-                  />
-                </div>
-              ) : (
-                <div className="text-xs text-gray-500">No image selected</div>
-              )}
-            </div>
-          </div>
-          <div className="h-6 w-6 rounded-full bg-gray-100 flex items-center justify-center">
-            <ChevronRight className="h-4 w-4 text-gray-500" />
-          </div>
-        </motion.button>
-      </DialogTrigger>
-
-      <DialogContent className="sm:max-w-[425px] max-h-[90vh] flex flex-col">
-        <DialogHeader className="flex-shrink-0">
-          <DialogTitle className="text-lg font-semibold text-gray-900">Background Image</DialogTitle>
-        </DialogHeader>
-
-        <div className="flex-1 overflow-y-auto px-4 py-4 space-y-6">
-          {/* Current Background */}
-          {globalBackground ? (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="flex items-center bg-white p-4 rounded-lg ring-1 ring-gray-200 hover:ring-blue-200 transition-all duration-200"
-            >
-              <div className="relative w-24 h-24 rounded-lg overflow-hidden mr-4">
-                <Image
-                  src={globalBackground}
-                  alt="Current Background"
-                  layout="fill"
-                  objectFit="cover"
-                />
-              </div>
-              <div className="flex-grow">
-                <p className="text-sm font-medium text-gray-700 mb-2">
-                  Current background
-                </p>
-                <Button
-                  size="sm"
-                  variant="ghost"
-                  className="w-full h-9 text-sm font-medium text-red-600 bg-red-50 ring-1 ring-red-200 hover:bg-red-100 transition-all duration-200"
-                  onClick={() => dispatch(setBackgroundImageToAllSlides(null))}
-                >
-                  <X size={16} className="mr-2" />
-                  Remove
-                </Button>
-              </div>
-            </motion.div>
-          ) : (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="flex items-center justify-center w-full h-24 bg-gray-50 rounded-lg ring-1 ring-gray-200 ring-dashed"
-            >
-              <p className="text-sm text-gray-500">No background selected</p>
-            </motion.div>
-          )}
-
-          {/* Upload Section */}
-          <div className="flex justify-between items-center">
-            <h3 className="text-sm font-medium text-gray-700">
-              Choose an image
-            </h3>
-            <Button
-              size="sm"
-              variant="ghost"
-              onClick={() => setIsModalOpen(true)}
-              className="h-9 text-sm font-medium text-gray-700 bg-white ring-1 ring-gray-200 hover:bg-gray-50 hover:text-gray-900 transition-all duration-200"
-            >
-              <Upload size={16} className="mr-2" />
-              Upload
-            </Button>
-          </div>
-
-          {/* Image Grid */}
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-            {backgroundImages.map((imageUrl, index) => (
-              <motion.div
-                key={index}
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                className="relative aspect-square cursor-pointer rounded-lg overflow-hidden ring-1 ring-gray-200 hover:ring-blue-200 transition-all duration-200"
-                onClick={() => handleBackgroundImageSelect(imageUrl)}
+            <div className="flex-grow">
+              <p className="text-sm font-medium text-gray-700 mb-2">
+                Current background
+              </p>
+              <Button
+                size="sm"
+                variant="ghost"
+                className="w-full h-9 text-sm font-medium text-red-600 bg-red-50 ring-1 ring-red-200 hover:bg-red-100 transition-all duration-200"
+                onClick={() => dispatch(setBackgroundImageToAllSlides(null))}
               >
-                <Image
-                  src={imageUrl}
-                  alt={`Background ${index + 1}`}
-                  layout="fill"
-                  objectFit="cover"
-                />
-                <div className="absolute inset-0 bg-black/0 hover:bg-black/5 transition-colors duration-200" />
-                {globalBackground === imageUrl && (
-                  <div className="absolute inset-0 flex items-center justify-center bg-blue-50/80">
-                    <Check size={20} className="text-blue-600" />
-                  </div>
-                )}
-              </motion.div>
-            ))}
-          </div>
+                <X size={16} className="mr-2" />
+                Remove
+              </Button>
+            </div>
+          </motion.div>
+        ) : (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="flex items-center justify-center w-full h-24 bg-gray-50 rounded-lg ring-1 ring-gray-200 ring-dashed"
+          >
+            <p className="text-sm text-gray-500">No background selected</p>
+          </motion.div>
+        )}
+
+        <div className="flex justify-between items-center">
+          <h3 className="text-sm font-medium text-gray-700">Choose an image</h3>
+          <Button
+            size="sm"
+            variant="ghost"
+            onClick={() => setIsModalOpen(true)}
+            className="h-9 text-sm font-medium text-gray-700 bg-white ring-1 ring-gray-200 hover:bg-gray-50 hover:text-gray-900 transition-all duration-200"
+          >
+            <Upload size={16} className="mr-2" />
+            Upload
+          </Button>
         </div>
-      </DialogContent>
+
+        <div className="grid grid-cols-3 gap-4 pb-6">
+          {backgroundImages.map((imageUrl, index) => (
+            <motion.div
+              key={index}
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              className="relative aspect-square cursor-pointer rounded-lg overflow-hidden ring-1 ring-gray-200 hover:ring-blue-200 transition-all duration-200"
+              onClick={() => handleBackgroundImageSelect(imageUrl)}
+            >
+              <Image
+                src={imageUrl}
+                alt={`Background ${index + 1}`}
+                layout="fill"
+                objectFit="cover"
+              />
+              <div className="absolute inset-0 bg-black/0 hover:bg-black/5 transition-colors duration-200" />
+              {globalBackground === imageUrl && (
+                <div className="absolute inset-0 flex items-center justify-center bg-blue-50">
+                  <Check size={20} className="text-blue-600" />
+                </div>
+              )}
+            </motion.div>
+          ))}
+        </div>
+      </div>
 
       <ImageUploadModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         onImageSelect={handleImageUpload}
       />
-    </Dialog>
+    </div>
   );
 };
 

@@ -12,7 +12,6 @@ interface AIWritingPreviewProps {
   title?: string;
 }
 
-// Update LoadingAnimation component
 const LoadingAnimation = () => (
   <div className="relative space-y-4 p-6 bg-white">
     <div className="space-y-4">
@@ -92,8 +91,10 @@ const LoadingAnimation = () => (
           />
         </div>
         <div className="flex flex-col items-start">
-          <span className="text-sm font-medium text-primary">AI is writing</span>
-          <motion.div 
+          <span className="text-sm font-medium text-primary">
+            AI is writing
+          </span>
+          <motion.div
             className="flex gap-1"
             animate={{ opacity: [1, 0.5, 1] }}
             transition={{ duration: 1.5, repeat: Infinity }}
@@ -122,7 +123,8 @@ export const AIWritingPreview = ({
   const [isCopied, setIsCopied] = useState(false);
   const content = generatedPost || "";
   const router = useRouter();
-  const { handleCreateDraftFromGenerated, isCreatingDraft } = useContentPosting();
+  const { handleCreateDraftFromGenerated, isCreatingDraft } =
+    useContentPosting();
 
   const handleCopy = async () => {
     try {
@@ -168,9 +170,10 @@ export const AIWritingPreview = ({
           <div>
             <h3 className="text-sm font-semibold text-gray-900">{title}</h3>
             <div className="flex items-center gap-2 mt-0.5">
-              <span className="text-xs text-gray-500">AI-powered content</span>
               <div className="w-1 h-1 rounded-full bg-gray-300" />
-              <span className="text-xs text-gray-500">{content.length} characters</span>
+              <span className="text-xs text-gray-500">
+                {content.length} characters
+              </span>
             </div>
           </div>
         </div>
@@ -189,7 +192,11 @@ export const AIWritingPreview = ({
                 onClick={handleCopy}
                 className={`
                   h-8 gap-2 text-xs transition-all duration-200
-                  ${isCopied ? 'text-green-600 bg-green-50' : 'text-gray-600 hover:text-gray-900'}
+                  ${
+                    isCopied
+                      ? "text-green-600 bg-green-50"
+                      : "text-gray-600 hover:text-gray-900"
+                  }
                 `}
               >
                 {isCopied ? (
@@ -240,24 +247,25 @@ export const AIWritingPreview = ({
             animate={{ opacity: 1, y: 0 }}
             className="relative"
           >
-            <div className="absolute -left-0.5 top-0 bottom-0 w-1 bg-primary rounded-full" />
             <div className="p-6 bg-white rounded-xl">
               <div className="prose prose-sm max-w-none">
-                <div className="whitespace-pre-wrap text-gray-700 leading-relaxed">
+                <div className="whitespace-pre-wrap text-sm text-gray-700 leading-relaxed">
                   {content}
                 </div>
               </div>
             </div>
             <div className="absolute bottom-4 right-4">
-              <div className="flex items-center gap-1.5 text-[10px] font-medium text-primary bg-primary/10 
-                            px-2 py-1 rounded-full">
+              <div
+                className="flex items-center gap-1.5 text-[10px] font-medium text-primary bg-primary/10 
+                            px-2 py-1 rounded-full"
+              >
                 <Sparkles className="h-3 w-3" />
                 AI Enhanced
               </div>
             </div>
           </motion.div>
         ) : (
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             className="min-h-[300px] flex flex-col items-center justify-center text-center border-2 border-dashed border-gray-200 rounded-xl p-8 bg-gray-50/50"

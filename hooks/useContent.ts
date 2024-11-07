@@ -257,6 +257,13 @@ export const useContentPosting = () => {
         return;
       }
 
+      // First save the draft
+      const savedDraft = await handleCreateUpdateDraft(selectedProfile.id);
+      if (!savedDraft?.success) {
+        toast.error("Failed to save draft before scheduling");
+        return;
+      }
+
       // Show scheduling feedback
       toast.loading("Scheduling post...", { id: "scheduling" });
 
@@ -278,7 +285,7 @@ export const useContentPosting = () => {
       console.error("Error in handleSchedule:", error);
       toast.error("Failed to schedule post");
     }
-  }, [draftId, selectedProfile?.id, schedulePostMutation]);
+  }, [draftId, selectedProfile?.id, schedulePostMutation, handleCreateUpdateDraft]);
 
   const handleCreateDraftFromGenerated = useCallback(
     async ({
@@ -334,6 +341,13 @@ export const useContentPosting = () => {
           return;
         }
 
+        // First save the draft
+        const savedDraft = await handleCreateUpdateDraft(linkedinProfileId);
+        if (!savedDraft?.success) {
+          toast.error("Failed to save draft before publishing");
+          return;
+        }
+
         // Show posting feedback
         toast.loading("Publishing post...", { id: "posting" });
 
@@ -346,7 +360,7 @@ export const useContentPosting = () => {
         toast.error("Failed to publish post");
       }
     },
-    [draftId, postNowMutation]
+    [draftId, postNowMutation, handleCreateUpdateDraft]
   );
 
   const clearSelectedProfile = useCallback(() => {

@@ -25,15 +25,6 @@ import {
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { fontOptions } from "@/lib/fonts";
-import { motion } from "framer-motion";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import { ChevronRight } from "lucide-react";
 
 const TextSettingsSection = () => {
   const dispatch = useDispatch();
@@ -65,9 +56,15 @@ const TextSettingsSection = () => {
 
   useEffect(() => {
     setFontStyle(textSettings.fontStyle || "normal");
-    setFontWeight(typeof textSettings.fontWeight === "number"
-      ? textSettings.fontWeight >= 700 ? "bold" : "normal"
-      : textSettings.fontWeight === "bold" ? "bold" : "normal");
+    setFontWeight(
+      typeof textSettings.fontWeight === "number"
+        ? textSettings.fontWeight >= 700
+          ? "bold"
+          : "normal"
+        : textSettings.fontWeight === "bold"
+        ? "bold"
+        : "normal"
+    );
   }, [selectedSection, textSettings]);
 
   const handleSectionChange = (
@@ -82,9 +79,15 @@ const TextSettingsSection = () => {
         : taglineTextSettings;
     setFontSize(newTextSettings.fontSize);
     setFontStyle(newTextSettings.fontStyle);
-    setFontWeight(typeof newTextSettings.fontWeight === "number"
-      ? newTextSettings.fontWeight >= 700 ? "bold" : "normal"
-      : newTextSettings.fontWeight === "bold" ? "bold" : "normal");
+    setFontWeight(
+      typeof newTextSettings.fontWeight === "number"
+        ? newTextSettings.fontWeight >= 700
+          ? "bold"
+          : "normal"
+        : newTextSettings.fontWeight === "bold"
+        ? "bold"
+        : "normal"
+    );
   };
 
   const handleFontSizeChange = (size: number) => {
@@ -122,8 +125,14 @@ const TextSettingsSection = () => {
       selectedSection === "title"
         ? setTitleTextSettings({ ...titleTextSettings, fontWeight: newWeight })
         : selectedSection === "description"
-        ? setDescriptionTextSettings({ ...descriptionTextSettings, fontWeight: newWeight })
-        : setTaglineTextSettings({ ...taglineTextSettings, fontWeight: newWeight })
+        ? setDescriptionTextSettings({
+            ...descriptionTextSettings,
+            fontWeight: newWeight,
+          })
+        : setTaglineTextSettings({
+            ...taglineTextSettings,
+            fontWeight: newWeight,
+          })
     );
   };
 
@@ -140,36 +149,15 @@ const TextSettingsSection = () => {
   };
 
   return (
-    <Dialog>
-      <DialogTrigger asChild>
-        <motion.button
-          className="w-full flex items-center justify-between px-4 py-2.5 rounded-xl transition-all duration-200
-            bg-white hover:bg-gray-50 border border-gray-200 hover:border-blue-200"
-          whileHover={{ scale: 1.01 }}
-          whileTap={{ scale: 0.99 }}
-        >
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center">
-              <Type className="h-4 w-4 text-blue-600" />
-            </div>
-            <div className="text-left">
-              <div className="text-sm font-medium text-gray-900">Typography</div>
-              <div className="text-xs text-gray-500">Customize text styles</div>
-            </div>
-          </div>
-          <div className="h-6 w-6 rounded-full bg-gray-100 flex items-center justify-center">
-            <ChevronRight className="h-4 w-4 text-gray-500" />
-          </div>
-        </motion.button>
-      </DialogTrigger>
-
-      <DialogContent className="sm:max-w-[425px]">
-        <DialogHeader>
-          <DialogTitle className="text-lg font-semibold text-gray-900">Typography Settings</DialogTitle>
-        </DialogHeader>
-
-        <div className="space-y-4 py-4">
-          {/* Text Element Selection */}
+    <div className="w-full h-full flex flex-col bg-white">
+      <div className="p-6 border-b border-gray-200">
+        <h2 className="text-lg font-medium text-gray-700 flex items-center gap-2">
+          <Type className="w-5 h-5 text-blue-600" />
+          Typography
+        </h2>
+      </div>
+      <div className="flex-grow overflow-y-auto">
+        <div className="p-6 space-y-6">
           <div className="space-y-2">
             <label className="text-sm font-medium text-gray-700">
               Text Element
@@ -194,8 +182,7 @@ const TextSettingsSection = () => {
             </div>
           </div>
 
-          {/* Font Size */}
-          <div className="space-y-2">
+          <div className="space-y-4">
             <div className="flex items-center justify-between">
               <label className="text-sm font-medium text-gray-700">
                 Font Size
@@ -214,11 +201,8 @@ const TextSettingsSection = () => {
             />
           </div>
 
-          {/* Font Style */}
           <div className="space-y-2">
-            <label className="text-sm font-medium text-gray-700">
-              Style
-            </label>
+            <label className="text-sm font-medium text-gray-700">Style</label>
             <div className="flex gap-2">
               <Button
                 size="sm"
@@ -248,7 +232,6 @@ const TextSettingsSection = () => {
             </div>
           </div>
 
-          {/* Alignment */}
           <div className="space-y-2">
             <label className="text-sm font-medium text-gray-700">
               Alignment
@@ -286,7 +269,6 @@ const TextSettingsSection = () => {
             </div>
           </div>
 
-          {/* Font Family */}
           <div className="space-y-2">
             <label className="text-sm font-medium text-gray-700">
               Font Family
@@ -309,11 +291,8 @@ const TextSettingsSection = () => {
             </Select>
           </div>
 
-          {/* Font Weight */}
           <div className="space-y-2">
-            <label className="text-sm font-medium text-gray-700">
-              Weight
-            </label>
+            <label className="text-sm font-medium text-gray-700">Weight</label>
             <div className="flex gap-2">
               <Button
                 size="sm"
@@ -343,8 +322,8 @@ const TextSettingsSection = () => {
             </div>
           </div>
         </div>
-      </DialogContent>
-    </Dialog>
+      </div>
+    </div>
   );
 };
 

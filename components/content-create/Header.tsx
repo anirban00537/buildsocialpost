@@ -35,7 +35,7 @@ export const Header = () => {
                         bg-gradient-to-r from-gray-900 via-blue-800 to-indigo-900
                         inline-block text-transparent bg-clip-text"
           >
-            What would you like to write about?
+            What Viral Post Would You Like to Create?
           </h1>
         </motion.div>
 

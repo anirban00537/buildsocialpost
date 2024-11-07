@@ -4,8 +4,7 @@ import { PostPreviewFullFeature } from "@/components/content-create/PostPreviewF
 import { ComposeSection } from "@/components/content-create/ComposeSection";
 import { useContentPosting } from "@/hooks/useContent";
 import { LinkedInProfileUI } from "@/types/post";
-import { useSelector } from "react-redux";
-import { RootState } from "@/state/store";
+
 import {
   DropdownMenu,
   DropdownMenuContent,

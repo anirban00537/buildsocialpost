@@ -27,17 +27,8 @@ export const ContentSourceSelector = ({
           </div>
           <div>
             <h3 className="text-sm font-semibold text-gray-900">
-              Content Source
+              Create Content from
             </h3>
-            <div className="flex items-center gap-2 mt-0.5">
-              <span className="text-xs text-gray-500">
-                Choose your content type
-              </span>
-              <div className="flex items-center gap-1 text-[10px] font-medium text-primary bg-primary/10 px-2 py-0.5 rounded-full">
-                <Sparkles className="h-3 w-3" />
-                <span>AI Optimized</span>
-              </div>
-            </div>
           </div>
         </div>
       </div>
@@ -49,7 +40,7 @@ export const ContentSourceSelector = ({
             key={source.id}
             onClick={() => setContentSource(source.id)}
             className={`
-              group relative flex items-center gap-2 px-2 py-2 rounded-xl transition-all duration-200
+              group relative flex items-center px-1 rounded-xl transition-all duration-200
               ${
                 contentSource === source.id
                   ? "bg-primary/10 ring-1 ring-primary/20"
@@ -64,16 +55,11 @@ export const ContentSourceSelector = ({
             <div
               className={`
               w-8 h-8 rounded-lg flex items-center justify-center transition-all duration-200
-              ${
-                contentSource === source.id
-                  ? "bg-primary/10"
-                  : "bg-white group-hover:bg-primary/5"
-              }
             `}
             >
               <source.icon
                 className={`
-                  h-4 w-4 transition-all duration-200
+                  h-3 w-3 transition-all duration-200
                   ${
                     contentSource === source.id
                       ? "text-primary"
@@ -85,7 +71,7 @@ export const ContentSourceSelector = ({
 
             <span
               className={`
-              text-xs font-medium whitespace-nowrap transition-colors
+              text-xs font-medium whitespace-nowrap mr-4 transition-colors
               ${
                 contentSource === source.id
                   ? "text-primary"
@@ -114,7 +100,8 @@ export const ContentSourceSelector = ({
       {/* Helper Text */}
       <div className="px-1">
         <p className="text-xs text-gray-500">
-          Select the most appropriate source type for your content generation needs
+          Select the most appropriate source type for your content generation
+          needs
         </p>
       </div>
     </div>

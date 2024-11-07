@@ -70,13 +70,7 @@ export const ComposeSection = ({
 }: ComposeSectionProps) => {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const characterCount = content.length;
-  const { toast } = useToast();
-  const { linkedinProfiles } = useSelector<
-    RootState,
-    { linkedinProfiles: LinkedInProfileUI[] }
-  >((state) => ({
-    linkedinProfiles: state.user.linkedinProfiles,
-  }));
+
 
   // Auto-resize textarea
   useEffect(() => {

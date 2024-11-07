@@ -24,9 +24,7 @@ import DownloadLoading from "@/components/utils-components/loading/Download.load
 
 SwiperCore.use([Navigation, Pagination, Scrollbar, A11y, Autoplay]);
 
-const CarouselEditor: React.FC<{ isCollapsed: boolean }> = ({
-  isCollapsed,
-}) => {
+const CarouselEditor: React.FC = () => {
   const {
     swiperRef,
     slides,
@@ -106,19 +104,10 @@ const CarouselEditor: React.FC<{ isCollapsed: boolean }> = ({
               </SwiperSlide>
             ))}
           </Swiper>
-          <button 
-            className="custom-prev absolute top-1/2 -left-4 transform -translate-y-1/2 
-                     p-2 bg-primary text-white rounded-full hover:bg-primary/90 
-                     hover:scale-105 active:scale-95 transition-all duration-200 z-20"
-          >
+          <button className="custom-prev absolute top-1/2 left-0 transform -translate-y-1/2 p-2 bg-primary text-textColor rounded-full hover:bg-primary hover:border-primary hover:text-white z-20">
             <ChevronLeft size={24} />
           </button>
-          <button 
-            className={`custom-next absolute top-1/2 transform -translate-y-1/2 
-                     p-2 bg-primary text-white rounded-full hover:bg-primary/90 
-                     hover:scale-105 active:scale-95 transition-all duration-200 z-20
-                     ${isCollapsed ? 'right-[-16px]' : 'right-[350px]'}`}
-          >
+          <button className="custom-next absolute top-1/2 right-0 transform -translate-y-1/2 p-2 bg-primary text-textColor rounded-full hover:bg-primary hover:border-primary hover:text-white z-20">
             <ChevronRight size={24} />
           </button>
         </div>

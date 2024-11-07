@@ -85,6 +85,8 @@ export function ScheduleModal({
   // Quick options for scheduling
   const getQuickOptions = () => {
     const now = new Date();
+    const inOneMin = new Date(now.getTime() + 1 * 60000);
+    const inThreeMin = new Date(now.getTime() + 3 * 60000);
     const tonight = new Date(now);
     tonight.setHours(23, 59, 0, 0);
 
@@ -94,11 +96,19 @@ export function ScheduleModal({
 
     return [
       {
-        label: `Tonight at ${format(tonight, 'h:mm a')}`,
+        label: `In 1 min (${format(inOneMin, 'h:mm a')})`,
+        date: inOneMin
+      },
+      {
+        label: `In 3 min (${format(inThreeMin, 'h:mm a')})`,
+        date: inThreeMin
+      },
+      {
+        label: `Tonight (${format(tonight, 'h:mm a')})`,
         date: tonight
       },
       {
-        label: `Tomorrow at ${format(tomorrow, 'h:mm a')}`,
+        label: `Tomorrow (${format(tomorrow, 'h:mm a')})`,
         date: tomorrow
       }
     ];
@@ -188,14 +198,14 @@ export function ScheduleModal({
           {/* Quick Options */}
           <div className="space-y-3">
             <h3 className="text-sm font-medium text-gray-900">Quick Schedule</h3>
-            <div className="flex gap-3">
+            <div className="grid grid-cols-2 gap-3">
               {quickOptions.map((option, index) => (
                 <Button
                   key={index}
-                  variant={index === 0 ? "outline" : "default"}
+                  variant={index < 2 ? "outline" : "default"}
                   className={cn(
-                    "flex-1 h-10 px-4 rounded-full transition-all duration-200",
-                    index === 0 
+                    "h-10 px-4 rounded-full transition-all duration-200",
+                    index < 2
                       ? "bg-white hover:bg-blue-50 border-blue-200 text-blue-600 hover:text-blue-700" 
                       : "bg-blue-600 hover:bg-blue-700 text-white shadow-sm hover:shadow"
                   )}

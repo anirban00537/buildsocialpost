@@ -53,17 +53,6 @@ type ManagementItem = BaseNavigationItem & {
   counter?: number;
 };
 
-// Define the arrays with their specific types
-const tools: ToolItem[] = [
-  {
-    id: "compose",
-    name: "Compose",
-    icon: Pen,
-    href: "/compose",
-    shortcut: "⌘N",
-  },
-];
-
 const features: FeatureItem[] = [
   {
     id: "ai-writer",
@@ -81,6 +70,9 @@ const features: FeatureItem[] = [
     badge: "New",
     badgeColor: "bg-gradient-to-r from-green-500 to-emerald-500",
   },
+];
+
+const management: ManagementItem[] = [
   {
     id: "carousels",
     name: "My Carousels",
@@ -94,16 +86,6 @@ const features: FeatureItem[] = [
     icon: Calendar,
     href: "/content-manager",
     counter: 5,
-  },
-];
-
-const management: ManagementItem[] = [
-  {
-    id: "linkedin-accounts",
-    name: "LinkedIn Accounts",
-    icon: Linkedin,
-    href: "/linkedin-accounts",
-    counter: 2,
   },
   {
     id: "settings",
@@ -199,18 +181,6 @@ const Navigation = () => {
 
   return (
     <nav className="flex-grow overflow-y-auto px-3 py-4 space-y-6">
-      <NavigationSection title="Create">
-        {tools.map((tool) => (
-          <NavigationItem
-            key={tool.id}
-            item={tool}
-            isActive={
-              pathname === tool.href || pathname.startsWith(tool.href + "/")
-            }
-          />
-        ))}
-      </NavigationSection>
-
       <NavigationSection title="Tools">
         {features.map((feature) => (
           <NavigationItem
