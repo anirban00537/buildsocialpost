@@ -55,6 +55,13 @@ export const useContentPosting = () => {
     useState<LinkedInProfileUI | null>(null);
   const [isAutoSaving, setIsAutoSaving] = useState(false);
 
+  // Add new states for future fields
+  const [imageUrls, setImageUrls] = useState<string[]>([]);
+  const [videoUrl, setVideoUrl] = useState("");
+  const [documentUrl, setDocumentUrl] = useState("");
+  const [hashtags, setHashtags] = useState<string[]>([]);
+  const [mentions, setMentions] = useState<string[]>([]);
+
   useEffect(() => {
     if (postDetails?.linkedInProfile?.id) {
       // If post has a linked profile, find and set it
@@ -107,7 +114,7 @@ export const useContentPosting = () => {
     onSuccess: (response) => {
       if (response.success) {
         toast.success("Post published successfully!");
-        router.push("/content-manager?tab=published");
+        router.push("/my-posts?tab=published");
       } else {
         toast.error(response.message || "Failed to publish post");
       }
@@ -124,7 +131,7 @@ export const useContentPosting = () => {
     onSuccess: (response) => {
       if (response.success) {
         toast.success("Post scheduled successfully!");
-        router.push("/content-manager?tab=scheduled");
+        router.push("/my-posts?tab=scheduled");
       } else {
         toast.error(response.message || "Failed to schedule post");
       }
@@ -189,29 +196,19 @@ export const useContentPosting = () => {
     ]
   );
 
-  // Modify the debounced auto-save
+  // Modify debouncedSaveDraft to accept full draft data
   const debouncedSaveDraft = useCallback(
-    debounce(async (content: string, linkedinProfileId: number) => {
-      if (!content.trim() || !currentWorkspace?.id || !linkedinProfileId)
+    debounce(async (draftData: Omit<CreateDraftPostType, 'workspaceId'>) => {
+      if (!draftData.content.trim() || !currentWorkspace?.id || !draftData.linkedInProfileId)
         return;
 
       try {
         setIsAutoSaving(true);
-        const draftData = {
-          ...(draftId && { id: Number(draftId) }),
-          content: content.trim(),
-          postType: "text" as const,
+        const response = await createUpdateDraftMutation({
+          ...draftData,
           workspaceId: currentWorkspace.id,
-          linkedInProfileId: linkedinProfileId,
-          imageUrls: [] as string[],
-          videoUrl: "",
-          documentUrl: "",
-          hashtags: [] as string[],
-          mentions: [] as string[],
-        };
-
-        const response = await createUpdateDraftMutation(draftData);
-        // processApiResponse(response);
+          ...(draftId && { id: Number(draftId) }),
+        });
 
         if (!draftId && response.data?.post?.id) {
           const newUrl = new URL(window.location.href);
@@ -227,23 +224,61 @@ export const useContentPosting = () => {
     [currentWorkspace?.id, createUpdateDraftMutation, draftId]
   );
 
-  // Update content and trigger auto-save
+  // Watch for changes in any draft-related field
+  useEffect(() => {
+    if (!selectedProfile?.id) return;
+
+    const draftData = {
+      content: content.trim(),
+      postType: "text" as const,
+      linkedInProfileId: selectedProfile.id,
+      imageUrls,
+      videoUrl,
+      documentUrl,
+      hashtags,
+      mentions,
+    };
+
+    debouncedSaveDraft(draftData);
+  }, [
+    content,
+    selectedProfile?.id,
+    imageUrls,
+    videoUrl,
+    documentUrl,
+    hashtags,
+    mentions,
+    debouncedSaveDraft
+  ]);
+
+  // Modify handleContentChange to only update content
   const handleContentChange = useCallback(
     (newContent: string) => {
       setContent(newContent);
-      if (selectedProfile?.id) {
-        debouncedSaveDraft(newContent, selectedProfile.id);
-      }
     },
-    [selectedProfile?.id, debouncedSaveDraft]
+    []
   );
 
-  // Clean up debounced function on unmount
-  useEffect(() => {
-    return () => {
-      debouncedSaveDraft.cancel();
-    };
-  }, [debouncedSaveDraft]);
+  // Add handlers for other fields
+  const handleImageUrlsChange = useCallback((urls: string[]) => {
+    setImageUrls(urls);
+  }, []);
+
+  const handleVideoUrlChange = useCallback((url: string) => {
+    setVideoUrl(url);
+  }, []);
+
+  const handleDocumentUrlChange = useCallback((url: string) => {
+    setDocumentUrl(url);
+  }, []);
+
+  const handleHashtagsChange = useCallback((tags: string[]) => {
+    setHashtags(tags);
+  }, []);
+
+  const handleMentionsChange = useCallback((newMentions: string[]) => {
+    setMentions(newMentions);
+  }, []);
 
   const handleSchedule = useCallback(async (date: Date) => {
     try {
@@ -392,6 +427,17 @@ export const useContentPosting = () => {
     setSelectedProfile,
     clearSelectedProfile,
     handleCreateUpdateDraft,
+    // Add new state and handlers
+    imageUrls,
+    videoUrl,
+    documentUrl,
+    hashtags,
+    mentions,
+    handleImageUrlsChange,
+    handleVideoUrlChange,
+    handleDocumentUrlChange,
+    handleHashtagsChange,
+    handleMentionsChange,
   };
 };
 

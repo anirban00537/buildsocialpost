@@ -81,10 +81,10 @@ const management: ManagementItem[] = [
     counter: 0,
   },
   {
-    id: "content-manager",
-    name: "Content Manager",
+    id: "my-posts",
+    name: "My Posts",
     icon: Calendar,
-    href: "/content-manager",
+    href: "/my-posts",
     counter: 5,
   },
   {

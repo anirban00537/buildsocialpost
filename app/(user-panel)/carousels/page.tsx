@@ -23,6 +23,7 @@ import {
   TableCell,
 } from "@/components/ui/table";
 import { Pagination } from "@/components/ui/pagination";
+import Link from "next/link";
 
 const CarouselsPage = () => {
   const router = useRouter();
@@ -36,13 +37,6 @@ const CarouselsPage = () => {
     handlePageChange,
     currentPage,
   } = useCarouselManager();
-
-  const handleOpenCarousel = useCallback(
-    (carouselId: string) => {
-      router.push(`/carousel-editor?id=${carouselId}`);
-    },
-    [router]
-  );
 
   const handleDeleteCarousel = useCallback(
     async (carouselId: string) => {
@@ -108,8 +102,12 @@ const CarouselsPage = () => {
               <div className="mx-auto w-24 h-24 bg-gray-50 rounded-full flex items-center justify-center mb-4">
                 <Layout className="w-12 h-12 text-gray-400" />
               </div>
-              <h3 className="text-lg font-medium text-gray-900">No carousels yet</h3>
-              <p className="mt-1 text-sm text-gray-500">Get started by creating a new carousel</p>
+              <h3 className="text-lg font-medium text-gray-900">
+                No carousels yet
+              </h3>
+              <p className="mt-1 text-sm text-gray-500">
+                Get started by creating a new carousel
+              </p>
               <Button
                 onClick={() => router.push("/carousel-editor")}
                 className="mt-4 h-10 px-4 rounded-xl bg-gradient-to-br from-blue-500 via-blue-600 to-blue-800 text-white 
@@ -132,17 +130,27 @@ const CarouselsPage = () => {
               <Table>
                 <TableHeader>
                   <TableRow className="border-b border-gray-200">
-                    <TableHead className="w-[35%] py-4 text-gray-600 font-medium">Name</TableHead>
-                    <TableHead className="w-[20%] py-4 text-gray-600 font-medium">Created</TableHead>
-                    <TableHead className="w-[15%] py-4 text-gray-600 font-medium">Slides</TableHead>
-                    <TableHead className="w-[15%] py-4 text-gray-600 font-medium">Status</TableHead>
-                    <TableHead className="w-[15%] py-4 text-right text-gray-600 font-medium">Actions</TableHead>
+                    <TableHead className="w-[35%] py-4 text-gray-600 font-medium">
+                      Name
+                    </TableHead>
+                    <TableHead className="w-[20%] py-4 text-gray-600 font-medium">
+                      Created
+                    </TableHead>
+                    <TableHead className="w-[15%] py-4 text-gray-600 font-medium">
+                      Slides
+                    </TableHead>
+                    <TableHead className="w-[15%] py-4 text-gray-600 font-medium">
+                      Status
+                    </TableHead>
+                    <TableHead className="w-[15%] py-4 text-right text-gray-600 font-medium">
+                      Actions
+                    </TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {carousels.map((carousel: any) => (
-                    <TableRow 
-                      key={carousel.id} 
+                    <TableRow
+                      key={carousel.id}
                       className="border-b border-gray-100 hover:border-gray-200 transition-colors duration-150"
                     >
                       <TableCell className="py-4">
@@ -155,7 +163,7 @@ const CarouselsPage = () => {
                               {carousel?.data?.name || "Unnamed Carousel"}
                             </h3>
                             <p className="text-sm text-gray-500 truncate">
-                              ID: {String(carousel?.id).padStart(4, '0')}
+                              ID: {String(carousel?.id).padStart(4, "0")}
                             </p>
                           </div>
                         </div>
@@ -180,13 +188,12 @@ const CarouselsPage = () => {
                       </TableCell>
                       <TableCell className="text-right py-4">
                         <div className="flex justify-end gap-2">
-                          <Button
-                            onClick={() => handleOpenCarousel(carousel?.id)}
-                            className="h-8 px-3 rounded-lg text-white bg-primary hover:from-blue-600 hover:via-blue-700 hover:to-blue-900 shadow-sm"
-                          >
-                            <FileText className="w-4 h-4 mr-1.5" />
-                            Open
-                          </Button>
+                          <Link href={`/carousel-editor?id=${carousel?.id}`}>
+                            <Button className="h-8 px-3 rounded-lg text-white bg-primary hover:from-blue-600 hover:via-blue-700 hover:to-blue-900 shadow-sm">
+                              <FileText className="w-4 h-4 mr-1.5" />
+                              Open
+                            </Button>
+                          </Link>
                           <Button
                             onClick={() => handleDeleteCarousel(carousel?.id)}
                             disabled={isDeleting}
