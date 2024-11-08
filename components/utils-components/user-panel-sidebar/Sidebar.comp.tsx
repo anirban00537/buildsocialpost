@@ -236,17 +236,6 @@ const Sidebar = () => {
     }
   };
 
-  // Example accounts data - replace with your actual data
-
-  const handleConnectLinkedIn = () => {
-    // Implement LinkedIn OAuth connection
-    console.log("Connecting LinkedIn account...");
-  };
-
-  const handleDisconnectAccount = (accountId: number) => {
-    // Implement account disconnection
-    console.log("Disconnecting account:", accountId);
-  };
 
   return (
     <div className="w-72 h-screen flex flex-col bg-gradient-to-br from-blue-100 via-indigo-50/50 to-blue-100  text-gray-500 border-r border-gray-100 shadow-sm">

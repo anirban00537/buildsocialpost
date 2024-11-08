@@ -15,6 +15,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import Image from "next/image";
 
 interface LinkedInProfile {
   id: number;
@@ -60,6 +61,7 @@ interface PostPreviewNotReduxProps {
   postLogs?: PostLog[];
   publishedAt?: string | null;
   scheduledTime?: string | null;
+  imageUrls?: string[];
 }
 
 export const PostPreviewNotRedux = ({
@@ -73,6 +75,7 @@ export const PostPreviewNotRedux = ({
   postLogs,
   publishedAt,
   scheduledTime,
+  imageUrls,
 }: PostPreviewNotReduxProps) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [hasMoreContent, setHasMoreContent] = useState(false);
@@ -259,6 +262,63 @@ export const PostPreviewNotRedux = ({
             </div>
           )}
         </div>
+
+        {/* Image Grid */}
+        {imageUrls && imageUrls.length > 0 && (
+          <div className="mt-4">
+            <div
+              className={`grid gap-1 w-full ${
+                imageUrls.length === 1
+                  ? 'grid-cols-1'
+                  : imageUrls.length === 2
+                  ? 'grid-cols-2'
+                  : imageUrls.length === 3
+                  ? 'grid-cols-2'
+                  : imageUrls.length === 4
+                  ? 'grid-cols-2'
+                  : 'grid-cols-3'
+              }`}
+            >
+              {imageUrls.map((url, index) => (
+                <div
+                  key={index}
+                  className={`relative ${
+                    imageUrls.length === 3 && index === 0
+                      ? 'row-span-2'
+                      : imageUrls.length > 4 && index >= 4
+                      ? 'hidden md:block'
+                      : ''
+                  }`}
+                >
+                  <div
+                    className={`relative ${
+                      imageUrls.length === 1 ? 'pt-[52%]' : 'pt-[100%]'
+                    }`}
+                  >
+                    <img
+                      src={url}
+                      alt={`Post image ${index + 1}`}
+                      className={`absolute inset-0 w-full h-full object-cover ${
+                        imageUrls.length === 1 ? 'rounded-lg' : index === 0 ? 'rounded-tl-lg' :
+                        index === 1 && imageUrls.length === 2 ? 'rounded-tr-lg' :
+                        index === imageUrls.length - 1 && index % 3 === 0 ? 'rounded-bl-lg' :
+                        index === imageUrls.length - 1 ? 'rounded-br-lg' : ''
+                      }`}
+                    />
+                    {/* Overlay for images beyond the 4th one */}
+                    {imageUrls.length > 4 && index === 4 && (
+                      <div className="absolute inset-0 bg-black/50 flex items-center justify-center rounded-br-lg">
+                        <span className="text-white text-lg font-medium">
+                          +{imageUrls.length - 4}
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* Post Logs */}
         <div className="flex items-center gap-2">

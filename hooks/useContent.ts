@@ -328,12 +328,7 @@ export const useContentPosting = () => {
           return;
         }
 
-        // First save the draft
-        const savedDraft = await handleCreateUpdateDraft(selectedProfile.id);
-        if (!savedDraft?.success) {
-          toast.error("Failed to save draft before scheduling");
-          return;
-        }
+    
 
         // Show scheduling feedback
         toast.loading("Scheduling post...", { id: "scheduling" });

@@ -1,14 +1,11 @@
 "use client";
 import React, { useState } from "react";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { motion, AnimatePresence } from "framer-motion";
 import { Header } from "../../../components/content-create/Header";
 import { ContentInput } from "../../../components/content-create/ContentInput";
 import { AIWritingPreview } from "@/components/content-create/AIWritingPreview";
-import { ContentSourceSelector } from "../../../components/content-create/ContentSourceSelector";
-import { contentSources } from "@/lib/data";
 import { useGenerateLinkedInPosts } from "@/hooks/useGenerateLinkedInPosts";
-import { Sparkles, Linkedin } from "lucide-react";
+import { Sparkles } from "lucide-react";
 
 const ContentCreationTools: React.FC = () => {
   const [characterCount, setCharacterCount] = useState(0);
@@ -23,8 +20,7 @@ const ContentCreationTools: React.FC = () => {
     handleLinkedInTextChange,
     postTone,
     setPostTone,
-    writingStyle,
-    setWritingStyle,
+  
   } = useGenerateLinkedInPosts();
 
   const handleLocalTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -36,27 +32,17 @@ const ContentCreationTools: React.FC = () => {
     <div className="min-h-screen bg-gradient-to-br from-white via-blue-50/30 to-indigo-50/20">
       <Header />
 
-      <div className="max-w-[1600px] mx-auto px-4 sm:px-6">
+      <div className="max-w-[1600px] mx-auto px-4 sm:px-6 py-6">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 relative">
-          {/* Left Column - Enhanced Input Section */}
+          {/* Left Column - Input Section */}
           <div className="max-w-[800px] w-full mx-auto lg:mx-0">
-            <Card
-              className="border border-gray-200 shadow-md overflow-hidden rounded-2xl relative backdrop-blur-sm
-                              bg-gradient-to-r from-white to-blue-50 hover:border-blue-200/30 transition-colors"
-            >
-              {/* Refined Gradient Background */}
+            <div className="relative overflow-hidden rounded-2xl border border-gray-200/80 shadow-[0_8px_30px_rgb(0,0,0,0.04)] backdrop-blur-sm">
+              {/* Gradient Backgrounds */}
               <div className="absolute inset-0 bg-gradient-to-br from-white via-blue-50/50 to-indigo-100/30" />
               <div className="absolute inset-0 bg-white/50 backdrop-blur-[2px]" />
 
-              {/* <CardHeader className="relative pb-0 px-8 pt-6 border-b border-gray-100/80">
-                <ContentSourceSelector
-                  contentSource={contentSource}
-                  setContentSource={setContentSource}
-                  contentSources={contentSources}
-                />
-              </CardHeader> */}
-
-              <CardContent className="relative px-8 py-6 h-[calc(100%-7rem)] overflow-auto">
+              {/* Content */}
+              <div className="relative px-8 py-6">
                 <ContentInput
                   {...{
                     contentSource,
@@ -70,15 +56,13 @@ const ContentCreationTools: React.FC = () => {
                     content,
                     postTone,
                     setPostTone,
-                    writingStyle,
-                    setWritingStyle,
                   }}
                 />
-              </CardContent>
-            </Card>
+              </div>
+            </div>
           </div>
 
-          {/* Enhanced Section Separator with refined gradients */}
+          {/* Center Separator */}
           <div className="hidden lg:block absolute right-1/2 top-1/2 -translate-y-1/2 z-10">
             <motion.div
               className="w-14 h-14 rounded-full bg-gradient-to-br from-white to-blue-50 shadow-md 
@@ -95,7 +79,7 @@ const ContentCreationTools: React.FC = () => {
             </motion.div>
           </div>
 
-          {/* Right Column - Enhanced Preview Section */}
+          {/* Right Column - Preview Section */}
           <div className="max-w-[800px] w-full mx-auto lg:mx-0">
             <AnimatePresence mode="wait">
               <motion.div
@@ -105,22 +89,20 @@ const ContentCreationTools: React.FC = () => {
                 transition={{ duration: 0.3, ease: "easeOut" }}
                 className="h-full"
               >
-                <Card
-                  className="border border-gray-200 shadow-md overflow-hidden rounded-2xl relative backdrop-blur-sm
-                                  bg-gradient-to-br from-white via-transparent to-white/50 hover:border-blue-200/30 transition-colors"
-                >
-                  {/* Refined Gradient Background */}
+                <div className="relative overflow-hidden rounded-2xl border border-gray-200/80 shadow-[0_8px_30px_rgb(0,0,0,0.04)] backdrop-blur-sm">
+                  {/* Gradient Backgrounds */}
                   <div className="absolute inset-0 bg-gradient-to-br from-white via-blue-50/50 to-indigo-100/30" />
                   <div className="absolute inset-0 bg-white/50 backdrop-blur-[2px]" />
 
-                  <CardContent className="relative px-8 py-6">
+                  {/* Content */}
+                  <div className="relative px-8 py-6">
                     <AIWritingPreview
                       isGenerating={isGeneratingLinkedinPosts}
                       generatedPost={generatedPost}
                       title="AI Generated LinkedIn Post"
                     />
-                  </CardContent>
-                </Card>
+                  </div>
+                </div>
               </motion.div>
             </AnimatePresence>
           </div>

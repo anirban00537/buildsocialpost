@@ -9,7 +9,6 @@ export const useGenerateLinkedInPosts = () => {
   const [content, setContent] = useState("");
   const [generatedPost, setGeneratedPost] = useState<string>("");
   const [postTone, setPostTone] = useState("Professional");
-  const [writingStyle, setWritingStyle] = useState("Direct");
   const {
     mutateAsync: generateLinkedinPosts,
     isLoading: isGeneratingLinkedinPosts,
@@ -22,7 +21,7 @@ export const useGenerateLinkedInPosts = () => {
           console.log(post, "generated post from useGenerateLinkedInPosts");
           setGeneratedPost(post);
           toast.success("Content generated successfully!");
-          
+
           // Refetch subscription data to update usage
           await queryClient.refetchQueries(["subscription"]);
         } else {
@@ -39,7 +38,7 @@ export const useGenerateLinkedInPosts = () => {
 
   useEffect(() => {
     const handleKeyPress = (event: KeyboardEvent) => {
-      if ((event.ctrlKey || event.metaKey) && event.key === 'Enter') {
+      if ((event.ctrlKey || event.metaKey) && event.key === "Enter") {
         event.preventDefault();
         if (!isGeneratingLinkedinPosts) {
           handleGenerateLinkedIn();
@@ -47,8 +46,8 @@ export const useGenerateLinkedInPosts = () => {
       }
     };
 
-    window.addEventListener('keydown', handleKeyPress);
-    return () => window.removeEventListener('keydown', handleKeyPress);
+    window.addEventListener("keydown", handleKeyPress);
+    return () => window.removeEventListener("keydown", handleKeyPress);
   }, [content, isGeneratingLinkedinPosts]);
 
   const handleLinkedInTextChange = (
@@ -75,7 +74,6 @@ export const useGenerateLinkedInPosts = () => {
         prompt: content.trim(),
         language: "en",
         tone: postTone,
-        writingStyle: writingStyle,
       });
     } catch (error) {
       console.error("Error in handleGenerate:", error);
@@ -93,7 +91,5 @@ export const useGenerateLinkedInPosts = () => {
     handleLinkedInTextChange,
     postTone,
     setPostTone,
-    writingStyle,
-    setWritingStyle,
   };
 };

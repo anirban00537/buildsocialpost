@@ -31,9 +31,12 @@ export const Header = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.2 }}
         >
-          <h1 className="text-4xl font-bold tracking-tight lg:text-5xl 
-                        bg-gradient-to-r from-gray-900 via-blue-800 to-indigo-900
-                        inline-block text-transparent bg-clip-text"
+          <h1
+            className="text-4xl font-bold tracking-tight lg:text-5xl 
+          bg-slate-800
+          inline-block text-transparent bg-clip-text
+          [text-shadow:_0_1px_3px_rgb(0_0_0_/_15%)]
+          relative z-10"
           >
             What Viral Post Would You Like to Create?
           </h1>
