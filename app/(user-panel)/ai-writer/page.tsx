@@ -48,13 +48,13 @@ const ContentCreationTools: React.FC = () => {
               <div className="absolute inset-0 bg-gradient-to-br from-white via-blue-50/50 to-indigo-100/30" />
               <div className="absolute inset-0 bg-white/50 backdrop-blur-[2px]" />
 
-              <CardHeader className="relative pb-0 px-8 pt-6 border-b border-gray-100/80">
+              {/* <CardHeader className="relative pb-0 px-8 pt-6 border-b border-gray-100/80">
                 <ContentSourceSelector
                   contentSource={contentSource}
                   setContentSource={setContentSource}
                   contentSources={contentSources}
                 />
-              </CardHeader>
+              </CardHeader> */}
 
               <CardContent className="relative px-8 py-6 h-[calc(100%-7rem)] overflow-auto">
                 <ContentInput

@@ -84,16 +84,44 @@ export const useContentPosting = () => {
       enabled: !!draftId,
       onSuccess: (response) => {
         if (response.success) {
-          setContent(response.data.post.content);
-          setPostDetails(response.data.post);
+          const post = response.data.post;
 
-          if (response.data.post.linkedInProfile?.id) {
+          // Set all available fields from the draft
+          setContent(post.content);
+          setPostDetails(post);
+
+          // Set media fields
+          if (post.imageUrls) {
+            setImageUrls(post.imageUrls);
+          }
+          if (post.videoUrl) {
+            setVideoUrl(post.videoUrl);
+          }
+          if (post.documentUrl) {
+            setDocumentUrl(post.documentUrl);
+          }
+
+          // Set metadata fields
+          if (post.hashtags) {
+            setHashtags(post.hashtags);
+          }
+          if (post.mentions) {
+            setMentions(post.mentions);
+          }
+
+          // Set LinkedIn profile if available
+          if (post.linkedInProfile?.id) {
             const linkedProfile = linkedinProfiles.find(
-              (profile) => profile.id === response.data.post.linkedInProfile.id
+              (profile) => profile.id === post.linkedInProfile.id
             );
             if (linkedProfile) {
               setSelectedProfile(linkedProfile);
             }
+          }
+
+          // Set scheduled date if available
+          if (post.scheduledTime) {
+            setScheduledDate(new Date(post.scheduledTime));
           }
         }
       },
@@ -125,22 +153,28 @@ export const useContentPosting = () => {
     },
   });
 
-  const { mutateAsync: schedulePostMutation, isLoading: isScheduling } = useMutation({
-    mutationFn: ({ postId, scheduleData }: { postId: number; scheduleData: SchedulePostType }) =>
-      schedulePost(postId, scheduleData),
-    onSuccess: (response) => {
-      if (response.success) {
-        toast.success("Post scheduled successfully!");
-        router.push("/my-posts?tab=scheduled");
-      } else {
-        toast.error(response.message || "Failed to schedule post");
-      }
-    },
-    onError: (error: Error) => {
-      toast.error(`Error scheduling post: ${error.message}`);
-      console.error("Scheduling error:", error);
-    },
-  });
+  const { mutateAsync: schedulePostMutation, isLoading: isScheduling } =
+    useMutation({
+      mutationFn: ({
+        postId,
+        scheduleData,
+      }: {
+        postId: number;
+        scheduleData: SchedulePostType;
+      }) => schedulePost(postId, scheduleData),
+      onSuccess: (response) => {
+        if (response.success) {
+          toast.success("Post scheduled successfully!");
+          router.push("/my-posts?tab=scheduled");
+        } else {
+          toast.error(response.message || "Failed to schedule post");
+        }
+      },
+      onError: (error: Error) => {
+        toast.error(`Error scheduling post: ${error.message}`);
+        console.error("Scheduling error:", error);
+      },
+    });
 
   // Keep the original handleCreateUpdateDraft
   const handleCreateUpdateDraft = useCallback(
@@ -198,8 +232,12 @@ export const useContentPosting = () => {
 
   // Modify debouncedSaveDraft to accept full draft data
   const debouncedSaveDraft = useCallback(
-    debounce(async (draftData: Omit<CreateDraftPostType, 'workspaceId'>) => {
-      if (!draftData.content.trim() || !currentWorkspace?.id || !draftData.linkedInProfileId)
+    debounce(async (draftData: Omit<CreateDraftPostType, "workspaceId">) => {
+      if (
+        !draftData.content.trim() ||
+        !currentWorkspace?.id ||
+        !draftData.linkedInProfileId
+      )
         return;
 
       try {
@@ -248,16 +286,13 @@ export const useContentPosting = () => {
     documentUrl,
     hashtags,
     mentions,
-    debouncedSaveDraft
+    debouncedSaveDraft,
   ]);
 
   // Modify handleContentChange to only update content
-  const handleContentChange = useCallback(
-    (newContent: string) => {
-      setContent(newContent);
-    },
-    []
-  );
+  const handleContentChange = useCallback((newContent: string) => {
+    setContent(newContent);
+  }, []);
 
   // Add handlers for other fields
   const handleImageUrlsChange = useCallback((urls: string[]) => {
@@ -280,47 +315,54 @@ export const useContentPosting = () => {
     setMentions(newMentions);
   }, []);
 
-  const handleSchedule = useCallback(async (date: Date) => {
-    try {
-      if (!draftId) {
-        toast.error("No draft found to schedule");
-        return;
+  const handleSchedule = useCallback(
+    async (date: Date) => {
+      try {
+        if (!draftId) {
+          toast.error("No draft found to schedule");
+          return;
+        }
+
+        if (!selectedProfile?.id) {
+          toast.error("Please select a LinkedIn profile");
+          return;
+        }
+
+        // First save the draft
+        const savedDraft = await handleCreateUpdateDraft(selectedProfile.id);
+        if (!savedDraft?.success) {
+          toast.error("Failed to save draft before scheduling");
+          return;
+        }
+
+        // Show scheduling feedback
+        toast.loading("Scheduling post...", { id: "scheduling" });
+
+        const scheduleData = {
+          scheduledTime: date.toISOString(),
+          timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+        };
+
+        await schedulePostMutation({
+          postId: Number(draftId),
+          scheduleData,
+        });
+
+        setScheduledDate(date);
+        setIsScheduleModalOpen(false);
+        toast.dismiss("scheduling");
+      } catch (error) {
+        console.error("Error in handleSchedule:", error);
+        toast.error("Failed to schedule post");
       }
-
-      if (!selectedProfile?.id) {
-        toast.error("Please select a LinkedIn profile");
-        return;
-      }
-
-      // First save the draft
-      const savedDraft = await handleCreateUpdateDraft(selectedProfile.id);
-      if (!savedDraft?.success) {
-        toast.error("Failed to save draft before scheduling");
-        return;
-      }
-
-      // Show scheduling feedback
-      toast.loading("Scheduling post...", { id: "scheduling" });
-
-      const scheduleData = {
-        scheduledTime: date.toISOString(),
-        timezone: Intl.DateTimeFormat().resolvedOptions().timeZone
-      };
-
-      await schedulePostMutation({
-        postId: Number(draftId),
-        scheduleData
-      });
-
-      setScheduledDate(date);
-      setIsScheduleModalOpen(false);
-      toast.dismiss("scheduling");
-
-    } catch (error) {
-      console.error("Error in handleSchedule:", error);
-      toast.error("Failed to schedule post");
-    }
-  }, [draftId, selectedProfile?.id, schedulePostMutation, handleCreateUpdateDraft]);
+    },
+    [
+      draftId,
+      selectedProfile?.id,
+      schedulePostMutation,
+      handleCreateUpdateDraft,
+    ]
+  );
 
   const handleCreateDraftFromGenerated = useCallback(
     async ({
@@ -377,11 +419,11 @@ export const useContentPosting = () => {
         }
 
         // First save the draft
-        const savedDraft = await handleCreateUpdateDraft(linkedinProfileId);
-        if (!savedDraft?.success) {
-          toast.error("Failed to save draft before publishing");
-          return;
-        }
+        // const savedDraft = await handleCreateUpdateDraft(linkedinProfileId);
+        // if (!savedDraft?.success) {
+        //   toast.error("Failed to save draft before publishing");
+        //   return;
+        // }
 
         // Show posting feedback
         toast.loading("Publishing post...", { id: "posting" });

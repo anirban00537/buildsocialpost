@@ -13,6 +13,11 @@ export const uploadImage = async (file: File) => {
   return response;
 };
 
+export const uploadImageAndGetUrl = async (file: File) => {
+  const response = await fRequest.post("/files/upload-image", file);
+  return response;
+};
+
 export const getImages = async ({ page, pageSize }: PaginationParams = {}) => {
   const response = await request.get("/files", {
     params: { page, pageSize },

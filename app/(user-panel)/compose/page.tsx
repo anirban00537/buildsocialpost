@@ -35,6 +35,8 @@ const ComposePage = () => {
     setSelectedProfile,
     linkedinProfiles,
     isAutoSaving,
+    imageUrls,
+    handleImageUrlsChange,
   } = useContentPosting();
 
   const handleProfileSelect = useCallback(
@@ -71,7 +73,9 @@ const ComposePage = () => {
 
             {/* Enhanced Profile Selector */}
             <div className="flex items-center gap-2">
-              <span className="text-xs font-medium text-gray-500">Profile:</span>
+              <span className="text-xs font-medium text-gray-500">
+                Profile:
+              </span>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button
@@ -79,9 +83,10 @@ const ComposePage = () => {
                     size="sm"
                     className={`
                       h-9 px-3 gap-2 transition-all duration-200
-                      ${!selectedProfile
-                        ? "text-red-600 border-red-200 hover:border-red-300 hover:bg-red-50"
-                        : "border-blue-200 hover:border-blue-300 hover:bg-blue-50"
+                      ${
+                        !selectedProfile
+                          ? "text-red-600 border-red-200 hover:border-red-300 hover:bg-red-50"
+                          : "border-blue-200 hover:border-blue-300 hover:bg-blue-50"
                       }
                     `}
                   >
@@ -104,7 +109,9 @@ const ComposePage = () => {
                     ) : (
                       <div className="flex items-center gap-2">
                         <Linkedin className="h-4 w-4 text-current" />
-                        <span className="text-sm font-medium">Select Profile</span>
+                        <span className="text-sm font-medium">
+                          Select Profile
+                        </span>
                       </div>
                     )}
                     <ChevronDown className="h-3.5 w-3.5 opacity-50 ml-1" />
@@ -123,9 +130,10 @@ const ComposePage = () => {
                         onClick={() => handleProfileSelect(profile)}
                         className={`
                           flex items-center gap-2 px-2 py-1.5 rounded-md cursor-pointer
-                          ${selectedProfile?.id === profile.id
-                            ? "bg-blue-50 text-blue-600"
-                            : "hover:bg-gray-50"
+                          ${
+                            selectedProfile?.id === profile.id
+                              ? "bg-blue-50 text-blue-600"
+                              : "hover:bg-gray-50"
                           }
                         `}
                       >
@@ -206,6 +214,8 @@ const ComposePage = () => {
                 selectedLinkedInProfile={selectedProfile}
                 onProfileSelect={setSelectedProfile}
                 isAutoSaving={isAutoSaving}
+                imageUrls={imageUrls}
+                onImageUrlsChange={handleImageUrlsChange}
               />
               <PostPreviewFullFeature
                 isGenerating={isGenerating}
@@ -213,6 +223,7 @@ const ComposePage = () => {
                 showActions={false}
                 title="Content Preview"
                 selectedProfile={selectedProfile}
+                imageUrls={imageUrls}
               />
             </>
           )}

@@ -1,16 +1,7 @@
 "use client";
 import React, { useState, useEffect, useRef } from "react";
-import { Card } from "../ui/card";
 import { Button } from "../ui/button";
-import {
-  Send,
-  Clock,
-  Save,
-  Sparkles,
-  HelpCircle,
-  FileText,
-  ArrowRight,
-} from "lucide-react";
+import { Send, Clock, Sparkles, HelpCircle } from "lucide-react";
 import { ScheduleModal } from "./ScheduleModal";
 import {
   Tooltip,
@@ -18,18 +9,19 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { LinkedInProfile, Post } from "@/types/post";
-import { useToast } from "@/components/ui/use-toast";
-import { useSelector } from "react-redux";
-import { RootState } from "@/state/store";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuTrigger,
-  DropdownMenuItem,
-} from "@/components/ui/dropdown-menu";
-import { ChevronDown, Linkedin } from "lucide-react";
-import Image from "next/image";
 import { LinkedInProfileUI } from "@/types/post";
+import dynamic from "next/dynamic";
+import data from "@emoji-mart/data";
+import {
+  Image as ImageIcon,
+  Smile,
+  Link2,
+  FileText,
+  Video,
+} from "lucide-react";
+import { cn } from "@/lib/utils";
+import ImageUploadModal from "../editor/Image_upload_modal/Image-Upload-Modal.comp";
+import { X } from "lucide-react";
 
 interface ComposeSectionProps {
   content: string;
@@ -47,9 +39,19 @@ interface ComposeSectionProps {
   selectedLinkedInProfile: LinkedInProfileUI | null;
   onProfileSelect: (profile: LinkedInProfileUI) => void;
   isAutoSaving?: boolean;
+  imageUrls: string[];
+  onImageUrlsChange: (urls: string[]) => void;
 }
 
 const CHAR_LIMIT = 3000;
+
+// Dynamic import of EmojiPicker to avoid SSR issues
+const Picker = dynamic(() => import("@emoji-mart/react"), {
+  ssr: false,
+  loading: () => (
+    <div className="h-[400px] w-[320px] bg-white animate-pulse rounded-lg" />
+  ),
+});
 
 export const ComposeSection = ({
   content,
@@ -67,10 +69,13 @@ export const ComposeSection = ({
   selectedLinkedInProfile,
   onProfileSelect,
   isAutoSaving,
+  imageUrls,
+  onImageUrlsChange,
 }: ComposeSectionProps) => {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const characterCount = content.length;
-
+  const [isImageModalOpen, setIsImageModalOpen] = useState(false);
 
   // Auto-resize textarea
   useEffect(() => {
@@ -97,213 +102,272 @@ export const ComposeSection = ({
     }
   };
 
+  const onEmojiSelect = (emoji: any) => {
+    const cursorPosition = textareaRef.current?.selectionStart || 0;
+    const updatedContent =
+      content.slice(0, cursorPosition) +
+      emoji.native +
+      content.slice(cursorPosition);
+    setContent(updatedContent);
+    setShowEmojiPicker(false);
+  };
+
+  const handleImageSelect = (url: string) => {
+    onImageUrlsChange([...imageUrls, url]);
+    setIsImageModalOpen(false);
+  };
+
   return (
-    <Card className="flex flex-col h-[calc(100vh-200px)] bg-white shadow-md border border-gray-200/80 rounded-2xl backdrop-blur-sm overflow-hidden">
-      {/* Enhanced Editor Header */}
-      <div className="px-6 py-4 border-b border-gray-100">
+    <div className="flex flex-col  bg-white rounded-2xl overflow-hidden border border-gray-200/80 shadow-[0_8px_30px_rgb(0,0,0,0.04)] backdrop-blur-sm">
+      {/* Editor Header */}
+      <div className="px-5 py-4 border-b border-gray-100 bg-gradient-to-r from-white to-gray-50/50">
         <div className="flex items-center justify-between">
-          {/* Status & Character Count */}
-          <div className="flex items-center gap-4">
-            <div className="flex items-center gap-2">
-              <div className="flex flex-col">
-                <div className="flex items-center gap-2">
-                  <span className="text-sm font-medium text-gray-900">
-                    Content Editor
-                  </span>
-                  {isAutoSaving ? (
-                    <span className="text-xs text-blue-600 flex items-center gap-1">
-                      <span className="w-2 h-2 border-2 border-current border-t-transparent rounded-full animate-spin" />
-                      Auto-saving...
-                    </span>
-                  ) : (
-                    <span className="text-xs text-green-600 flex items-center gap-1">
-                      <span className="w-2 h-2 bg-green-500 rounded-full" />
-                      All changes saved
-                    </span>
-                  )}
-                </div>
-                <div className="flex items-center gap-2 mt-1">
-                  <div
-                    className={`text-xs ${
-                      characterCount > CHAR_LIMIT
-                        ? "text-red-600"
-                        : "text-gray-500"
-                    }`}
-                  >
-                    {characterCount}/{CHAR_LIMIT} characters
-                  </div>
-                  {characterCount > CHAR_LIMIT * 0.9 && (
-                    <span className="text-xs text-amber-600">
-                      {CHAR_LIMIT - characterCount} characters remaining
-                    </span>
-                  )}
-                </div>
-              </div>
+          <div className="flex items-center gap-3">
+            <h2 className="text-base font-semibold text-gray-800">
+              Create Post
+            </h2>
+            <div
+              className={cn(
+                "flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium transition-all",
+                isAutoSaving
+                  ? "bg-blue-50 text-blue-600"
+                  : "bg-green-50 text-green-600"
+              )}
+            >
+              <span
+                className={cn(
+                  "w-1.5 h-1.5 rounded-full",
+                  isAutoSaving ? "bg-blue-500 animate-pulse" : "bg-green-500"
+                )}
+              />
+              {isAutoSaving ? "Saving..." : "Saved"}
             </div>
           </div>
-
-          {/* AI Assistant Quick Access */}
-          <Button
-            variant="outline"
-            size="sm"
-            className="h-9 gap-2 border-blue-200 text-blue-600 hover:bg-blue-50"
-            onClick={() => {
-              /* Toggle AI Assistant */
-            }}
-          >
-            <Sparkles className="w-4 h-4" />
-            AI Assist
-            <kbd className="ml-2 text-[10px] px-1.5 py-0.5 bg-blue-50 rounded">
-              ⌘/
-            </kbd>
-          </Button>
         </div>
       </div>
 
-      {/* Enhanced Editor Content */}
-      <div className="flex-grow overflow-y-auto bg-gradient-to-b from-white to-blue-50/5 relative">
-        <textarea
-          ref={textareaRef}
-          value={content}
-          onChange={(e) => setContent(e.target.value)}
-          onKeyDown={handleKeyDown}
-          placeholder="Start writing or use AI commands (⌘ + /) to enhance your content..."
-          className="w-full h-full min-h-[calc(100vh-400px)] px-6 py-4 resize-none focus:outline-none
-                   text-gray-700 placeholder-gray-400/80 bg-transparent text-base leading-relaxed"
-          style={{
-            lineHeight: "1.8",
-            fontFamily: "inherit",
-          }}
-        />
+      {/* Editor Toolbar */}
+      <div className="px-5 py-2.5 border-b border-gray-100 flex items-center gap-2">
+        <div className="flex items-center gap-1 p-1 bg-gray-50/80 rounded-lg">
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="h-8 w-8 p-0 hover:bg-white rounded-md transition-all"
+                onClick={() => setIsImageModalOpen(true)}
+              >
+                <ImageIcon className="w-4 h-4 text-gray-600" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>Add Image</TooltipContent>
+          </Tooltip>
 
-        {/* Character limit warning */}
-        {characterCount > CHAR_LIMIT * 0.9 && (
-          <div
-            className={`
-            absolute bottom-4 right-4 px-3 py-2 rounded-lg shadow-md
-            flex items-center gap-2 text-sm
-            ${
-              characterCount > CHAR_LIMIT
-                ? "bg-red-50 text-red-600"
-                : "bg-yellow-50 text-yellow-600"
-            }
-          `}
-          >
-            <span className="font-medium">
-              {characterCount > CHAR_LIMIT
-                ? "Character limit exceeded"
-                : "Approaching character limit"}
-            </span>
-            <span className="text-xs opacity-75">
-              {CHAR_LIMIT - characterCount} remaining
-            </span>
-          </div>
-        )}
-      </div>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="h-8 w-8 p-0 hover:bg-white rounded-md transition-all"
+              >
+                <Video className="w-4 h-4 text-gray-600" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>Add Video</TooltipContent>
+          </Tooltip>
 
-      {/* Enhanced Action Footer */}
-      <div className="p-4 border-t border-gray-100 bg-white">
-        <div className="flex flex-col gap-4">
-          {/* Action Buttons */}
-          <div className="flex gap-2">
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="flex-1 h-10 gap-2 border-blue-200 text-blue-600 hover:bg-blue-50 hover:border-blue-300 hover:text-blue-700 transition-colors duration-200"
-                  onClick={() => setIsScheduleModalOpen(true)}
-                  disabled={!selectedLinkedInProfile || !content.trim()}
-                >
-                  <Clock className="w-4 h-4" />
-                  Schedule Post
-                  <kbd className="ml-2 text-[10px] px-1.5 py-0.5 bg-blue-50 rounded">⌘S</kbd>
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p className="text-xs">Schedule your post for later</p>
-              </TooltipContent>
-            </Tooltip>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="h-8 w-8 p-0 hover:bg-white rounded-md transition-all"
+              >
+                <FileText className="w-4 h-4 text-gray-600" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>Add Document</TooltipContent>
+          </Tooltip>
+        </div>
 
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button
-                  variant="default"
-                  size="sm"
-                  className={`
-                    flex-1 h-10 gap-2 bg-blue-600 hover:bg-blue-700 text-white transition-all duration-200
-                    ${!selectedLinkedInProfile || characterCount > CHAR_LIMIT || !content.trim() || isPosting
-                      ? "opacity-50 cursor-not-allowed"
-                      : "shadow-sm hover:shadow-md"
-                    }
-                  `}
-                  disabled={!selectedLinkedInProfile || characterCount > CHAR_LIMIT || !content.trim() || isPosting}
-                  onClick={() => selectedLinkedInProfile?.id && onPostNow(selectedLinkedInProfile.id)}
-                >
-                  {isPosting ? (
-                    <>
-                      <span className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
-                      <span>Publishing...</span>
-                    </>
-                  ) : (
-                    <>
-                      <Send className="w-4 h-4" />
-                      <span>Publish Now</span>
-                      <kbd className="ml-2 text-[10px] px-1.5 py-0.5 bg-white/20 rounded">⌘↵</kbd>
-                    </>
-                  )}
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p className="text-xs">Publish your post immediately</p>
-              </TooltipContent>
-            </Tooltip>
-          </div>
+        <div className="flex items-center gap-1 p-1 bg-gray-50/80 rounded-lg">
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="h-8 w-8 p-0 hover:bg-white rounded-md transition-all"
+              >
+                <Link2 className="w-4 h-4 text-gray-600" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>Add Link</TooltipContent>
+          </Tooltip>
 
-          {/* Enhanced Keyboard Shortcuts & Help */}
-          <div className="flex items-center justify-between pt-3 border-t border-gray-100">
-            {/* Left: Quick Actions */}
-            <div className="flex items-center gap-4">
-              <div className="flex items-center gap-1.5 px-2 py-1 bg-gray-50 hover:bg-gray-100 transition-colors duration-200 hover:shadow-sm hover:text-blue-700 rounded-md">
-                <kbd className="text-[10px] font-medium text-gray-500">⌘/</kbd>
-                <span className="text-xs text-gray-600 hover:text-blue-700 transition-colors duration-200">AI Assistant</span>
-              </div>
-              <div className="flex items-center gap-1.5 px-2 py-1 bg-gray-50 rounded-md">
-                <kbd className="text-[10px] font-medium text-gray-500">⌘↵</kbd>
-                <span className="text-xs text-gray-600">Quick Publish</span>
-              </div>
-              <div className="flex items-center gap-1.5 px-2 py-1 bg-gray-50 rounded-md">
-                <kbd className="text-[10px] font-medium text-gray-500">Tab</kbd>
-                <span className="text-xs text-gray-600">Navigate</span>
-              </div>
-            </div>
-
-            {/* Right: Help Link */}
+          <div className="relative">
             <Tooltip>
               <TooltipTrigger asChild>
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="h-8 px-3 text-blue-600 hover:bg-blue-50 transition-colors duration-200"
+                  className="h-8 w-8 p-0 hover:bg-white rounded-md transition-all"
+                  onClick={() => setShowEmojiPicker(!showEmojiPicker)}
                 >
-                  <HelpCircle className="w-4 h-4 mr-2" />
-                  <span className="text-xs">View All Shortcuts</span>
+                  <Smile className="w-4 h-4 text-gray-600" />
                 </Button>
               </TooltipTrigger>
-              <TooltipContent>
-                <p className="text-xs">See all available keyboard shortcuts</p>
-              </TooltipContent>
+              <TooltipContent>Add Emoji</TooltipContent>
             </Tooltip>
+
+            {showEmojiPicker && (
+              <div className="absolute top-full mt-1 left-0 z-50">
+                <div className="shadow-2xl rounded-lg overflow-hidden border border-gray-100">
+                  <Picker
+                    data={data}
+                    onEmojiSelect={onEmojiSelect}
+                    theme="light"
+                    previewPosition="none"
+                    skinTonePosition="none"
+                    searchPosition="none"
+                    perLine={8}
+                    maxFrequentRows={1}
+                  />
+                </div>
+              </div>
+            )}
           </div>
         </div>
 
-        <ScheduleModal
-          isOpen={isScheduleModalOpen}
-          onClose={() => setIsScheduleModalOpen(false)}
-          onSchedule={onSchedule}
-          isScheduling={isPosting}
-        />
+        <Button
+          variant="ghost"
+          size="sm"
+          className="h-8 px-3 gap-1.5 ml-auto text-blue-600 hover:bg-blue-50/80 hover:text-blue-700"
+        >
+          <Sparkles className="w-3.5 h-3.5" />
+          <span className="text-xs font-medium">AI Assist</span>
+        </Button>
       </div>
-    </Card>
+
+      {/* Editor Content */}
+      <div className="flex-grow relative bg-gradient-to-b from-white to-gray-50/20">
+        <textarea
+          ref={textareaRef}
+          value={content}
+          onChange={(e) => setContent(e.target.value)}
+          onKeyDown={handleKeyDown}
+          placeholder="What would you like to share?"
+          className="w-full h-full px-5 py-4 resize-none focus:outline-none
+                   text-gray-700 placeholder-gray-400/80 bg-transparent
+                   text-base leading-relaxed"
+          style={{ minHeight: "200px" }}
+        />
+
+        {/* Character Counter */}
+        <div className="absolute bottom-4 right-5">
+          <div
+            className={cn(
+              "px-2.5 py-1 rounded-full text-xs font-medium transition-colors",
+              characterCount > CHAR_LIMIT
+                ? "bg-red-50 text-red-600"
+                : characterCount > CHAR_LIMIT * 0.9
+                ? "bg-amber-50 text-amber-600"
+                : "bg-gray-50/80 text-gray-500"
+            )}
+          >
+            {characterCount}/{CHAR_LIMIT}
+          </div>
+        </div>
+      </div>
+
+      {/* Image Preview Section - Moved here */}
+      {imageUrls.length > 0 && (
+        <div className="px-5 py-4 border-t border-gray-100 bg-white">
+          <div className="flex flex-wrap gap-2">
+            {imageUrls.map((url, index) => (
+              <div key={index} className="relative group">
+                <img
+                  src={url}
+                  alt={`Uploaded image ${index + 1}`}
+                  className="w-20 h-20 object-cover rounded-lg"
+                />
+                <button
+                  onClick={() => {
+                    const newUrls = imageUrls.filter((_, i) => i !== index);
+                    onImageUrlsChange(newUrls);
+                  }}
+                  className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                >
+                  <X className="w-3 h-3" />
+                </button>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Editor Footer */}
+      <div className="px-5 py-4 border-t border-gray-100 bg-gray-50/80 backdrop-blur-sm">
+        <div className="flex items-center justify-between">
+          <Button
+            variant="outline"
+            size="sm"
+            className="h-9 px-4 gap-2 bg-white hover:bg-primary/10 transition-all hover:text-primary"
+            onClick={() => setIsScheduleModalOpen(true)}
+            disabled={!selectedLinkedInProfile || !content.trim()}
+          >
+            <Clock className="w-4 h-4" />
+            Schedule
+          </Button>
+
+          <Button
+            variant="default"
+            size="sm"
+            className={cn(
+              "h-9 px-4 gap-2",
+              (!selectedLinkedInProfile ||
+                characterCount > CHAR_LIMIT ||
+                !content.trim() ||
+                isPosting) &&
+                "opacity-50"
+            )}
+            disabled={
+              !selectedLinkedInProfile ||
+              characterCount > CHAR_LIMIT ||
+              !content.trim() ||
+              isPosting
+            }
+            onClick={() =>
+              selectedLinkedInProfile?.id &&
+              onPostNow(selectedLinkedInProfile.id)
+            }
+          >
+            {isPosting ? (
+              <>
+                <span className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
+                Publishing...
+              </>
+            ) : (
+              <>
+                <Send className="w-4 h-4" />
+                Publish Now
+              </>
+            )}
+          </Button>
+        </div>
+      </div>
+
+      <ScheduleModal
+        isOpen={isScheduleModalOpen}
+        onClose={() => setIsScheduleModalOpen(false)}
+        onSchedule={onSchedule}
+        isScheduling={isPosting}
+      />
+
+      <ImageUploadModal
+        isOpen={isImageModalOpen}
+        onClose={() => setIsImageModalOpen(false)}
+        onImageSelect={handleImageSelect}
+      />
+    </div>
   );
 };

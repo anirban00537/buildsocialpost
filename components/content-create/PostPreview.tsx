@@ -40,6 +40,7 @@ interface PostPreviewProps {
   status?: 'scheduled' | 'draft' | 'published' | 'failed';
   dropdownItems?: DropdownItem[];
   selectedProfile: LinkedInProfileUI | null;
+  imageUrls?: string[];
 }
 
 type ViewMode = "mobile" | "tablet" | "desktop";
@@ -54,6 +55,7 @@ export const PostPreview = ({
   status,
   dropdownItems,
   selectedProfile,
+  imageUrls = [],
 }: PostPreviewProps) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [viewMode, setViewMode] = useState<ViewMode>("desktop");
@@ -281,31 +283,63 @@ export const PostPreview = ({
                   <div className="h-4 bg-gray-200 rounded w-5/6" />
                 </div>
               ) : (
-                <div className="relative">
-                  <div
-                    ref={contentRef}
-                    className={`whitespace-pre-wrap break-words relative ${
-                      !isExpanded && hasMoreContent ? "line-clamp-3" : ""
-                    }`}
-                    style={{ 
-                      wordBreak: 'break-word',
-                      overflowWrap: 'break-word',
-                      lineHeight: '1.5'
-                    }}
-                  >
-                    {content}
-                  </div>
-                  
-                  {/* Show more/less button */}
-                  {hasMoreContent && (
-                    <button
-                      onClick={() => setIsExpanded(!isExpanded)}
-                      className="text-blue-600 hover:text-blue-700 hover:underline text-sm font-medium mt-1"
+                <>
+                  <div className="relative">
+                    <div
+                      ref={contentRef}
+                      className={`whitespace-pre-wrap break-words relative ${
+                        !isExpanded && hasMoreContent ? "line-clamp-3" : ""
+                      }`}
+                      style={{ 
+                        wordBreak: 'break-word',
+                        overflowWrap: 'break-word',
+                        lineHeight: '1.5'
+                      }}
                     >
-                      {isExpanded ? "...see less" : "...see more"}
-                    </button>
+                      {content}
+                    </div>
+                    
+                    {/* Show more/less button */}
+                    {hasMoreContent && (
+                      <button
+                        onClick={() => setIsExpanded(!isExpanded)}
+                        className="text-blue-600 hover:text-blue-700 hover:underline text-sm font-medium mt-1"
+                      >
+                        {isExpanded ? "...see less" : "...see more"}
+                      </button>
+                    )}
+                  </div>
+
+                  {/* Image Preview Grid */}
+                  {imageUrls.length > 0 && (
+                    <div className="mt-4">
+                      <div className={`grid gap-2 ${
+                        imageUrls.length === 1 ? 'grid-cols-1' : 
+                        imageUrls.length === 2 ? 'grid-cols-2' :
+                        imageUrls.length === 3 ? 'grid-cols-2' :
+                        'grid-cols-2'
+                      }`}>
+                        {imageUrls.map((url, index) => (
+                          <div 
+                            key={index}
+                            className={`relative rounded-lg overflow-hidden ${
+                              imageUrls.length === 3 && index === 0 ? 'row-span-2' : ''
+                            }`}
+                          >
+                            <img
+                              src={url}
+                              alt={`Preview ${index + 1}`}
+                              className="w-full h-full object-cover"
+                              style={{
+                                aspectRatio: imageUrls.length === 1 ? '16/9' : '1/1'
+                              }}
+                            />
+                          </div>
+                        ))}
+                      </div>
+                    </div>
                   )}
-                </div>
+                </>
               )}
             </div>
           </motion.div>
