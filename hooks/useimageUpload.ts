@@ -52,13 +52,16 @@ const MAX_STORAGE_MB = 500;
 const MB_TO_BYTES = 1024 * 1024;
 
 export const useImageUpload = (isOpen: boolean) => {
-  const { userinfo, subscribed, loggedin } = useSelector(
+  const { userinfo, subscription, loggedin, currentWorkspace } = useSelector(
     (state: RootState) => state.user
   );
+  const { isSubscribed } = subscription;
   const [currentPage, setCurrentPage] = useState(1);
   const [jumpToPage, setJumpToPage] = useState("");
   const imagesPerPage = 9;
   const queryClient = useQueryClient();
+  const [uploadLoading, setUploadLoading] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
 
   // Fetch images
   const {
@@ -111,24 +114,42 @@ export const useImageUpload = (isOpen: boolean) => {
   );
 
   const uploadImage = async (file: File) => {
-    if (!userinfo) {
-      throw new Error("Please log in to upload images.");
-    }
+    try {
+      setUploadLoading(true);
+      setUploadProgress(0);
 
-    if (file.size > MAX_STORAGE_MB * MB_TO_BYTES) {
-      throw new Error(
-        `Image ${file.name} exceeds the ${MAX_STORAGE_MB} MB limit.`
-      );
-    }
+      // Simulate upload progress
+      const interval = setInterval(() => {
+        setUploadProgress(prev => {
+          if (prev >= 90) {
+            clearInterval(interval);
+            return 90;
+          }
+          return prev + 10;
+        });
+      }, 500);
 
-    const newTotalUsage = totalUsage + file.size / MB_TO_BYTES;
-    if (newTotalUsage > MAX_STORAGE_MB) {
-      throw new Error(
-        `Uploading this image would exceed your ${MAX_STORAGE_MB} MB storage limit.`
-      );
-    }
+      await uploadImageService(file);
+      
+      // Clear interval and set to 100%
+      clearInterval(interval);
+      setUploadProgress(100);
 
-    return uploadMutation.mutateAsync(file);
+      // Small delay to show 100% completion
+      await new Promise(resolve => setTimeout(resolve, 200));
+
+      // Refetch both images and usage data
+      await Promise.all([
+        refetchImages(),
+        refetchUsage()
+      ]);
+
+    } catch (error) {
+      throw error;
+    } finally {
+      setUploadLoading(false);
+      setUploadProgress(0);
+    }
   };
 
   const onDrop = useCallback(
@@ -229,7 +250,7 @@ export const useImageUpload = (isOpen: boolean) => {
     isLoading,
     totalUsage,
     totalCount,
-    uploadLoading: uploadMutation?.isLoading,
+    uploadLoading,
     currentImages: imagesData?.data?.items || [],
     totalPages: imagesData?.data?.pagination?.totalPages || 1,
     getRootProps,
@@ -240,10 +261,11 @@ export const useImageUpload = (isOpen: boolean) => {
     setJumpToPage,
     MAX_STORAGE_MB,
     onDrop,
-    subscribed,
+    isSubscribed,
     userinfo,
     refetchImages,
     loggedin,
     uploadImage,
+    uploadProgress,
   };
 };

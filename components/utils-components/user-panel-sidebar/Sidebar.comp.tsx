@@ -93,6 +93,12 @@ const management: ManagementItem[] = [
     icon: Settings,
     href: "/settings",
   },
+  {
+    id: "media",
+    name: "Media",
+    icon: ImageIcon,
+    href: "/media",
+  },
 ];
 
 // Navigation Section Component
@@ -235,7 +241,6 @@ const Sidebar = () => {
       return tokens.toString();
     }
   };
-
 
   return (
     <div className="w-72 h-screen flex flex-col bg-gradient-to-br from-blue-100 via-indigo-50/50 to-blue-100  text-gray-500 border-r border-gray-100 shadow-sm">

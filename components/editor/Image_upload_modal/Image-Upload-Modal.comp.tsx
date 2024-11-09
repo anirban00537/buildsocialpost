@@ -21,6 +21,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import toast from "react-hot-toast";
+import MediaGrid from '@/components/common/MediaGrid';
 
 interface ImageUploadModalProps {
   isOpen: boolean;
@@ -121,9 +122,9 @@ const ImageUploadModal: React.FC<ImageUploadModalProps> = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="w-[900px] h-[90vh] p-0 flex flex-col bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 rounded-xl shadow-2xl">
-        <header className="flex-shrink-0 flex justify-between items-center p-6 border-b border-gray-200 dark:border-gray-700">
-          <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-100">
+      <DialogContent className="w-[900px] h-[90vh] p-0 flex flex-col bg-gradient-to-br from-gray-50 to-gray-100">
+        <header className="flex-shrink-0 flex justify-between items-center p-6 border-b border-gray-200">
+          <h2 className="text-2xl font-bold text-gray-800">
             Image Gallery
           </h2>
         </header>
@@ -133,10 +134,10 @@ const ImageUploadModal: React.FC<ImageUploadModalProps> = ({
             {!loggedin ? (
               <div className="flex flex-col items-center justify-center h-full">
                 <AlertTriangle className="w-16 h-16 text-yellow-500 mb-4" />
-                <p className="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-2">
+                <p className="text-lg font-semibold text-gray-700 mb-2">
                   Login Required
                 </p>
-                <p className="text-gray-500 dark:text-gray-400 text-center">
+                <p className="text-gray-500 text-center">
                   Please log in to upload and manage images.
                 </p>
               </div>
@@ -144,14 +145,14 @@ const ImageUploadModal: React.FC<ImageUploadModalProps> = ({
               <>
                 <div className="mb-6">
                   <div className="flex justify-between items-center mb-2">
-                    <p className="text-sm font-medium text-gray-600 dark:text-gray-300">
+                    <p className="text-sm font-medium text-gray-600">
                       Storage Usage
                     </p>
-                    <p className="text-sm font-semibold text-gray-700 dark:text-gray-200">
+                    <p className="text-sm font-semibold text-gray-700">
                       {totalUsage.toFixed(2)} MB / {MAX_STORAGE_MB} MB
                     </p>
                   </div>
-                  <div className="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
+                  <div className="w-full bg-gray-200 rounded-full h-2.5">
                     <div
                       className="bg-blue-600 h-2.5 rounded-full transition-all duration-300 ease-in-out"
                       style={{
@@ -164,13 +165,13 @@ const ImageUploadModal: React.FC<ImageUploadModalProps> = ({
                 <div
                   {...getRootProps()}
                   className={`
-                    border-2 border-dashed border-gray-300 dark:border-gray-600 
+                    border-2 border-dashed border-gray-300 
                     rounded-lg p-8 text-center cursor-pointer 
                     transition-all duration-300 ease-in-out mb-6
                     ${
                       uploadLoading
-                        ? "bg-gray-100 dark:bg-gray-800"
-                        : "hover:border-blue-500 hover:bg-blue-50 dark:hover:bg-gray-700"
+                        ? "bg-gray-100"
+                        : "hover:border-blue-500 hover:bg-blue-50"
                     }
                   `}
                 >
@@ -178,69 +179,30 @@ const ImageUploadModal: React.FC<ImageUploadModalProps> = ({
                   {uploadLoading ? (
                     <div className="flex flex-col items-center">
                       <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mb-4"></div>
-                      <p className="text-gray-600 dark:text-gray-300">
+                      <p className="text-gray-600">
                         Uploading...
                       </p>
                     </div>
                   ) : (
                     <>
                       <Upload className="mx-auto h-16 w-16 text-gray-400 mb-4" />
-                      <p className="text-lg font-medium text-gray-700 dark:text-gray-200 mb-2">
+                      <p className="text-lg font-medium text-gray-700 mb-2">
                         Drag & drop images here, or click to select
                       </p>
-                      <p className="text-sm text-gray-500 dark:text-gray-400">
+                      <p className="text-sm text-gray-500">
                         JPG and PNG only, max 100 MB per file
                       </p>
                     </>
                   )}
                 </div>
 
-                {isLoading ? (
-                  <div className="flex justify-center items-center h-64">
-                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
-                  </div>
-                ) : currentImages.length === 0 ? (
-                  <div className="flex flex-col items-center justify-center h-64">
-                    <p className="text-lg font-medium text-gray-600 dark:text-gray-300 mb-2">
-                      No images uploaded yet
-                    </p>
-                    <p className="text-sm text-gray-500 dark:text-gray-400">
-                      Your uploaded images will appear here
-                    </p>
-                  </div>
-                ) : (
-                  <div className="mt-4 grid grid-cols-3 gap-4">
-                    {currentImages.map((image) => (
-                      <div key={image.id} className="relative group">
-                        <div
-                          className="cursor-pointer overflow-hidden rounded-lg"
-                          onClick={() => onImageSelect(image.url)}
-                        >
-                          <Image
-                            src={image.url}
-                            alt={image.name}
-                            width={240}
-                            height={240}
-                            className="object-cover w-full h-48 transition-transform duration-300 group-hover:scale-110"
-                          />
-                        </div>
-                        <button
-                          onClick={() => setDeleteImageId(image.id)}
-                          className="absolute top-2 right-2 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                          disabled={uploadLoading}
-                        >
-                          <X className="h-4 w-4" />
-                        </button>
-                        <div className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-50 text-white p-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                          <p className="text-sm truncate">{image.name}</p>
-                          <p className="text-xs">
-                            {(image.size / (1024 * 1024)).toFixed(2)} MB
-                          </p>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                )}
+                <MediaGrid
+                  files={currentImages}
+                  onSelect={onImageSelect}
+                  onDelete={(id) => setDeleteImageId(id)}
+                  columns={3}
+                  isLoading={isLoading}
+                />
 
                 {totalPages > 1 && (
                   <div className="flex justify-center mt-8">
@@ -272,7 +234,7 @@ const ImageUploadModal: React.FC<ImageUploadModalProps> = ({
           </div>
         </div>
 
-        <footer className="flex-shrink-0 p-4 border-t border-gray-200 dark:border-gray-700">
+        <footer className="flex-shrink-0 p-4 border-t border-gray-200">
           <Button
             variant="default"
             onClick={onClose}
