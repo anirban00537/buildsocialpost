@@ -229,6 +229,67 @@ const useCarousel = () => {
     setPdfLoading(false);
     dispatch(setCarouselDownloading(false));
   }, [slides, layout.width, layout.height]);
+  const exportSlidesToPDFThenSchedule = useCallback(async () => {
+    dispatch(setCarouselDownloading(true));
+    setPdfLoading(true);
+
+    try {
+      const pdf = new jsPDF("p", "px", [layout.width, layout.height]);
+      const scaleFactor = 3; // Adjust the scale factor for higher quality
+
+      const captureSlide = async (index: number) => {
+        const slideElement = document.getElementById(`slide-${index}`);
+        if (slideElement) {
+          try {
+            // Wait for a short time to ensure the slide is fully rendered
+            await new Promise((resolve) => setTimeout(resolve, 100));
+
+            const pngDataUrl = await toPng(slideElement, {
+              cacheBust: true,
+              pixelRatio: scaleFactor,
+            });
+
+            if (index !== 0) {
+              pdf.addPage();
+            }
+            pdf.addImage(
+              pngDataUrl,
+              "PNG",
+              0,
+              0,
+              layout.width,
+              layout.height,
+              undefined,
+              "FAST" // Use FAST compression to reduce file size
+            );
+          } catch (error) {
+            console.error(
+              `Failed to export slide ${index + 1} as image`,
+              error
+            );
+          }
+        } else {
+          console.warn(`Slide element with ID slide-${index} not found`);
+        }
+      };
+
+      // Capture all slides sequentially
+      for (let i = 0; i < slides.length; i++) {
+        await captureSlide(i);
+      }
+
+      // Get PDF as blob instead of saving
+      const pdfOutput = pdf.output("blob");
+      setPdfLoading(false);
+      dispatch(setCarouselDownloading(false));
+
+      return pdfOutput;
+    } catch (error) {
+      setPdfLoading(false);
+      dispatch(setCarouselDownloading(false));
+      throw error;
+    }
+  }, [slides, layout.width, layout.height]);
 
   return {
     swiperRef,
@@ -254,6 +315,7 @@ const useCarousel = () => {
     pdfLoading,
     handleRemoveImage,
     carouselDownloading,
+    exportSlidesToPDFThenSchedule,
   };
 };
 

@@ -244,12 +244,12 @@ export const ContentInput = ({
                     key={tone}
                     onClick={() => setPostTone(tone)}
                     className={`
-                      group px-4 py-2.5 flex items-center gap-2.5 text-sm rounded-xl border-2 
+                      group px-2 py-1 flex items-center gap-2.5 text-sm rounded-xl border 
                       transition-all duration-200 relative overflow-hidden
                       ${
                         tone === postTone
-                          ? `${config.activeColor} ring-2 shadow-sm`
-                          : `border-gray-200/80 text-gray-600 ${config.hoverColor} hover:border-2`
+                          ? `${config.activeColor} shadow-sm`
+                          : `border-gray-200/80 text-gray-600 ${config.hoverColor} hover:border`
                       }
                       hover:shadow-md active:scale-95
                     `}
@@ -271,9 +271,6 @@ export const ContentInput = ({
                 ))}
               </div>
             </div>
-
-            {/* Writing Style with similar enhancements */}
-            {/* ... similar updates for writing style section ... */}
           </div>
 
           {/* Enhanced Generate Button */}

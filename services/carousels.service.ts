@@ -1,3 +1,4 @@
+import fRequest from "@/lib/f-request";
 import request from "@/lib/request";
 
 export const getCarousels = async (
@@ -21,6 +22,14 @@ export const updateCarousel = async (carouselData: any) => {
   return response.data;
 };
 
+export const scheduleCarouselPdf = async (formData: any) => {
+  const response = await fRequest.post(
+    `/my-carousels/schedule-carousel`,
+    formData
+  );
+  return response;
+};
+
 export const deleteCarousel = async (id: string) => {
   const response = await request.delete(`/my-carousels/delete/${id}`);
   return response.data;
@@ -32,5 +41,3 @@ export const getCarouselDetails = async (id: string, workspaceId: number) => {
   });
   return response.data;
 };
-
-
