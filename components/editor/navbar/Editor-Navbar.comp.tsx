@@ -45,6 +45,8 @@ const EditorNavbar: React.FC = () => {
     isConverting,
     linkedinText,
     setLinkedinText,
+    generateAIContent,
+    isGeneratingContent
   } = useCarousel();
   const {
     isFetchingAll,
@@ -283,6 +285,8 @@ const EditorNavbar: React.FC = () => {
         carouselId={carouselId || undefined}
         linkedinText={linkedinText}
         setLinkedinText={setLinkedinText}
+        generateAIContent={generateAIContent}
+        isGeneratingContent={isGeneratingContent}
       />
     </>
   );

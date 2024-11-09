@@ -11,12 +11,13 @@ interface PreviewModalProps {
   onDownloadZip: () => void;
   onDownloadPdf: () => void;
   onSchedule: () => void;
-  onGenerateAIContent?: () => Promise<string>;
   carouselId?: string;
   previewImages: string[];
   isConverting: boolean;
   linkedinText: string;
   setLinkedinText: (text: string) => void;
+  generateAIContent: (topic: string) => Promise<string>;
+  isGeneratingContent: boolean;
 }
 
 const PreviewModal: React.FC<PreviewModalProps> = ({
@@ -25,16 +26,17 @@ const PreviewModal: React.FC<PreviewModalProps> = ({
   onDownloadZip,
   onDownloadPdf,
   onSchedule,
-  onGenerateAIContent,
   carouselId,
   previewImages,
   isConverting,
   linkedinText,
-  setLinkedinText
+  setLinkedinText,
+  generateAIContent,
+  isGeneratingContent
 }) => {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [isScheduling, setIsScheduling] = useState(false);
-  const [isGeneratingContent, setIsGeneratingContent] = useState(false);
+  const [topic, setTopic] = useState('');
 
   const handleScroll = (direction: 'left' | 'right') => {
     if (scrollContainerRef.current) {
@@ -57,16 +59,16 @@ const PreviewModal: React.FC<PreviewModalProps> = ({
   };
 
   const handleGenerateContent = async () => {
-    if (!onGenerateAIContent) return;
-    
-    setIsGeneratingContent(true);
+    if (!topic.trim()) {
+      toast.error('Please enter a topic first');
+      return;
+    }
+
     try {
-      const generatedText = await onGenerateAIContent();
-      setLinkedinText(generatedText);
+      await generateAIContent(topic);
+      toast.success('Content generated successfully!');
     } catch (error) {
-      console.error('Failed to generate content:', error);
-    } finally {
-      setIsGeneratingContent(false);
+      // Error is already handled in the hook
     }
   };
 
@@ -89,13 +91,13 @@ const PreviewModal: React.FC<PreviewModalProps> = ({
         </div>
 
         {/* Main Content Area */}
-        <div className="flex-1 flex gap-4 p-4 overflow-hidden">
+        <div className="flex-1 flex flex-col lg:flex-row gap-4 p-4 overflow-auto">
           {/* Left Side - LinkedIn Content */}
-          <div className="w-[400px] flex flex-col bg-white rounded-lg shadow-sm">
+          <div className="w-full lg:w-[400px] flex flex-col bg-white rounded-lg shadow-sm">
             <div className="p-4 border-b">
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="font-medium text-gray-900">LinkedIn Post Content</h3>
-                <div className="flex gap-2">
+              <div className="flex flex-col gap-3">
+                <div className="flex items-center justify-between">
+                  <h3 className="font-medium text-gray-900">LinkedIn Post Content</h3>
                   <Button
                     size="sm"
                     variant="outline"
@@ -105,46 +107,59 @@ const PreviewModal: React.FC<PreviewModalProps> = ({
                   >
                     <Copy className="w-4 h-4" />
                   </Button>
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    className="h-8 whitespace-nowrap"
-                    onClick={handleGenerateContent}
-                    disabled={isGeneratingContent}
-                  >
-                    {isGeneratingContent ? (
-                      <Loader2 className="w-4 h-4 animate-spin" />
-                    ) : (
-                      <>
-                        <Sparkles className="w-4 h-4 mr-1" />
-                        Generate with AI
-                      </>
-                    )}
-                  </Button>
                 </div>
-              </div>
-              <div className="text-sm text-gray-500 mb-2">
-                Write an engaging post to accompany your carousel
+                
+                <div className="flex flex-col gap-2">
+                  <div className="text-sm text-gray-500">
+                    Generate AI content for your post
+                  </div>
+                  <div className="flex gap-2">
+                    <input
+                      type="text"
+                      value={topic}
+                      onChange={(e) => setTopic(e.target.value)}
+                      placeholder="Enter topic for AI generation..."
+                      className="flex-1 px-3 py-2 text-sm border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      className="h-9 whitespace-nowrap shrink-0"
+                      onClick={handleGenerateContent}
+                      disabled={isGeneratingContent || !topic}
+                      title={!topic ? "Please enter a topic first" : ""}
+                    >
+                      {isGeneratingContent ? (
+                        <Loader2 className="w-4 h-4 animate-spin" />
+                      ) : (
+                        <>
+                          <Sparkles className="w-4 h-4 mr-1" />
+                          Generate
+                        </>
+                      )}
+                    </Button>
+                  </div>
+                </div>
               </div>
             </div>
             
-            <div className="flex-1 p-4">
+            <div className="flex-1 p-4 min-h-[200px] overflow-hidden">
               <Textarea
                 value={linkedinText}
                 onChange={(e) => setLinkedinText(e.target.value)}
                 placeholder="Write your LinkedIn post content here..."
-                className="min-h-[calc(100vh-400px)] resize-none"
+                className="h-full min-h-[300px] resize-none"
               />
             </div>
           </div>
 
           {/* Right Side - Carousel Preview */}
-          <div className="flex-1 bg-white rounded-lg shadow-sm overflow-hidden flex flex-col">
+          <div className="flex-1 bg-white rounded-lg shadow-sm overflow-hidden flex flex-col min-h-[500px]">
             <div className="p-4 border-b">
               <h3 className="font-medium text-gray-900">Carousel Preview</h3>
             </div>
             
-            <div className="flex-1 relative">
+            <div className="flex-1 relative overflow-auto">
               {isConverting ? (
                 <div className="absolute inset-0 flex flex-col items-center justify-center bg-white/80">
                   <Loader2 className="w-8 h-8 animate-spin text-blue-600 mb-2" />
@@ -154,19 +169,18 @@ const PreviewModal: React.FC<PreviewModalProps> = ({
                 <div className="h-full flex items-center justify-center p-6">
                   <div 
                     ref={scrollContainerRef}
-                    className="relative flex gap-6 overflow-x-auto snap-x snap-mandatory"
-                    style={{ scrollbarWidth: 'thin' }}
+                    className="relative flex gap-6 overflow-x-auto snap-x snap-mandatory scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent"
                   >
                     {previewImages.map((img, index) => (
                       <div 
                         key={index}
-                        className="flex-none snap-center"
+                        className="flex-none snap-center first:pl-[20%] last:pr-[20%]"
                       >
                         <div className="relative group">
                           <img
                             src={img}
                             alt={`Slide ${index + 1}`}
-                            className="h-[600px] w-auto object-contain rounded-lg shadow-lg"
+                            className="h-[500px] w-auto object-contain rounded-lg shadow-lg"
                           />
                           <div className="absolute top-2 right-2 bg-black/50 text-white px-2 py-1 rounded-md text-sm">
                             {index + 1}/{previewImages.length}
@@ -206,7 +220,7 @@ const PreviewModal: React.FC<PreviewModalProps> = ({
         </div>
 
         {/* Footer */}
-        <div className="p-4 bg-white border-t">
+        <div className="p-4 bg-white border-t mt-auto">
           <div className="flex justify-between items-center">
             <div className="flex gap-2">
               <Button

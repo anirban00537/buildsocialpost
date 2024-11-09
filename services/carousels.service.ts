@@ -29,13 +29,6 @@ export const scheduleCarouselPdf = async (formData: any) => {
   );
   return response;
 };
-export const generateLinkedinPostContentForCarousel = async (topic: string) => {
-  const response = await request.post(
-    `/my-carousels/generate-linkedin-post-content-for-carousel`,
-    { topic }
-  );
-  return response;
-};
 
 export const deleteCarousel = async (id: string) => {
   const response = await request.delete(`/my-carousels/delete/${id}`);

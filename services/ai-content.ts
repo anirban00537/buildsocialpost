@@ -11,6 +11,14 @@ export const generateLinkedInPosts = async (dto: {
   );
   return response.data;
 };
+export const generateLinkedinPostContentForCarousel = async (topic: string) => {
+  const response = await request.post(
+    `/ai-content/generate-linkedin-post-content-for-carousel`,
+    { topic }
+  );
+  return response.data;
+};
+
 export const generateCarouselContent = async (
   topic: string,
   numSlides: number,

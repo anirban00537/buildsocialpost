@@ -22,6 +22,8 @@ import { lightColorPresets } from "@/lib/color-presets";
 import { toast } from "react-hot-toast";
 import { scheduleCarouselPdf } from "@/services/carousels.service";
 import { useRouter } from "next/navigation";
+import { generateLinkedinPostContentForCarousel } from "@/services/ai-content";
+
 const useCarousel = () => {
   const dispatch = useDispatch();
   const router = useRouter();
@@ -34,13 +36,14 @@ const useCarousel = () => {
   const [zipLoading, setZipLoading] = useState(false);
   const [pdfLoading, setPdfLoading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [linkedinText, setLinkedinText] = useState('');
+  const [linkedinText, setLinkedinText] = useState("");
   const [activeSlideIndex, setActiveSlideIndex] = useState<number | null>(null);
   const [imageType, setImageType] = useState<"background" | "slide">(
     "background"
   );
   const [previewImages, setPreviewImages] = useState<string[]>([]);
   const [isConverting, setIsConverting] = useState(false);
+  const [isGeneratingContent, setIsGeneratingContent] = useState(false);
 
   useEffect(() => {
     document.documentElement.style.setProperty("--color4", color4);
@@ -238,36 +241,37 @@ const useCarousel = () => {
     dispatch(setCarouselDownloading(false));
   }, [slides, layout.width, layout.height]);
 
-  const createPDFFromImages = useCallback(async (images: string[]) => {
-    const pdf = new jsPDF("p", "px", [layout.width, layout.height]);
-    
-    try {
-      // Add each image to the PDF
-      for (let i = 0; i < images.length; i++) {
-        if (i !== 0) {
-          pdf.addPage();
+  const createPDFFromImages = useCallback(
+    async (images: string[]) => {
+      const pdf = new jsPDF("p", "px", [layout.width, layout.height]);
+
+      try {
+        // Add each image to the PDF
+        for (let i = 0; i < images.length; i++) {
+          if (i !== 0) {
+            pdf.addPage();
+          }
+
+          pdf.addImage(
+            images[i],
+            "PNG",
+            0,
+            0,
+            layout.width,
+            layout.height,
+            undefined,
+            "FAST"
+          );
         }
-        
-        pdf.addImage(
-          images[i],
-          "PNG",
-          0,
-          0,
-          layout.width,
-          layout.height,
-          undefined,
-          "FAST"
-        );
+
+        return pdf.output("blob");
+      } catch (error) {
+        console.error("Failed to create PDF:", error);
+        throw new Error("Failed to create PDF from images");
       }
-      
-      return pdf.output("blob");
-    } catch (error) {
-      console.error("Failed to create PDF:", error);
-      throw new Error("Failed to create PDF from images");
-    }
-  }, [layout.width, layout.height]);
-
-
+    },
+    [layout.width, layout.height]
+  );
 
   const convertSlidesToImages = useCallback(async () => {
     setIsConverting(true);
@@ -278,23 +282,23 @@ const useCarousel = () => {
       for (let i = 0; i < slides.length; i++) {
         const slideElement = document.getElementById(`slide-${i}`);
         if (slideElement) {
-          await new Promise(resolve => setTimeout(resolve, 100));
-          
+          await new Promise((resolve) => setTimeout(resolve, 100));
+
           const pngDataUrl = await toPng(slideElement, {
             cacheBust: true,
             pixelRatio: scaleFactor,
-            backgroundColor: '#fff'
+            backgroundColor: "#fff",
           });
-          
+
           images.push(pngDataUrl);
         }
       }
-      
+
       setPreviewImages(images);
       return images;
     } catch (error) {
-      console.error('Failed to convert slides to images:', error);
-      toast.error('Failed to generate preview images');
+      console.error("Failed to convert slides to images:", error);
+      toast.error("Failed to generate preview images");
       return [];
     } finally {
       setIsConverting(false);
@@ -361,6 +365,25 @@ const useCarousel = () => {
     [slides, layout.width, layout.height, router, linkedinText]
   );
 
+  const generateAIContent = useCallback(async (topic: string) => {
+    setIsGeneratingContent(true);
+    try {
+      const response = await generateLinkedinPostContentForCarousel(topic);
+      if (response.success) {
+        setLinkedinText(response.data.post);
+        return response.data;
+      } else {
+        throw new Error("Failed to generate content");
+      }
+    } catch (error) {
+      console.error("AI content generation error:", error);
+      toast.error("Failed to generate content");
+      throw error;
+    } finally {
+      setIsGeneratingContent(false);
+    }
+  }, []);
+
   return {
     swiperRef,
     slides,
@@ -391,7 +414,9 @@ const useCarousel = () => {
     createPDFFromImages,
     exportSlidesToPDFThenSchedule,
     linkedinText,
-    setLinkedinText
+    setLinkedinText,
+    generateAIContent,
+    isGeneratingContent,
   };
 };
 
