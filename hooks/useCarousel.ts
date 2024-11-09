@@ -34,10 +34,14 @@ const useCarousel = () => {
   const [zipLoading, setZipLoading] = useState(false);
   const [pdfLoading, setPdfLoading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [linkedinText, setLinkedinText] = useState('');
   const [activeSlideIndex, setActiveSlideIndex] = useState<number | null>(null);
   const [imageType, setImageType] = useState<"background" | "slide">(
     "background"
   );
+  const [previewImages, setPreviewImages] = useState<string[]>([]);
+  const [isConverting, setIsConverting] = useState(false);
+
   useEffect(() => {
     document.documentElement.style.setProperty("--color4", color4);
   }, [color4]);
@@ -233,64 +237,111 @@ const useCarousel = () => {
     setPdfLoading(false);
     dispatch(setCarouselDownloading(false));
   }, [slides, layout.width, layout.height]);
+
+  const createPDFFromImages = useCallback(async (images: string[]) => {
+    const pdf = new jsPDF("p", "px", [layout.width, layout.height]);
+    
+    try {
+      // Add each image to the PDF
+      for (let i = 0; i < images.length; i++) {
+        if (i !== 0) {
+          pdf.addPage();
+        }
+        
+        pdf.addImage(
+          images[i],
+          "PNG",
+          0,
+          0,
+          layout.width,
+          layout.height,
+          undefined,
+          "FAST"
+        );
+      }
+      
+      return pdf.output("blob");
+    } catch (error) {
+      console.error("Failed to create PDF:", error);
+      throw new Error("Failed to create PDF from images");
+    }
+  }, [layout.width, layout.height]);
+
+
+
+  const convertSlidesToImages = useCallback(async () => {
+    setIsConverting(true);
+    const images: string[] = [];
+    const scaleFactor = 3;
+
+    try {
+      for (let i = 0; i < slides.length; i++) {
+        const slideElement = document.getElementById(`slide-${i}`);
+        if (slideElement) {
+          await new Promise(resolve => setTimeout(resolve, 100));
+          
+          const pngDataUrl = await toPng(slideElement, {
+            cacheBust: true,
+            pixelRatio: scaleFactor,
+            backgroundColor: '#fff'
+          });
+          
+          images.push(pngDataUrl);
+        }
+      }
+      
+      setPreviewImages(images);
+      return images;
+    } catch (error) {
+      console.error('Failed to convert slides to images:', error);
+      toast.error('Failed to generate preview images');
+      return [];
+    } finally {
+      setIsConverting(false);
+    }
+  }, [slides]);
+
   const exportSlidesToPDFThenSchedule = useCallback(
     async (carouselId: string) => {
       dispatch(setCarouselDownloading(true));
 
       try {
         const pdf = new jsPDF("p", "px", [layout.width, layout.height]);
-        const scaleFactor = 3; // Adjust the scale factor for higher quality
+        const scaleFactor = 3;
 
-        const captureSlide = async (index: number) => {
-          const slideElement = document.getElementById(`slide-${index}`);
-          if (slideElement) {
-            try {
-              // Wait for a short time to ensure the slide is fully rendered
-              await new Promise((resolve) => setTimeout(resolve, 100));
-
-              const pngDataUrl = await toPng(slideElement, {
-                cacheBust: true,
-                pixelRatio: scaleFactor,
-              });
-
-              if (index !== 0) {
-                pdf.addPage();
-              }
-              pdf.addImage(
-                pngDataUrl,
-                "PNG",
-                0,
-                0,
-                layout.width,
-                layout.height,
-                undefined,
-                "FAST" // Use FAST compression to reduce file size
-              );
-            } catch (error) {
-              console.error(
-                `Failed to export slide ${index + 1} as image`,
-                error
-              );
-            }
-          } else {
-            console.warn(`Slide element with ID slide-${index} not found`);
-          }
-        };
-
-        // Capture all slides sequentially
         for (let i = 0; i < slides.length; i++) {
-          await captureSlide(i);
+          const slideElement = document.getElementById(`slide-${i}`);
+          if (slideElement) {
+            await new Promise((resolve) => setTimeout(resolve, 100));
+
+            const pngDataUrl = await toPng(slideElement, {
+              cacheBust: true,
+              pixelRatio: scaleFactor,
+            });
+
+            if (i !== 0) {
+              pdf.addPage();
+            }
+
+            pdf.addImage(
+              pngDataUrl,
+              "PNG",
+              0,
+              0,
+              layout.width,
+              layout.height,
+              undefined,
+              "FAST"
+            );
+          }
         }
 
-        // Get PDF as blob instead of saving
         const pdfOutput = pdf.output("blob");
-
-        // Create FormData and append the PDF
         const formData = new FormData();
         formData.append("file", pdfOutput, "carousel.pdf");
         formData.append("carouselId", carouselId);
+        formData.append("content", linkedinText);
 
-        // Send to API
         const response = await scheduleCarouselPdf(formData);
 
         if (response.success) {
@@ -300,14 +351,14 @@ const useCarousel = () => {
         } else {
           toast.error("Failed to schedule carousel");
         }
-        dispatch(setCarouselDownloading(false));
       } catch (error) {
-        setPdfLoading(false);
+        console.error("Schedule error:", error);
+        toast.error("Failed to schedule carousel");
+      } finally {
         dispatch(setCarouselDownloading(false));
-        throw error;
       }
     },
-    [slides, layout.width, layout.height]
+    [slides, layout.width, layout.height, router, linkedinText]
   );
 
   return {
@@ -334,7 +385,13 @@ const useCarousel = () => {
     pdfLoading,
     handleRemoveImage,
     carouselDownloading,
+    convertSlidesToImages,
+    previewImages,
+    isConverting,
+    createPDFFromImages,
     exportSlidesToPDFThenSchedule,
+    linkedinText,
+    setLinkedinText
   };
 };
 
