@@ -110,9 +110,18 @@ const EditorNavbar: React.FC = () => {
   };
 
   const handlePreviewClick = async () => {
-    if (!carouselId || !isAuthenticated) return;
+    if (!isAuthenticated) return;
     
     try {
+      // If carousel is not saved (no carouselId), save it first
+      if (!carouselId) {
+        await createOrUpdateCarousel({
+          newName: name || "Default Carousel",
+        });
+        // Wait a moment for the save to complete and ID to be available
+        await new Promise(resolve => setTimeout(resolve, 500));
+      }
+      
       await convertSlidesToImages();
       setIsPreviewModalOpen(true);
     } catch (error) {
@@ -198,7 +207,7 @@ const EditorNavbar: React.FC = () => {
               </Button>
               <Button
                 onClick={handlePreviewClick}
-                disabled={!carouselId || !isAuthenticated || isConverting}
+                disabled={!isAuthenticated || isConverting}
                 className="h-9 bg-blue-600 hover:bg-blue-700 text-white flex items-center gap-2"
               >
                 {isConverting ? (
@@ -240,7 +249,7 @@ const EditorNavbar: React.FC = () => {
               </Button>
               <Button
                 onClick={handlePreviewClick}
-                disabled={!carouselId || !isAuthenticated || isConverting}
+                disabled={!isAuthenticated || isConverting}
                 className="w-full h-9 bg-blue-600 hover:bg-blue-700 text-white flex items-center justify-center gap-2"
               >
                 {isConverting ? (
