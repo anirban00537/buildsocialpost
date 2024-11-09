@@ -19,8 +19,12 @@ import { jsPDF } from "jspdf";
 import { toPng } from "html-to-image";
 import { setCarouselDownloading } from "@/state/slice/user.slice";
 import { lightColorPresets } from "@/lib/color-presets";
+import { toast } from "react-hot-toast";
+import { scheduleCarouselPdf } from "@/services/carousels.service";
+import { useRouter } from "next/navigation";
 const useCarousel = () => {
   const dispatch = useDispatch();
+  const router = useRouter();
   const { slides, layout, background } = useSelector(
     (state: RootState) => state.slides
   );
@@ -229,67 +233,82 @@ const useCarousel = () => {
     setPdfLoading(false);
     dispatch(setCarouselDownloading(false));
   }, [slides, layout.width, layout.height]);
-  const exportSlidesToPDFThenSchedule = useCallback(async () => {
-    dispatch(setCarouselDownloading(true));
-    setPdfLoading(true);
+  const exportSlidesToPDFThenSchedule = useCallback(
+    async (carouselId: string) => {
+      dispatch(setCarouselDownloading(true));
 
-    try {
-      const pdf = new jsPDF("p", "px", [layout.width, layout.height]);
-      const scaleFactor = 3; // Adjust the scale factor for higher quality
+      try {
+        const pdf = new jsPDF("p", "px", [layout.width, layout.height]);
+        const scaleFactor = 3; // Adjust the scale factor for higher quality
 
-      const captureSlide = async (index: number) => {
-        const slideElement = document.getElementById(`slide-${index}`);
-        if (slideElement) {
-          try {
-            // Wait for a short time to ensure the slide is fully rendered
-            await new Promise((resolve) => setTimeout(resolve, 100));
+        const captureSlide = async (index: number) => {
+          const slideElement = document.getElementById(`slide-${index}`);
+          if (slideElement) {
+            try {
+              // Wait for a short time to ensure the slide is fully rendered
+              await new Promise((resolve) => setTimeout(resolve, 100));
 
-            const pngDataUrl = await toPng(slideElement, {
-              cacheBust: true,
-              pixelRatio: scaleFactor,
-            });
+              const pngDataUrl = await toPng(slideElement, {
+                cacheBust: true,
+                pixelRatio: scaleFactor,
+              });
 
-            if (index !== 0) {
-              pdf.addPage();
+              if (index !== 0) {
+                pdf.addPage();
+              }
+              pdf.addImage(
+                pngDataUrl,
+                "PNG",
+                0,
+                0,
+                layout.width,
+                layout.height,
+                undefined,
+                "FAST" // Use FAST compression to reduce file size
+              );
+            } catch (error) {
+              console.error(
+                `Failed to export slide ${index + 1} as image`,
+                error
+              );
             }
-            pdf.addImage(
-              pngDataUrl,
-              "PNG",
-              0,
-              0,
-              layout.width,
-              layout.height,
-              undefined,
-              "FAST" // Use FAST compression to reduce file size
-            );
-          } catch (error) {
-            console.error(
-              `Failed to export slide ${index + 1} as image`,
-              error
-            );
+          } else {
+            console.warn(`Slide element with ID slide-${index} not found`);
           }
-        } else {
-          console.warn(`Slide element with ID slide-${index} not found`);
+        };
+
+        // Capture all slides sequentially
+        for (let i = 0; i < slides.length; i++) {
+          await captureSlide(i);
         }
-      };
 
-      // Capture all slides sequentially
-      for (let i = 0; i < slides.length; i++) {
-        await captureSlide(i);
+        // Get PDF as blob instead of saving
+        const pdfOutput = pdf.output("blob");
+
+        // Create FormData and append the PDF
+        const formData = new FormData();
+        formData.append("file", pdfOutput, "carousel.pdf");
+        formData.append("carouselId", carouselId);
+
+        // Send to API
+        const response = await scheduleCarouselPdf(formData);
+
+        if (response.success) {
+          const postId = response.data.post.post.id;
+          toast.success("Carousel scheduled successfully!");
+          router.push(`/compose?draft_id=${postId}`);
+        } else {
+          toast.error("Failed to schedule carousel");
+        }
+        dispatch(setCarouselDownloading(false));
+      } catch (error) {
+        setPdfLoading(false);
+        dispatch(setCarouselDownloading(false));
+        throw error;
       }
-
-      // Get PDF as blob instead of saving
-      const pdfOutput = pdf.output("blob");
-      setPdfLoading(false);
-      dispatch(setCarouselDownloading(false));
-
-      return pdfOutput;
-    } catch (error) {
-      setPdfLoading(false);
-      dispatch(setCarouselDownloading(false));
-      throw error;
-    }
-  }, [slides, layout.width, layout.height]);
+    },
+    [slides, layout.width, layout.height]
+  );
 
   return {
     swiperRef,

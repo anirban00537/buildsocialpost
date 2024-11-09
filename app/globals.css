@@ -242,3 +242,56 @@ strong {
 .swiper-button-prev::after {
   display: none;
 }
+/* Add these styles to your global CSS */
+.react-pdf__Page {
+  margin: 0 auto;
+  padding: 0;
+  background: white;
+}
+
+.react-pdf__Page canvas {
+  max-width: 100%;
+  height: auto !important;
+}
+
+.react-pdf__Document {
+  line-height: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+/* Hide scrollbar but keep functionality */
+.scrollbar-hide {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;     /* Firefox */
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;  /* Chrome, Safari and Opera */
+}
+/* Disable interactions and scrolling */
+.rpv-core__viewer,
+.rpv-core__view-layer,
+.rpv-core__page-layer,
+.rpv-core__inner-pages {
+  overflow: hidden !important;
+  pointer-events: none !important;
+  touch-action: none !important;
+  user-select: none !important;
+}
+
+/* Enable pointer events only for navigation buttons */
+.rpv-core__viewer button {
+  pointer-events: auto !important;
+}
+
+/* Hide toolbar and other UI elements */
+.rpv-core__toolbar,
+.rpv-core__menu {
+  display: none !important;
+}
+
+/* Remove page margins */
+.rpv-core__inner-page {
+  margin: 0 !important;
+}

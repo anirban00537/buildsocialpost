@@ -30,7 +30,7 @@ const DownloadLoading: React.FC = () => {
           />
         </svg>
       </div>
-      <p className="text-white text-sm font-normal">Downloading Carousel</p>
+      <p className="text-white text-sm font-normal">Processing Carousel</p>
 
       <style jsx>{`
         @keyframes fade-in-out {

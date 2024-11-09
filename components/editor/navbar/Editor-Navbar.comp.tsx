@@ -99,39 +99,6 @@ const EditorNavbar: React.FC = () => {
     setIsLoginModalOpen(true);
   };
 
-  const handlePostCarousel = useCallback(async () => {
-    if (!carouselId) {
-      toast.error("Please save the carousel first");
-      return;
-    }
-
-    try {
-      // Generate PDF
-      const pdfOutput = await exportSlidesToPDFThenSchedule();
-      
-      // Create FormData and append the PDF
-      const formData = new FormData();
-      formData.append('file', pdfOutput, 'carousel.pdf');
-      formData.append('carouselId', carouselId);
-      
-      // Send to API
-      const response = await scheduleCarouselPdf(formData);
-      console.log(response, "response");
-      
-      if (response.success) {
-        const postId = response.data.post.post.id;
-        toast.success("Carousel scheduled successfully!");
-        // Redirect to compose page with draft_id
-        router.push(`/compose?draft_id=${postId}`);
-      } else {
-        toast.error("Failed to schedule carousel");
-      }
-    } catch (error) {
-      console.error("Error posting carousel:", error);
-      toast.error("Failed to schedule carousel");
-    }
-  }, [carouselId, exportSlidesToPDF, router]);
-
   if (isFetchingAll) {
     return <FullScreenLoading />;
   }
@@ -216,7 +183,9 @@ const EditorNavbar: React.FC = () => {
               {isCreatingOrUpdating ? "Saving..." : "Save Progress"}
             </Button>
             <Button
-              onClick={handlePostCarousel}
+              onClick={() => {
+                carouselId && exportSlidesToPDFThenSchedule(carouselId);
+              }}
               disabled={!carouselId || !isAuthenticated}
               className="h-9 bg-green-50 hover:bg-green-100 text-green-700 ring-1 ring-green-200 hover:ring-green-300 transition-all duration-200 rounded-lg"
             >
@@ -271,7 +240,9 @@ const EditorNavbar: React.FC = () => {
               {isCreatingOrUpdating ? "Saving..." : "Save Carousel"}
             </Button>
             <Button
-              onClick={handlePostCarousel}
+              onClick={() => {
+                carouselId && exportSlidesToPDFThenSchedule(carouselId);
+              }}
               disabled={!carouselId || !isAuthenticated}
               className="w-full h-9 bg-green-50 hover:bg-green-100 text-green-700 ring-1 ring-green-200 hover:ring-green-300 rounded-lg transition-all duration-200"
             >

@@ -1,6 +1,5 @@
 "use client";
 import React, { useState, useEffect, useCallback } from "react";
-import { PostPreviewFullFeature } from "@/components/content-create/PostPreviewFullFeature";
 import { ComposeSection } from "@/components/content-create/ComposeSection";
 import { useContentPosting } from "@/hooks/useContent";
 import { LinkedInProfileUI } from "@/types/post";
@@ -14,6 +13,7 @@ import {
 import { ChevronDown, Linkedin, FileText } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
+import { PostPreview } from "@/components/content-create/PostPreview";
 
 const ComposePage = () => {
   const {
@@ -37,6 +37,7 @@ const ComposePage = () => {
     isAutoSaving,
     imageUrls,
     handleImageUrlsChange,
+    documentUrl,
   } = useContentPosting();
 
   const handleProfileSelect = useCallback(
@@ -217,13 +218,14 @@ const ComposePage = () => {
                 imageUrls={imageUrls}
                 onImageUrlsChange={handleImageUrlsChange}
               />
-              <PostPreviewFullFeature
-                isGenerating={isGenerating}
-                generatedPost={content}
-                showActions={false}
+              <PostPreview
                 title="Content Preview"
+                content={content}
+                isGenerating={isGenerating}
+                hideViewModeSelector={false}
                 selectedProfile={selectedProfile}
                 imageUrls={imageUrls}
+                documentUrl={documentUrl}
               />
             </>
           )}

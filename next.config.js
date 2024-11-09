@@ -1,31 +1,28 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  webpack: (config, { isServer }) => {
-    if (!isServer) {
-      config.module.rules.push({
-        test: /\.map$/,
-        loader: "ignore-loader",
-      });
-    }
+  webpack: (config) => {
+    config.resolve.alias.canvas = false;
+    config.resolve.alias.encoding = false;
+
     return config;
-  },
-  env: {
-    PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: "true",
-    PUPPETEER_EXECUTABLE_PATH: "/usr/bin/chromium-browser",
   },
   images: {
     remotePatterns: [
       {
-        protocol: 'https',
-        hostname: '**',
+        protocol: "https",
+        hostname: "**",
       },
       {
-        protocol: 'http',
-        hostname: '**',
+        protocol: "http",
+        hostname: "**",
       },
     ],
-    domains: ['localhost'],
+    domains: ["localhost"],
   },
+  transpilePackages: [
+    "@react-pdf-viewer/core",
+    "@react-pdf-viewer/page-navigation",
+  ],
 };
 
 module.exports = nextConfig;
