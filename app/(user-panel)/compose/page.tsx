@@ -14,6 +14,7 @@ import { ChevronDown, Linkedin, FileText } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { PostPreview } from "@/components/content-create/PostPreview";
+import Link from "next/link";
 
 const ComposePage = () => {
   const {
@@ -74,9 +75,7 @@ const ComposePage = () => {
 
             {/* Enhanced Profile Selector */}
             <div className="flex items-center gap-3">
-              <span className="text-sm font-medium text-gray-500">
-                Profile
-              </span>
+              <span className="text-sm font-medium text-gray-500">Profile</span>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button
@@ -185,31 +184,43 @@ const ComposePage = () => {
           <div className="rounded-2xl bg-white shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-red-100 p-12">
             <div className="max-w-md mx-auto text-center">
               <div className="w-16 h-16 rounded-full bg-red-50 flex items-center justify-center mx-auto mb-6">
-                <Linkedin className="h-8 w-8 text-red-500" />
+                <Image
+                  src="/linkedin-logo.webp"
+                  alt="LinkedIn"
+                  width={24}
+                  height={24}
+                  className="h-8 w-8 text-red-500"
+                />
               </div>
-              
+
               <h2 className="text-xl font-semibold text-gray-900 mb-3">
                 LinkedIn Profile Required
               </h2>
-              
+
               <p className="text-gray-600 mb-8 leading-relaxed">
-                Please connect your LinkedIn profile to start creating and managing content. 
-                This allows us to post directly to your LinkedIn account.
+                Please connect your LinkedIn profile to start creating and
+                managing content. This allows us to post directly to your
+                LinkedIn account.
               </p>
-              
+
               <div className="flex flex-col items-center gap-4">
-                <Button
-                  variant="default"
-                  size="lg"
-                  className="h-11 px-6 gap-2 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white shadow-md"
-                  onClick={() => {
-                    /* Add your LinkedIn connect logic */
-                  }}
-                >
-                  <Linkedin className="h-5 w-5" />
-                  Connect LinkedIn Profile
-                </Button>
-                
+                <Link href="/accounts">
+                  <Button
+                    variant="default"
+                    size="lg"
+                    className="h-11 px-6 gap-2 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white shadow-md"
+                  >
+                    <Image
+                      src="/linkedin-logo.webp"
+                      alt="LinkedIn"
+                      width={24}
+                      height={24}
+                      className="h-5 w-5"
+                    />
+                    Connect LinkedIn Profile
+                  </Button>
+                </Link>
+
                 <div className="flex items-center gap-2 text-sm text-gray-500">
                   <div className="w-5 h-5 rounded-full bg-blue-50 flex items-center justify-center">
                     <svg
@@ -226,7 +237,10 @@ const ComposePage = () => {
                       />
                     </svg>
                   </div>
-                  <span>Your data is secure and we never post without your permission</span>
+                  <span>
+                    Your data is secure and we never post without your
+                    permission
+                  </span>
                 </div>
               </div>
             </div>

@@ -436,56 +436,74 @@ const Sidebar = () => {
       <Navigation />
 
       {/* User Section */}
-      <div className="mt-auto border-t border-gray-100">
-        {/* AI Usage Section */}
-        <div className="px-4 py-2.5 border-b border-gray-100">
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-sm text-gray-600">AI Usage</span>
-            <span className="text-xs text-gray-500">
-              {formatTokens(aiUsage.used)} / {formatTokens(aiUsage.total)} words
-            </span>
+      <div className="mt-auto space-y-1 border-t border-gray-100">
+        {/* Usage Stats Group */}
+        <div className="space-y-1">
+          {/* AI Usage Section */}
+          <div className="px-4 py-3 border-b border-gray-100">
+            <div className="flex items-center justify-between mb-2.5">
+              <div className="flex items-center gap-2">
+                <Wand2 className="h-4 w-4 text-gray-400" />
+                <span className="text-sm font-medium text-gray-700">AI Usage</span>
+              </div>
+              <span className="text-xs font-medium text-gray-500">
+                {formatTokens(aiUsage.used)} / {formatTokens(aiUsage.total)}
+              </span>
+            </div>
+            <div className="w-full h-1.5 bg-gray-100 rounded-full overflow-hidden">
+              <div
+                className={cn(
+                  "h-full transition-all duration-300 ease-in-out",
+                  aiUsage.percentage > 80 ? "bg-red-500" : "bg-blue-600"
+                )}
+                style={{
+                  width: `${aiUsage.percentage}%`,
+                }}
+              />
+            </div>
           </div>
-          <div className="w-full h-1.5 bg-gray-100 rounded-full overflow-hidden">
-            <div
-              className="h-full bg-blue-600 transition-all duration-300 ease-in-out"
-              style={{
-                width: `${aiUsage.percentage}%`,
-              }}
-            />
+
+          {/* Subscription Info */}
+          <div className="border-b border-gray-100">
+            <SubscriptionInfo />
           </div>
         </div>
 
-        <SubscriptionInfo />
-
-        {/* Settings Accordion */}
-        <Accordion type="single" collapsible className="border-b border-gray-100">
+        {/* Settings Group */}
+        <Accordion 
+          type="single" 
+          collapsible 
+          className="border-b border-gray-100"
+        >
           <AccordionItem value="settings" className="border-none">
-            <AccordionTrigger className="flex items-center px-4 py-2.5 hover:no-underline hover:bg-gray-50">
+            <AccordionTrigger className="flex items-center px-4 py-2.5 hover:no-underline hover:bg-gray-50/80">
               <div className="flex items-center gap-2">
                 <Settings className="h-4 w-4 text-gray-400" />
-                <span className="text-sm text-gray-600">Settings</span>
+                <span className="text-sm font-medium text-gray-700">Settings</span>
               </div>
             </AccordionTrigger>
             <AccordionContent className="pt-1 pb-2">
-              <div className="space-y-1">
+              <div className="space-y-0.5">
                 {settingsItems.map((item) => (
                   <Link
                     key={item.id}
                     href={item.href}
                     className={cn(
-                      "flex items-center gap-x-3 px-4 py-2 text-sm rounded-lg",
+                      "flex items-center gap-x-3 px-4 py-2 text-sm rounded-lg transition-colors duration-150",
                       pathname === item.href
                         ? "bg-blue-50 text-blue-600"
-                        : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+                        : "text-gray-600 hover:bg-gray-50/80 hover:text-gray-900"
                     )}
                   >
-                    <item.icon className={cn(
-                      "h-4 w-4",
-                      pathname === item.href
-                        ? "text-blue-600"
-                        : "text-gray-400 group-hover:text-gray-500"
-                    )} />
-                    <span>{item.name}</span>
+                    <item.icon 
+                      className={cn(
+                        "h-4 w-4",
+                        pathname === item.href
+                          ? "text-blue-600"
+                          : "text-gray-400 group-hover:text-gray-500"
+                      )} 
+                    />
+                    <span className="font-medium">{item.name}</span>
                   </Link>
                 ))}
               </div>
@@ -494,9 +512,9 @@ const Sidebar = () => {
         </Accordion>
 
         {/* User Profile */}
-        <div className="px-4 py-2.5 flex items-center justify-between">
+        <div className="px-4 py-3 flex items-center justify-between group hover:bg-gray-50/80 transition-colors duration-150 cursor-pointer">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-600">
+            <div className="w-9 h-9 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 group-hover:bg-gray-200 transition-colors duration-150">
               {userinfo?.first_name?.charAt(0) || "U"}
             </div>
             <div className="flex flex-col">
@@ -508,6 +526,7 @@ const Sidebar = () => {
               </span>
             </div>
           </div>
+          <ChevronDown className="h-4 w-4 text-gray-400 group-hover:text-gray-500 transition-colors duration-150" />
         </div>
       </div>
 
