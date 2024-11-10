@@ -31,8 +31,13 @@ import Image from "next/image";
 import { cn } from "@/lib/utils";
 import SubscriptionInfo from "@/components/subscription/Status.comp";
 import ManageWorkspacesModal from "../../workspace/Manage-Workspaces-Modal.comp";
-import ManageAccountsModal from "./ManageAccountsModal";
 import { LucideIcon } from "lucide-react";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 
 // Define base interface for navigation items
 interface BaseNavigationItem {
@@ -107,16 +112,16 @@ const management: ManagementItem[] = [
     counter: 5,
   },
   {
+    id: "accounts",
+    name: "Social Accounts",
+    icon: Linkedin,
+    href: "/accounts",
+  },
+  {
     id: "media",
     name: "Media",
     icon: ImageIcon,
     href: "/media",
-  },
-  {
-    id: "settings",
-    name: "Settings",
-    icon: Settings,
-    href: "/settings",
   },
 ];
 
@@ -360,11 +365,11 @@ const Navigation = () => {
 };
 
 const Sidebar = () => {
+  const pathname = usePathname();
   const { userinfo, currentWorkspace, wordUsage, subscription } = useSelector(
     (state: RootState) => state.user
   );
   const [isManageModalOpen, setIsManageModalOpen] = useState(false);
-  const [isAccountsModalOpen, setIsAccountsModalOpen] = useState(false);
   const aiUsage = {
     used: wordUsage?.usage?.used || 0,
     remaining: wordUsage?.usage?.remaining || 0,
@@ -432,16 +437,6 @@ const Sidebar = () => {
 
       {/* User Section */}
       <div className="mt-auto border-t border-gray-100">
-        {/* LinkedIn Accounts Section */}
-        <button
-          onClick={() => setIsAccountsModalOpen(true)}
-          className="w-full flex items-center px-4 py-2.5 text-gray-600 hover:bg-gray-50 border-b border-gray-100"
-        >
-          <Linkedin className="h-4 w-4 mr-2 text-[#0A66C2]" />
-          <span className="text-sm">Manage LinkedIn Accounts</span>
-          <ChevronDown className="h-4 w-4 ml-auto" />
-        </button>
-
         {/* AI Usage Section */}
         <div className="px-4 py-2.5 border-b border-gray-100">
           <div className="flex items-center justify-between mb-2">
@@ -462,6 +457,42 @@ const Sidebar = () => {
 
         <SubscriptionInfo />
 
+        {/* Settings Accordion */}
+        <Accordion type="single" collapsible className="border-b border-gray-100">
+          <AccordionItem value="settings" className="border-none">
+            <AccordionTrigger className="flex items-center px-4 py-2.5 hover:no-underline hover:bg-gray-50">
+              <div className="flex items-center gap-2">
+                <Settings className="h-4 w-4 text-gray-400" />
+                <span className="text-sm text-gray-600">Settings</span>
+              </div>
+            </AccordionTrigger>
+            <AccordionContent className="pt-1 pb-2">
+              <div className="space-y-1">
+                {settingsItems.map((item) => (
+                  <Link
+                    key={item.id}
+                    href={item.href}
+                    className={cn(
+                      "flex items-center gap-x-3 px-4 py-2 text-sm rounded-lg",
+                      pathname === item.href
+                        ? "bg-blue-50 text-blue-600"
+                        : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+                    )}
+                  >
+                    <item.icon className={cn(
+                      "h-4 w-4",
+                      pathname === item.href
+                        ? "text-blue-600"
+                        : "text-gray-400 group-hover:text-gray-500"
+                    )} />
+                    <span>{item.name}</span>
+                  </Link>
+                ))}
+              </div>
+            </AccordionContent>
+          </AccordionItem>
+        </Accordion>
+
         {/* User Profile */}
         <div className="px-4 py-2.5 flex items-center justify-between">
           <div className="flex items-center gap-3">
@@ -481,10 +512,6 @@ const Sidebar = () => {
       </div>
 
       {/* Modals */}
-      <ManageAccountsModal
-        isOpen={isAccountsModalOpen}
-        onClose={() => setIsAccountsModalOpen(false)}
-      />
       <ManageWorkspacesModal
         isOpen={isManageModalOpen}
         onClose={() => setIsManageModalOpen(false)}
