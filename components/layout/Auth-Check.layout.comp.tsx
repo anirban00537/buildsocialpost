@@ -7,13 +7,14 @@ import useBranding from "@/hooks/useBranding";
 import { setBackground, setNewCarousel } from "@/state/slice/carousel.slice";
 import { useDispatch } from "react-redux";
 import { darkColorPresets, lightColorPresets } from "@/lib/color-presets";
+import useLinkedIn from "@/hooks/useLinkedIn";
 
 const AuthCheckLayout = ({ children }: { children: React.ReactNode }) => {
   const { isAuthenticated, isLoading } = useAuth();
   const pathname = usePathname();
   useBranding();
   const dispatch = useDispatch();
-
+  useLinkedIn();
   const chooseColorFromColorPalette = useCallback(() => {
     const lightPreset =
       lightColorPresets[Math.floor(Math.random() * lightColorPresets.length)];
@@ -34,24 +35,24 @@ const AuthCheckLayout = ({ children }: { children: React.ReactNode }) => {
   useEffect(() => {
     const handleKeyPress = (event: KeyboardEvent) => {
       // Check for Ctrl+Alt+N (Windows/Linux) or Cmd+Alt+N (Mac)
-        if (
-          (event.ctrlKey || event.metaKey) &&
-          event.altKey &&
-          event.key.toLowerCase() === "n"
-        ) {
-          event.preventDefault(); // Prevent default browser behavior
-          router.push("/compose");
-        }
-      };
-
-      // Add event listener
-      window.addEventListener("keydown", handleKeyPress);
-
-      // Cleanup
-      return () => {
-        window.removeEventListener("keydown", handleKeyPress);
+      if (
+        (event.ctrlKey || event.metaKey) &&
+        event.altKey &&
+        event.key.toLowerCase() === "n"
+      ) {
+        event.preventDefault(); // Prevent default browser behavior
+        router.push("/compose");
+      }
     };
-    }, [router]);
+
+    // Add event listener
+    window.addEventListener("keydown", handleKeyPress);
+
+    // Cleanup
+    return () => {
+      window.removeEventListener("keydown", handleKeyPress);
+    };
+  }, [router]);
 
   if (isLoading) {
     return <FullScreenLoading />;

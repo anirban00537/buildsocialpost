@@ -50,10 +50,10 @@ const ComposePage = () => {
   );
 
   return (
-    <div className="min-h-screen bg-gray-50/50">
-      <div className="max-w-[1600px] mx-auto px-6 py-10">
-        {/* Enhanced Header Section */}
-        <div className="mb-10">
+    <div className="h-screen flex flex-col bg-gray-50/50">
+      {/* Fixed Header */}
+      <div className="flex-none border-b border-gray-200 bg-white">
+        <div className="max-w-[1600px] mx-auto px-6 py-6">
           <div className="flex items-center justify-between">
             <div className="space-y-2">
               <div className="flex items-center gap-3">
@@ -177,114 +177,139 @@ const ComposePage = () => {
             </div>
           </div>
         </div>
+      </div>
 
-        {/* Main Content Area with Enhanced Loading State */}
+      {/* Scrollable Content Area */}
+      <div className="flex-1 overflow-hidden">
         {!selectedProfile ? (
-          // No LinkedIn Profile Error State
-          <div className="rounded-2xl bg-white shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-red-100 p-12">
-            <div className="max-w-md mx-auto text-center">
-              <div className="w-16 h-16 rounded-full bg-red-50 flex items-center justify-center mx-auto mb-6">
-                <Image
-                  src="/linkedin-logo.webp"
-                  alt="LinkedIn"
-                  width={24}
-                  height={24}
-                  className="h-8 w-8 text-red-500"
-                />
-              </div>
+          // No LinkedIn Profile Error State (Centered in scrollable area)
+          <div className="h-full flex items-center justify-center p-6">
+            <div className="rounded-2xl bg-white shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-red-100 p-12 max-w-2xl">
+              <div className="max-w-md mx-auto text-center">
+                <div className="w-16 h-16 rounded-full bg-red-50 flex items-center justify-center mx-auto mb-6">
+                  <Image
+                    src="/linkedin-logo.webp"
+                    alt="LinkedIn"
+                    width={24}
+                    height={24}
+                    className="h-8 w-8 text-red-500"
+                  />
+                </div>
 
-              <h2 className="text-xl font-semibold text-gray-900 mb-3">
-                LinkedIn Profile Required
-              </h2>
+                <h2 className="text-xl font-semibold text-gray-900 mb-3">
+                  LinkedIn Profile Required
+                </h2>
 
-              <p className="text-gray-600 mb-8 leading-relaxed">
-                Please connect your LinkedIn profile to start creating and
-                managing content. This allows us to post directly to your
-                LinkedIn account.
-              </p>
+                <p className="text-gray-600 mb-8 leading-relaxed">
+                  Please connect your LinkedIn profile to start creating and
+                  managing content. This allows us to post directly to your
+                  LinkedIn account.
+                </p>
 
-              <div className="flex flex-col items-center gap-4">
-                <Link href="/accounts">
-                  <Button
-                    variant="default"
-                    size="lg"
-                    className="h-11 px-6 gap-2 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white shadow-md"
-                  >
-                    <Image
-                      src="/linkedin-logo.webp"
-                      alt="LinkedIn"
-                      width={24}
-                      height={24}
-                      className="h-5 w-5"
-                    />
-                    Connect LinkedIn Profile
-                  </Button>
-                </Link>
-
-                <div className="flex items-center gap-2 text-sm text-gray-500">
-                  <div className="w-5 h-5 rounded-full bg-blue-50 flex items-center justify-center">
-                    <svg
-                      className="w-3 h-3 text-blue-600"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
+                <div className="flex flex-col items-center gap-4">
+                  <Link href="/accounts">
+                    <Button
+                      variant="default"
+                      size="lg"
+                      className="h-11 px-6 gap-2 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white shadow-md"
                     >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                      <Image
+                        src="/linkedin-logo.webp"
+                        alt="LinkedIn"
+                        width={24}
+                        height={24}
+                        className="h-5 w-5"
                       />
-                    </svg>
+                      Connect LinkedIn Profile
+                    </Button>
+                  </Link>
+
+                  <div className="flex items-center gap-2 text-sm text-gray-500">
+                    <div className="w-5 h-5 rounded-full bg-blue-50 flex items-center justify-center">
+                      <svg
+                        className="w-3 h-3 text-blue-600"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                        />
+                      </svg>
+                    </div>
+                    <span>
+                      Your data is secure and we never post without your
+                      permission
+                    </span>
                   </div>
-                  <span>
-                    Your data is secure and we never post without your
-                    permission
-                  </span>
                 </div>
               </div>
             </div>
           </div>
         ) : (
-          // Existing Content Grid
-          <div className="grid grid-cols-2 gap-8">
-            {isLoadingDraft ? (
-              <div className="col-span-2 h-[600px] rounded-xl bg-white shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-gray-100/80 flex items-center justify-center">
-                <div className="flex flex-col items-center gap-4">
-                  <div className="w-16 h-16 rounded-full bg-blue-50 flex items-center justify-center animate-pulse">
-                    <FileText className="w-8 h-8 text-blue-600 opacity-50" />
+          // Split View with Fixed Headers and Scrollable Content
+          <div className="h-full grid grid-cols-2">
+            {/* Left Column - Compose Section */}
+            <div className="flex flex-col border-r border-gray-200">
+              <div className="flex-none px-6 py-4 bg-white border-b border-gray-200">
+                <h2 className="text-lg font-medium text-gray-900">Write Post</h2>
+              </div>
+              <div className="flex-1 overflow-y-auto px-6 py-6">
+                {isLoadingDraft ? (
+                  <div className="h-full flex items-center justify-center">
+                    <div className="flex flex-col items-center gap-4">
+                      <div className="w-16 h-16 rounded-full bg-blue-50 flex items-center justify-center animate-pulse">
+                        <FileText className="w-8 h-8 text-blue-600 opacity-50" />
+                      </div>
+                      <div className="space-y-2 text-center">
+                        <p className="text-base font-medium text-gray-900">
+                          Loading Draft
+                        </p>
+                        <p className="text-sm text-gray-500">
+                          Please wait while we fetch your content
+                        </p>
+                      </div>
+                    </div>
                   </div>
-                  <div className="space-y-2 text-center">
-                    <p className="text-base font-medium text-gray-900">
-                      Loading Draft
-                    </p>
-                    <p className="text-sm text-gray-500">
-                      Please wait while we fetch your content
-                    </p>
+                ) : (
+                  <ComposeSection
+                    content={content}
+                    setContent={setContent}
+                    isGenerating={isGenerating}
+                    setIsGenerating={setIsGenerating}
+                    isScheduleModalOpen={isScheduleModalOpen}
+                    setIsScheduleModalOpen={setIsScheduleModalOpen}
+                    scheduledDate={scheduledDate}
+                    onSchedule={handleSchedule}
+                    isEditing={isEditing}
+                    postDetails={postDetails}
+                    onPostNow={handlePostNow}
+                    isPosting={isPosting}
+                    selectedLinkedInProfile={selectedProfile}
+                    onProfileSelect={setSelectedProfile}
+                    isAutoSaving={isAutoSaving}
+                    imageUrls={imageUrls}
+                    onImageUrlsChange={handleImageUrlsChange}
+                  />
+                )}
+              </div>
+            </div>
+
+            {/* Right Column - Preview Section */}
+            <div className="flex flex-col">
+              <div className="flex-none px-6 py-4 bg-white border-b border-gray-200">
+                <div className="flex items-center justify-between">
+                  <h2 className="text-lg font-medium text-gray-900">Post Preview</h2>
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm text-gray-500">Devices:</span>
+                    {/* Add your device selector buttons here */}
                   </div>
                 </div>
               </div>
-            ) : (
-              <>
-                <ComposeSection
-                  content={content}
-                  setContent={setContent}
-                  isGenerating={isGenerating}
-                  setIsGenerating={setIsGenerating}
-                  isScheduleModalOpen={isScheduleModalOpen}
-                  setIsScheduleModalOpen={setIsScheduleModalOpen}
-                  scheduledDate={scheduledDate}
-                  onSchedule={handleSchedule}
-                  isEditing={isEditing}
-                  postDetails={postDetails}
-                  onPostNow={handlePostNow}
-                  isPosting={isPosting}
-                  selectedLinkedInProfile={selectedProfile}
-                  onProfileSelect={setSelectedProfile}
-                  isAutoSaving={isAutoSaving}
-                  imageUrls={imageUrls}
-                  onImageUrlsChange={handleImageUrlsChange}
-                />
+              <div className="flex-1 overflow-y-auto px-6 py-6">
                 <PostPreview
                   title="Content Preview"
                   content={content}
@@ -294,8 +319,8 @@ const ComposePage = () => {
                   imageUrls={imageUrls}
                   documentUrl={documentUrl}
                 />
-              </>
-            )}
+              </div>
+            </div>
           </div>
         )}
       </div>

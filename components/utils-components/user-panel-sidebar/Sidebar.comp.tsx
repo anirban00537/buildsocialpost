@@ -77,13 +77,24 @@ interface SettingsSection {
   items: SettingsItem[];
 }
 
-const features: FeatureItem[] = [
+// First, combine the interfaces
+type NavigationItem = BaseNavigationItem & {
+  shortcut?: string;
+  badge?: string;
+  badgeColor?: string;
+  counter?: number;
+  subItems?: SettingsItem[];
+};
+
+// Then combine the navigation items
+const navigationItems: NavigationItem[] = [
+  // Tools/Features
   {
     id: "ai-writer",
     name: "AI Writer",
     icon: Wand2,
     href: "/ai-writer",
-    badge: "Pro",
+    badge: "AI",
     badgeColor: "bg-gradient-to-r from-indigo-500 to-blue-500 text-white",
   },
   {
@@ -94,68 +105,32 @@ const features: FeatureItem[] = [
     badge: "New",
     badgeColor: "bg-gradient-to-r from-green-500 to-emerald-500 text-white",
   },
-];
-
-const management: ManagementItem[] = [
+  // Management items
   {
     id: "carousels",
     name: "My Carousels",
     icon: LayoutTemplate,
     href: "/carousels",
-    counter: 0,
   },
   {
     id: "my-posts",
     name: "My Posts",
     icon: Calendar,
     href: "/my-posts",
-    counter: 5,
   },
   {
     id: "accounts",
-    name: "Social Accounts",
+    name: "Manage Accounts",
     icon: Linkedin,
     href: "/accounts",
+    badge: "LinkedIn",
+    badgeColor: "bg-gradient-to-r from-blue-500 to-blue-700 text-white",
   },
   {
     id: "media",
-    name: "Media",
+    name: "Media Manager",
     icon: ImageIcon,
     href: "/media",
-  },
-];
-
-// Define the settings items array with simplified structure
-const settingsItems: SettingsItem[] = [
-  {
-    id: "settings-general",
-    name: "General",
-    icon: Settings,
-    href: "/settings/general",
-  },
-  {
-    id: "settings-profile",
-    name: "Profile",
-    icon: User,
-    href: "/settings/profile",
-  },
-  {
-    id: "settings-workspace",
-    name: "Workspace",
-    icon: Users,
-    href: "/settings/workspace",
-  },
-  {
-    id: "settings-linkedin",
-    name: "LinkedIn",
-    icon: Linkedin,
-    href: "/settings/linkedin",
-  },
-  {
-    id: "settings-ai",
-    name: "AI Settings",
-    icon: Wand2,
-    href: "/settings/ai",
   },
 ];
 
@@ -177,7 +152,7 @@ const NavigationSection = ({
 
 // Simplified NavigationItem component with updated styling
 const NavigationItem: React.FC<{
-  item: FeatureItem | ManagementItem;
+  item: NavigationItem;
   isActive: boolean;
   hasSubItems?: boolean;
 }> = ({ item, isActive, hasSubItems }) => {
@@ -187,45 +162,90 @@ const NavigationItem: React.FC<{
   const showSubItems = isSettings && isExpanded;
 
   useEffect(() => {
-    if (isSettings && pathname.startsWith('/settings')) {
+    if (isSettings && pathname.startsWith("/settings")) {
       setIsExpanded(true);
     }
   }, [isSettings, pathname]);
 
   return (
     <div>
-      <div
-        onClick={() => isSettings && setIsExpanded(!isExpanded)}
-        className={cn(
-          "flex items-center gap-x-3 px-3 py-2 rounded-lg cursor-pointer",
-          isActive || (isSettings && pathname.startsWith('/settings'))
-            ? "bg-blue-50 text-blue-600"
-            : "text-gray-600 hover:bg-gray-50 hover:text-gray-900",
-          "group"
-        )}
-      >
-        <item.icon className={cn(
-          "h-4 w-4",
-          isActive || (isSettings && pathname.startsWith('/settings'))
-            ? "text-blue-600"
-            : "text-gray-400 group-hover:text-gray-500"
-        )} />
-        <span className="text-sm font-medium flex-1">{item.name}</span>
-        {hasSubItems && (
-          <ChevronDown className={cn(
-            "h-4 w-4 transition-transform duration-200",
-            isActive || (isSettings && pathname.startsWith('/settings'))
-              ? "text-blue-600"
-              : "text-gray-400",
-            isExpanded && "transform rotate-180"
-          )} />
-        )}
-      </div>
+      {isSettings ? (
+        // Settings item with expandable content
+        <div
+          onClick={() => setIsExpanded(!isExpanded)}
+          className={cn(
+            "flex items-center gap-x-3 px-3 py-2 rounded-lg cursor-pointer",
+            isActive || (isSettings && pathname.startsWith("/settings"))
+              ? "bg-blue-50 text-blue-600"
+              : "text-gray-600 hover:bg-gray-50 hover:text-gray-900",
+            "group"
+          )}
+        >
+          <item.icon
+            className={cn(
+              "h-4 w-4",
+              isActive || (isSettings && pathname.startsWith("/settings"))
+                ? "text-blue-600"
+                : "text-gray-400 group-hover:text-gray-500"
+            )}
+          />
+          <span className="text-sm font-medium flex-1">{item.name}</span>
+          <ChevronDown
+            className={cn(
+              "h-4 w-4 transition-transform duration-200",
+              isActive || (isSettings && pathname.startsWith("/settings"))
+                ? "text-blue-600"
+                : "text-gray-400",
+              isExpanded && "transform rotate-180"
+            )}
+          />
+        </div>
+      ) : (
+        // Regular navigation item with Link
+        <Link
+          href={item.href}
+          className={cn(
+            "flex items-center gap-x-3 px-3 py-2 rounded-lg cursor-pointer",
+            isActive
+              ? "bg-blue-50 text-blue-600"
+              : "text-gray-600 hover:bg-gray-50 hover:text-gray-900",
+            "group"
+          )}
+        >
+          <item.icon
+            className={cn(
+              "h-4 w-4",
+              isActive
+                ? "text-blue-600"
+                : "text-gray-400 group-hover:text-gray-500"
+            )}
+          />
+          <span className="text-sm font-medium flex-1">{item.name}</span>
+          {item.badge && (
+            <span
+              className={cn(
+                "px-2 py-0.5 text-xs font-medium rounded-full",
+                item.badgeColor || "bg-blue-100 text-blue-600"
+              )}
+            >
+              {item.badge}
+            </span>
+          )}
+          {item.shortcut && (
+            <span className="text-xs text-gray-400 px-1.5 py-0.5 bg-gray-50 rounded">
+              {item.shortcut}
+            </span>
+          )}
+          {item.counter !== undefined && (
+            <span className="text-xs text-gray-500">{item.counter}</span>
+          )}
+        </Link>
+      )}
 
       {/* Settings Sub-items */}
-      {showSubItems && (
+      {showSubItems && item.subItems && (
         <div className="ml-7 space-y-1 mt-1">
-          {settingsItems.map((subItem) => (
+          {item.subItems.map((subItem) => (
             <Link
               key={subItem.id}
               href={subItem.href}
@@ -236,12 +256,14 @@ const NavigationItem: React.FC<{
                   : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
               )}
             >
-              <subItem.icon className={cn(
-                "h-4 w-4",
-                pathname === subItem.href
-                  ? "text-blue-600"
-                  : "text-gray-400 group-hover:text-gray-500"
-              )} />
+              <subItem.icon
+                className={cn(
+                  "h-4 w-4",
+                  pathname === subItem.href
+                    ? "text-blue-600"
+                    : "text-gray-400 group-hover:text-gray-500"
+                )}
+              />
               <span>{subItem.name}</span>
             </Link>
           ))}
@@ -323,44 +345,19 @@ const SettingsNavigationSection: React.FC<{
 const Navigation = () => {
   const pathname = usePathname();
 
-  // Create settings section
-  const settingsSection: SettingsSection = {
-    id: "settings-section",
-    name: "Settings",
-    icon: Settings,
-    items: settingsItems
-  };
-
   return (
-    <nav className="flex-grow overflow-y-auto px-3 py-4 space-y-6">
-      <NavigationSection title="TOOLS">
-        {features.map((feature) => (
+    <div className="px-3 py-2">
+      <div className="space-y-1">
+        {navigationItems.map((item) => (
           <NavigationItem
-            key={feature.id}
-            item={feature}
-            isActive={pathname === feature.href}
+            key={item.id}
+            item={item}
+            isActive={pathname === item.href}
+            hasSubItems={item.id === "settings"}
           />
         ))}
-      </NavigationSection>
-
-      <NavigationSection title="MANAGEMENT">
-        {management.map((item) => (
-          item.id === "settings" ? (
-            <SettingsNavigationSection
-              key={item.id}
-              section={settingsSection}
-              isActive={pathname.startsWith('/settings')}
-            />
-          ) : (
-            <NavigationItem
-              key={item.id}
-              item={item}
-              isActive={pathname === item.href}
-            />
-          )
-        ))}
-      </NavigationSection>
-    </nav>
+      </div>
+    </div>
   );
 };
 
@@ -432,7 +429,7 @@ const Sidebar = () => {
         </Link>
       </div>
 
-      {/* Main Navigation */}
+      {/* Combined Navigation */}
       <Navigation />
 
       {/* User Section */}
@@ -444,7 +441,9 @@ const Sidebar = () => {
             <div className="flex items-center justify-between mb-2.5">
               <div className="flex items-center gap-2">
                 <Wand2 className="h-4 w-4 text-gray-400" />
-                <span className="text-sm font-medium text-gray-700">AI Usage</span>
+                <span className="text-sm font-medium text-gray-700">
+                  AI Usage
+                </span>
               </div>
               <span className="text-xs font-medium text-gray-500">
                 {formatTokens(aiUsage.used)} / {formatTokens(aiUsage.total)}
@@ -470,21 +469,23 @@ const Sidebar = () => {
         </div>
 
         {/* Settings Group */}
-        <Accordion 
-          type="single" 
-          collapsible 
+        <Accordion
+          type="single"
+          collapsible
           className="border-b border-gray-100"
         >
           <AccordionItem value="settings" className="border-none">
             <AccordionTrigger className="flex items-center px-4 py-2.5 hover:no-underline hover:bg-gray-50/80">
               <div className="flex items-center gap-2">
                 <Settings className="h-4 w-4 text-gray-400" />
-                <span className="text-sm font-medium text-gray-700">Settings</span>
+                <span className="text-sm font-medium text-gray-700">
+                  Settings
+                </span>
               </div>
             </AccordionTrigger>
             <AccordionContent className="pt-1 pb-2">
               <div className="space-y-0.5">
-                {settingsItems.map((item) => (
+                {navigationItems.map((item) => (
                   <Link
                     key={item.id}
                     href={item.href}
@@ -495,13 +496,13 @@ const Sidebar = () => {
                         : "text-gray-600 hover:bg-gray-50/80 hover:text-gray-900"
                     )}
                   >
-                    <item.icon 
+                    <item.icon
                       className={cn(
                         "h-4 w-4",
                         pathname === item.href
                           ? "text-blue-600"
                           : "text-gray-400 group-hover:text-gray-500"
-                      )} 
+                      )}
                     />
                     <span className="font-medium">{item.name}</span>
                   </Link>

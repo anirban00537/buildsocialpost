@@ -125,6 +125,27 @@ export const PostPreview = ({
 
   
 
+  // Add viewMode-specific styles
+  const getViewportStyles = (mode: ViewMode) => {
+    switch (mode) {
+      case "mobile":
+        return {
+          containerClass: "max-w-[375px]",
+          previewClass: "scale-[0.85] origin-top",
+        };
+      case "tablet":
+        return {
+          containerClass: "max-w-[768px]",
+          previewClass: "scale-[0.9] origin-top",
+        };
+      case "desktop":
+        return {
+          containerClass: "max-w-3xl",
+          previewClass: "scale-100",
+        };
+    }
+  };
+
   return (
     <div className="space-y-4 w-full">
       {/* View Mode Selector */}
@@ -174,16 +195,26 @@ export const PostPreview = ({
 
       {/* Main Preview Container */}
       <div className="flex justify-center w-full">
-        <div className="w-full max-w-3xl">
+        <div className={cn(
+          "w-full transition-all duration-300",
+          getViewportStyles(viewMode).containerClass
+        )}>
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="rounded-xl border border-gray-200/80 bg-white/80 backdrop-blur-sm shadow-[0_8px_30px_rgb(0,0,0,0.04)]"
+            className={cn(
+              "rounded-xl border border-gray-200/80 bg-white/80 backdrop-blur-sm shadow-[0_8px_30px_rgb(0,0,0,0.04)]",
+              "transition-all duration-300",
+              getViewportStyles(viewMode).previewClass
+            )}
           >
             {selectedProfile ? (
               <>
                 {/* Profile Header */}
-                <div className="p-6 border-b border-gray-100">
+                <div className={cn(
+                  "p-6 border-b border-gray-100",
+                  viewMode === "mobile" && "p-4"
+                )}>
                   <div className="flex items-start justify-between">
                     <div className="flex gap-3">
                       <Avatar className="h-12 w-12 rounded-full ring-2 ring-white shadow-sm">
@@ -261,20 +292,30 @@ export const PostPreview = ({
                 </div>
 
                 {/* Content Area */}
-                <div className="p-6">
-                  <div className="prose prose-sm max-w-none">
+                <div className={cn(
+                  "p-6",
+                  viewMode === "mobile" && "p-4"
+                )}>
+                  <div className={cn(
+                    "prose prose-sm max-w-none",
+                    viewMode === "mobile" && "prose-xs"
+                  )}>
                     {content}
                   </div>
 
                   {/* Image Grid */}
                   {imageUrls.length > 0 && (
-                    <div className="mt-4">
+                    <div className={cn(
+                      "mt-4",
+                      viewMode === "mobile" && "mt-3"
+                    )}>
                       <div
                         className={cn(
                           "grid gap-2",
                           imageUrls.length === 1 && "grid-cols-1",
                           imageUrls.length === 2 && "grid-cols-2",
-                          imageUrls.length >= 3 && "grid-cols-2"
+                          imageUrls.length >= 3 && "grid-cols-2",
+                          viewMode === "mobile" && "gap-1"
                         )}
                       >
                         {imageUrls.map((url, index) => (
@@ -302,7 +343,10 @@ export const PostPreview = ({
               </>
             ) : (
               // No LinkedIn Account State
-              <div className="min-h-[400px] flex flex-col items-center justify-center p-8">
+              <div className={cn(
+                "min-h-[400px] flex flex-col items-center justify-center",
+                viewMode === "mobile" ? "p-4" : "p-8"
+              )}>
                 <div className="w-full max-w-[280px] flex flex-col items-center text-center">
                   <div className="w-16 h-16 rounded-full bg-blue-50 flex items-center justify-center mb-8">
                     <svg
