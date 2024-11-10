@@ -370,24 +370,35 @@ const ContentManager = () => {
               {/* Empty State */}
               {(!postsData[activeTab] || postsData[activeTab].length === 0) && (
                 <div className="flex flex-col items-center justify-center py-16 px-4">
-                  <div className="w-16 h-16 mb-4">
-                    {
-                      postConfigs.find((config) => config.id === activeTab)
-                        ?.icon
-                    }
+                  {/* Icon Container */}
+                  <div className="w-16 h-16 mb-6 flex items-center justify-center text-gray-400">
+                    {postConfigs.find((config) => config.id === activeTab)?.icon && (
+                      <div className={`
+                        w-16 h-16 rounded-full flex items-center justify-center
+                        ${activeTab === 'failed' 
+                          ? 'bg-red-50 text-red-500' 
+                          : 'bg-blue-50 text-blue-500'
+                        }
+                      `}>
+                        {React.cloneElement(
+                          postConfigs.find((config) => config.id === activeTab)?.icon as React.ReactElement,
+                          { className: 'w-8 h-8' }
+                        )}
+                      </div>
+                    )}
                   </div>
-                  <h3 className="text-xl font-semibold text-gray-900 mb-2">
+
+                  {/* Text Content */}
+                  <h3 className="text-xl font-semibold text-gray-900 mb-2 text-center">
                     {activeTab === "published"
                       ? "Ready to share your story?"
-                      : postConfigs.find((config) => config.id === activeTab)
-                          ?.title}
+                      : postConfigs.find((config) => config.id === activeTab)?.title}
                   </h3>
-                  <p className="text-gray-500 text-center max-w-md mb-6">
-                    {
-                      postConfigs.find((config) => config.id === activeTab)
-                        ?.emptyStateMessage
-                    }
+                  <p className="text-gray-500 text-center max-w-md mb-8">
+                    {postConfigs.find((config) => config.id === activeTab)?.emptyStateMessage}
                   </p>
+
+                  {/* Button */}
                   <Button
                     onClick={handleCreatePost}
                     className="bg-primary hover:bg-primary/90 text-white px-6 py-2 rounded-lg

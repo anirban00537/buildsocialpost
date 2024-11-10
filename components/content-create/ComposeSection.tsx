@@ -118,20 +118,23 @@ export const ComposeSection = ({
   };
 
   return (
-    <div className="flex flex-col  bg-white rounded-2xl overflow-hidden border border-gray-200/80 shadow-[0_8px_30px_rgb(0,0,0,0.04)] backdrop-blur-sm">
+    <div className="flex flex-col bg-white/80 backdrop-blur-sm rounded-2xl overflow-hidden border border-blue-100/50 shadow-[0_8px_40px_rgb(59,130,246,0.08)]">
       {/* Editor Header */}
-      <div className="px-5 py-4 border-b border-gray-100 bg-gradient-to-r from-white to-gray-50/50">
+      <div className="px-6 py-4 border-b border-blue-50 bg-gradient-to-r from-blue-50/50 via-white to-purple-50/30">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <h2 className="text-base font-semibold text-gray-800">
-              Create Post
-            </h2>
+            <div className="flex items-center gap-2">
+              <Sparkles className="w-5 h-5 text-blue-500" />
+              <h2 className="text-base font-semibold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                AI-Powered Editor
+              </h2>
+            </div>
             <div
               className={cn(
-                "flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium transition-all",
+                "flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium transition-all border",
                 isAutoSaving
-                  ? "bg-blue-50 text-blue-600"
-                  : "bg-green-50 text-green-600"
+                  ? "bg-blue-50/50 text-blue-600 border-blue-100"
+                  : "bg-green-50/50 text-green-600 border-green-100"
               )}
             >
               <span
@@ -147,101 +150,104 @@ export const ComposeSection = ({
       </div>
 
       {/* Editor Toolbar */}
-      <div className="px-5 py-2.5 border-b border-gray-100 flex items-center gap-2">
-        <div className="flex items-center gap-1 p-1 bg-gray-50/80 rounded-lg">
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button
-                variant="ghost"
-                size="sm"
-                className="h-8 w-8 p-0 hover:bg-white rounded-md transition-all"
-                onClick={() => setIsImageModalOpen(true)}
-              >
-                <ImageIcon className="w-4 h-4 text-gray-600" />
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent>Add Image</TooltipContent>
-          </Tooltip>
-
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button
-                variant="ghost"
-                size="sm"
-                className="h-8 w-8 p-0 hover:bg-white rounded-md transition-all"
-              >
-                <Video className="w-4 h-4 text-gray-600" />
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent>Add Video</TooltipContent>
-          </Tooltip>
-
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button
-                variant="ghost"
-                size="sm"
-                className="h-8 w-8 p-0 hover:bg-white rounded-md transition-all"
-              >
-                <FileText className="w-4 h-4 text-gray-600" />
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent>Add Document</TooltipContent>
-          </Tooltip>
-        </div>
-
-        <div className="flex items-center gap-1 p-1 bg-gray-50/80 rounded-lg">
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button
-                variant="ghost"
-                size="sm"
-                className="h-8 w-8 p-0 hover:bg-white rounded-md transition-all"
-              >
-                <Link2 className="w-4 h-4 text-gray-600" />
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent>Add Link</TooltipContent>
-          </Tooltip>
-
-          <div className="relative">
+      <div className="px-6 py-3 border-b border-blue-50 flex items-center justify-between bg-gradient-to-b from-white to-blue-50/10">
+        <div className="flex items-center gap-2">
+          {/* Media Tools */}
+          <div className="flex items-center gap-1 p-1 bg-white/80 rounded-lg border border-blue-100/50 shadow-sm">
             <Tooltip>
               <TooltipTrigger asChild>
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="h-8 w-8 p-0 hover:bg-white rounded-md transition-all"
-                  onClick={() => setShowEmojiPicker(!showEmojiPicker)}
+                  className="h-8 w-8 p-0 hover:bg-blue-50/50 rounded-md transition-all"
+                  onClick={() => setIsImageModalOpen(true)}
                 >
-                  <Smile className="w-4 h-4 text-gray-600" />
+                  <ImageIcon className="w-4 h-4 text-blue-600/80" />
                 </Button>
               </TooltipTrigger>
-              <TooltipContent>Add Emoji</TooltipContent>
+              <TooltipContent className="bg-blue-900 text-white">
+                Add Image
+              </TooltipContent>
             </Tooltip>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="h-8 w-8 p-0 hover:bg-white rounded-md transition-colors"
+                >
+                  <Video className="w-4 h-4 text-gray-600" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>Add Video</TooltipContent>
+            </Tooltip>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="h-8 w-8 p-0 hover:bg-white rounded-md transition-colors"
+                >
+                  <FileText className="w-4 h-4 text-gray-600" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>Add Document</TooltipContent>
+            </Tooltip>
+          </div>
 
-            {showEmojiPicker && (
-              <div className="absolute top-full mt-1 left-0 z-50">
-                <div className="shadow-2xl rounded-lg overflow-hidden border border-gray-100">
-                  <Picker
-                    data={data}
-                    onEmojiSelect={onEmojiSelect}
-                    theme="light"
-                    previewPosition="none"
-                    skinTonePosition="none"
-                    searchPosition="none"
-                    perLine={8}
-                    maxFrequentRows={1}
-                  />
+          {/* Text Tools */}
+          <div className="flex items-center gap-1 p-1 bg-white/80 rounded-lg border border-blue-100/50 shadow-sm ml-2">
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="h-8 w-8 p-0 hover:bg-white rounded-md transition-colors"
+                >
+                  <Link2 className="w-4 h-4 text-gray-600" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>Add Link</TooltipContent>
+            </Tooltip>
+            <div className="relative">
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="h-8 w-8 p-0 hover:bg-white rounded-md transition-colors"
+                    onClick={() => setShowEmojiPicker(!showEmojiPicker)}
+                  >
+                    <Smile className="w-4 h-4 text-gray-600" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>Add Emoji</TooltipContent>
+              </Tooltip>
+              {showEmojiPicker && (
+                <div className="absolute top-full mt-1 left-0 z-50">
+                  <div className="shadow-2xl rounded-lg overflow-hidden border border-gray-100">
+                    <Picker
+                      data={data}
+                      onEmojiSelect={onEmojiSelect}
+                      theme="light"
+                      previewPosition="none"
+                      skinTonePosition="none"
+                      searchPosition="none"
+                      perLine={8}
+                      maxFrequentRows={1}
+                    />
+                  </div>
                 </div>
-              </div>
-            )}
+              )}
+            </div>
           </div>
         </div>
 
+        {/* AI Assist Button */}
         <Button
           variant="ghost"
           size="sm"
-          className="h-8 px-3 gap-1.5 ml-auto text-blue-600 hover:bg-blue-50/80 hover:text-blue-700"
+          className="h-8 px-4 gap-2 bg-gradient-to-r from-blue-500 to-purple-500 text-white hover:from-blue-600 hover:to-purple-600 rounded-full shadow-md"
         >
           <Sparkles className="w-3.5 h-3.5" />
           <span className="text-xs font-medium">AI Assist</span>
@@ -249,29 +255,29 @@ export const ComposeSection = ({
       </div>
 
       {/* Editor Content */}
-      <div className="flex-grow relative bg-gradient-to-b from-white to-gray-50/20">
+      <div className="flex-grow relative bg-gradient-to-br from-white via-blue-50/5 to-purple-50/5">
         <textarea
           ref={textareaRef}
           value={content}
           onChange={(e) => setContent(e.target.value)}
           onKeyDown={handleKeyDown}
-          placeholder="What would you like to share?"
-          className="w-full h-full px-5 py-4 resize-none focus:outline-none
+          placeholder="What would you like to share? Use AI to enhance your content..."
+          className="w-full h-full px-6 py-5 resize-none focus:outline-none
                    text-gray-700 placeholder-gray-400/80 bg-transparent
                    text-base leading-relaxed"
-          style={{ minHeight: "200px" }}
+          style={{ minHeight: "240px" }}
         />
 
         {/* Character Counter */}
-        <div className="absolute bottom-4 right-5">
+        <div className="absolute bottom-4 right-6">
           <div
             className={cn(
-              "px-2.5 py-1 rounded-full text-xs font-medium transition-colors",
+              "px-3 py-1.5 rounded-full text-xs font-medium transition-all border shadow-sm",
               characterCount > CHAR_LIMIT
-                ? "bg-red-50 text-red-600"
+                ? "bg-red-50 text-red-600 border-red-100"
                 : characterCount > CHAR_LIMIT * 0.9
-                ? "bg-amber-50 text-amber-600"
-                : "bg-gray-50/80 text-gray-500"
+                ? "bg-amber-50 text-amber-600 border-amber-100"
+                : "bg-white text-blue-600 border-blue-100"
             )}
           >
             {characterCount}/{CHAR_LIMIT}
@@ -279,23 +285,23 @@ export const ComposeSection = ({
         </div>
       </div>
 
-      {/* Image Preview Section - Moved here */}
+      {/* Image Preview Section */}
       {imageUrls.length > 0 && (
-        <div className="px-5 py-4 border-t border-gray-100 bg-white">
-          <div className="flex flex-wrap gap-2">
+        <div className="px-6 py-4 border-t border-blue-50 bg-gradient-to-b from-white to-blue-50/10">
+          <div className="flex flex-wrap gap-3">
             {imageUrls.map((url, index) => (
               <div key={index} className="relative group">
                 <img
                   src={url}
                   alt={`Uploaded image ${index + 1}`}
-                  className="w-20 h-20 object-cover rounded-lg"
+                  className="w-24 h-24 object-cover rounded-lg border border-blue-100/50 shadow-sm"
                 />
                 <button
                   onClick={() => {
                     const newUrls = imageUrls.filter((_, i) => i !== index);
                     onImageUrlsChange(newUrls);
                   }}
-                  className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                  className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1.5 opacity-0 group-hover:opacity-100 transition-all shadow-lg hover:bg-red-600"
                 >
                   <X className="w-3 h-3" />
                 </button>
@@ -306,12 +312,12 @@ export const ComposeSection = ({
       )}
 
       {/* Editor Footer */}
-      <div className="px-5 py-4 border-t border-gray-100 bg-gray-50/80 backdrop-blur-sm">
+      <div className="px-6 py-4 border-t border-blue-50 bg-gradient-to-b from-blue-50/10 to-white backdrop-blur-sm">
         <div className="flex items-center justify-between">
           <Button
             variant="outline"
             size="sm"
-            className="h-9 px-4 gap-2 bg-white hover:bg-primary/10 transition-all hover:text-primary"
+            className="h-9 px-4 gap-2 bg-white hover:bg-blue-50 transition-all hover:text-blue-600 border-blue-200"
             onClick={() => setIsScheduleModalOpen(true)}
             disabled={!selectedLinkedInProfile || !content.trim()}
           >
@@ -323,7 +329,7 @@ export const ComposeSection = ({
             variant="default"
             size="sm"
             className={cn(
-              "h-9 px-4 gap-2",
+              "h-9 px-4 gap-2  bg-primary text-white hover:bg-primary/80 shadow-md",
               (!selectedLinkedInProfile ||
                 characterCount > CHAR_LIMIT ||
                 !content.trim() ||
@@ -356,6 +362,7 @@ export const ComposeSection = ({
         </div>
       </div>
 
+      {/* Modals */}
       <ScheduleModal
         isOpen={isScheduleModalOpen}
         onClose={() => setIsScheduleModalOpen(false)}
