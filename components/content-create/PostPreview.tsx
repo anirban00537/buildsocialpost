@@ -227,19 +227,18 @@ export const PostPreview = ({
         </div>
       )}
 
-      {/* Post Container - Updated for grid view */}
-      <div className="flex justify-center w-full h-full">
-        <div className="w-full">
+      {/* Main Container */}
+      <div className="flex justify-center w-full">
+        <div className="w-full max-w-3xl">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="rounded-lg border border-gray-200 bg-white p-4 space-y-3 h-full"
+            className="rounded-lg border border-gray-200 bg-white"
           >
-            {/* Header with Status and Options */}
-            <div className="flex items-start justify-between">
-              <div className="flex gap-2">
-                {selectedProfile ? (
-                  <>
+            {selectedProfile ? (
+              <>
+                <div className="flex items-start justify-between">
+                  <div className="flex gap-2">
                     <Avatar className="h-12 w-12 rounded-full">
                       <img
                         src={selectedProfile.avatarUrl}
@@ -268,242 +267,244 @@ export const PostPreview = ({
                         </span>
                       </div>
                     </div>
-                  </>
-                ) : (
-                  <div className="flex gap-2">
-                    <Avatar className="h-12 w-12 rounded-full" />
-                    <div className="flex flex-col">
-                      <div className="flex items-center gap-1">
-                        <span className="text-sm font-semibold text-gray-900">
-                          No LinkedIn Account Connected
-                        </span>
-                      </div>
-                      <span className="text-xs text-gray-500">
-                        Please connect your LinkedIn account to post
-                      </span>
-                    </div>
                   </div>
-                )}
-              </div>
 
-              <div className="flex items-center gap-2">
-                {/* Status Badge */}
-                {status && statusConfig && (
-                  <div
-                    className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium ${statusConfig.className}`}
-                  >
-                    {statusConfig.icon}
-                    <span>{statusConfig.text}</span>
-                  </div>
-                )}
-
-                {/* Dropdown Menu - Only show if there are items */}
-                {dropdownItems && dropdownItems.length > 0 && (
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <button className="p-1 hover:bg-gray-100 rounded-full transition-colors">
-                        <MoreHorizontal className="h-5 w-5 text-gray-600" />
-                      </button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end" className="w-[160px]">
-                      {dropdownItems.map((item, index) =>
-                        item.href ? (
-                          // Use Link for navigation items
-                          <Link key={index} href={item.href} passHref>
-                            <DropdownMenuItem
-                              className={`flex items-center gap-2 cursor-pointer ${
-                                item.className || ""
-                              }`}
-                            >
-                              {item.icon}
-                              <span>{item.label}</span>
-                            </DropdownMenuItem>
-                          </Link>
-                        ) : (
-                          // Use button for action items
-                          <DropdownMenuItem
-                            key={index}
-                            onClick={item.onClick}
-                            className={`flex items-center gap-2 cursor-pointer ${
-                              item.className || ""
-                            }`}
-                          >
-                            {item.icon}
-                            <span>{item.label}</span>
-                          </DropdownMenuItem>
-                        )
-                      )}
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                )}
-              </div>
-            </div>
-
-            {/* Content */}
-            <div className="text-sm text-gray-900">
-              {isGenerating ? (
-                <div className="space-y-2 animate-pulse">
-                  <div className="h-4 bg-gray-200 rounded w-3/4" />
-                  <div className="h-4 bg-gray-200 rounded w-1/2" />
-                  <div className="h-4 bg-gray-200 rounded w-5/6" />
-                </div>
-              ) : (
-                <>
-                  <div className="relative">
-                    <div
-                      ref={contentRef}
-                      className={`whitespace-pre-wrap break-words relative ${
-                        !isExpanded && hasMoreContent ? "line-clamp-3" : ""
-                      }`}
-                      style={{
-                        wordBreak: "break-word",
-                        overflowWrap: "break-word",
-                        lineHeight: "1.5",
-                      }}
-                    >
-                      {content}
-                    </div>
-
-                    {/* Show more/less button */}
-                    {hasMoreContent && (
-                      <button
-                        onClick={() => setIsExpanded(!isExpanded)}
-                        className="text-blue-600 hover:text-blue-700 hover:underline text-sm font-medium mt-1"
+                  <div className="flex items-center gap-2">
+                    {/* Status Badge */}
+                    {status && statusConfig && (
+                      <div
+                        className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium ${statusConfig.className}`}
                       >
-                        {isExpanded ? "...see less" : "...see more"}
-                      </button>
+                        {statusConfig.icon}
+                        <span>{statusConfig.text}</span>
+                      </div>
+                    )}
+
+                    {/* Dropdown Menu - Only show if there are items */}
+                    {dropdownItems && dropdownItems.length > 0 && (
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <button className="p-1 hover:bg-gray-100 rounded-full transition-colors">
+                            <MoreHorizontal className="h-5 w-5 text-gray-600" />
+                          </button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end" className="w-[160px]">
+                          {dropdownItems.map((item, index) =>
+                            item.href ? (
+                              // Use Link for navigation items
+                              <Link key={index} href={item.href} passHref>
+                                <DropdownMenuItem
+                                  className={`flex items-center gap-2 cursor-pointer ${
+                                    item.className || ""
+                                  }`}
+                                >
+                                  {item.icon}
+                                  <span>{item.label}</span>
+                                </DropdownMenuItem>
+                              </Link>
+                            ) : (
+                              // Use button for action items
+                              <DropdownMenuItem
+                                key={index}
+                                onClick={item.onClick}
+                                className={`flex items-center gap-2 cursor-pointer ${
+                                  item.className || ""
+                                }`}
+                              >
+                                {item.icon}
+                                <span>{item.label}</span>
+                              </DropdownMenuItem>
+                            )
+                          )}
+                        </DropdownMenuContent>
+                      </DropdownMenu>
                     )}
                   </div>
+                </div>
 
-                  {/* Replace the Image Preview Grid with PDF Preview when documentUrl exists */}
-                  {documentUrl ? (
-                    <div className="mt-4">
-                      <div className="relative bg-white rounded-lg shadow-lg">
-                        {/* Navigation Buttons */}
-                        {!isLoading && (
-                          <>
-                            {currentPage > 0 && (
-                              <button
-                                onClick={handlePrevPage}
-                                className="absolute left-4 top-1/2 -translate-y-1/2 z-20 bg-white hover:bg-gray-100 rounded-full p-2 shadow-lg transition-all"
-                              >
-                                <FiChevronLeft className="w-6 h-6 text-gray-800" />
-                              </button>
-                            )}
-
-                            {currentPage < numPages - 1 && (
-                              <button
-                                onClick={handleNextPage}
-                                className="absolute right-4 top-1/2 -translate-y-1/2 z-20 bg-white hover:bg-gray-100 rounded-full p-2 shadow-lg transition-all"
-                              >
-                                <FiChevronRight className="w-6 h-6 text-gray-800" />
-                              </button>
-                            )}
-
-                            {/* Page Counter */}
-                            <div className="absolute top-4 right-4 z-20 bg-black/50 text-white px-3 py-1 rounded-full text-sm">
-                              {currentPage + 1} / {numPages}
-                            </div>
-                          </>
-                        )}
-
-                        {/* PDF Viewer */}
-                        <div
-                          className="h-[600px] overflow-hidden select-none"
-                          style={{
-                            touchAction: "none", // Disable touch scrolling
-                            userSelect: "none", // Disable text selection
-                          }}
-                        >
-                          <Worker
-                            workerUrl={`//cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js`}
-                          >
-                            <Viewer
-                              fileUrl={documentUrl}
-                              plugins={[pageNavigationPluginInstance]}
-                              defaultScale={SpecialZoomLevel.PageFit}
-                              enableSmoothScroll={false}
-                              onPageChange={(e) =>
-                                setCurrentPage(e.currentPage)
-                              }
-                              onDocumentLoad={(e) => {
-                                setNumPages(e.doc.numPages);
-                                setIsLoading(false);
-                              }}
-                              renderLoader={(percentages) => (
-                                <div className="h-full flex items-center justify-center">
-                                  <div className="text-center">
-                                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900 mb-4" />
-                                    <p className="text-gray-600">
-                                      Loading... {Math.round(percentages)}%
-                                    </p>
-                                  </div>
-                                </div>
-                              )}
-                            />
-                          </Worker>
-                        </div>
-
-                        {/* Page Indicators */}
-                        {!isLoading && (
-                          <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-1 z-10">
-                            {Array.from({ length: numPages }, (_, i) => (
-                              <button
-                                key={i}
-                                onClick={() => jumpToPage(i)}
-                                className={`transition-all duration-200 rounded-full ${
-                                  currentPage === i
-                                    ? "w-4 h-2 bg-blue-600"
-                                    : "w-2 h-2 bg-gray-300 hover:bg-gray-400"
-                                }`}
-                              />
-                            ))}
-                          </div>
-                        )}
-                      </div>
+                {/* Content */}
+                <div className="text-sm text-gray-900">
+                  {isGenerating ? (
+                    <div className="space-y-2 animate-pulse">
+                      <div className="h-4 bg-gray-200 rounded w-3/4" />
+                      <div className="h-4 bg-gray-200 rounded w-1/2" />
+                      <div className="h-4 bg-gray-200 rounded w-5/6" />
                     </div>
                   ) : (
-                    // Existing image grid code
-                    imageUrls.length > 0 && (
-                      <div className="mt-4">
+                    <>
+                      <div className="relative">
                         <div
-                          className={`grid gap-2 ${
-                            imageUrls.length === 1
-                              ? "grid-cols-1"
-                              : imageUrls.length === 2
-                              ? "grid-cols-2"
-                              : imageUrls.length === 3
-                              ? "grid-cols-2"
-                              : "grid-cols-2"
+                          ref={contentRef}
+                          className={`whitespace-pre-wrap break-words relative ${
+                            !isExpanded && hasMoreContent ? "line-clamp-3" : ""
                           }`}
+                          style={{
+                            wordBreak: "break-word",
+                            overflowWrap: "break-word",
+                            lineHeight: "1.5",
+                          }}
                         >
-                          {imageUrls.map((url, index) => (
+                          {content}
+                        </div>
+
+                        {/* Show more/less button */}
+                        {hasMoreContent && (
+                          <button
+                            onClick={() => setIsExpanded(!isExpanded)}
+                            className="text-blue-600 hover:text-blue-700 hover:underline text-sm font-medium mt-1"
+                          >
+                            {isExpanded ? "...see less" : "...see more"}
+                          </button>
+                        )}
+                      </div>
+
+                      {/* Replace the Image Preview Grid with PDF Preview when documentUrl exists */}
+                      {documentUrl ? (
+                        <div className="mt-4">
+                          <div className="relative bg-white rounded-lg shadow-lg">
+                            {/* Navigation Buttons */}
+                            {!isLoading && (
+                              <>
+                                {currentPage > 0 && (
+                                  <button
+                                    onClick={handlePrevPage}
+                                    className="absolute left-4 top-1/2 -translate-y-1/2 z-20 bg-white hover:bg-gray-100 rounded-full p-2 shadow-lg transition-all"
+                                  >
+                                    <FiChevronLeft className="w-6 h-6 text-gray-800" />
+                                  </button>
+                                )}
+
+                                {currentPage < numPages - 1 && (
+                                  <button
+                                    onClick={handleNextPage}
+                                    className="absolute right-4 top-1/2 -translate-y-1/2 z-20 bg-white hover:bg-gray-100 rounded-full p-2 shadow-lg transition-all"
+                                  >
+                                    <FiChevronRight className="w-6 h-6 text-gray-800" />
+                                  </button>
+                                )}
+
+                                {/* Page Counter */}
+                                <div className="absolute top-4 right-4 z-20 bg-black/50 text-white px-3 py-1 rounded-full text-sm">
+                                  {currentPage + 1} / {numPages}
+                                </div>
+                              </>
+                            )}
+
+                            {/* PDF Viewer */}
                             <div
-                              key={index}
-                              className={`relative rounded-lg overflow-hidden ${
-                                imageUrls.length === 3 && index === 0
-                                  ? "row-span-2"
-                                  : ""
+                              className="h-[600px] overflow-hidden select-none"
+                              style={{
+                                touchAction: "none", // Disable touch scrolling
+                                userSelect: "none", // Disable text selection
+                              }}
+                            >
+                              <Worker
+                                workerUrl={`//cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js`}
+                              >
+                                <Viewer
+                                  fileUrl={documentUrl}
+                                  plugins={[pageNavigationPluginInstance]}
+                                  defaultScale={SpecialZoomLevel.PageFit}
+                                  enableSmoothScroll={false}
+                                  onPageChange={(e) =>
+                                    setCurrentPage(e.currentPage)
+                                  }
+                                  onDocumentLoad={(e) => {
+                                    setNumPages(e.doc.numPages);
+                                    setIsLoading(false);
+                                  }}
+                                  renderLoader={(percentages) => (
+                                    <div className="h-full flex items-center justify-center">
+                                      <div className="text-center">
+                                        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900 mb-4" />
+                                        <p className="text-gray-600">
+                                          Loading... {Math.round(percentages)}%
+                                        </p>
+                                      </div>
+                                    </div>
+                                  )}
+                                />
+                              </Worker>
+                            </div>
+
+                            {/* Page Indicators */}
+                            {!isLoading && (
+                              <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-1 z-10">
+                                {Array.from({ length: numPages }, (_, i) => (
+                                  <button
+                                    key={i}
+                                    onClick={() => jumpToPage(i)}
+                                    className={`transition-all duration-200 rounded-full ${
+                                      currentPage === i
+                                        ? "w-4 h-2 bg-blue-600"
+                                        : "w-2 h-2 bg-gray-300 hover:bg-gray-400"
+                                    }`}
+                                  />
+                                ))}
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      ) : (
+                        // Existing image grid code
+                        imageUrls.length > 0 && (
+                          <div className="mt-4">
+                            <div
+                              className={`grid gap-2 ${
+                                imageUrls.length === 1
+                                  ? "grid-cols-1"
+                                  : imageUrls.length === 2
+                                  ? "grid-cols-2"
+                                  : imageUrls.length === 3
+                                  ? "grid-cols-2"
+                                  : "grid-cols-2"
                               }`}
                             >
-                              <img
-                                src={url}
-                                alt={`Preview ${index + 1}`}
-                                className="w-full h-full object-cover"
-                                style={{
-                                  aspectRatio:
-                                    imageUrls.length === 1 ? "16/9" : "1/1",
-                                }}
-                              />
+                              {imageUrls.map((url, index) => (
+                                <div
+                                  key={index}
+                                  className={`relative rounded-lg overflow-hidden ${
+                                    imageUrls.length === 3 && index === 0
+                                      ? "row-span-2"
+                                      : ""
+                                  }`}
+                                >
+                                  <img
+                                    src={url}
+                                    alt={`Preview ${index + 1}`}
+                                    className="w-full h-full object-cover"
+                                    style={{
+                                      aspectRatio:
+                                        imageUrls.length === 1 ? "16/9" : "1/1",
+                                    }}
+                                  />
+                                </div>
+                              ))}
                             </div>
-                          ))}
-                        </div>
-                      </div>
-                    )
+                          </div>
+                        )
+                      )}
+                    </>
                   )}
-                </>
-              )}
-            </div>
+                </div>
+              </>
+            ) : (
+              <div className="min-h-[400px] flex flex-col items-center justify-center p-8">
+                <div className="w-full max-w-[280px] flex flex-col items-center text-center">
+                  <Avatar className="w-16 h-16 rounded-full bg-gray-50 mb-8" />
+                  <h3 className="text-[22px] font-semibold text-gray-900 mb-2 leading-tight w-full">
+                    No LinkedIn Account
+                    <br />
+                    Connected
+                  </h3>
+                  <p className="text-base text-gray-500 w-full">
+                    Please connect your LinkedIn
+                    <br />
+                    account to post
+                  </p>
+                </div>
+              </div>
+            )}
           </motion.div>
         </div>
       </div>

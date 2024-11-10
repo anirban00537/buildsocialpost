@@ -109,8 +109,8 @@ const NavigationSection = ({
   title: string;
   children: React.ReactNode;
 }) => (
-  <div className="space-y-1">
-    <h3 className="px-3 mb-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
+  <div className="space-y-1 px-3">
+    <h3 className="px-3 mb-2 text-xs font-medium text-gray-500 uppercase">
       {title}
     </h3>
     {children}
@@ -127,56 +127,35 @@ const NavigationItem: React.FC<NavigationItemProps> = ({ item, isActive }) => (
   <Link href={item.href} passHref>
     <span
       className={`
-        group relative w-full flex items-center px-2 h-9 rounded-lg transition-all duration-200
+        group relative w-full flex items-center px-3 py-2 rounded-lg transition-all duration-200
         ${
           isActive
-            ? "bg-gradient-to-r from-blue-50 to-indigo-50 text-blue-700 font-medium ring-1 ring-blue-200"
-            : "hover:bg-gray-50 text-gray-600 hover:text-gray-900"
+            ? "bg-blue-50 text-blue-700"
+            : "text-gray-600 hover:bg-gray-50"
         }
-        focus:outline-none
-        active:scale-[0.98]
       `}
     >
-      <div className="flex items-center gap-3 flex-1">
-        <div
+      <item.icon
+        className={`h-4 w-4 mr-3 ${
+          isActive ? "text-blue-600" : "text-gray-400"
+        }`}
+      />
+      <span className="text-sm">{item.name}</span>
+      {item.badge && (
+        <span
           className={`
-          flex items-center justify-center w-8 h-8 rounded-lg transition-all duration-200
-          ${
-            isActive
-              ? "text-blue-600"
-              : "text-gray-400 group-hover:text-gray-600"
-          }
-        `}
+            ml-auto text-xs text-white px-2 py-0.5 rounded-full
+            ${item.badgeColor || "bg-blue-500"}
+          `}
         >
-          <item.icon className="w-4 h-4" />
-        </div>
-
-        <div className="flex items-center justify-between flex-1">
-          <span className="text-sm font-medium">{item.name}</span>
-          <div className="flex items-center gap-2">
-            {item.badge && (
-              <span
-                className={`
-                px-1.5 py-0.5 text-[10px] font-medium text-white rounded-full
-                ${item.badgeColor || "bg-blue-500"}
-              `}
-              >
-                {item.badge}
-              </span>
-            )}
-            {item.counter !== undefined && (
-              <span className="px-1.5 py-0.5 text-xs font-medium text-gray-600 bg-gray-100 rounded-full">
-                {item.counter}
-              </span>
-            )}
-            {item.shortcut && (
-              <kbd className="hidden sm:inline-flex items-center gap-1 px-1.5 py-0.5 text-[10px] font-medium text-gray-500 bg-gray-100 rounded">
-                {item.shortcut}
-              </kbd>
-            )}
-          </div>
-        </div>
-      </div>
+          {item.badge}
+        </span>
+      )}
+      {item.counter !== undefined && (
+        <span className="ml-auto text-xs bg-gray-100 px-2 py-0.5 rounded-full">
+          {item.counter}
+        </span>
+      )}
     </span>
   </Link>
 );
@@ -243,9 +222,9 @@ const Sidebar = () => {
   };
 
   return (
-    <div className="w-72 h-screen flex flex-col bg-gradient-to-br from-blue-100 via-indigo-50/50 to-blue-100  text-gray-500 border-r border-gray-100 shadow-sm">
+    <div className="w-72 h-screen flex flex-col bg-white border-r border-gray-100">
       {/* Logo Section */}
-      <div className="px-6 py-1 border-b border-gray-50">
+      <div className="px-6 py-4 border-b border-gray-100">
         <Link href="/" className="block">
           <Image
             src="/logo.svg"
@@ -258,15 +237,15 @@ const Sidebar = () => {
       </div>
 
       {/* Workspace Selector */}
-      <div className="px-4 ">
+      <div className="p-3">
         <Button
-          variant="ghost"
+          variant="outline"
           onClick={() => setIsManageModalOpen(true)}
-          className="w-full h-8 justify-between bg-cardBackground hover:bg-gray-50 text-gray-600 hover:text-gray-700 ring-1 ring-gray-200 hover:ring-blue-200 rounded-lg transition-all duration-200"
+          className="w-full h-9 justify-between text-gray-600 bg-gray-50/50 border border-gray-200 hover:bg-gray-100/50"
         >
           <div className="flex items-center gap-2">
             <Users className="h-4 w-4 text-gray-400" />
-            <span className="text-xs font-medium">
+            <span className="text-sm">
               {currentWorkspace?.name || "Select workspace..."}
             </span>
           </div>
@@ -275,19 +254,14 @@ const Sidebar = () => {
       </div>
 
       {/* Create Button */}
-      <div className="px-4 py-2">
+      <div className="px-3 pb-2">
         <Link href="/compose" className="w-full">
-          <Button
-            variant="gradient"
-            className="w-full py-3 rounded-lg font-medium"
-          >
+          <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white flex items-center gap-2 h-9">
             <Plus className="h-4 w-4" />
             Create New
-            <div className="flex items-center gap-1 text-[10px] opacity-70 bg-white/10 px-1.5 py-0.5 rounded ml-auto">
-              <span>{navigator.platform.includes("Mac") ? "⌘" : "Ctrl"}</span>
-              <span>⌥</span>
-              <span>N</span>
-            </div>
+            <span className="ml-auto text-xs bg-white/10 px-1.5 py-0.5 rounded">
+              Ctrl + N
+            </span>
           </Button>
         </Link>
       </div>
@@ -295,70 +269,40 @@ const Sidebar = () => {
       {/* Main Navigation */}
       <Navigation />
 
-      {/* Usage Stats */}
-      {subscription?.limits?.aiWordsPerMonth && (
-        <div className="px-4 py-3 border-t border-gray-50">
-          <div className="p-3 bg-gray-50/50 rounded-lg ring-1 ring-gray-200 space-y-3">
-            <div className="flex items-center justify-between text-sm">
-              <div className="flex items-center gap-2">
-                <Zap className="w-4 h-4 text-blue-600" />
-                <span className="text-gray-700 font-medium">
-                  AI Token Usage
-                </span>
-              </div>
-              <span className="text-xs bg-white px-2 py-1 rounded-md text-gray-500 font-medium ring-1 ring-gray-200">
-                {formatTokens(aiUsage.used)} / {formatTokens(aiUsage.total)}
+      {/* User Section */}
+      <div className="mt-auto border-t border-gray-100">
+        {/* LinkedIn Accounts Section */}
+        <button
+          onClick={() => setIsAccountsModalOpen(true)}
+          className="w-full flex items-center px-4 py-2.5 text-gray-600 hover:bg-gray-50 border-b border-gray-100"
+        >
+          <Linkedin className="h-4 w-4 mr-2 text-[#0A66C2]" />
+          <span className="text-sm">Manage LinkedIn Accounts</span>
+          <ChevronDown className="h-4 w-4 ml-auto" />
+        </button>
+        <SubscriptionInfo />
+        <div className="px-4 py-2.5 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-600">
+              {userinfo?.first_name?.charAt(0) || "M"}
+            </div>
+            <div className="flex flex-col">
+              <span className="text-sm text-gray-700">
+                {userinfo?.first_name || "Mr"}
+              </span>
+              <span className="text-xs text-gray-500">
+                {userinfo?.email || "user@email.com"}
               </span>
             </div>
-            <div className="space-y-1">
-              <div className="w-full bg-gray-200/50 rounded-full h-1">
-                <div
-                  className={`h-1 rounded-full transition-all duration-300 ${
-                    aiUsage.percentage > 90 ? "bg-red-500" : "bg-blue-600"
-                  }`}
-                  style={{
-                    width: `${aiUsage.percentage}%`,
-                  }}
-                ></div>
-              </div>
-              <div className="flex justify-between items-center text-xs text-gray-500">
-                <span>{formatTokens(aiUsage.remaining)} remaining</span>
-                <span>{aiUsage.percentage}% used</span>
-              </div>
-            </div>
           </div>
-        </div>
-      )}
-      {/* Add Accounts Section */}
-      <div className="px-4 py-3 border-t cursor-pointer border-gray-50">
-        <div
-          onClick={() => setIsAccountsModalOpen(true)}
-          className="w-full flex items-center bg-cardBackground px-3 py-2 hover:bg-gray-50 text-gray-600 hover:text-gray-700 ring-1 ring-gray-200 hover:ring-blue-200 rounded-lg transition-all duration-200"
-        >
-          <div className="flex items-center gap-2">
-            <Linkedin className="h-4 w-4 text-[#0A66C2]" />
-            <span className="text-xs font-medium">
-              Manage Linkedin Accounts
-            </span>
-          </div>
-          <ChevronDown className="h-4 w-4 text-gray-400" />
         </div>
       </div>
 
-      {/* User Section */}
-      <div className="p-4 border-t border-gray-50 bg-gray-50/30">
-        <div className="flex items-center gap-3">
-          <UserMenu />
-          <div className="h-8 w-[1px] bg-gray-200" />
-          <SubscriptionInfo />
-        </div>
-      </div>
-
+      {/* Modals */}
       <ManageAccountsModal
         isOpen={isAccountsModalOpen}
         onClose={() => setIsAccountsModalOpen(false)}
       />
-
       <ManageWorkspacesModal
         isOpen={isManageModalOpen}
         onClose={() => setIsManageModalOpen(false)}

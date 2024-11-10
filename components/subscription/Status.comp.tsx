@@ -25,13 +25,12 @@ const SubscriptionInfo = () => {
           <Button
             variant="ghost"
             size="sm"
-            className="h-9 flex items-center gap-2 bg-blue-50 hover:bg-blue-100 text-blue-700 ring-1 ring-blue-200 hover:ring-blue-300 rounded-lg transition-all duration-200"
+            className="w-full h-8 flex items-center justify-center gap-2 text-blue-600 hover:text-blue-700 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors border border-blue-100"
           >
-            <Sparkles className="w-4 h-4" />
-            <span className="hidden sm:inline text-sm font-medium">
-              Upgrade to Pro
-            </span>
-            <span className="sm:hidden text-sm font-medium">Upgrade</span>
+            <div className="flex items-center gap-2">
+              <Sparkles className="w-4 h-4" />
+              <span className="text-sm font-medium">Upgrade to Pro</span>
+            </div>
           </Button>
         }
       />
@@ -47,7 +46,7 @@ const SubscriptionInfo = () => {
       <Tooltip>
         <TooltipTrigger asChild>
           <motion.div
-            className="flex items-center justify-center w-9 h-9 bg-blue-50 hover:bg-blue-100 text-blue-700 ring-1 ring-blue-200 hover:ring-blue-300 rounded-lg transition-all duration-200"
+            className="flex items-center justify-center w-8 h-8 bg-blue-50 hover:bg-blue-100 text-blue-600 rounded-lg transition-colors cursor-pointer"
             animate={{
               scale: [1, 1.05, 1],
               rotate: [0, 3, -3, 0],
@@ -62,8 +61,8 @@ const SubscriptionInfo = () => {
             <DiamondSVG />
           </motion.div>
         </TooltipTrigger>
-        <TooltipContent className="bg-white text-gray-700 ring-1 ring-gray-200 rounded-lg">
-          <p className="text-sm font-medium">
+        <TooltipContent side="top" className="bg-white p-2 border border-gray-100 shadow-md">
+          <p className="text-sm">
             {subscription.subscription?.productName} • Expires {endDateString}
           </p>
         </TooltipContent>

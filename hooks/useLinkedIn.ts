@@ -2,11 +2,11 @@ import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "react-query";
 import { useSelector } from "react-redux";
 import { RootState } from "@/state/store";
-import { 
-  getLinkedInAuthUrl, 
-  handleLinkedInCallback, 
+import {
+  getLinkedInAuthUrl,
+  handleLinkedInCallback,
   getLinkedInProfiles,
-  disconnectLinkedInProfile 
+  disconnectLinkedInProfile,
 } from "@/services/linkedin.service";
 import { processApiResponse } from "@/lib/functions";
 import { toast } from "react-hot-toast";
@@ -18,15 +18,25 @@ interface LinkedInProfile {
   id: number;
   name: string;
   avatarUrl: string;
-  type: 'linkedin';
-  status: 'connected' | 'disconnected';
+  type: "linkedin";
+  status: "connected" | "disconnected";
+}
+
+interface LinkedInResponse {
+  success: boolean;
+  message?: string;
+  data: {
+    profiles?: LinkedInProfile[];
+    url?: string;
+    state?: string;
+  };
 }
 
 export const useLinkedInCallback = (
-  code: string | null, 
+  code: string | null,
   state: string | null,
   error?: string | null,
-  errorDescription?: string | null,
+  errorDescription?: string | null
 ) => {
   const router = useRouter();
   const queryClient = useQueryClient();
@@ -35,17 +45,21 @@ export const useLinkedInCallback = (
     async () => {
       // Handle LinkedIn error response
       if (error) {
-        throw new Error(decodeURIComponent(errorDescription || 'LinkedIn authentication failed'));
+        throw new Error(
+          decodeURIComponent(
+            errorDescription || "LinkedIn authentication failed"
+          )
+        );
       }
 
       if (!code || !state) {
-        throw new Error('Missing required parameters');
+        throw new Error("Missing required parameters");
       }
 
       // Verify state
-      const storedState = sessionStorage.getItem('linkedin_state');
+      const storedState = sessionStorage.getItem("linkedin_state");
       if (state !== storedState) {
-        throw new Error('Invalid state parameter');
+        throw new Error("Invalid state parameter");
       }
 
       return await handleLinkedInCallback(code, state);
@@ -53,44 +67,49 @@ export const useLinkedInCallback = (
     {
       onSuccess: (response) => {
         if (response.success) {
-          toast.success('LinkedIn account connected successfully!');
-          queryClient.invalidateQueries('linkedinProfiles');
+          toast.success("LinkedIn account connected successfully!");
+          queryClient.invalidateQueries("linkedinProfiles");
         } else {
-          toast.error(response.message || 'Failed to connect LinkedIn account');
+          toast.error(response.message || "Failed to connect LinkedIn account");
         }
       },
       onError: (error: Error) => {
-        console.error('LinkedIn callback error:', error);
-        toast.error(error.message || 'Failed to connect LinkedIn account');
+        console.error("LinkedIn callback error:", error);
+        toast.error(error.message || "Failed to connect LinkedIn account");
       },
       onSettled: () => {
-        sessionStorage.removeItem('linkedin_state');
-        router.push('/');
-      }
+        sessionStorage.removeItem("linkedin_state");
+        router.push("/");
+      },
     }
   );
 };
 
 const useLinkedIn = () => {
   const dispatch = useDispatch();
-  const { loggedin, linkedinProfiles } = useSelector((state: RootState) => state.user);
+  const { loggedin, linkedinProfiles } = useSelector(
+    (state: RootState) => state.user
+  );
   const [isConnecting, setIsConnecting] = useState(false);
 
-  const { 
-    isLoading: isLoadingProfiles,
-    refetch: refetchProfiles
-  } = useQuery<LinkedInProfile[]>(
-    "linkedinProfiles",
+  const { isLoading: isLoadingProfiles, refetch: refetchProfiles } = useQuery<
+    LinkedInProfile[],
+    Error
+  >(
+    ["linkedinProfiles"],
     async () => {
       const response = await getLinkedInProfiles();
-      dispatch(setLinkedInProfiles(response.data.profiles));
+      if (!response.success) {
+        throw new Error(response.message || "Failed to fetch LinkedIn profiles");
+      }
       return response.data.profiles;
     },
     {
       enabled: loggedin,
-      onError: (error) => {
-        toast.error("Failed to fetch LinkedIn profiles");
-        console.error("Error fetching profiles:", error);
+      staleTime: 5 * 60 * 1000,
+      retry: 2,
+      onSuccess: (profiles) => {
+        dispatch(setLinkedInProfiles(profiles));
       }
     }
   );
@@ -104,9 +123,9 @@ const useLinkedIn = () => {
     try {
       setIsConnecting(true);
       const response = await getLinkedInAuthUrl();
-      
+
       if (response.success && response.data.url) {
-        sessionStorage.setItem('linkedin_state', response.data.state);
+        sessionStorage.setItem("linkedin_state", response.data.state);
         window.location.href = response.data.url;
       }
     } catch (error) {
@@ -116,7 +135,11 @@ const useLinkedIn = () => {
     }
   };
 
-  const { mutate: disconnectProfile } = useMutation(
+  const { mutate: disconnectProfile } = useMutation<
+    LinkedInResponse,
+    Error,
+    number
+  >(
     async (profileId: number) => {
       const response = await disconnectLinkedInProfile(profileId);
       return response;
@@ -132,7 +155,7 @@ const useLinkedIn = () => {
       onError: (error) => {
         toast.error("Failed to disconnect LinkedIn account");
         console.error("LinkedIn disconnect error:", error);
-      }
+      },
     }
   );
 
@@ -146,4 +169,4 @@ const useLinkedIn = () => {
   };
 };
 
-export default useLinkedIn; 
+export default useLinkedIn;
