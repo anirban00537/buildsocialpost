@@ -11,14 +11,14 @@ const initialState: UserState = {
   wordUsage: {
     usage: {
       used: 0,
-      remaining: 2000,
-      total: 2000,
-      isActive: true,
+      remaining: 0,
+      total: 0,
+      isActive: false,
       expirationDate: null,
     },
     percentage: {
       used: 0,
-      remaining: 100,
+      remaining: 0,
     },
   },
   linkedinProfiles: [] as LinkedInProfileUI[],

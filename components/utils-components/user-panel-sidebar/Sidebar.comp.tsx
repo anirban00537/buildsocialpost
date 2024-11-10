@@ -318,6 +318,14 @@ const SettingsNavigationSection: React.FC<{
 const Navigation = () => {
   const pathname = usePathname();
 
+  // Create settings section
+  const settingsSection: SettingsSection = {
+    id: "settings-section",
+    name: "Settings",
+    icon: Settings,
+    items: settingsItems
+  };
+
   return (
     <nav className="flex-grow overflow-y-auto px-3 py-4 space-y-6">
       <NavigationSection title="TOOLS">
@@ -332,12 +340,19 @@ const Navigation = () => {
 
       <NavigationSection title="MANAGEMENT">
         {management.map((item) => (
-          <NavigationItem
-            key={item.id}
-            item={item}
-            isActive={pathname === item.href}
-            hasSubItems={item.id === "settings"}
-          />
+          item.id === "settings" ? (
+            <SettingsNavigationSection
+              key={item.id}
+              section={settingsSection}
+              isActive={pathname.startsWith('/settings')}
+            />
+          ) : (
+            <NavigationItem
+              key={item.id}
+              item={item}
+              isActive={pathname === item.href}
+            />
+          )
         ))}
       </NavigationSection>
     </nav>
@@ -345,14 +360,28 @@ const Navigation = () => {
 };
 
 const Sidebar = () => {
-  const pathname = usePathname();
-  const router = useRouter();
   const { userinfo, currentWorkspace, wordUsage, subscription } = useSelector(
     (state: RootState) => state.user
   );
   const [isManageModalOpen, setIsManageModalOpen] = useState(false);
   const [isAccountsModalOpen, setIsAccountsModalOpen] = useState(false);
+  const aiUsage = {
+    used: wordUsage?.usage?.used || 0,
+    remaining: wordUsage?.usage?.remaining || 0,
+    total: wordUsage?.usage?.total || 0,
+    percentage: wordUsage?.percentage?.used || 0,
+    isActive: wordUsage?.usage?.isActive || false,
+  };
 
+  const formatTokens = (tokens: number) => {
+    if (tokens >= 1000000) {
+      return (tokens / 1000000).toFixed(1) + "M";
+    } else if (tokens >= 1000) {
+      return (tokens / 1000).toFixed(0) + "k";
+    } else {
+      return tokens.toString();
+    }
+  };
   return (
     <div className="w-72 h-screen flex flex-col bg-white border-r border-gray-200">
       {/* Logo Section */}
@@ -412,6 +441,24 @@ const Sidebar = () => {
           <span className="text-sm">Manage LinkedIn Accounts</span>
           <ChevronDown className="h-4 w-4 ml-auto" />
         </button>
+
+        {/* AI Usage Section */}
+        <div className="px-4 py-2.5 border-b border-gray-100">
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-sm text-gray-600">AI Usage</span>
+            <span className="text-xs text-gray-500">
+              {formatTokens(aiUsage.used)} / {formatTokens(aiUsage.total)} words
+            </span>
+          </div>
+          <div className="w-full h-1.5 bg-gray-100 rounded-full overflow-hidden">
+            <div
+              className="h-full bg-blue-600 transition-all duration-300 ease-in-out"
+              style={{
+                width: `${aiUsage.percentage}%`,
+              }}
+            />
+          </div>
+        </div>
 
         <SubscriptionInfo />
 
