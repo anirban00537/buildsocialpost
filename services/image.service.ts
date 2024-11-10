@@ -6,36 +6,34 @@ interface PaginationParams {
   pageSize?: number;
 }
 
-export const uploadImage = async (file: File) => {
+export const uploadFile = async (file: File) => {
   const formData = new FormData();
   formData.append("file", file);
   const response = await fRequest.post("/files/upload", formData);
   return response;
 };
 
-export const uploadImageAndGetUrl = async (file: File) => {
-  const response = await fRequest.post("/files/upload-image", file);
-  return response;
-};
-
-export const getImages = async ({ page, pageSize }: PaginationParams = {}) => {
-  const response = await request.get("/files", {
-    params: { page, pageSize },
+export const getFiles = async ({ page, pageSize }: PaginationParams = {}) => {
+  const response = await request.get("/files/files", {
+    params: {
+      page: page || 1,
+      pageSize: pageSize || 10
+    },
   });
   return response.data;
 };
 
-export const getImage = async (id: string) => {
-  const response = await request.get(`/files/${id}`);
+export const getFile = async (id: string) => {
+  const response = await request.get(`/files/file/${id}`);
   return response.data;
 };
 
-export const deleteImage = async (id: string) => {
+export const deleteFile = async (id: string) => {
   const response = await request.delete(`/files/${id}`);
   return response.data;
 };
 
-export const getImageUsage = async () => {
+export const getFileUsage = async () => {
   const response = await request.get("/files/usages");
   return response.data;
 };

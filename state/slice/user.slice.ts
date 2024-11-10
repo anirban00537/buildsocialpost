@@ -35,6 +35,7 @@ const initialState: UserState = {
       linkedInProfiles: 0,
       carousels: 0,
     },
+    isTrial: false,
   },
 };
 

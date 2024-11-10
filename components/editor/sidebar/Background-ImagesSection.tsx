@@ -5,7 +5,7 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { RootState } from "@/state/store";
 import { X, Upload, Check, Image as ImageIcon } from "lucide-react";
-import ImageUploadModal from "@/components/editor/Image_upload_modal/Image-Upload-Modal.comp";
+import FileUploadModal from "@/components/editor/file_upload_modal/file-Upload-Modal.comp";
 import { motion } from "framer-motion";
 
 const backgroundImages = [
@@ -127,7 +127,7 @@ const BackgroundImagesSection = () => {
         </div>
       </div>
 
-      <ImageUploadModal
+      <FileUploadModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         onImageSelect={handleImageUpload}

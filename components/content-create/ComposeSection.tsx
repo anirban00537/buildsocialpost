@@ -20,7 +20,7 @@ import {
   Video,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import ImageUploadModal from "../editor/Image_upload_modal/Image-Upload-Modal.comp";
+import FileUploadModal from "../editor/file_upload_modal/file-Upload-Modal.comp";
 import { X } from "lucide-react";
 
 interface ComposeSectionProps {
@@ -370,7 +370,7 @@ export const ComposeSection = ({
         isScheduling={isPosting}
       />
 
-      <ImageUploadModal
+      <FileUploadModal
         isOpen={isImageModalOpen}
         onClose={() => setIsImageModalOpen(false)}
         onImageSelect={handleImageSelect}

@@ -17,7 +17,7 @@ import "swiper/css/a11y";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import useCarousel from "@/hooks/useCarousel";
 import SlideComponent from "../slide/slide.comp";
-import ImageUploadModal from "../Image_upload_modal/Image-Upload-Modal.comp";
+import FileUploadModal from "../file_upload_modal/file-Upload-Modal.comp";
 
 import SlideControls from "./Slide-Controls.comp";
 import DownloadLoading from "@/components/utils-components/loading/Download.loading.comp";
@@ -112,7 +112,7 @@ const CarouselEditor: React.FC = () => {
           </button>
         </div>
       </div>
-      <ImageUploadModal
+      <FileUploadModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         onImageSelect={handleImageSelect}

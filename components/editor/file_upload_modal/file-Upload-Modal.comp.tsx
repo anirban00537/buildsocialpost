@@ -9,7 +9,7 @@ import {
   AlertTriangle,
   Upload,
 } from "lucide-react";
-import { useImageUpload } from "@/hooks/useimageUpload";
+import { useFileUpload } from "@/hooks/useFileUpload";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -21,15 +21,15 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import toast from "react-hot-toast";
-import MediaGrid from '@/components/common/MediaGrid';
+import MediaGrid from "@/components/common/MediaGrid";
 
-interface ImageUploadModalProps {
+interface FileUploadModalProps {
   isOpen: boolean;
   onClose: () => void;
   onImageSelect: (url: string) => void;
 }
 
-const ImageUploadModal: React.FC<ImageUploadModalProps> = ({
+const FileUploadModal: React.FC<FileUploadModalProps> = ({
   isOpen,
   onClose,
   onImageSelect,
@@ -51,8 +51,8 @@ const ImageUploadModal: React.FC<ImageUploadModalProps> = ({
     handleJumpToPage,
     setJumpToPage,
     MAX_STORAGE_MB,
-    uploadImage,
-  } = useImageUpload(isOpen);
+    uploadFile,
+  } = useFileUpload(isOpen);
 
   const [deleteImageId, setDeleteImageId] = useState<string | null>(null);
 
@@ -65,13 +65,7 @@ const ImageUploadModal: React.FC<ImageUploadModalProps> = ({
 
   const handleUpload = async (files: File[]) => {
     for (const file of files) {
-      try {
-        await uploadImage(file);
-        toast.success(`Successfully uploaded ${file.name}`);
-      } catch (error) {
-        toast.error(`Failed to upload ${file.name}`);
-        console.error("Upload error:", error);
-      }
+      await uploadFile(file);
     }
   };
 
@@ -124,9 +118,7 @@ const ImageUploadModal: React.FC<ImageUploadModalProps> = ({
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="w-[900px] h-[90vh] p-0 flex flex-col bg-gradient-to-br from-gray-50 to-gray-100">
         <header className="flex-shrink-0 flex justify-between items-center p-6 border-b border-gray-200">
-          <h2 className="text-2xl font-bold text-gray-800">
-            Image Gallery
-          </h2>
+          <h2 className="text-2xl font-bold text-gray-800">Image Gallery</h2>
         </header>
 
         <div className="flex-grow overflow-y-auto">
@@ -179,9 +171,7 @@ const ImageUploadModal: React.FC<ImageUploadModalProps> = ({
                   {uploadLoading ? (
                     <div className="flex flex-col items-center">
                       <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mb-4"></div>
-                      <p className="text-gray-600">
-                        Uploading...
-                      </p>
+                      <p className="text-gray-600">Uploading...</p>
                     </div>
                   ) : (
                     <>
@@ -282,4 +272,4 @@ const ImageUploadModal: React.FC<ImageUploadModalProps> = ({
   );
 };
 
-export default ImageUploadModal;
+export default FileUploadModal;

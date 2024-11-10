@@ -172,6 +172,7 @@ export interface SubscriptionState {
   plan: "starter" | "pro" | null;
   expiresAt: string | null;
   subscription: SubscriptionDetails | null;
+  isTrial: boolean;
   limits: SubscriptionLimits;
 }
 

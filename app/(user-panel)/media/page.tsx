@@ -15,7 +15,7 @@ import {
   Link2,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useImageUpload } from "@/hooks/useimageUpload";
+import { useFileUpload } from "@/hooks/useFileUpload";
 import toast from "react-hot-toast";
 import {
   Table,
@@ -27,9 +27,10 @@ import {
 } from "@/components/ui/table";
 import { Pagination } from "@/components/ui/pagination";
 import Image from "next/image";
-import ImageUploadModal from "@/components/editor/Image_upload_modal/Image-Upload-Modal.comp";
+import FileUploadModal from "@/components/editor/file_upload_modal/file-Upload-Modal.comp";
 import MediaGrid from "@/components/common/MediaGrid";
 import { useDropzone } from "react-dropzone";
+import { processApiResponse } from "@/lib/functions";
 
 const MediaPage = () => {
   const router = useRouter();
@@ -45,10 +46,10 @@ const MediaPage = () => {
     handleDeleteImage,
     handlePageChange,
     MAX_STORAGE_MB,
-    uploadImage,
+    uploadFile,
     uploadLoading,
     refetchImages,
-  } = useImageUpload(true);
+  } = useFileUpload(true);
   const [currentUpload, setCurrentUpload] = React.useState<{
     file: File;
     progress: number;
@@ -63,15 +64,10 @@ const MediaPage = () => {
     for (const file of files) {
       try {
         setCurrentUpload({ file, progress: 0 });
-        await uploadImage(file);
-        toast.success(`Successfully uploaded ${file.name}`);
-        
+        await uploadFile(file);
         await refetchImages();
-        
       } catch (error) {
-        toast.error(`Failed to upload ${file.name}`);
         console.error("Upload error:", error);
-        break; // Stop uploading on error
       } finally {
         setCurrentUpload(null);
       }
@@ -86,11 +82,14 @@ const MediaPage = () => {
       }
 
       const validFiles = acceptedFiles.filter(
-        (file) => file.type === "image/jpeg" || file.type === "image/png"
+        (file) =>
+          file.type === "image/jpeg" ||
+          file.type === "image/png" ||
+          file.type === "application/pdf" // Add PDF support
       );
 
       if (validFiles.length !== acceptedFiles.length) {
-        toast.error("Only JPG and PNG images are allowed.");
+        toast.error("Only JPG, PNG, and PDF files are allowed.");
       }
 
       if (validFiles.length > 0) {
@@ -108,6 +107,7 @@ const MediaPage = () => {
     accept: {
       "image/jpeg": [".jpg", ".jpeg"],
       "image/png": [".png"],
+      "application/pdf": [".pdf"], // Add PDF support
     },
   });
 
@@ -258,7 +258,7 @@ const MediaPage = () => {
         )}
       </div>
 
-      <ImageUploadModal
+      <FileUploadModal
         isOpen={isUploadModalOpen}
         onClose={() => setIsUploadModalOpen(false)}
         onImageSelect={handleImageSelect}

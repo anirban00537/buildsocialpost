@@ -5,15 +5,15 @@ import { useDropzone, DropEvent, FileRejection } from "react-dropzone";
 import { useMutation, useQueryClient, useQuery } from "react-query";
 import toast from "react-hot-toast";
 import {
-  uploadImage as uploadImageService,
-  getImages,
-  deleteImage,
-  getImageUsage,
+  uploadFile as uploadFileService,
+  getFiles,
+  deleteFile,
+  getFileUsage,
 } from "@/services/image.service";
 import { processApiResponse } from "@/lib/functions";
 import { ApiResponse } from "@/types";
 
-interface ImageInfo {
+interface FileInfo {
   id: string;
   name: string;
   originalName: string;
@@ -29,7 +29,7 @@ interface PaginatedResponse {
   success: boolean;
   message: string;
   data: {
-    items: ImageInfo[];
+    items: FileInfo[];
     pagination: {
       currentPage: number;
       pageSize: number;
@@ -51,7 +51,7 @@ interface UsageResponse {
 const MAX_STORAGE_MB = 500;
 const MB_TO_BYTES = 1024 * 1024;
 
-export const useImageUpload = (isOpen: boolean) => {
+export const useFileUpload = (isOpen: boolean) => {
   const { userinfo, subscription, loggedin, currentWorkspace } = useSelector(
     (state: RootState) => state.user
   );
@@ -71,11 +71,11 @@ export const useImageUpload = (isOpen: boolean) => {
   } = useQuery<PaginatedResponse>(
     ["images", currentPage, imagesPerPage],
     async () => {
-      const response = await getImages({
+      const response = await getFiles({
         page: currentPage,
         pageSize: imagesPerPage,
       });
-      console.log("Images response:", response);
+      console.log("Files response:", response);
       return response;
     },
     {
@@ -85,8 +85,8 @@ export const useImageUpload = (isOpen: boolean) => {
 
   // Fetch total usage
   const { data: usageData, refetch: refetchUsage } = useQuery<UsageResponse>(
-    "imageUsage",
-    getImageUsage,
+    "fileUsage",
+    getFileUsage,
     {
       enabled: isOpen && loggedin,
     }
@@ -99,28 +99,28 @@ export const useImageUpload = (isOpen: boolean) => {
 
   // Upload images mutation
   const uploadMutation = useMutation<ApiResponse, Error, File>(
-    (file) => uploadImageService(file),
+    (file) => uploadFileService(file),
     {
       onSuccess: (response: ApiResponse) => {
+        processApiResponse(response);
         refetchUsage();
         refetchImages();
-        console.log(response, "res");
-        processApiResponse(response);
       },
       onError: (error: Error) => {
+        console.log(error, "errorresponseresponseresponseresponse");
         processApiResponse(error);
       },
     }
   );
 
-  const uploadImage = async (file: File) => {
+  const uploadFile = async (file: File) => {
     try {
       setUploadLoading(true);
       setUploadProgress(0);
 
       // Simulate upload progress
       const interval = setInterval(() => {
-        setUploadProgress(prev => {
+        setUploadProgress((prev) => {
           if (prev >= 90) {
             clearInterval(interval);
             return 90;
@@ -129,23 +129,29 @@ export const useImageUpload = (isOpen: boolean) => {
         });
       }, 500);
 
-      await uploadImageService(file);
-      
-      // Clear interval and set to 100%
-      clearInterval(interval);
-      setUploadProgress(100);
+      try {
+        const response = await uploadFileService(file);
+        
+        // Clear interval and set to 100%
+        clearInterval(interval);
+        setUploadProgress(100);
 
-      // Small delay to show 100% completion
-      await new Promise(resolve => setTimeout(resolve, 200));
+        // Small delay to show 100% completion
+        await new Promise((resolve) => setTimeout(resolve, 200));
 
-      // Refetch both images and usage data
-      await Promise.all([
-        refetchImages(),
-        refetchUsage()
-      ]);
-
-    } catch (error) {
-      throw error;
+        // Refetch both images and usage data
+        await Promise.all([refetchImages(), refetchUsage()]);
+        
+        return response;
+      } catch (error: any) {
+        clearInterval(interval);
+        if (error.message) {
+          toast.error(error.message);
+        } else {
+          toast.error("Failed to upload file");
+        }
+        throw error;
+      }
     } finally {
       setUploadLoading(false);
       setUploadProgress(0);
@@ -166,7 +172,7 @@ export const useImageUpload = (isOpen: boolean) => {
       if (loggedin) {
         for (const file of acceptedFiles) {
           try {
-            await uploadImage(file);
+            await uploadFile(file);
           } catch (error) {
             if (error instanceof Error) {
               toast.error(error.message);
@@ -184,26 +190,26 @@ export const useImageUpload = (isOpen: boolean) => {
         });
       }
     },
-    [loggedin, userinfo, totalUsage, uploadImage]
+    [loggedin, userinfo, totalUsage, uploadFile]
   );
 
   const deleteMutation = useMutation<void, Error, string>(
-    (imageId) => deleteImage(imageId),
+    (fileId) => deleteFile(fileId),
     {
       onSuccess: () => {
         refetchUsage();
         refetchImages();
       },
       onError: (error) => {
-        console.error("Error deleting image: ", error);
-        toast.error("Failed to delete image.");
+        console.error("Error deleting file: ", error);
+        toast.error("Failed to delete file.");
       },
     }
   );
 
-  const handleDeleteImage = async (imageId: string) => {
+  const handleDeleteImage = async (fileId: string) => {
     try {
-      await deleteMutation.mutateAsync(imageId);
+      await deleteMutation.mutateAsync(fileId);
     } catch (error) {
       console.error("Error in handleDeleteImage:", error);
     }
@@ -214,6 +220,7 @@ export const useImageUpload = (isOpen: boolean) => {
     accept: {
       "image/jpeg": [".jpeg", ".jpg"],
       "image/png": [".png"],
+      "application/pdf": [".pdf"],
     },
     maxSize: MAX_STORAGE_MB * MB_TO_BYTES,
     disabled: uploadMutation.isLoading,
@@ -265,7 +272,7 @@ export const useImageUpload = (isOpen: boolean) => {
     userinfo,
     refetchImages,
     loggedin,
-    uploadImage,
+    uploadFile,
     uploadProgress,
   };
 };

@@ -7,47 +7,44 @@ interface RequestOptions extends RequestInit {
   data?: any;
 }
 
-const post = async (url: string, data: any, options: RequestOptions = {}) => {
-  const token = Cookie.get("token");
-  const headers = new Headers(options.headers || {});
-
-  headers.set("Accept", "application/json");
-  headers.set("apisecretkeycheck", API_SECRET || "");
-
-  if (token) {
-    headers.set("Authorization", `Bearer ${token}`);
-  }
-
-  let body: string | FormData;
-  if (data instanceof FormData) {
-    body = data;
-    // Don't set Content-Type for FormData, browser will set it automatically with the correct boundary
-  } else {
-    body = JSON.stringify(data);
-    headers.set("Content-Type", "application/json");
-  }
-
-  const config: RequestInit = {
-    ...options,
-    method: "POST",
-    headers,
-    body,
-  };
-
+const post = async (url: string, data: any) => {
   try {
-    const response = await fetch(BASE_URL + url, config);
+    const response = await fetch(`${BASE_URL}${url}`, {
+      method: 'POST',
+      headers: {
+        ...(!(data instanceof FormData) && {
+          'Content-Type': 'application/json',
+        }),
+        Authorization: `Bearer ${Cookie.get("token")}`,
+        apisecretkeycheck: API_SECRET || "",
+      },
+      body: data instanceof FormData ? data : JSON.stringify(data),
+    });
 
+    const result = await response.json();
+
+    // If response is not ok, throw the error
     if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(
-        errorData.message || `HTTP error! status: ${response.status}`
-      );
+      throw {
+        message: result.message,
+        error: result.error,
+        statusCode: result.statusCode
+      };
     }
 
-    return await response.json();
-  } catch (error) {
-    console.error("Fetch error:", error);
-    throw error;
+    return result;
+  } catch (error: any) {
+    // If it's our thrown error, pass it directly
+    if (error.message && error.statusCode) {
+      throw error;
+    }
+    
+    // For other errors, format them consistently
+    throw {
+      message: error.message || "An unexpected error occurred",
+      error: error.error || "Error",
+      statusCode: error.statusCode || 500
+    };
   }
 };
 

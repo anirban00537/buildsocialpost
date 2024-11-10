@@ -58,8 +58,10 @@ export const useAuth = () => {
             plan: data.data.plan,
             expiresAt: data.data.expiresAt,
             subscription: data.data.subscription,
-            limits: data.data.limits
-          }));
+              limits: data.data.limits,
+              isTrial: data.data.isTrial,
+            })
+          );
 
           if (data.data.userWordUsage) {
             dispatch(setWordUsage({
