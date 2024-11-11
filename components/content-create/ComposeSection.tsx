@@ -118,14 +118,16 @@ export const ComposeSection = ({
   };
 
   return (
-    <div className="flex flex-col bg-white/80 backdrop-blur-sm rounded-2xl overflow-hidden border border-blue-100/50 shadow-[0_8px_40px_rgb(59,130,246,0.08)]">
+    <div className="flex flex-col bg-white/80 backdrop-blur-sm rounded-2xl overflow-hidden 
+                    border border-primary/10 shadow-[0_8px_40px_rgb(var(--primary-rgb),0.08)]">
       {/* Editor Header */}
-      <div className="px-6 py-4 border-b border-blue-50 bg-gradient-to-r from-blue-50/50 via-white to-purple-50/30">
+      <div className="px-6 py-4 border-b border-primary/5 
+                    bg-gradient-to-r from-primary/5 via-white to-primary/5">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="flex items-center gap-2">
-              <Sparkles className="w-5 h-5 text-blue-500" />
-              <h2 className="text-base font-semibold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+              <Sparkles className="w-5 h-5 text-primary" />
+              <h2 className="text-base font-semibold text-primary">
                 AI-Powered Editor
               </h2>
             </div>
@@ -133,14 +135,14 @@ export const ComposeSection = ({
               className={cn(
                 "flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium transition-all border",
                 isAutoSaving
-                  ? "bg-blue-50/50 text-blue-600 border-blue-100"
+                  ? "bg-primary/5 text-primary border-primary/20"
                   : "bg-green-50/50 text-green-600 border-green-100"
               )}
             >
               <span
                 className={cn(
                   "w-1.5 h-1.5 rounded-full",
-                  isAutoSaving ? "bg-blue-500 animate-pulse" : "bg-green-500"
+                  isAutoSaving ? "bg-primary animate-pulse" : "bg-green-500"
                 )}
               />
               {isAutoSaving ? "Saving..." : "Saved"}
@@ -150,22 +152,24 @@ export const ComposeSection = ({
       </div>
 
       {/* Editor Toolbar */}
-      <div className="px-6 py-3 border-b border-blue-50 flex items-center justify-between bg-gradient-to-b from-white to-blue-50/10">
+      <div className="px-6 py-3 border-b border-primary/5 flex items-center justify-between 
+                    bg-gradient-to-b from-white to-primary/5">
         <div className="flex items-center gap-2">
           {/* Media Tools */}
-          <div className="flex items-center gap-1 p-1 bg-white/80 rounded-lg border border-blue-100/50 shadow-sm">
+          <div className="flex items-center gap-1 p-1 bg-white/80 rounded-lg 
+                        border border-primary/10 shadow-sm">
             <Tooltip>
               <TooltipTrigger asChild>
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="h-8 w-8 p-0 hover:bg-blue-50/50 rounded-md transition-all"
+                  className="h-8 w-8 p-0 hover:bg-primary/5 rounded-md transition-all"
                   onClick={() => setIsImageModalOpen(true)}
                 >
-                  <ImageIcon className="w-4 h-4 text-blue-600/80" />
+                  <ImageIcon className="w-4 h-4 text-primary/80" />
                 </Button>
               </TooltipTrigger>
-              <TooltipContent className="bg-blue-900 text-white">
+              <TooltipContent className="bg-gray-900 text-white">
                 Add Image
               </TooltipContent>
             </Tooltip>
@@ -247,7 +251,8 @@ export const ComposeSection = ({
         <Button
           variant="ghost"
           size="sm"
-          className="h-8 px-4 gap-2 bg-gradient-to-r from-blue-500 to-purple-500 text-white hover:from-blue-600 hover:to-purple-600 rounded-full shadow-md"
+          className="h-8 px-4 gap-2 bg-primary text-white hover:bg-primary/90 
+                   rounded-full shadow-md"
         >
           <Sparkles className="w-3.5 h-3.5" />
           <span className="text-xs font-medium">AI Assist</span>
@@ -255,7 +260,7 @@ export const ComposeSection = ({
       </div>
 
       {/* Editor Content */}
-      <div className="flex-grow relative bg-gradient-to-br from-white via-blue-50/5 to-purple-50/5">
+      <div className="flex-grow relative bg-gradient-to-br from-white via-primary/5 to-primary/5">
         <textarea
           ref={textareaRef}
           value={content}
@@ -277,7 +282,7 @@ export const ComposeSection = ({
                 ? "bg-red-50 text-red-600 border-red-100"
                 : characterCount > CHAR_LIMIT * 0.9
                 ? "bg-amber-50 text-amber-600 border-amber-100"
-                : "bg-white text-blue-600 border-blue-100"
+                : "bg-white text-primary border-primary/20"
             )}
           >
             {characterCount}/{CHAR_LIMIT}
@@ -287,21 +292,25 @@ export const ComposeSection = ({
 
       {/* Image Preview Section */}
       {imageUrls.length > 0 && (
-        <div className="px-6 py-4 border-t border-blue-50 bg-gradient-to-b from-white to-blue-50/10">
+        <div className="px-6 py-4 border-t border-primary/5 
+                     bg-gradient-to-b from-white to-primary/5">
           <div className="flex flex-wrap gap-3">
             {imageUrls.map((url, index) => (
               <div key={index} className="relative group">
                 <img
                   src={url}
                   alt={`Uploaded image ${index + 1}`}
-                  className="w-24 h-24 object-cover rounded-lg border border-blue-100/50 shadow-sm"
+                  className="w-24 h-24 object-cover rounded-lg 
+                         border border-primary/10 shadow-sm"
                 />
                 <button
                   onClick={() => {
                     const newUrls = imageUrls.filter((_, i) => i !== index);
                     onImageUrlsChange(newUrls);
                   }}
-                  className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1.5 opacity-0 group-hover:opacity-100 transition-all shadow-lg hover:bg-red-600"
+                  className="absolute -top-2 -right-2 bg-red-500 text-white 
+                         rounded-full p-1.5 opacity-0 group-hover:opacity-100 
+                         transition-all shadow-lg hover:bg-red-600"
                 >
                   <X className="w-3 h-3" />
                 </button>
@@ -312,12 +321,14 @@ export const ComposeSection = ({
       )}
 
       {/* Editor Footer */}
-      <div className="px-6 py-4 border-t border-blue-50 bg-gradient-to-b from-blue-50/10 to-white backdrop-blur-sm">
+      <div className="px-6 py-4 border-t border-primary/5 
+                   bg-gradient-to-b from-primary/5 to-white backdrop-blur-sm">
         <div className="flex items-center justify-between">
           <Button
             variant="outline"
             size="sm"
-            className="h-9 px-4 gap-2 bg-white hover:bg-blue-50 transition-all hover:text-blue-600 border-blue-200"
+            className="h-9 px-4 gap-2 bg-white hover:bg-primary/5 
+                     transition-all hover:text-primary border-primary/20"
             onClick={() => setIsScheduleModalOpen(true)}
             disabled={!selectedLinkedInProfile || !content.trim()}
           >
@@ -329,7 +340,7 @@ export const ComposeSection = ({
             variant="default"
             size="sm"
             className={cn(
-              "h-9 px-4 gap-2  bg-primary text-white hover:bg-primary/80 shadow-md",
+              "h-9 px-4 gap-2 bg-primary text-white hover:bg-primary/90 shadow-md",
               (!selectedLinkedInProfile ||
                 characterCount > CHAR_LIMIT ||
                 !content.trim() ||
@@ -349,7 +360,8 @@ export const ComposeSection = ({
           >
             {isPosting ? (
               <>
-                <span className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
+                <span className="w-4 h-4 border-2 border-current border-t-transparent 
+                              rounded-full animate-spin" />
                 Publishing...
               </>
             ) : (

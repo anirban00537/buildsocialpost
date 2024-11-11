@@ -60,8 +60,8 @@ const ComposePage = () => {
                 <h1 className="text-2xl font-semibold text-gray-900 tracking-tight">
                   {isEditing ? "Edit Content" : "Create Content"}
                 </h1>
-                <div className="px-2.5 py-1 rounded-full bg-blue-50 border border-blue-100">
-                  <span className="text-xs font-medium text-blue-600">
+                <div className="px-2.5 py-1 rounded-full bg-primary/10 border border-primary/20">
+                  <span className="text-xs font-medium text-primary">
                     {isEditing ? "Draft" : "New Post"}
                   </span>
                 </div>
@@ -86,7 +86,7 @@ const ComposePage = () => {
                       ${
                         !selectedProfile
                           ? "text-red-600 border-red-200 hover:border-red-300 hover:bg-red-50"
-                          : "border-blue-200 hover:border-blue-300 hover:bg-blue-50"
+                          : "border-primary/20 hover:border-primary/30 hover:bg-primary/5"
                       }
                     `}
                   >
@@ -132,7 +132,7 @@ const ComposePage = () => {
                           flex items-center gap-3 px-3 py-2 rounded-md cursor-pointer
                           ${
                             selectedProfile?.id === profile.id
-                              ? "bg-blue-50 text-blue-600"
+                              ? "bg-primary/5 text-primary"
                               : "hover:bg-gray-50"
                           }
                         `}
@@ -154,8 +154,8 @@ const ComposePage = () => {
                     ))
                   ) : (
                     <div className="p-6 text-center">
-                      <div className="w-12 h-12 rounded-full bg-blue-50 flex items-center justify-center mx-auto mb-3">
-                        <Linkedin className="h-6 w-6 text-blue-600" />
+                      <div className="w-12 h-12 rounded-full bg-primary/5 flex items-center justify-center mx-auto mb-3">
+                        <Linkedin className="h-6 w-6 text-primary" />
                       </div>
                       <h3 className="text-sm font-medium text-gray-900 mb-2">
                         No Profiles Connected
@@ -163,7 +163,7 @@ const ComposePage = () => {
                       <Button
                         variant="outline"
                         size="sm"
-                        className="h-9 px-4 text-sm border-blue-200 text-blue-600 hover:bg-blue-50"
+                        className="h-9 px-4 text-sm border-primary/20 text-primary hover:bg-primary/5"
                         onClick={() => {
                           /* Add your LinkedIn connect logic */
                         }}
@@ -211,7 +211,8 @@ const ComposePage = () => {
                     <Button
                       variant="default"
                       size="lg"
-                      className="h-11 px-6 gap-2 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white shadow-md"
+                      className="h-11 px-6 gap-2 bg-gradient-to-r from-primary to-primary/80 
+                               hover:from-primary/90 hover:to-primary/70 text-white shadow-md"
                     >
                       <Image
                         src="/linkedin-logo.webp"
@@ -225,9 +226,9 @@ const ComposePage = () => {
                   </Link>
 
                   <div className="flex items-center gap-2 text-sm text-gray-500">
-                    <div className="w-5 h-5 rounded-full bg-blue-50 flex items-center justify-center">
+                    <div className="w-5 h-5 rounded-full bg-primary/5 flex items-center justify-center">
                       <svg
-                        className="w-3 h-3 text-blue-600"
+                        className="w-3 h-3 text-primary"
                         fill="none"
                         viewBox="0 0 24 24"
                         stroke="currentColor"
@@ -241,8 +242,7 @@ const ComposePage = () => {
                       </svg>
                     </div>
                     <span>
-                      Your data is secure and we never post without your
-                      permission
+                      Your data is secure and we never post without your permission
                     </span>
                   </div>
                 </div>
@@ -261,8 +261,8 @@ const ComposePage = () => {
                 {isLoadingDraft ? (
                   <div className="h-full flex items-center justify-center">
                     <div className="flex flex-col items-center gap-4">
-                      <div className="w-16 h-16 rounded-full bg-blue-50 flex items-center justify-center animate-pulse">
-                        <FileText className="w-8 h-8 text-blue-600 opacity-50" />
+                      <div className="w-16 h-16 rounded-full bg-primary/5 flex items-center justify-center animate-pulse">
+                        <FileText className="w-8 h-8 text-primary opacity-50" />
                       </div>
                       <div className="space-y-2 text-center">
                         <p className="text-base font-medium text-gray-900">

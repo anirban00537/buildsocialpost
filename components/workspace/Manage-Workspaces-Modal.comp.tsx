@@ -106,13 +106,13 @@ const ManageWorkspacesModal: FC<ManageWorkspacesModalProps> = ({
   return (
     <>
       <Dialog open={isOpen} onOpenChange={onClose}>
-        <DialogContent className="bg-gradient-to-br from-white to-blue-50/30 
+        <DialogContent className="bg-gradient-to-br from-white to-primary/5 
                                 rounded-[20px] text-textColor sm:max-w-[700px] p-8 
                                 shadow-xl border border-gray-200 overflow-hidden">
           <DialogHeader className="mb-6">
             <div className="flex items-center gap-3 mb-2">
-              <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-600 
-                            flex items-center justify-center shadow-lg shadow-blue-500/20">
+              <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-primary to-primary/80 
+                            flex items-center justify-center shadow-lg shadow-primary/20">
                 <Layout className="h-6 w-6 text-white" />
               </div>
               <div>
@@ -139,7 +139,7 @@ const ManageWorkspacesModal: FC<ManageWorkspacesModalProps> = ({
                 <Button
                   variant="ghost"
                   onClick={() => setIsEditing(true)}
-                  className="self-end bg-blue-500 hover:bg-blue-600 text-white
+                  className="self-end bg-primary hover:bg-primary/90 text-white
                            transition-all duration-200 rounded-full h-10 px-5"
                 >
                   <Plus className="h-4 w-4 mr-2" />
@@ -155,7 +155,7 @@ const ManageWorkspacesModal: FC<ManageWorkspacesModalProps> = ({
                       className={`group p-5 rounded-[16px] transition-all duration-200
                                 border ${
                                   currentWorkspace?.id === workspace.id
-                                  ? "bg-blue-50/50 border-blue-200"
+                                  ? "bg-primary/5 border-primary/20"
                                   : "bg-white hover:bg-gray-50/80 border-gray-100 hover:border-gray-200"
                                 } ${
                                   index === workspaces.length - 1 ? "mb-4" : ""
@@ -171,7 +171,7 @@ const ManageWorkspacesModal: FC<ManageWorkspacesModalProps> = ({
                               {workspace.name}
                             </span>
                             {currentWorkspace?.id === workspace.id && (
-                              <span className="text-xs font-medium bg-gradient-to-r from-blue-500 to-indigo-600 
+                              <span className="text-xs font-medium bg-gradient-to-r from-primary to-primary/80 
                                            text-white px-3 py-1 rounded-full shadow-sm">
                                 Current
                               </span>
@@ -194,8 +194,8 @@ const ManageWorkspacesModal: FC<ManageWorkspacesModalProps> = ({
                           <Button
                             variant="ghost"
                             size="sm"
-                            className="h-9 px-4 text-gray-600 hover:text-blue-600 
-                                     hover:bg-blue-50 rounded-full gap-2"
+                            className="h-9 px-4 text-gray-600 hover:text-primary 
+                                     hover:bg-primary/5 rounded-full gap-2"
                             onClick={() => handleEditWorkspace(workspace)}
                           >
                             <Pencil className="w-4 h-4" />

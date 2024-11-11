@@ -28,7 +28,7 @@ const SubscriptionInfo = () => {
           <Button
             variant="ghost"
             size="sm"
-            className="w-full h-8 flex items-center justify-center gap-2 text-blue-600 hover:text-blue-700 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors border border-blue-100"
+            className="w-full h-8 flex items-center justify-center gap-2 text-primary hover:text-primary bg-primary/10 hover:bg-blue-100 rounded-lg transition-colors border border-blue-100"
           >
             <div className="flex items-center gap-2">
               <Sparkles className="w-4 h-4" />

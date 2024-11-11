@@ -137,7 +137,7 @@ const MediaPage = () => {
             </div>
             <div className="w-full bg-gray-200 rounded-full h-2">
               <div
-                className="bg-blue-600 h-2 rounded-full transition-all duration-300"
+                className="bg-primary h-2 rounded-full transition-all duration-300"
                 style={{ width: `${(totalUsage / MAX_STORAGE_MB) * 100}%` }}
               />
             </div>
@@ -167,7 +167,7 @@ const MediaPage = () => {
                   relative border-2 border-dashed rounded-xl p-4 transition-all duration-200
                   ${
                     isDragActive
-                      ? "border-blue-500 bg-blue-50"
+                      ? "border-primary bg-primary/5"
                       : "border-gray-200 hover:border-gray-300"
                   }
                   ${uploadLoading || currentUpload ? "pointer-events-none" : ""}
@@ -180,7 +180,7 @@ const MediaPage = () => {
                 {currentUpload ? (
                   <div className="flex items-center justify-center gap-4">
                     <div className="w-12 h-12 rounded-full flex items-center justify-center">
-                      <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600" />
+                      <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary" />
                     </div>
                     <div className="flex-1">
                       <h3 className="text-sm font-medium text-gray-900">
@@ -188,7 +188,7 @@ const MediaPage = () => {
                       </h3>
                       <div className="mt-1 w-full bg-gray-200 rounded-full h-1.5">
                         <div
-                          className="bg-blue-600 h-1.5 rounded-full transition-all duration-300"
+                          className="bg-primary h-1.5 rounded-full transition-all duration-300"
                           style={{ width: `${currentUpload.progress}%` }}
                         />
                       </div>

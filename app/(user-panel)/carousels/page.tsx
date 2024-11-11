@@ -67,8 +67,8 @@ const CarouselsPage = () => {
             </div>
             <Button
               onClick={() => router.push("/carousel-editor")}
-              className="h-10 px-4 rounded-xl bg-primary text-white 
-                hover:bg-primary/80 shadow-sm"
+              className="h-10 px-4 rounded-xl bg-primary hover:bg-primary/90 text-white 
+                        transition-all duration-200 shadow-sm"
               variant="outline"
             >
               <Plus className="h-4 w-4 mr-2" />
@@ -83,7 +83,8 @@ const CarouselsPage = () => {
               <input
                 type="text"
                 placeholder="Search carousels..."
-                className="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                className="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-xl 
+                         text-sm focus:outline-none focus:ring-2 focus:ring-primary/20"
               />
             </div>
           </div>
@@ -94,11 +95,12 @@ const CarouselsPage = () => {
       <div className="w-full px-8 py-6">
         {isFetchingAll ? (
           <div className="flex justify-center items-center h-[600px]">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600" />
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
           </div>
         ) : !carousels || carousels.length === 0 ? (
           <>
-            <div className="text-center py-12 bg-white rounded-xl border border-gray-200 min-h-[600px] flex flex-col items-center justify-center">
+            <div className="text-center py-12 bg-white rounded-xl border border-gray-200 
+                          min-h-[600px] flex flex-col items-center justify-center">
               <div className="mx-auto w-24 h-24 bg-gray-50 rounded-full flex items-center justify-center mb-4">
                 <Layout className="w-12 h-12 text-gray-400" />
               </div>
@@ -110,8 +112,8 @@ const CarouselsPage = () => {
               </p>
               <Button
                 onClick={() => router.push("/carousel-editor")}
-                className="mt-4 h-10 px-4 rounded-xl bg-gradient-to-br from-blue-500 via-blue-600 to-blue-800 text-white 
-                  hover:from-blue-600 hover:via-blue-700 hover:to-blue-900 shadow-sm"
+                className="mt-4 h-10 px-4 rounded-xl bg-primary hover:bg-primary/90 
+                          text-white transition-all duration-200 shadow-sm"
                 variant="outline"
               >
                 Create Carousel
@@ -126,7 +128,8 @@ const CarouselsPage = () => {
           </>
         ) : (
           <>
-            <div className="w-full bg-white rounded-xl border border-gray-200 overflow-hidden min-h-[600px] flex flex-col shadow-sm">
+            <div className="w-full bg-white rounded-xl border border-gray-200 
+                          overflow-hidden min-h-[600px] flex flex-col shadow-sm">
               <Table>
                 <TableHeader>
                   <TableRow className="border-b border-gray-200">
@@ -151,15 +154,18 @@ const CarouselsPage = () => {
                   {carousels.map((carousel: any) => (
                     <TableRow
                       key={carousel.id}
-                      className="border-b border-gray-100 hover:border-gray-200 transition-colors duration-150"
+                      className="border-b border-gray-100 hover:border-gray-200 
+                               hover:bg-primary/[0.02] transition-all duration-200"
                     >
                       <TableCell className="py-4">
                         <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 rounded-lg border border-gray-200 flex items-center justify-center">
+                          <div className="w-10 h-10 rounded-lg border border-gray-200 
+                                        flex items-center justify-center">
                             <Layout className="w-5 h-5 text-gray-400" />
                           </div>
                           <div>
-                            <h3 className="font-medium text-gray-900 truncate hover:text-blue-600 transition-colors">
+                            <h3 className="font-medium text-gray-900 truncate 
+                                         hover:text-primary transition-colors">
                               {carousel?.data?.name || "Unnamed Carousel"}
                             </h3>
                             <p className="text-sm text-gray-500 truncate">
@@ -189,7 +195,9 @@ const CarouselsPage = () => {
                       <TableCell className="text-right py-4">
                         <div className="flex justify-end gap-2">
                           <Link href={`/carousel-editor?id=${carousel?.id}`}>
-                            <Button className="h-8 px-3 rounded-lg text-white bg-primary hover:from-blue-600 hover:via-blue-700 hover:to-blue-900 shadow-sm">
+                            <Button className="h-8 px-3 rounded-lg text-white 
+                                           bg-primary hover:bg-primary/90 
+                                           transition-all duration-200 shadow-sm">
                               <FileText className="w-4 h-4 mr-1.5" />
                               Open
                             </Button>
@@ -198,7 +206,9 @@ const CarouselsPage = () => {
                             onClick={() => handleDeleteCarousel(carousel?.id)}
                             disabled={isDeleting}
                             variant="ghost"
-                            className="h-8 px-2 rounded-lg text-gray-600 hover:text-red-600 border border-gray-200 hover:border-red-200"
+                            className="h-8 px-2 rounded-lg text-gray-600 
+                                     hover:text-red-600 border border-gray-200 
+                                     hover:border-red-200"
                           >
                             <Trash className="w-4 h-4" />
                           </Button>

@@ -284,7 +284,7 @@ export const ContentInput = ({
               text-white flex items-center justify-center gap-3
               hover:shadow-lg active:shadow-md transform active:scale-[0.98]
             `}
-            background="linear-gradient(to right, #3369e7, #2f5cc9)"
+            background="linear-gradient(to right, #1769FF, #1764FF)"
           >
             {isGeneratingContent ? (
               <>

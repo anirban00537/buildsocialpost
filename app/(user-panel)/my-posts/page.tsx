@@ -95,7 +95,7 @@ const TabHeader: React.FC<TabHeaderProps> = ({ activeTab, onTabChange }) => {
             <Link href="/compose">
               <Button
                 size="sm"
-                className="gap-2 bg-blue-50 text-blue-600 hover:bg-blue-100 border-blue-200"
+                className="gap-2 bg-primary text-white hover:bg-primary/90 border-primary"
               >
                 <Plus className="w-4 h-4" />
                 Create New
@@ -104,7 +104,7 @@ const TabHeader: React.FC<TabHeaderProps> = ({ activeTab, onTabChange }) => {
             <Link href="/ai-writer">
               <Button
                 size="sm"
-              className="gap-2 bg-blue-50 text-blue-600 hover:bg-blue-100 border-blue-200"
+              className="gap-2 bg-primary text-white hover:bg-primary/90 border-primary"
             >
                 <Plus className="w-4 h-4" />
                 Viral Post Generator
@@ -127,7 +127,7 @@ const TabHeader: React.FC<TabHeaderProps> = ({ activeTab, onTabChange }) => {
                   activeTab === config.id
                     ? config.id === "failed"
                       ? "text-red-600"
-                      : "text-blue-600"
+                      : "text-primary"
                     : "text-gray-600 hover:text-gray-900"
                 }
               `}
@@ -139,7 +139,7 @@ const TabHeader: React.FC<TabHeaderProps> = ({ activeTab, onTabChange }) => {
                       activeTab === config.id
                         ? config.id === "failed"
                           ? "text-red-600"
-                          : "text-blue-600"
+                          : "text-primary"
                         : "text-gray-400 group-hover:text-gray-500"
                     }
                   `}
@@ -158,7 +158,7 @@ const TabHeader: React.FC<TabHeaderProps> = ({ activeTab, onTabChange }) => {
                   activeTab === config.id
                     ? config.id === "failed"
                       ? "bg-red-600"
-                      : "bg-blue-600"
+                      : "bg-primary"
                     : "bg-transparent group-hover:bg-gray-200"
                 }
               `}
@@ -271,7 +271,7 @@ const ContentManager = () => {
     const oneWeekAgo = moment().subtract(7, "days").startOf("day");
 
     if (momentDate.isSame(today, "day")) {
-      return <Clock className="w-4 h-4 text-blue-500" />;
+      return <Clock className="w-4 h-4 text-primary" />;
     } else if (momentDate.isSame(yesterday, "day")) {
       return <Moon className="w-4 h-4 text-indigo-500" />;
     } else if (momentDate.isAfter(oneWeekAgo)) {
@@ -288,7 +288,7 @@ const ContentManager = () => {
         <div className="p-6">
           {isLoadingPosts ? (
             <div className="flex justify-center items-center h-40">
-              <span className="loading loading-spinner loading-lg" />
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
             </div>
           ) : (
             <div className="space-y-6">
@@ -377,7 +377,7 @@ const ContentManager = () => {
                         w-16 h-16 rounded-full flex items-center justify-center
                         ${activeTab === 'failed' 
                           ? 'bg-red-50 text-red-500' 
-                          : 'bg-blue-50 text-blue-500'
+                          : 'bg-primary/5 text-primary'
                         }
                       `}>
                         {React.cloneElement(

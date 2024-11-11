@@ -31,7 +31,7 @@ const AccountsPage = () => {
             <Button
               onClick={connectLinkedIn}
               disabled={isConnecting}
-              className="h-10 px-4 rounded-xl bg-[#0A66C2] hover:bg-[#004182] text-white shadow-sm"
+              className="h-10 px-4 rounded-xl bg-primary hover:bg-[#004182] text-white shadow-sm"
             >
               {isConnecting ? (
                 <div className="flex items-center">
@@ -53,7 +53,7 @@ const AccountsPage = () => {
       <div className="w-full px-8 py-6">
         {isLoadingProfiles ? (
           <div className="flex justify-center items-center h-[600px]">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600" />
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
           </div>
         ) : !profiles || profiles.length === 0 ? (
           <div className="text-center py-12 bg-white rounded-xl border border-gray-200 min-h-[600px] flex flex-col items-center justify-center">

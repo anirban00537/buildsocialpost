@@ -29,7 +29,7 @@ const ContentCreationTools: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-white via-blue-50/30 to-indigo-50/20">
+    <div className="min-h-screen bg-white">
       <Header />
 
       <div className="max-w-[1600px] mx-auto px-4 sm:px-6 py-6">
@@ -38,7 +38,7 @@ const ContentCreationTools: React.FC = () => {
           <div className="max-w-[800px] w-full mx-auto lg:mx-0">
             <div className="relative overflow-hidden rounded-2xl border border-gray-200/80 shadow-[0_8px_30px_rgb(0,0,0,0.04)] backdrop-blur-sm">
               {/* Gradient Backgrounds */}
-              <div className="absolute inset-0 bg-gradient-to-br from-white via-blue-50/50 to-indigo-100/30" />
+              <div className="absolute inset-0 bg-gradient-to-br from-white via-priamry/50 to-indigo-100/30" />
               <div className="absolute inset-0 bg-white/50 backdrop-blur-[2px]" />
 
               {/* Content */}
@@ -65,13 +65,13 @@ const ContentCreationTools: React.FC = () => {
           {/* Center Separator */}
           <div className="hidden lg:block absolute right-1/2 top-1/2 -translate-y-1/2 z-10">
             <motion.div
-              className="w-14 h-14 rounded-full bg-gradient-to-br from-white to-blue-50 shadow-md 
+              className="w-14 h-14 rounded-full bg-gradient-to-br from-white to-priamry shadow-md 
                        flex items-center justify-center transform -translate-x-1/2 backdrop-blur-sm"
               animate={{ rotate: 360 }}
               transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
             >
               <div
-                className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 via-blue-600 to-indigo-700 
+                className="w-10 h-10 rounded-full bg-gradient-to-br from-primary via-primary to-primary 
                             flex items-center justify-center shadow-md"
               >
                 <Sparkles className="w-5 h-5 text-white" />
@@ -91,7 +91,7 @@ const ContentCreationTools: React.FC = () => {
               >
                 <div className="relative overflow-hidden rounded-2xl border border-gray-200/80 shadow-[0_8px_30px_rgb(0,0,0,0.04)] backdrop-blur-sm">
                   {/* Gradient Backgrounds */}
-                  <div className="absolute inset-0 bg-gradient-to-br from-white via-blue-50/50 to-indigo-100/30" />
+                  <div className="absolute inset-0 bg-gradient-to-br from-white via-priamry/50 to-indigo-100/30" />
                   <div className="absolute inset-0 bg-white/50 backdrop-blur-[2px]" />
 
                   {/* Content */}

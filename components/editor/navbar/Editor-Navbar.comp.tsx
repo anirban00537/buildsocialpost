@@ -8,7 +8,6 @@ import { useSearchParams, useRouter } from "next/navigation";
 import { useCarouselManager } from "@/hooks/useCarouselManager";
 import { signOut } from "@/services/auth";
 import useCarousel from "@/hooks/useCarousel";
-import LoginModal from "@/components/auth/login.modal";
 import CarouselListModal from "@/components/editor/Carousel-List-Modal.comp";
 import {
   List,
@@ -46,7 +45,7 @@ const EditorNavbar: React.FC = () => {
     linkedinText,
     setLinkedinText,
     generateAIContent,
-    isGeneratingContent
+    isGeneratingContent,
   } = useCarousel();
   const {
     isFetchingAll,
@@ -63,7 +62,6 @@ const EditorNavbar: React.FC = () => {
   const [isViewAllModalOpen, setIsViewAllModalOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const router = useRouter();
-  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [isPreviewModalOpen, setIsPreviewModalOpen] = useState(false);
 
   const handleLogout = async () => {
@@ -105,13 +103,9 @@ const EditorNavbar: React.FC = () => {
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
-  const handleLoginRequired = () => {
-    setIsLoginModalOpen(true);
-  };
-
   const handlePreviewClick = async () => {
     if (!isAuthenticated) return;
-    
+
     try {
       // If carousel is not saved (no carouselId), save it first
       if (!carouselId) {
@@ -119,13 +113,13 @@ const EditorNavbar: React.FC = () => {
           newName: name || "Default Carousel",
         });
         // Wait a moment for the save to complete and ID to be available
-        await new Promise(resolve => setTimeout(resolve, 500));
+        await new Promise((resolve) => setTimeout(resolve, 500));
       }
-      
+
       await convertSlidesToImages();
       setIsPreviewModalOpen(true);
     } catch (error) {
-      toast.error('Failed to generate preview');
+      toast.error("Failed to generate preview");
     }
   };
 
@@ -216,10 +210,9 @@ const EditorNavbar: React.FC = () => {
                     Converting...
                   </>
                 ) : (
-                  'Continue'
+                  "Continue"
                 )}
               </Button>
-            
             </div>
 
             <div className="lg:hidden">
@@ -239,7 +232,6 @@ const EditorNavbar: React.FC = () => {
         {isMenuOpen && (
           <div className="lg:hidden bg-background border-t border-gray-200">
             <div className="container mx-auto px-4 py-2 space-y-2">
-
               <Button
                 onClick={handleSaveCarousel}
                 disabled={isCreatingOrUpdating}
@@ -258,11 +250,9 @@ const EditorNavbar: React.FC = () => {
                     Converting...
                   </>
                 ) : (
-                  'Continue'
+                  "Continue"
                 )}
               </Button>
-
-             
             </div>
           </div>
         )}
@@ -270,11 +260,6 @@ const EditorNavbar: React.FC = () => {
         <CarouselListModal
           isOpen={isViewAllModalOpen}
           onClose={() => setIsViewAllModalOpen(false)}
-        />
-
-        <LoginModal
-          isOpen={isLoginModalOpen}
-          onClose={() => setIsLoginModalOpen(false)}
         />
       </header>
 

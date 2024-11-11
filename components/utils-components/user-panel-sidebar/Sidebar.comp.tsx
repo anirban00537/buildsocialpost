@@ -347,6 +347,7 @@ const Navigation = () => {
 
 const Sidebar = () => {
   const pathname = usePathname();
+  const router = useRouter();
   const { userinfo, currentWorkspace, wordUsage, subscription } = useSelector(
     (state: RootState) => state.user
   );
@@ -368,6 +369,19 @@ const Sidebar = () => {
       return tokens.toString();
     }
   };
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'n') {
+        e.preventDefault();
+        router.push('/compose');
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [router]);
+
   return (
     <div className="w-72 h-screen flex flex-col bg-white border-r border-gray-200">
       {/* Logo Section */}
@@ -402,15 +416,21 @@ const Sidebar = () => {
 
       {/* Create Button */}
       <div className="px-3 pb-2">
-        <Link href="/compose" className="w-full">
-          <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white flex items-center gap-2 h-9">
+        <button
+          onClick={() => router.push('/compose')}
+          className="w-full inline-flex items-center justify-between h-9 px-4 py-2 
+                   bg-primary hover:bg-primary/90 text-white rounded-md
+                   transition-colors duration-200 focus:outline-none focus:ring-2 
+                   focus:ring-primary/20 focus:ring-offset-1"
+        >
+          <div className="flex items-center gap-2">
             <Plus className="h-4 w-4" />
-            Create New
-            <span className="ml-auto text-xs bg-white/10 px-1.5 py-0.5 rounded">
-              Ctrl + N
-            </span>
-          </Button>
-        </Link>
+            <span>Create New</span>
+          </div>
+          <kbd className="text-xs bg-white/10 px-1.5 py-0.5 rounded">
+            Ctrl + N
+          </kbd>
+        </button>
       </div>
 
       {/* Combined Navigation */}
@@ -437,7 +457,7 @@ const Sidebar = () => {
               <div
                 className={cn(
                   "h-full transition-all duration-300 ease-in-out",
-                  aiUsage.percentage > 80 ? "bg-red-500" : "bg-blue-600"
+                  aiUsage.percentage > 80 ? "bg-red-500" : "bg-primary"
                 )}
                 style={{
                   width: `${aiUsage.percentage}%`,
