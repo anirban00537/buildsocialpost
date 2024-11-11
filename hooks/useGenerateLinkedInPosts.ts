@@ -3,9 +3,11 @@ import { generateLinkedInPosts } from "@/services/ai-content";
 import { GenerateLinkedInPostsDTO } from "@/types";
 import toast from "react-hot-toast";
 import { useState, useEffect } from "react";
+import { useAuth } from "./useAuth";
 
 export const useGenerateLinkedInPosts = () => {
   const queryClient = useQueryClient();
+  const { refetchSubscription } = useAuth();
   const [content, setContent] = useState("");
   const [generatedPost, setGeneratedPost] = useState<string>("");
   const [postTone, setPostTone] = useState("Professional");
@@ -22,16 +24,33 @@ export const useGenerateLinkedInPosts = () => {
           setGeneratedPost(post);
           toast.success("Content generated successfully!");
 
-          // Refetch subscription data to update usage
-          await queryClient.refetchQueries(["subscription"]);
+          // Update both subscription data and refetch
+          try {
+            await Promise.all([
+              queryClient.invalidateQueries(["subscription"]),
+              refetchSubscription()
+            ]);
+          } catch (error) {
+            console.error("Error refreshing subscription data:", error);
+          }
         } else {
           setGeneratedPost("");
           toast.error(response.message || "Failed to generate content");
         }
       },
-      onError: (error: Error) => {
+      onError: async (error: Error) => {
         toast.error(`Error generating content: ${error.message}`);
         console.error("Generation error:", error);
+        
+        // Still try to refresh subscription data on error
+        try {
+          await Promise.all([
+            queryClient.invalidateQueries(["subscription"]),
+            refetchSubscription()
+          ]);
+        } catch (refreshError) {
+          console.error("Error refreshing subscription data:", refreshError);
+        }
       },
     }
   );
@@ -77,8 +96,15 @@ export const useGenerateLinkedInPosts = () => {
       });
     } catch (error) {
       console.error("Error in handleGenerate:", error);
-      // Refetch subscription data even on error to ensure usage is up to date
-      await queryClient.refetchQueries(["subscription"]);
+      // Ensure subscription data is refreshed even on error
+      try {
+        await Promise.all([
+          queryClient.invalidateQueries(["subscription"]),
+          refetchSubscription()
+        ]);
+      } catch (refreshError) {
+        console.error("Error refreshing subscription data:", refreshError);
+      }
     }
   };
 

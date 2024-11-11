@@ -134,22 +134,6 @@ const navigationItems: NavigationItem[] = [
   },
 ];
 
-// Navigation Section Component
-const NavigationSection = ({
-  title,
-  children,
-}: {
-  title: string;
-  children: React.ReactNode;
-}) => (
-  <div className="space-y-1">
-    <h3 className="px-3 text-xs font-medium text-gray-500 uppercase tracking-wider">
-      {title}
-    </h3>
-    {children}
-  </div>
-);
-
 // Simplified NavigationItem component with updated styling
 const NavigationItem: React.FC<{
   item: NavigationItem;
@@ -467,50 +451,6 @@ const Sidebar = () => {
             <SubscriptionInfo />
           </div>
         </div>
-
-        {/* Settings Group */}
-        <Accordion
-          type="single"
-          collapsible
-          className="border-b border-gray-100"
-        >
-          <AccordionItem value="settings" className="border-none">
-            <AccordionTrigger className="flex items-center px-4 py-2.5 hover:no-underline hover:bg-gray-50/80">
-              <div className="flex items-center gap-2">
-                <Settings className="h-4 w-4 text-gray-400" />
-                <span className="text-sm font-medium text-gray-700">
-                  Settings
-                </span>
-              </div>
-            </AccordionTrigger>
-            <AccordionContent className="pt-1 pb-2">
-              <div className="space-y-0.5">
-                {navigationItems.map((item) => (
-                  <Link
-                    key={item.id}
-                    href={item.href}
-                    className={cn(
-                      "flex items-center gap-x-3 px-4 py-2 text-sm rounded-lg transition-colors duration-150",
-                      pathname === item.href
-                        ? "bg-blue-50 text-blue-600"
-                        : "text-gray-600 hover:bg-gray-50/80 hover:text-gray-900"
-                    )}
-                  >
-                    <item.icon
-                      className={cn(
-                        "h-4 w-4",
-                        pathname === item.href
-                          ? "text-blue-600"
-                          : "text-gray-400 group-hover:text-gray-500"
-                      )}
-                    />
-                    <span className="font-medium">{item.name}</span>
-                  </Link>
-                ))}
-              </div>
-            </AccordionContent>
-          </AccordionItem>
-        </Accordion>
 
         {/* User Profile */}
         <div className="px-4 py-3 flex items-center justify-between group hover:bg-gray-50/80 transition-colors duration-150 cursor-pointer">

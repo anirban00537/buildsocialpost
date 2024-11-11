@@ -393,7 +393,9 @@ export const useContentPosting = () => {
           hashtags,
           mentions,
         });
-        processApiResponse(response);
+        if (!response.success) {
+          toast.error(response.message || "Failed to save draft");
+        }
 
         return response.data?.post?.id;
       } catch (error) {

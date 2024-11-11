@@ -150,7 +150,6 @@ export const AIWritingPreview = ({
       });
 
       if (draftId) {
-        toast.success("Draft saved! Redirecting to editor...");
         router.push(`/compose?draft_id=${draftId}`);
       }
     } catch (error) {

@@ -75,9 +75,16 @@ const SubscriptionInfo = () => {
               />
             </div>
             <div className="flex flex-col">
-              <span className="text-sm font-semibold text-blue-800">
-                {plan} Plan
-              </span>
+              <div className="flex items-center gap-2">
+                <span className="text-sm font-semibold text-blue-800">
+                  {plan} Plan
+                </span>
+                {isTrial && (
+                  <span className="text-xs px-1.5 py-0.5 bg-orange-100 text-orange-700 rounded-full">
+                    Trial
+                  </span>
+                )}
+              </div>
               <span className="text-xs text-blue-600/80">
                 Valid until {expiryFormatted}
               </span>
@@ -89,20 +96,25 @@ const SubscriptionInfo = () => {
           className="bg-white p-4 border border-gray-100 shadow-xl rounded-xl w-72"
         >
           <div className="space-y-3">
-            <div className="flex items-center gap-2 pb-2 border-b border-gray-100">
-              <Crown className="w-5 h-5 text-blue-600" />
-              <span className="font-semibold text-gray-900">
-                {plan} Plan Benefits
-              </span>
+            <div className="flex items-center justify-between pb-2 border-b border-gray-100">
+              <div className="flex items-center gap-2">
+                <Crown className="w-5 h-5 text-blue-600" />
+                <span className="font-semibold text-gray-900">
+                  {plan} Plan Benefits
+                </span>
+              </div>
+              {isTrial && (
+                <span className="text-xs font-medium px-2 py-1 bg-orange-100 text-orange-700 rounded-full">
+                  Trial Period
+                </span>
+              )}
             </div>
             <div className="space-y-2">
               <div className="flex items-center justify-between gap-4 bg-blue-50/50 p-2 rounded-lg">
-                <span className="text-sm text-gray-600">
-                  Subscription Status
-                </span>
+                <span className="text-sm text-gray-600">Status</span>
                 <span className="text-sm font-medium text-green-600 flex items-center gap-1.5 bg-green-50 px-2 py-0.5 rounded-full">
                   <span className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></span>
-                  Active
+                  Active {isTrial ? '(Trial)' : ''}
                 </span>
               </div>
               <div className="flex items-center justify-between gap-4 p-2">
@@ -140,6 +152,14 @@ const SubscriptionInfo = () => {
                 <AlertTriangle className="w-4 h-4 flex-shrink-0" />
                 <span>
                   Your subscription has expired. Please renew to restore access.
+                </span>
+              </div>
+            )}
+            {isTrial && (
+              <div className="flex items-center gap-2 text-xs text-blue-700 bg-blue-50 p-2.5 rounded-lg">
+                <AlertTriangle className="w-4 h-4 flex-shrink-0" />
+                <span>
+                  You are currently in your trial period. Upgrade to continue accessing premium features after trial ends.
                 </span>
               </div>
             )}

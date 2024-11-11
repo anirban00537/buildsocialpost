@@ -109,8 +109,6 @@ export const PostPreview = ({
   const pageNavigationPluginInstance = pageNavigationPlugin({});
   const { jumpToPage } = pageNavigationPluginInstance;
 
-  
-
   const handlePrevPage = () => {
     if (currentPage > 0) {
       jumpToPage(currentPage - 1);
@@ -122,8 +120,6 @@ export const PostPreview = ({
       jumpToPage(currentPage + 1);
     }
   };
-
-  
 
   // Add viewMode-specific styles
   const getViewportStyles = (mode: ViewMode) => {
@@ -195,10 +191,12 @@ export const PostPreview = ({
 
       {/* Main Preview Container */}
       <div className="flex justify-center w-full">
-        <div className={cn(
-          "w-full transition-all duration-300",
-          getViewportStyles(viewMode).containerClass
-        )}>
+        <div
+          className={cn(
+            "w-full transition-all duration-300",
+            getViewportStyles(viewMode).containerClass
+          )}
+        >
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -211,10 +209,12 @@ export const PostPreview = ({
             {selectedProfile ? (
               <>
                 {/* Profile Header */}
-                <div className={cn(
-                  "p-6 border-b border-gray-100",
-                  viewMode === "mobile" && "p-4"
-                )}>
+                <div
+                  className={cn(
+                    "p-6 border-b border-gray-100",
+                    viewMode === "mobile" && "p-4"
+                  )}
+                >
                   <div className="flex items-start justify-between">
                     <div className="flex gap-3">
                       <Avatar className="h-12 w-12 rounded-full ring-2 ring-white shadow-sm">
@@ -258,7 +258,7 @@ export const PostPreview = ({
                           <span>{statusConfig.text}</span>
                         </div>
                       )}
-                      
+
                       {dropdownItems && dropdownItems.length > 0 && (
                         <DropdownMenu>
                           <DropdownMenuTrigger asChild>
@@ -270,7 +270,10 @@ export const PostPreview = ({
                               <MoreHorizontal className="h-4 w-4 text-gray-500" />
                             </Button>
                           </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end" className="w-[180px]">
+                          <DropdownMenuContent
+                            align="end"
+                            className="w-[180px]"
+                          >
                             {dropdownItems.map((item, index) => (
                               <DropdownMenuItem
                                 key={index}
@@ -292,23 +295,26 @@ export const PostPreview = ({
                 </div>
 
                 {/* Content Area */}
-                <div className={cn(
-                  "p-6",
-                  viewMode === "mobile" && "p-4"
-                )}>
-                  <div className={cn(
-                    "prose prose-sm max-w-none",
-                    viewMode === "mobile" && "prose-xs"
-                  )}>
+                <div className={cn("p-6", viewMode === "mobile" && "p-4")}>
+                  <div
+                    ref={contentRef}
+                    className={`whitespace-pre-wrap break-words relative ${
+                      !isExpanded && hasMoreContent ? "line-clamp-3" : ""
+                    }`}
+                    style={{
+                      wordBreak: "break-word",
+                      overflowWrap: "break-word",
+                      lineHeight: "1.5",
+                    }}
+                  >
                     {content}
                   </div>
 
                   {/* Image Grid */}
                   {imageUrls.length > 0 && (
-                    <div className={cn(
-                      "mt-4",
-                      viewMode === "mobile" && "mt-3"
-                    )}>
+                    <div
+                      className={cn("mt-4", viewMode === "mobile" && "mt-3")}
+                    >
                       <div
                         className={cn(
                           "grid gap-2",
@@ -323,7 +329,9 @@ export const PostPreview = ({
                             key={index}
                             className={cn(
                               "relative rounded-lg overflow-hidden shadow-sm",
-                              imageUrls.length === 3 && index === 0 && "row-span-2"
+                              imageUrls.length === 3 &&
+                                index === 0 &&
+                                "row-span-2"
                             )}
                           >
                             <img
@@ -331,7 +339,8 @@ export const PostPreview = ({
                               alt={`Preview ${index + 1}`}
                               className="w-full h-full object-cover"
                               style={{
-                                aspectRatio: imageUrls.length === 1 ? "16/9" : "1/1",
+                                aspectRatio:
+                                  imageUrls.length === 1 ? "16/9" : "1/1",
                               }}
                             />
                           </div>
@@ -343,10 +352,12 @@ export const PostPreview = ({
               </>
             ) : (
               // No LinkedIn Account State
-              <div className={cn(
-                "min-h-[400px] flex flex-col items-center justify-center",
-                viewMode === "mobile" ? "p-4" : "p-8"
-              )}>
+              <div
+                className={cn(
+                  "min-h-[400px] flex flex-col items-center justify-center",
+                  viewMode === "mobile" ? "p-4" : "p-8"
+                )}
+              >
                 <div className="w-full max-w-[280px] flex flex-col items-center text-center">
                   <div className="w-16 h-16 rounded-full bg-blue-50 flex items-center justify-center mb-8">
                     <svg
@@ -361,7 +372,8 @@ export const PostPreview = ({
                     No LinkedIn Account Connected
                   </h3>
                   <p className="text-sm text-gray-500">
-                    Please connect your LinkedIn account to start posting content
+                    Please connect your LinkedIn account to start posting
+                    content
                   </p>
                 </div>
               </div>

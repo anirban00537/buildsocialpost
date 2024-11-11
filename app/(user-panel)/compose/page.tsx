@@ -50,11 +50,11 @@ const ComposePage = () => {
   );
 
   return (
-    <div className="h-screen flex flex-col bg-gray-50/50">
+    <div className="h-[calc(100vh-64px)] flex flex-col bg-gray-50/50">
       {/* Fixed Header */}
       <div className="flex-none border-b border-gray-200 bg-white">
-        <div className="max-w-[1600px] mx-auto px-6 py-6">
-          <div className="flex items-center justify-between">
+        <div className="max-w-[1600px] mx-auto px-4 sm:px-6 py-4 sm:py-6">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 sm:gap-0">
             <div className="space-y-2">
               <div className="flex items-center gap-3">
                 <h1 className="text-2xl font-semibold text-gray-900 tracking-tight">
@@ -74,7 +74,7 @@ const ComposePage = () => {
             </div>
 
             {/* Enhanced Profile Selector */}
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-3 w-full sm:w-auto">
               <span className="text-sm font-medium text-gray-500">Profile</span>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
@@ -180,10 +180,10 @@ const ComposePage = () => {
       </div>
 
       {/* Scrollable Content Area */}
-      <div className="flex-1 overflow-hidden">
+      <div className="flex-1 overflow-y-auto min-h-0">
         {!selectedProfile ? (
           // No LinkedIn Profile Error State (Centered in scrollable area)
-          <div className="h-full flex items-center justify-center p-6">
+          <div className="h-full flex items-center justify-center p-4 sm:p-6">
             <div className="rounded-2xl bg-white shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-red-100 p-12 max-w-2xl">
               <div className="max-w-md mx-auto text-center">
                 <div className="w-16 h-16 rounded-full bg-red-50 flex items-center justify-center mx-auto mb-6">
@@ -251,13 +251,13 @@ const ComposePage = () => {
           </div>
         ) : (
           // Split View with Fixed Headers and Scrollable Content
-          <div className="h-full grid grid-cols-2">
+          <div className="h-full grid grid-cols-1 lg:grid-cols-2">
             {/* Left Column - Compose Section */}
-            <div className="flex flex-col border-r border-gray-200">
-              <div className="flex-none px-6 py-4 bg-white border-b border-gray-200">
+            <div className="flex flex-col border-b lg:border-b-0 lg:border-r border-gray-200">
+              <div className="flex-none px-4 sm:px-6 py-3 sm:py-4 bg-white border-b border-gray-200">
                 <h2 className="text-lg font-medium text-gray-900">Write Post</h2>
               </div>
-              <div className="flex-1 overflow-y-auto px-6 py-6">
+              <div className="flex-1 overflow-y-auto min-h-0 px-4 sm:px-6 py-4 sm:py-6">
                 {isLoadingDraft ? (
                   <div className="h-full flex items-center justify-center">
                     <div className="flex flex-col items-center gap-4">
@@ -299,17 +299,17 @@ const ComposePage = () => {
             </div>
 
             {/* Right Column - Preview Section */}
-            <div className="flex flex-col">
-              <div className="flex-none px-6 py-4 bg-white border-b border-gray-200">
+            <div className="flex flex-col h-[500px] lg:h-full">
+              <div className="flex-none px-4 sm:px-6 py-3 sm:py-4 bg-white border-b border-gray-200">
                 <div className="flex items-center justify-between">
                   <h2 className="text-lg font-medium text-gray-900">Post Preview</h2>
                   <div className="flex items-center gap-2">
-                    <span className="text-sm text-gray-500">Devices:</span>
+                    <span className="text-sm text-gray-500 hidden sm:inline">Devices:</span>
                     {/* Add your device selector buttons here */}
                   </div>
                 </div>
               </div>
-              <div className="flex-1 overflow-y-auto px-6 py-6">
+              <div className="flex-1 overflow-y-auto min-h-0 px-4 sm:px-6 py-4 sm:py-6">
                 <PostPreview
                   title="Content Preview"
                   content={content}

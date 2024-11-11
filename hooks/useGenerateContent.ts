@@ -2,6 +2,7 @@ import { generateCarouselContent } from "@/services/ai-content";
 import { addAllSlides, setBackground } from "@/state/slice/carousel.slice";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
+import { useAuth } from "./useAuth";
 
 export const useGenerateContent = () => {
   const [topic, setTopic] = useState("");
@@ -14,6 +15,7 @@ export const useGenerateContent = () => {
   const [targetAudience, setTargetAudience] = useState("General");
   const [themeActive, setThemeActive] = useState(false);
   const dispatch = useDispatch();
+  const { refetchSubscription } = useAuth();
 
   const generateContent = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -31,6 +33,7 @@ export const useGenerateContent = () => {
       );
 
       if (result.success) {
+        refetchSubscription();
         const { response, colorPalette } = result.data;
         dispatch(addAllSlides(response));
         if (themeActive) {

@@ -79,7 +79,7 @@ export const useLinkedInCallback = (
       },
       onSettled: () => {
         sessionStorage.removeItem("linkedin_state");
-        router.push("/");
+        router.push("/accounts");
       },
     }
   );
