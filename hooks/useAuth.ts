@@ -1,173 +1,188 @@
-import { usePathname, useRouter } from "next/navigation";
-import { useMutation, useQuery, useQueryClient } from "react-query";
-import axios from "axios";
-import toast from "react-hot-toast";
-import { useDispatch, useSelector } from "react-redux";
+import { useState, useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { useRouter } from "next/navigation";
 import {
-  setUser,
   logout,
-  setSubscribed,
   setEndDate,
   setLoading,
+  setSubscribed,
+  setUser,
 } from "@/state/slice/user.slice";
-import { useCallback, useEffect } from "react";
-import { CredentialResponse } from "@react-oauth/google";
-import { googleSignIn, profile } from "@/services/auth";
-import { checkSubscription } from "@/services/subscription";
-import Cookies from "js-cookie";
-import { RootState } from "@/state/store";
-import { ResponseData, UserInfo } from "@/types";
+import { useQuery, useMutation, useQueryClient } from "react-query";
+import { User } from "firebase/auth";
+import { setBranding } from "@/state/slice/branding.slice";
+import {
+  signOut,
+  signInWithGoogle,
+  onAuthStateChange,
+  getCurrentUser,
+} from "@/services/auth";
+import {
+  fetchSubscriptionStatus,
+  fetchBrandingSettings,
+} from "@/services/firestore";
 
-interface Subscription {
-  id: string;
-  userId: number;
-  orderId: string;
-  status: string;
-  endDate: string;
-  createdAt: string;
-  productName: string;
-  variantName: string;
-  subscriptionLengthInMonths: number;
-  totalAmount: number;
-  currency: string;
-}
-
-interface SubscriptionResponse {
-  success: boolean;
-  message: string;
-  data: {
-    isSubscribed: boolean;
-    subscription: Subscription | null;
-    daysLeft: number;
-  };
-}
-
-export const useAuth = () => {
-  const router = useRouter();
-  const queryClient = useQueryClient();
+// Hook for logging out the user
+const useLogout = () => {
+  const [error, setError] = useState<string>("");
+  const [success, setSuccess] = useState<string>("");
   const dispatch = useDispatch();
-  const { userinfo, loggedin, loading, subscribed, endDate } = useSelector(
-    (state: RootState) => state.user
-  );
-  const token = Cookies.get("token");
-  const pathname = usePathname();
+  const router = useRouter();
 
-  const { data: userData, isLoading: isUserLoading } = useQuery<
-    ResponseData,
-    Error
-  >(["user"], profile, {
-    enabled: !!token,
-    onSuccess: (data: ResponseData) => {
-      dispatch(setUser(data.data as UserInfo));
-      refetchSubscription();
-    },
-  });
-
-  const {
-    data: subscriptionData,
-    isLoading: isSubscriptionLoading,
-    refetch: refetchSubscription,
-  } = useQuery<SubscriptionResponse, Error>(
-    ["subscription"],
-    checkSubscription,
-    {
-      enabled: loggedin,
-      staleTime: 1000 * 60 * 5, // 5 minutes
-      cacheTime: 1000 * 60 * 30, // 30 minutes
-      onSuccess: (data: SubscriptionResponse) => {
-        dispatch(setSubscribed(data.data.isSubscribed));
-        if (data.data.subscription) {
-          dispatch(setEndDate(data.data.subscription.endDate));
-        } else {
-          dispatch(setEndDate(null));
-        }
-      },
-      onError: (error: Error) => {
-        toast.error(`Failed to fetch subscription: ${error.message}`);
-      },
-    }
-  );
-
-  const loginMutation = useMutation(
-    (idToken: string) => googleSignIn(idToken),
-    {
-      onSuccess: (result) => {
-        if (result.success) {
-          const { accessToken, refreshToken, user, isAdmin } = result.data;
-          dispatch(setUser(user as UserInfo));
-
-          Cookies.set("token", accessToken, { expires: 7 });
-          Cookies.set("refreshToken", refreshToken, { expires: 30 });
-          Cookies.set("user", JSON.stringify(user), { expires: 7 });
-
-          toast.success("Logged in successfully");
-          if (pathname !== "/editor") {
-            router.push("/editor");
-          }
-        } else {
-          toast.error(`Failed to log in: ${result.message}`);
-        }
-      },
-      onError: (error: Error) => {
-        toast.error(`Failed to log in with Google: ${error.message}`);
-      },
-    }
-  );
-
-  const logoutMutation = useMutation(
-    () => {
-      // Implement your logout logic here
-      return Promise.resolve();
-    },
+  const { mutate: logoutUser, isLoading: loading } = useMutation<void, Error>(
+    async () => await signOut(),
     {
       onSuccess: () => {
         dispatch(logout());
-        queryClient.clear();
-
-        // Remove cookies
-        Cookies.remove("token");
-        Cookies.remove("refreshToken");
-        Cookies.remove("user");
-
-        toast.success("Logged out successfully");
-        router.push("/");
+        setSuccess("Logged out successfully");
+        router.push("/login");
       },
       onError: (error: Error) => {
-        toast.error(`Failed to log out: ${error.message}`);
+        setError(error.message || "Logout failed. Please try again.");
       },
     }
   );
 
-  const handleGoogleLogin = useCallback(
-    async (credentialResponse: CredentialResponse) => {
-      try {
-        if (credentialResponse.credential) {
-          await loginMutation.mutateAsync(credentialResponse.credential);
-        } else {
-          console.error("No credential received from Google");
-        }
-      } catch (error) {
-        console.error("Error during Google login:", error);
+  return { logout: logoutUser, loading, error, success };
+};
+
+// Hook for fetching authenticated user and their subscription status
+const useAuthUser = () => {
+  const [error, setError] = useState<string>("");
+  const dispatch = useDispatch();
+  const queryClient = useQueryClient();
+
+  const {
+    data: userData,
+    isLoading: userLoading,
+    error: userError,
+    refetch: refetchUser,
+  } = useQuery<User | null, Error>("user", getCurrentUser, {
+    onSuccess: (data) => {
+      if (data) {
+        const { uid, email, displayName, photoURL } = data;
+        dispatch(setUser({ uid, email, displayName, photoURL }));
+      } else {
+        dispatch(logout());
       }
     },
-    [loginMutation]
+    onError: (error: Error) => {
+      setError(error.message || "Failed to fetch the current user.");
+      dispatch(logout());
+    },
+  });
+
+  const userId = userData?.uid;
+
+  const {
+    data: subscriptionData,
+    isLoading: subscriptionLoading,
+    error: subscriptionError,
+  } = useQuery(
+    ["subscriptionStatus", userId],
+    () => fetchSubscriptionStatus(userId!),
+    {
+      enabled: !!userId,
+      onSuccess: (data) => {
+        dispatch(setSubscribed(data.isSubscribed));
+        dispatch(setEndDate(data.endDate));
+      },
+      onError: (error: Error) => {
+        setError(error.message || "Failed to fetch subscription status.");
+        dispatch(setSubscribed(false));
+        dispatch(setEndDate(null));
+      },
+    }
   );
 
-  const logoutUser = () => {
-    logoutMutation.mutate();
-  };
+  const {
+    data: brandingData,
+    isLoading: brandingLoading,
+    error: brandingError,
+  } = useQuery(
+    ["brandingSettings", userId],
+    () => fetchBrandingSettings(userId!),
+    {
+      enabled: !!userId,
+      onSuccess: (data) => {
+        dispatch(setBranding(data));
+      },
+      onError: (error: Error) => {
+        setError(error.message || "Failed to fetch branding settings.");
+      },
+    }
+  );
+
   useEffect(() => {
-    if (!isUserLoading && !isSubscriptionLoading) dispatch(setLoading(false));
-  }, [isUserLoading, isSubscriptionLoading]);
+    dispatch(setLoading(userLoading || subscriptionLoading || brandingLoading));
+  }, [userLoading, subscriptionLoading, brandingLoading, dispatch]);
+
+  const refetchAllData = () => {
+    if (userId) {
+      queryClient.refetchQueries(["subscriptionStatus", userId]);
+      queryClient.refetchQueries(["brandingSettings", userId]);
+    }
+  };
+
   return {
-    user: userinfo,
-    isAuthenticated: loggedin,
-    isLoading: loading,
-    handleGoogleLogin,
-    logoutUser,
-    subscriptionData,
-    isSubscriptionLoading,
-    refetchSubscription,
-    checkSubscription,
+    error:
+      error ||
+      userError?.message ||
+      subscriptionError?.message ||
+      brandingError?.message,
+    user: userData,
+    loading: userLoading || subscriptionLoading || brandingLoading,
+    fetchUser: refetchUser,
+    refetchAllData,
   };
 };
+
+// Hook for Google login
+const useGoogleLogin = () => {
+  const [error, setError] = useState<string>("");
+  const [success, setSuccess] = useState<string>("");
+  const dispatch = useDispatch();
+  const router = useRouter();
+  const queryClient = useQueryClient();
+
+  const { mutate: loginWithGoogle, isLoading: loading } = useMutation<
+    void,
+    Error
+  >(
+    async () => {
+      const result = await signInWithGoogle();
+      const user = result.user;
+      const { uid, email, displayName, photoURL } = user;
+      dispatch(setUser({ uid, email, displayName, photoURL }));
+
+      // Fetch subscription and branding data immediately after login
+      const [subscriptionData, brandingData] = await Promise.all([
+        fetchSubscriptionStatus(uid),
+        fetchBrandingSettings(uid),
+      ]);
+
+      dispatch(setSubscribed(subscriptionData.isSubscribed));
+      dispatch(setEndDate(subscriptionData.endDate));
+      dispatch(setBranding(brandingData));
+
+      // Update React Query cache
+      queryClient.setQueryData(["subscriptionStatus", uid], subscriptionData);
+      queryClient.setQueryData(["brandingSettings", uid], brandingData);
+    },
+    {
+      onSuccess: () => {
+        setSuccess("Logged in successfully!");
+        router.push("/editor");
+      },
+      onError: (error: Error) => {
+        setError(
+          error.message || "Failed to log in with Google. Please try again."
+        );
+      },
+    }
+  );
+
+  return { loginWithGoogle, loading, error, success };
+};
+
+export { useLogout, useAuthUser, useGoogleLogin };

@@ -1,6 +1,8 @@
 import React from "react";
+import { ChevronRight } from "lucide-react";
 import { Slide } from "@/types";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { setBackgroundOpacity } from "@/state/slice/carousel.slice";
 import SharedElementsComponent from "./slide-parts/sharedElements";
 import Text from "./slide-parts/text";
 import Image from "./slide-parts/image";
@@ -9,6 +11,7 @@ import GeneralInfo from "./slide-parts/generalInfo";
 import { RootState } from "@/state/store";
 import { CSSProperties } from "react";
 import { fontOptions } from "@/lib/fonts";
+import { backgroundPatterns } from "@/lib/coreConstants";
 import { getBackgroundPattern } from "@/components/shared-components/backgrounds";
 
 interface SlideProps {
@@ -304,7 +307,7 @@ const SlideComponent: React.FC<SlideProps> = ({
         >
           Built with{" "}
           <a
-            href="https://buildsocialpost.com"
+            href="https://buildcarousel.com"
             style={{
               color: "inherit",
               textDecoration: "none",
@@ -314,7 +317,7 @@ const SlideComponent: React.FC<SlideProps> = ({
             onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.7")}
             onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}
           >
-            Buildsocialpost.com
+            BuildCarousel.com
           </a>
         </div>
       )}

@@ -1,113 +1,72 @@
 import React from "react";
-import { Paintbrush, Sliders, FileText, Share2 } from "lucide-react";
-import { motion } from "framer-motion";
-import { cn } from "@/lib/utils";
-
-const steps = [
-  {
-    icon: <Paintbrush className="w-8 h-8" />,
-    number: "01",
-    title: "Choose Template",
-    description:
-      "Start with professional templates optimized for LinkedIn engagement.",
-  },
-  {
-    icon: <Sliders className="w-8 h-8" />,
-    number: "02",
-    title: "Customize Design",
-    description:
-      "Personalize your carousel with brand colors, fonts, and professional layouts.",
-  },
-  {
-    icon: <FileText className="w-8 h-8" />,
-    number: "03",
-    title: "Add Content",
-    description:
-      "Transform your ideas into engaging carousel content with our user-friendly editor.",
-  },
-  {
-    icon: <Share2 className="w-8 h-8" />,
-    number: "04",
-    title: "Export & Share",
-    description:
-      "Download in LinkedIn-optimized formats and share directly to your professional network.",
-  },
-];
+import { Paintbrush, Sliders, Sparkles, Share2 } from "lucide-react";
 
 const HowItWorksSection = () => {
+  const steps = [
+    {
+      icon: <Paintbrush className="w-8 h-8" />,
+      number: "01",
+      title: "Choose a Template",
+      description:
+        "Select from a variety of professionally designed templates to start your carousel.",
+    },
+    {
+      icon: <Sliders className="w-8 h-8" />,
+      number: "02",
+      title: "Customize Your Design",
+      description:
+        "Use our dynamic color palettes and text customization features to make your carousel unique.",
+    },
+    {
+      icon: <Sparkles className="w-8 h-8" />,
+      number: "03",
+      title: "Generate Content",
+      description:
+        "Let our AI generate engaging content for your carousel slides.",
+    },
+    {
+      icon: <Share2 className="w-8 h-8" />,
+      number: "04",
+      title: "Download and Share",
+      description:
+        "Download your carousel as an image or PDF and share it on your social media platforms.",
+    },
+  ];
+
   return (
-    <section
-      className="py-16 bg-background"
-      id="how-it-works"
-      aria-label="How to create LinkedIn carousels"
-    >
+    <section className="py-16 bg-background">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        <motion.div
-          className="text-center mb-12"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-        >
+        <div className="text-center mb-12">
           <h2 className="text-3xl font-bold text-textColor sm:text-4xl">
-            Create Professional LinkedIn Carousels in Minutes
+            How It Works
           </h2>
           <p className="mt-4 text-xl text-textColor/70 max-w-3xl mx-auto">
-            Four simple steps to create engaging LinkedIn carousels. No design
-            experience needed.
+            Our AI carousel maker simplifies the creation process into a few
+            easy steps.
           </p>
-        </motion.div>
+        </div>
 
-        <div className="mt-16" role="list" aria-label="Carousel creation steps">
+        <div className="mt-16">
           <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">
             {steps.map((step, index) => (
-              <motion.div
+              <div
                 key={index}
-                className={cn(
-                  "flex flex-col items-center text-center",
-                  "p-6 rounded-xl bg-cardBackground/40",
-                  "backdrop-blur-lg border border-borderColor/50"
-                )}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.1, duration: 0.6 }}
-                role="listitem"
-                aria-label={`Step ${step.number}: ${step.title}`}
+                className="flex flex-col items-center text-center"
               >
-                <div
-                  className="flex items-center justify-center w-16 h-16 rounded-full bg-primary/10 text-primary mb-4"
-                  aria-hidden="true"
-                >
+                <div className="flex items-center justify-center w-16 h-16 rounded-full bg-primary/10 text-primary mb-4">
                   {step.icon}
                 </div>
                 <div className="text-sm font-semibold text-primary mb-2">
                   Step {step.number}
                 </div>
-                <h3 className="text-xl font-semibold text-textColor mb-2">
+                <h4 className="text-xl font-semibold text-textColor mb-2">
                   {step.title}
-                </h3>
+                </h4>
                 <p className="text-textColor/70">{step.description}</p>
-              </motion.div>
+              </div>
             ))}
           </div>
         </div>
-
-        {/* Essential structured data */}
-        <script type="application/ld+json">
-          {JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "HowTo",
-            name: "How to Create Professional LinkedIn Carousels",
-            description:
-              "Create engaging carousels for LinkedIn in four simple steps",
-            step: steps.map((step, index) => ({
-              "@type": "HowToStep",
-              position: index + 1,
-              name: step.title,
-              text: step.description,
-            })),
-            totalTime: "PT5M",
-          })}
-        </script>
       </div>
     </section>
   );

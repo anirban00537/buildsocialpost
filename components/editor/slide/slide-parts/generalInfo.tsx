@@ -12,7 +12,7 @@ interface GeneralInfoProps {
 }
 
 const GeneralInfo: React.FC<GeneralInfoProps> = ({
-  headshot = "/creator.jpg",
+  headshot = "images/headshot.png",
   name,
   handle,
   color2,
@@ -37,11 +37,7 @@ const GeneralInfo: React.FC<GeneralInfoProps> = ({
       >
         {headshot && (
           <img
-            src={
-              headshot === "/creator.jpg"
-                ? "/creator.jpg"
-                : `${headshot}`
-            }
+            src={headshot}
             alt="Headshot"
             style={{
               width: "40px",
@@ -59,7 +55,7 @@ const GeneralInfo: React.FC<GeneralInfoProps> = ({
               color: color2,
             }}
           >
-            {name || "BuildSocialPost"}
+            {name || "Anirban Roy"}
           </div>
           <div
             style={{
@@ -68,7 +64,7 @@ const GeneralInfo: React.FC<GeneralInfoProps> = ({
               color: color2,
             }}
           >
-            {handle || "@buildsocialpost"}
+            {handle || "@anirban00537"}
           </div>
         </div>
       </div>

@@ -18,7 +18,6 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Switch } from "@/components/ui/switch";
 import { Slide } from "@/types";
-import { Button } from "@/components/ui/button";
 
 interface SlideControlsProps {
   index: number;
@@ -51,103 +50,101 @@ const SlideControls: React.FC<SlideControlsProps> = ({
 }) => {
   const [showImagePreview, setShowImagePreview] = useState(false);
 
-  const ControlButton = ({
-    onClick,
-    title,
-    icon: Icon,
-  }: {
-    onClick: React.ButtonHTMLAttributes<HTMLButtonElement>['onClick'];
-    title: string;
-    icon: React.ElementType;
-  }) => (
-    <button
-      className="flex items-center justify-center bg-background/50 text-textColor border border-borderColor rounded-md hover:bg-primary/20 hover:border-primary hover:text-primary transition-colors duration-200 h-8 w-8"
-      onClick={onClick}
-      title={title}
-    >
-      <Icon size={16} />
-    </button>
-  );
-
   return (
-    <div className="flex items-center justify-between w-full px-4 py-3 bg-cardBackground/80 backdrop-blur-sm border rounded-t-lg ">
+    <div className="flex items-center justify-between mt-3 w-full px-2">
       <div className="flex items-center space-x-2">
-        <ControlButton
+        <button
+          className="flex items-center justify-center bg-cardBackground text-textColor border-none rounded-md hover:bg-primary hover:border-primary hover:text-white h-6 w-6 z-10"
           onClick={() => handleInsertSlide(index)}
           title="Insert new slide"
-          icon={Plus}
-        />
-        <ControlButton
+        >
+          <Plus size={22} />
+        </button>
+        <button
+          className="flex items-center justify-center bg-cardBackground text-textColor border-none rounded-md hover:bg-primary hover:border-primary hover:text-white h-6 w-6 z-10"
           onClick={() => handleCopySlide(index)}
           title="Copy slide"
-          icon={Copy}
-        />
-        <ControlButton
+        >
+          <Copy size={12} />
+        </button>
+        <button
+          className="flex items-center justify-center bg-cardBackground text-textColor border-none rounded-md hover:bg-primary hover:border-primary hover:text-white h-6 w-6 z-10"
           onClick={() => handleDeleteSlide(index)}
           title="Delete slide"
-          icon={Trash2}
-        />
-        <ControlButton
+        >
+          <Trash2 size={15} />
+        </button>
+        <button
+          className="flex items-center justify-center bg-cardBackground text-textColor border-none rounded-md hover:bg-primary hover:border-primary hover:text-white h-6 w-6 z-10"
           onClick={(e) => {
-            e.stopPropagation();
+            e.stopPropagation(); // Prevent slide click event
             handleMoveSlideLeft(index);
           }}
           title="Move slide left"
-          icon={ArrowLeft}
-        />
-        <ControlButton
+        >
+          <ArrowLeft size={15} />
+        </button>
+        <button
+          className="flex items-center justify-center bg-cardBackground text-textColor border-none rounded-md hover:bg-primary hover:border-primary hover:text-white h-6 w-6 z-10"
           onClick={(e) => {
-            e.stopPropagation();
+            e.stopPropagation(); // Prevent slide click event
             handleMoveSlideRight(index);
           }}
           title="Move slide right"
-          icon={ArrowRight}
-        />
+        >
+          <ArrowRight size={15} />
+        </button>
       </div>
       <div className="flex items-center space-x-2">
         <div className="relative">
-          {slide.backgroundImage ? (
-            <div className="relative h-8 w-8 rounded-md overflow-hidden border border-borderColor">
-              <img
-                src={slide.backgroundImage}
-                alt="Background"
-                onClick={() => handleImageIconClick(index, "background")}
-                className="w-full h-full object-cover"
-              />
+          <div className=" flex items-center justify-center rounded-md  h-8 w-8">
+            {slide.backgroundImage ? (
+              <div className="bg-cardBackground border border-borderColor">
+                <img
+                  src={slide.backgroundImage}
+                  alt="Background"
+                  onClick={() => handleImageIconClick(index, "background")}
+                  className="w-full h-full object-cover rounded-md"
+                />
+                <button
+                  className="text-xs text-primary hover:text-primary/80 bg-cardBackground border border-borderColor rounded-md absolute top-0 right-0"
+                  onClick={() => {
+                    handleRemoveImage(index);
+                    setShowImagePreview(false);
+                  }}
+                >
+                  <X size={16} className="absolute top-0 right-0" />
+                </button>
+              </div>
+            ) : (
               <button
-                className="absolute top-0 right-0 bg-cardBackground/80 hover:bg-cardBackground text-primary hover:text-primary/80 rounded-bl-md transition-colors duration-200"
-                onClick={() => {
-                  handleRemoveImage(index);
-                  setShowImagePreview(false);
-                }}
+                className="flex items-center justify-center bg-cardBackground text-textColor border-none rounded-md hover:bg-primary hover:border-primary hover:text-white h-6 w-6 z-10"
+                onClick={() => handleImageIconClick(index, "background")}
+                title={
+                  slide.backgroundImage
+                    ? "View/change background image"
+                    : "Add background image"
+                }
               >
-                <X size={16} />
+                <ImageIcon size={15} />
               </button>
-            </div>
-          ) : (
-            <ControlButton
-              onClick={() => handleImageIconClick(index, "background")}
-              title="Add background image"
-              icon={ImageIcon}
-            />
-          )}
+            )}
+          </div>
         </div>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button
-              variant="outline"
-              size="icon"
-              className="flex items-center justify-center bg-background/50  border border-borderColor rounded-md hover:bg-primary/20 hover:border-primary hover:text-primary transition-colors duration-200 h-8 w-8"
+            <button
+              className="flex items-center justify-center bg-cardBackground text-textColor border-none rounded-md hover:bg-primary hover:border-primary hover:text-white h-6 w-6 z-10"
               title="Slide settings"
             >
-              <Settings className="h-4 w-4" />
-            </Button>
+              <Settings size={15} />
+            </button>
           </DropdownMenuTrigger>
           <DropdownMenuContent className="bg-cardBackground text-textColor border-borderColor">
             <DropdownMenuLabel>Slide Settings</DropdownMenuLabel>
             {(
               [
-                // { value: "showImage", label: "Show Image" },
+                { value: "showImage", label: "Show Image" },
                 { value: "showTagline", label: "Show Tagline" },
                 { value: "showTitle", label: "Show Title" },
                 { value: "showDescription", label: "Show Description" },
@@ -160,7 +157,7 @@ const SlideControls: React.FC<SlideControlsProps> = ({
                 <span>{setting.label}</span>
                 <Switch
                   checked={slide[setting.value]}
-                  className="data-[state=checked]:bg-primary bg-background data-[state=unchecked]:bg-primary/50"
+                  className="data-[state=checked]:bg-primary bg-cardBackground data-[state=unchecked]:bg-primary/50"
                   onCheckedChange={(checked) =>
                     handleSettingChange(index, setting.value, checked)
                   }

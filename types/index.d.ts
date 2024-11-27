@@ -5,12 +5,6 @@ export interface Purchase {
   status: string;
   createdAt: string;
 }
-export interface BackgroundColors {
-  color1: string; // Background Color
-  color2: string; // Text Color
-  color3: string; // Tint Color
-  color4: string; // Accent Color
-}
 
 export interface Subscription {
   userId: string;
@@ -46,24 +40,13 @@ export interface TextSettings {
   fontWeight: "normal" | "bold" | number;
 }
 
-interface ApiResponse {
-  success: boolean;
-  message: string;
-  data?: {
-    [key: string]: any;
-  };
+export interface BackgroundColors {
+  color1: string; // Background Color
+  color2: string; // Text Color
+  color3: string; // Tint Color
+  color4: string; // Accent Color
 }
 
-interface ApiError {
-  response?: {
-    data?: {
-      statusCode?: number;
-      message?: string | string[];
-      error?: string;
-    };
-  };
-  message?: string;
-}
 export interface LayoutSettings {
   height: number;
   width: number;
@@ -92,30 +75,4 @@ export interface CarouselState {
 
 export interface FirestoreCarouselState extends CarouselState {
   userId: string;
-}
-export interface ResponseData {
-  data: any;
-  message: string;
-  success: boolean;
-}
-export interface UserInfo {
-  id: number;
-  email: string;
-  first_name: string;
-  last_name: string;
-  user_name: string;
-  unique_code: string;
-  phone: string | null;
-  photo: string | null;
-  country: string | null;
-  birth_date: string | null;
-  role: number;
-  status: number;
-  is_subscribed: number;
-  email_verified: number;
-  phone_verified: number;
-  gender: number;
-  createdAt: string;
-  updatedAt: string;
-  login_provider: string;
 }

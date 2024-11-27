@@ -1,5 +1,4 @@
-import { CarouselState, Slide } from "@/types";
-import { sharedElements } from "./coreConstants";
+import { Slide } from "@/types";
 
 export const initialSlides: Slide[] = [
   {
@@ -22,7 +21,7 @@ export const initialSlides: Slide[] = [
       "This is where you can put your main content. Add key points, data, or any information relevant to your presentation.",
     imageUrl: null,
     backgroundImage: null,
-    showImage: false,
+    showImage: true,
     showTagline: false,
     showTitle: true,
     showDescription: true,
@@ -40,47 +39,3 @@ export const initialSlides: Slide[] = [
     showDescription: true,
   },
 ];
-
-
-export const initialCarousel: CarouselState = {
-  name: "New Carousel",
-  slides: initialSlides,
-  background: {
-    color1: "#081022",
-    color2: "#F7FAFC",
-    color3: "#2D3748",
-    color4: "#63B3ED",
-  },
-  sharedSelectedElement: {
-    id: sharedElements[0].id,
-    opacity: 0.099,
-  },
-  titleTextSettings: {
-    alignment: "left",
-    fontSize: 48,
-    fontStyle: "normal",
-    fontWeight: "bold",
-  },
-  descriptionTextSettings: {
-    alignment: "left",
-    fontSize: 16,
-    fontStyle: "normal",
-    fontWeight: "normal",
-  },
-  taglineTextSettings: {
-    alignment: "left",
-    fontSize: 16,
-    fontStyle: "normal",
-    fontWeight: "normal",
-  },
-  layout: {
-    height: 600,
-    width: 600,
-    pattern: 7,
-    backgroundOpacity: 0.02,
-    gradient: true,
-  },
-  fontFamily: "poppins",
-  globalBackground: null,
-};
-

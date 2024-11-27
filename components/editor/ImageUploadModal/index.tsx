@@ -1,27 +1,11 @@
-import React, { useState } from "react";
+import React from "react";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import Image from "next/image";
-import {
-  X,
-  ChevronLeft,
-  ChevronRight,
-  AlertTriangle,
-  Upload,
-} from "lucide-react";
-import { useImageUpload } from "@/hooks/useimageUpload";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
 import toast from "react-hot-toast";
+import Image from "next/image";
+import { X, ChevronLeft, ChevronRight } from "lucide-react";
+import { useImageUpload } from "@/hooks/useimageUpload";
 
 interface ImageUploadModalProps {
   isOpen: boolean;
@@ -35,7 +19,7 @@ const ImageUploadModal: React.FC<ImageUploadModalProps> = ({
   onImageSelect,
 }) => {
   const {
-    loggedin,
+    uid,
     uploadedImages,
     currentPage,
     jumpToPage,
@@ -51,46 +35,7 @@ const ImageUploadModal: React.FC<ImageUploadModalProps> = ({
     handleJumpToPage,
     setJumpToPage,
     MAX_STORAGE_MB,
-    uploadImage,
   } = useImageUpload(isOpen);
-
-  const [deleteImageId, setDeleteImageId] = useState<string | null>(null);
-
-  const handleDeleteConfirm = () => {
-    if (deleteImageId) {
-      handleDeleteImage(deleteImageId);
-      setDeleteImageId(null);
-    }
-  };
-
-  const handleUpload = async (files: File[]) => {
-    for (const file of files) {
-      try {
-        await uploadImage(file);
-        toast.success(`Successfully uploaded ${file.name}`);
-      } catch (error) {
-        toast.error(`Failed to upload ${file.name}`);
-        console.error("Upload error:", error);
-      }
-    }
-  };
-
-  const onDrop = React.useCallback(
-    (acceptedFiles: File[]) => {
-      const validFiles = acceptedFiles.filter(
-        (file) => file.type === "image/jpeg" || file.type === "image/png"
-      );
-
-      if (validFiles.length !== acceptedFiles.length) {
-        toast.error("Only JPG and PNG images are allowed.");
-      }
-
-      if (validFiles.length > 0) {
-        handleUpload(validFiles);
-      }
-    },
-    [handleUpload]
-  );
 
   const renderPageNumbers = () => {
     const pageNumbers = [];
@@ -107,10 +52,9 @@ const ImageUploadModal: React.FC<ImageUploadModalProps> = ({
       pageNumbers.push(
         <Button
           key={i}
-          size="sm"
           variant={i === currentPage ? "default" : "outline"}
           onClick={() => handlePageChange(i)}
-          className="mx-1 transition-all duration-200"
+          className="mx-1 bg-opacity-70 bg-gray-700 text-white hover:bg-opacity-90 border border-gray-600 transition-all duration-200"
         >
           {i}
         </Button>
@@ -122,200 +66,145 @@ const ImageUploadModal: React.FC<ImageUploadModalProps> = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="w-[900px] h-[90vh] p-0 flex flex-col bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 rounded-xl shadow-2xl">
-        <header className="flex-shrink-0 flex justify-between items-center p-6 border-b border-gray-200 dark:border-gray-700">
-          <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-100">
-            Image Gallery
-          </h2>
-        </header>
+      <DialogContent className="w-[800px] max-h-[85vh] overflow-y-auto bg-opacity-80 bg-background backdrop-filter backdrop-blur-md border border-borderColor rounded-lg text-white">
+        <h2 className="text-lg font-semibold mb-4 text-white">
+          Image Management
+        </h2>
 
-        <div className="flex-grow overflow-y-auto">
-          <div className="p-6">
-            {!loggedin ? (
-              <div className="flex flex-col items-center justify-center h-full">
-                <AlertTriangle className="w-16 h-16 text-yellow-500 mb-4" />
-                <p className="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-2">
-                  Login Required
-                </p>
-                <p className="text-gray-500 dark:text-gray-400 text-center">
-                  Please log in to upload and manage images.
-                </p>
-              </div>
+        {!uid ? (
+          <p className="text-center text-red-500">
+            Please log in to upload and manage images.
+          </p>
+        ) : (
+          <>
+            <div className="mb-4">
+              <p className="text-white">
+                Total Usage: {totalUsage.toFixed(2)} MB / {MAX_STORAGE_MB} MB
+              </p>
+              <progress
+                value={totalUsage}
+                max={MAX_STORAGE_MB}
+                className="w-full h-2 bg-gray-200 rounded-full overflow-hidden"
+              >
+                {(totalUsage / MAX_STORAGE_MB) * 100}%
+              </progress>
+            </div>
+
+            <div
+              {...getRootProps()}
+              className={`border-2 border-dashed p-4 rounded-lg cursor-pointer bg-opacity-60 bg-cardBackground hover:bg-opacity-70 transition-all duration-200 ${
+                uploadLoading ? "cursor-not-allowed" : "hover:border-gray-400"
+              }`}
+            >
+              <input {...getInputProps()} />
+              <p className="text-center text-white">
+                {uploadLoading
+                  ? "Uploading..."
+                  : "Drag & drop images here, or click to select images (max 100 MB)"}
+              </p>
+            </div>
+
+            {isLoading ? (
+              <p className="mt-4 text-center text-white">
+                Loading images...
+              </p>
+            ) : uploadedImages.length === 0 ? (
+              <p className="mt-4 text-center text-white">
+                No images uploaded yet.
+              </p>
             ) : (
               <>
-                <div className="mb-6">
-                  <div className="flex justify-between items-center mb-2">
-                    <p className="text-sm font-medium text-gray-600 dark:text-gray-300">
-                      Storage Usage
-                    </p>
-                    <p className="text-sm font-semibold text-gray-700 dark:text-gray-200">
-                      {totalUsage.toFixed(2)} MB / {MAX_STORAGE_MB} MB
-                    </p>
-                  </div>
-                  <div className="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
-                    <div
-                      className="bg-blue-600 h-2.5 rounded-full transition-all duration-300 ease-in-out"
-                      style={{
-                        width: `${(totalUsage / MAX_STORAGE_MB) * 100}%`,
-                      }}
-                    ></div>
-                  </div>
-                </div>
-
-                <div
-                  {...getRootProps()}
-                  className={`
-                    border-2 border-dashed border-gray-300 dark:border-gray-600 
-                    rounded-lg p-8 text-center cursor-pointer 
-                    transition-all duration-300 ease-in-out mb-6
-                    ${
-                      uploadLoading
-                        ? "bg-gray-100 dark:bg-gray-800"
-                        : "hover:border-blue-500 hover:bg-blue-50 dark:hover:bg-gray-700"
-                    }
-                  `}
-                >
-                  <input {...getInputProps()} />
-                  {uploadLoading ? (
-                    <div className="flex flex-col items-center">
-                      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mb-4"></div>
-                      <p className="text-gray-600 dark:text-gray-300">
-                        Uploading...
-                      </p>
-                    </div>
-                  ) : (
-                    <>
-                      <Upload className="mx-auto h-16 w-16 text-gray-400 mb-4" />
-                      <p className="text-lg font-medium text-gray-700 dark:text-gray-200 mb-2">
-                        Drag & drop images here, or click to select
-                      </p>
-                      <p className="text-sm text-gray-500 dark:text-gray-400">
-                        JPG and PNG only, max 100 MB per file
-                      </p>
-                    </>
-                  )}
-                </div>
-
-                {isLoading ? (
-                  <div className="flex justify-center items-center h-64">
-                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
-                  </div>
-                ) : currentImages.length === 0 ? (
-                  <div className="flex flex-col items-center justify-center h-64">
-                    <p className="text-lg font-medium text-gray-600 dark:text-gray-300 mb-2">
-                      No images uploaded yet
-                    </p>
-                    <p className="text-sm text-gray-500 dark:text-gray-400">
-                      Your uploaded images will appear here
-                    </p>
-                  </div>
-                ) : (
-                  <div className="mt-4 grid grid-cols-3 gap-4">
-                    {currentImages.map((image) => (
-                      <div key={image.id} className="relative group">
-                        <div
-                          className="cursor-pointer overflow-hidden rounded-lg"
-                          onClick={() => onImageSelect(image.url)}
-                        >
-                          <Image
-                            src={image.url}
-                            alt={image.name}
-                            width={240}
-                            height={240}
-                            className="object-cover w-full h-48 transition-transform duration-300 group-hover:scale-110"
-                          />
-                        </div>
-                        <button
-                          onClick={() => setDeleteImageId(image.id)}
-                          className="absolute top-2 right-2 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                          disabled={uploadLoading}
-                        >
-                          <X className="h-4 w-4" />
-                        </button>
-                        <div className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-50 text-white p-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                          <p className="text-sm truncate">{image.name}</p>
-                          <p className="text-xs">
-                            {(image.size / (1024 * 1024)).toFixed(2)} MB
-                          </p>
-                        </div>
+                <div className="mt-4 grid grid-cols-3 gap-4">
+                  {currentImages.map((image) => (
+                    <div key={image.id} className="relative group">
+                      <div
+                        className="cursor-pointer overflow-hidden rounded-lg"
+                        onClick={() => onImageSelect(image.url)}
+                      >
+                        <Image
+                          src={image.url}
+                          alt={image.name}
+                          width={240}
+                          height={240}
+                          className="object-cover w-full h-48 transition-transform duration-300 group-hover:scale-110"
+                        />
                       </div>
-                    ))}
-                  </div>
-                )}
+                      <button
+                        onClick={() => handleDeleteImage(image.id, image.url)}
+                        className="absolute top-2 right-2 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                        disabled={uploadLoading}
+                      >
+                        <X className="h-4 w-4" />
+                      </button>
+                      <div className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-50 text-white p-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                        <p className="text-sm truncate">{image.name}</p>
+                        <p className="text-xs">
+                          {(image.size / (1024 * 1024)).toFixed(2)} MB
+                        </p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
 
+                {/* Pagination Controls */}
                 {totalPages > 1 && (
-                  <div className="flex justify-center mt-8">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => handlePageChange(currentPage - 1)}
-                      disabled={currentPage === 1}
-                      className="mr-2"
+                  <div className="flex flex-col items-center mt-4">
+                    <div className="flex items-center mb-2">
+                      <Button
+                        variant="outline"
+                        onClick={() => handlePageChange(currentPage - 1)}
+                        disabled={currentPage === 1}
+                        className="mr-2 bg-opacity-70 bg-gray-700 text-white hover:bg-opacity-90 border border-gray-600 transition-all duration-200"
+                      >
+                        <ChevronLeft className="w-4 h-4" />
+                        Previous
+                      </Button>
+                      {renderPageNumbers()}
+                      <Button
+                        variant="outline"
+                        onClick={() => handlePageChange(currentPage + 1)}
+                        disabled={currentPage === totalPages}
+                        className="ml-2 bg-opacity-70 bg-gray-700 text-white hover:bg-opacity-90 border border-gray-600 transition-all duration-200"
+                      >
+                        Next
+                        <ChevronRight className="w-4 h-4" />
+                      </Button>
+                    </div>
+                    <form
+                      onSubmit={handleJumpToPage}
+                      className="flex items-center"
                     >
-                      <ChevronLeft className="w-4 h-4 mr-1" />
-                      Previous
-                    </Button>
-                    {renderPageNumbers()}
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => handlePageChange(currentPage + 1)}
-                      disabled={currentPage === totalPages}
-                      className="ml-2"
-                    >
-                      Next
-                      <ChevronRight className="w-4 h-4 ml-1" />
-                    </Button>
+                      <Input
+                        type="number"
+                        min="1"
+                        max={totalPages}
+                        value={jumpToPage}
+                        onChange={(e) => setJumpToPage(e.target.value)}
+                        placeholder="Jump to page"
+                        className="w-24 mr-2 bg-opacity-70 bg-gray-700 text-white border border-gray-600"
+                      />
+                      <Button
+                        type="submit"
+                        variant="outline"
+                        className="bg-opacity-70 bg-gray-700 text-white hover:bg-opacity-90 border border-gray-600 transition-all duration-200"
+                      >
+                        Go
+                      </Button>
+                    </form>
                   </div>
                 )}
               </>
             )}
-          </div>
-        </div>
+          </>
+        )}
 
-        <footer className="flex-shrink-0 p-4 border-t border-gray-200 dark:border-gray-700">
-          <Button
-            variant="default"
-            onClick={onClose}
-            className="w-full transition-all duration-200"
-          >
-            Close
-          </Button>
-        </footer>
-
-        <AlertDialog
-          open={!!deleteImageId}
-          onOpenChange={() => setDeleteImageId(null)}
+        <Button
+          variant="default"
+          onClick={onClose}
+          className="mt-4 w-full bg-opacity-70 bg-gray-700 text-white hover:bg-opacity-90 border border-gray-600 transition-all duration-200"
         >
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <AlertDialogTitle className="flex items-center text-red-600">
-                <AlertTriangle className="w-5 h-5 mr-2" />
-                Confirm Image Deletion
-              </AlertDialogTitle>
-              <AlertDialogDescription className="text-gray-600">
-                Are you sure you want to delete this image? This action cannot
-                be undone.
-                <br />
-                <br />
-                <strong>Warning:</strong> This image may be in use elsewhere in
-                the application. Deleting it could potentially break layouts or
-                cause missing images in your projects.
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-              <AlertDialogCancel className="bg-gray-100 text-gray-800 hover:bg-gray-200">
-                Cancel
-              </AlertDialogCancel>
-              <AlertDialogAction
-                onClick={handleDeleteConfirm}
-                className="bg-red-600 text-white hover:bg-red-700"
-              >
-                Delete Image
-              </AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
+          Close
+        </Button>
       </DialogContent>
     </Dialog>
   );

@@ -13,19 +13,17 @@ import {
   moveSlideLeft,
   moveSlideRight,
   removeBackgroundImage,
-  setBackground,
 } from "@/state/slice/carousel.slice";
 import { jsPDF } from "jspdf";
 import { toPng } from "html-to-image";
 import { setCarouselDownloading } from "@/state/slice/user.slice";
-import { lightColorPresets } from "@/lib/color-presets";
 const useCarousel = () => {
   const dispatch = useDispatch();
   const { slides, layout, background } = useSelector(
     (state: RootState) => state.slides
   );
   const { color1, color2, color3, color4 } = background;
-  const { carouselDownloading } = useSelector((state: RootState) => state.user);
+ const { carouselDownloading } = useSelector((state: RootState) => state.user);
   const swiperRef = useRef<any>(null);
   const [zipLoading, setZipLoading] = useState(false);
   const [pdfLoading, setPdfLoading] = useState(false);

@@ -1,5 +1,4 @@
-/** @type {import('next').NextConfig} */
-const nextConfig = {
+module.exports = {
   webpack: (config, { isServer }) => {
     if (!isServer) {
       config.module.rules.push({
@@ -14,18 +13,12 @@ const nextConfig = {
     PUPPETEER_EXECUTABLE_PATH: "/usr/bin/chromium-browser",
   },
   images: {
-    remotePatterns: [
-      {
-        protocol: 'https',
-        hostname: '**',
-      },
-      {
-        protocol: 'http',
-        hostname: '**',
-      },
+    domains: [
+      "images.unsplash.com",
+      "media.licdn.com",
+      "firebasestorage.googleapis.com",
+      "aceternity.com",
+      "plus.unsplash.com",
     ],
-    domains: ['localhost'],
   },
 };
-
-module.exports = nextConfig;

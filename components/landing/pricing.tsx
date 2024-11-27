@@ -5,16 +5,19 @@ import Link from "next/link";
 
 const PricingSection = () => {
   const plan = {
-    name: "Free Plan",
-    description: "Everything you need to create stunning LinkedIn carousels",
+    name: "Basic Plan",
+    price: 9.99,
+    description: "Everything you need to create stunning carousels",
     features: [
       "User-Friendly Editor",
-      "LinkedIn Optimization",
+      "Multiple Templates",
+      "Cross-Platform Compatibility",
       "Data Security",
-      "Unlimited carousel creation",
+      "Unlimited manual carousel creation",
+      "Access to free templates",
       "Basic analytics",
       "Community support",
-      "Professional Design Tools",
+      "AI-Generated Content",
       "Dynamic Color Palettes",
       "Modern Backgrounds",
       "Text Customization",
@@ -44,10 +47,10 @@ const PricingSection = () => {
           className="text-center mb-16"
         >
           <h2 className="text-4xl md:text-5xl font-bold text-textColor mb-4">
-            100% Free LinkedIn Carousel Creator
+            Simple Pricing for Everyone
           </h2>
           <p className="text-xl text-textColor/70 max-w-2xl mx-auto">
-            All features included. Start creating amazing LinkedIn carousels today.
+            One plan, all features. Start creating amazing carousels today.
           </p>
         </motion.div>
 
@@ -65,9 +68,9 @@ const PricingSection = () => {
                 </h3>
                 <p className="text-textColor/70 mb-6">{plan.description}</p>
                 <div className="text-5xl font-bold text-primary mb-6">
-                  $0{" "}
+                  ${plan.price}{" "}
                   <span className="text-xl font-normal text-textColor/70">
-                    Forever
+                    /month
                   </span>
                 </div>
               </div>
@@ -75,9 +78,9 @@ const PricingSection = () => {
                 <motion.button
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
-                  className="w-full py-4 px-6 rounded-full font-semibold text-white bg-primary hover:bg-primary-dark transition-colors duration-300 text-lg flex items-center justify-center group"
+                  className="w-full py-4 px-6 rounded-full font-semibold text-textColor bg-primary hover:bg-primary-dark transition-colors duration-300 text-lg flex items-center justify-center group"
                 >
-                  Start Creating
+                  Get Started
                   <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
                 </motion.button>
               </Link>

@@ -1,40 +1,19 @@
 "use client";
-import { useAuth } from "@/hooks/useAuth";
-import { usePathname } from "next/navigation";
-import { useCallback, useEffect } from "react";
+import { useAuthUser } from "@/hooks/useAuth";
+import React, { ReactNode } from "react";
 import FullScreenLoading from "../loading/fullscreen.loading";
-import useBranding from "@/hooks/useBranding";
-import { setBackground, setNewCarousel } from "@/state/slice/carousel.slice";
-import { useDispatch } from "react-redux";
-import { darkColorPresets, lightColorPresets } from "@/lib/color-presets";
+import useAnalytics from "@/hooks/useAnalytics";
 
-const AuthCheckLayout = ({ children }: { children: React.ReactNode }) => {
-  const { isAuthenticated, isLoading } = useAuth();
-  const pathname = usePathname();
-  useBranding();
-  const dispatch = useDispatch();
+interface AuthCheckLayoutProps {
+  children: ReactNode;
+}
 
-  const chooseColorFromColorPalette = useCallback(() => {
-    const lightPreset =
-      lightColorPresets[Math.floor(Math.random() * lightColorPresets.length)];
-    const darkPreset =
-      darkColorPresets[Math.floor(Math.random() * darkColorPresets.length)];
-    const randomPreset = Math.random() < 0.5 ? lightPreset : darkPreset;
-    dispatch(setBackground(randomPreset));
-  }, [dispatch]);
+const AuthCheckLayout: React.FC<AuthCheckLayoutProps> = ({ children }) => {
+  const { loading } = useAuthUser();
 
-  useEffect(() => {
-    if (pathname) {
-      dispatch(setNewCarousel());
-      chooseColorFromColorPalette();
-    }
-  }, [pathname, dispatch, chooseColorFromColorPalette]);
-
-  if (isLoading) {
-    return <FullScreenLoading />;
-  }
-
-  return <>{children}</>;
+  useAnalytics();
+  if (loading) return <FullScreenLoading />;
+  return <div>{children}</div>;
 };
 
 export default AuthCheckLayout;

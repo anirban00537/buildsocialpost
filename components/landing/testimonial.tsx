@@ -31,20 +31,20 @@ const Testimonial = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.3 }}
         >
-          See what our users have to say about our LinkedIn Carousel Maker.
+          See what our users have to say about AI Carousel Maker.
         </motion.p>
         <div className="mt-12 flex flex-wrap justify-center gap-12">
           {[
             {
-              text: "This tool has revolutionized the way I create content for LinkedIn. Highly recommended!",
+              text: "This tool has revolutionized the way I create content for my social media. Highly recommended!",
               author: "Alex Johnson",
             },
             {
-              text: "The LinkedIn Carousel Maker saves me so much time and effort. The generated content is professional and engaging.",
+              text: "AI Carousel Maker saves me so much time and effort. The AI-generated content is spot on.",
               author: "Maria Davis",
             },
             {
-              text: "I love the customization options and the modern backgrounds. It's perfect for my LinkedIn business posts.",
+              text: "I love the customization options and the modern backgrounds. It's perfect for my business needs.",
               author: "James Smith",
             },
           ].map((testimonial, index) => (

@@ -28,7 +28,7 @@ const config: Config = {
         ring: "#c0c0c0",
         foreground: "#000000",
         primary: {
-          DEFAULT: "#3369E7",
+          DEFAULT: "#3490dc",
           foreground: "#ffffff",
         },
         secondary: {
@@ -56,20 +56,20 @@ const config: Config = {
           foreground: "#212529",
         },
         background: {
-          DEFAULT: "#FFFFFF",
-          foreground: "#F8FAFC",
+          DEFAULT: "#0B0E17",
+          foreground: "#E2E8F0",
         },
         cardBackground: {
-          DEFAULT: "#F1F5F9",
+          DEFAULT: "#111827",
           foreground: "#E2E8F0",
         },
         textColor: {
-          DEFAULT: "#1E293B",
-          foreground: "#64748B",
+          DEFAULT: "#FFFFFF",
+          foreground: "#94A3B8",
         },
         borderColor: {
-          DEFAULT: "#E2E8F0",
-          foreground: "#CBD5E1",
+          DEFAULT: "#131824",
+          foreground: "#2D3A59",
         },
       },
       borderRadius: {
