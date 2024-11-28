@@ -1,9 +1,10 @@
 import { addAllSlides, setBackground } from "@/state/slice/carousel.slice";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { incrementGenerations } from "@/state/slice/user.slice";
+import { incrementGenerations, setMonthlyGenerations } from "@/state/slice/user.slice";
 import { RootState } from "@/state/store";
 import toast from "react-hot-toast";
+import { updateGenerationCount, getGenerationCount } from "@/services/firestore";
 
 export const useGenerateContent = () => {
   const [topic, setTopic] = useState("");
@@ -16,10 +17,27 @@ export const useGenerateContent = () => {
   const [targetAudience, setTargetAudience] = useState("General");
   const [themeActive, setThemeActive] = useState(true);
   const dispatch = useDispatch();
-  const { subscribed, monthlyGenerations } = useSelector((state: RootState) => state.user);
+  const { subscribed, monthlyGenerations, userinfo } = useSelector((state: RootState) => state.user);
+
+  useEffect(() => {
+    // Load initial generation count from Firebase
+    const loadGenerationCount = async () => {
+      if (userinfo?.uid) {
+        const count = await getGenerationCount(userinfo.uid);
+        dispatch(setMonthlyGenerations(count));
+      }
+    };
+    
+    loadGenerationCount();
+  }, [userinfo?.uid]);
 
   const generateContent = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    if (!userinfo?.uid) {
+      toast.error("Please login to generate content");
+      return;
+    }
 
     // Check generation limits for non-subscribed users
     if (!subscribed && monthlyGenerations >= 5) {
@@ -66,9 +84,11 @@ export const useGenerateContent = () => {
         );
       }
 
-      // Increment generation count on successful generation
+      // On successful generation, update both Redux and Firebase
       if (!subscribed) {
+        const newCount = monthlyGenerations + 1;
         dispatch(incrementGenerations());
+        await updateGenerationCount(userinfo.uid, newCount);
       }
     } catch (error) {
       console.error("Error generating content:", error);

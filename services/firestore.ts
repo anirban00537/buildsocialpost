@@ -14,6 +14,12 @@ import {
 } from "firebase/firestore";
 import { CarouselState, FirestoreCarouselState } from "@/types";
 
+interface GenerationLog {
+  userId: string;
+  count: number;
+  date: string;
+}
+
 export const fetchSubscriptionStatus = async (userId: string) => {
   try {
     const q = query(
@@ -87,4 +93,28 @@ export const updateBrandingSettings = async (
 ) => {
   const docRef = doc(db, "user_branding", userId);
   await setDoc(docRef, { branding: brandingData }, { merge: true });
+};
+
+export const updateGenerationCount = async (userId: string, count: number) => {
+  const today = new Date().toISOString().split("T")[0]; // YYYY-MM-DD format
+
+  const logRef = doc(db, "generationLogs", `${userId}_${today}`);
+
+  await setDoc(
+    logRef,
+    {
+      userId,
+      count,
+      date: today,
+    },
+    { merge: true }
+  );
+};
+
+export const getGenerationCount = async (userId: string): Promise<number> => {
+  const today = new Date().toISOString().split("T")[0];
+  const logRef = doc(db, "generationLogs", `${userId}_${today}`);
+
+  const snapshot = await getDoc(logRef);
+  return snapshot.exists() ? snapshot.data().count : 0;
 };

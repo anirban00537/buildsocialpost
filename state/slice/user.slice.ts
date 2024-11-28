@@ -69,6 +69,10 @@ const userSlice = createSlice({
       state.monthlyGenerations = 0;
       state.lastGenerationReset = new Date().toISOString();
     },
+    setMonthlyGenerations: (state, action: PayloadAction<number>) => {
+      state.monthlyGenerations = action.payload;
+      state.lastGenerationReset = new Date().toISOString();
+    },
   },
 });
 
@@ -82,5 +86,6 @@ export const {
   setCarouselDownloading,
   incrementGenerations,
   resetGenerations,
+  setMonthlyGenerations,
 } = userSlice.actions;
 export default userSlice.reducer;
