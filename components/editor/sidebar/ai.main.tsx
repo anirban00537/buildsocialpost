@@ -39,6 +39,7 @@ const AiSettingsComponent = () => {
     setTargetAudience,
     themeActive,
     setThemeActive,
+    remainingGenerations,
   } = useGenerateContent();
   const { subscribed } = useSelector((state: RootState) => state.user);
 
@@ -274,7 +275,7 @@ const AiSettingsComponent = () => {
               type="submit"
               variant="default"
               size="sm"
-              disabled={loading || !subscribed}
+              disabled={loading || (!subscribed && remainingGenerations <= 0)}
               className="w-full text-sm"
             >
               {loading ? (
@@ -302,15 +303,24 @@ const AiSettingsComponent = () => {
                   Generating...
                 </>
               ) : !subscribed ? (
-                <span className="flex items-center gap-2">
-                  <Image
-                    src={"/premium.svg"}
-                    width={16}
-                    height={16}
-                    alt="Premium"
-                  />
-                  Upgrade to Premium
-                </span>
+                remainingGenerations > 0 ? (
+                  <>
+                    Generate Content
+                    <span className="ml-2 text-xs opacity-75">
+                      ({remainingGenerations} left)
+                    </span>
+                  </>
+                ) : (
+                  <span className="flex items-center gap-2">
+                    <Image
+                      src={"/premium.svg"}
+                      width={16}
+                      height={16}
+                      alt="Premium"
+                    />
+                    Upgrade to Premium
+                  </span>
+                )
               ) : (
                 "Generate Content"
               )}

@@ -1,6 +1,9 @@
 import { addAllSlides, setBackground } from "@/state/slice/carousel.slice";
 import { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { incrementGenerations } from "@/state/slice/user.slice";
+import { RootState } from "@/state/store";
+import toast from "react-hot-toast";
 
 export const useGenerateContent = () => {
   const [topic, setTopic] = useState("");
@@ -8,14 +11,22 @@ export const useGenerateContent = () => {
   const [language, setLanguage] = useState("en");
   const [mood, setMood] = useState("Neutral");
   const [loading, setLoading] = useState(false);
-  const [theme, setTheme] = useState("light");
+  const [theme, setTheme] = useState("dark");
   const [contentStyle, setContentStyle] = useState("Professional");
   const [targetAudience, setTargetAudience] = useState("General");
-  const [themeActive, setThemeActive] = useState(false);
+  const [themeActive, setThemeActive] = useState(true);
   const dispatch = useDispatch();
+  const { subscribed, monthlyGenerations } = useSelector((state: RootState) => state.user);
 
   const generateContent = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    // Check generation limits for non-subscribed users
+    if (!subscribed && monthlyGenerations >= 5) {
+      toast.error("You've reached your monthly limit of 5 generations. Please upgrade to continue.");
+      return;
+    }
+
     setLoading(true);
     try {
       const response = await fetch("/api/create-content", {
@@ -43,6 +54,7 @@ export const useGenerateContent = () => {
       const dataJson = await data.json();
       const { carousels, colorPalette } = dataJson;
       dispatch(addAllSlides(carousels));
+      
       if (themeActive) {
         dispatch(
           setBackground({
@@ -53,8 +65,14 @@ export const useGenerateContent = () => {
           })
         );
       }
+
+      // Increment generation count on successful generation
+      if (!subscribed) {
+        dispatch(incrementGenerations());
+      }
     } catch (error) {
       console.error("Error generating content:", error);
+      toast.error("Failed to generate content. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -79,5 +97,6 @@ export const useGenerateContent = () => {
     setTargetAudience,
     themeActive,
     setThemeActive,
+    remainingGenerations: subscribed ? Infinity : 5 - monthlyGenerations,
   };
 };
